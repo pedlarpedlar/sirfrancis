@@ -4,10 +4,14 @@ require_once __DIR__ . '/pricelist_helpers.php';
 
 date_default_timezone_set('Africa/Johannesburg');
 
-$productsByCategory = cbPricelistProductsByCategory();
+$sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'name';
+$sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+$direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
+$productsByCategory = cbPricelistProductsByCategory($sort, $direction);
 $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
+$limitedDescription = 'Compact CandyBird pricelist with current product prices, specials, sizes and online product links.';
 
 include 'header.php';
 
@@ -18,6 +22,12 @@ $description_og = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 $description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 
 include 'page_menues.php';
+
+function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
+    $nextDirection = ($currentSort === $key && $currentDirection === 'asc') ? 'desc' : 'asc';
+    $icon = $currentSort === $key ? ($currentDirection === 'asc' ? ' ^' : ' v') : '';
+    return '<a class="pricelist-sort-link" href="pricelist?sort=' . rawurlencode($key) . '&dir=' . rawurlencode($nextDirection) . '">' . cbPricelistText($label . $icon) . '</a>';
+}
 ?>
 
 <style>
@@ -65,6 +75,8 @@ include 'page_menues.php';
     text-transform: uppercase;
     white-space: nowrap;
   }
+  .pricelist-sort-link { color: inherit; text-decoration: none; }
+  .pricelist-sort-link:hover { color: #6b0099; text-decoration: underline; }
   .pricelist-table td { border-top: 1px solid #f0ebe4; padding: 6px 10px; vertical-align: middle; }
   .pricelist-table tbody tr:hover td { background: #fffaf2; }
   .pricelist-category td {
@@ -148,10 +160,10 @@ include 'page_menues.php';
         <table class="table pricelist-table">
           <thead>
             <tr>
-              <th class="id-cell">ID</th>
-              <th>Product</th>
-              <th class="size-cell">Size</th>
-              <th>Price</th>
+              <th class="id-cell"><?= cbPricelistSortLink('id', 'ID', $sort, $direction) ?></th>
+              <th><?= cbPricelistSortLink('name', 'Product', $sort, $direction) ?></th>
+              <th class="size-cell"><?= cbPricelistSortLink('size', 'Size', $sort, $direction) ?></th>
+              <th><?= cbPricelistSortLink('price', 'Price', $sort, $direction) ?></th>
               <th class="valid-cell">Special Ends</th>
               <th class="cart-cell no-print">Cart</th>
             </tr>
@@ -171,7 +183,7 @@ include 'page_menues.php';
                   $name = (string) ($product['name'] ?? '');
                   $size = getSheetProductDisplaySize($product);
                   $pricing = cbPricelistPricing($product);
-                  $productLink = 'product?id=' . rawurlencode($id);
+                  $productLink = getSheetProductUrl($product);
                 ?>
                 <tr>
                   <td class="id-cell"><?= cbPricelistText($id) ?></td>

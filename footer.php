@@ -501,6 +501,18 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 .global-search-item small {
   color: #6f675e;
 }
+.global-search-clearance-label {
+  background: #d5001f;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 4px;
+  padding: 4px 6px;
+  text-transform: uppercase;
+}
 .global-search-price {
   margin-left: auto;
   font-weight: 700;
@@ -1186,12 +1198,15 @@ $(document).ready(function () {
         var originalPrice = parseFloat(item.original_price || item.price || 0) || 0;
         var finalPrice = parseFloat(item.discounted_price || item.price || 0) || 0;
         var hasDiscount = originalPrice > 0 && finalPrice > 0 && finalPrice < originalPrice;
+        var isClearance = String(item.is_clearance || '').toLowerCase() === 'yes';
         var priceHtml = hasDiscount
           ? '<del>R' + originalPrice.toFixed(2) + '</del><span class="onsale">R' + finalPrice.toFixed(2) + '</span>'
           : 'R' + finalPrice.toFixed(2);
+        var metaHtml = '<small>' + escapeHtml(item.category || '') + '</small>' +
+          (isClearance ? '<span class="global-search-clearance-label">Clearance</span>' : '');
         return '<a class="global-search-item" href="' + escapeHtml(item.url) + '">' +
           '<img src="' + escapeHtml(item.image_url || 'assets/img/product/1.png') + '" onerror="this.onerror=null;this.src=\'assets/img/product/1.png\';" alt="">' +
-          '<span><strong>' + escapeHtml(title) + '</strong><small>' + escapeHtml(item.category || '') + '</small></span>' +
+          '<span><strong>' + escapeHtml(title) + '</strong>' + metaHtml + '</span>' +
           '<span class="global-search-price">' + priceHtml + '</span>' +
         '</a>';
       }).join('');
@@ -1232,6 +1247,14 @@ $(document).ready(function () {
       if (!query) {
         e.preventDefault();
         $searchInput.focus();
+      } else if (typeof logAction === 'function') {
+        logAction('UX search submitted', 'Query: ' + query + ' | From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
+      }
+    });
+
+    $('body').on('click', '.global-search-item, .global-search-all', function() {
+      if (typeof logAction === 'function') {
+        logAction('UX search result click', 'Query: ' + ($searchInput.val() || '') + ' | To: ' + ($(this).attr('href') || ''), '<?=$userId?>', '<?=$guestIdentifier?>');
       }
     });
 

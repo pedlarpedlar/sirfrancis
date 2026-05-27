@@ -362,6 +362,19 @@ include 'header.php';
     width: 100%;
   }
 
+  .pair-product-card .pair-price {
+    color: #1d7d38;
+    font-weight: 800;
+  }
+
+  .pair-product-card .pair-price del {
+    color: #8a7d8f;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
   .badge.badge-warning.position-static {
     color: #2c2926;
   }
@@ -1133,6 +1146,12 @@ $(function() {
   }
 
   function renderReviews(productId) {
+    if (window.CANDYBIRD_CURRENT_PRODUCT && String(window.CANDYBIRD_CURRENT_PRODUCT.is_clearance || '').toLowerCase() === 'yes') {
+      $('#product-stars').html('<span class="badge badge-danger">Clearance / dated stock</span>');
+      $('#reviews-list').html('<p class="mb-0">Reviews are not collected for clearance items because they are separate limited batches.</p>');
+      return;
+    }
+
     $.getJSON('get_product_reviews.php', { product_id: productId })
       .done(function(response) {
         const reviews = response.reviews || [];
@@ -1204,13 +1223,21 @@ $(function() {
     $('#paired-products').html(candidates.map(function(item) {
       const image = item.images.length ? item.images[0] : defaultImage;
       const title = displayTitle(item);
+      const salePercent = getSalePercent(item);
+      const isClearance = String(item.is_clearance || item.raw?.is_clearance || '').toLowerCase() === 'yes';
+      const priceHtml = salePercent > 0
+        ? '<p class="mb-3 pair-price"><del>R' + item.price.toFixed(2) + '</del> <span>R' + item.discountedPrice.toFixed(2) + '</span></p>'
+        : '<p class="mb-3 pair-price">R' + item.discountedPrice.toFixed(2) + '</p>';
+      const badges = (isClearance ? '<span class="clearance-corner-flag"><span>Clearance<br>to go</span></span>' : '') +
+        (salePercent > 0 ? '<span class="badge badge-success top-right">' + salePercent + '% off</span>' : '');
+      const clearanceAttr = isClearance && item.clearance_id ? ' data-clearance-id="' + escapeHtml(item.clearance_id) + '"' : '';
       return '<div class="col-sm-6 col-lg-3 mb-30">' +
         '<div class="card pair-product-card">' +
-          '<a href="' + getProductPath(item) + '"><img src="' + escapeHtml(image) + '"' + imageFallback + ' alt="' + escapeHtml(title) + '"></a>' +
+          '<a class="position-relative d-block" href="' + getProductPath(item) + '">' + badges + '<img src="' + escapeHtml(image) + '"' + imageFallback + ' alt="' + escapeHtml(title) + '"></a>' +
           '<div class="card-body">' +
             '<h3 class="h6"><a href="' + getProductPath(item) + '">' + escapeHtml(title) + '</a></h3>' +
-            '<p class="mb-3">R' + item.discountedPrice.toFixed(2) + '</p>' +
-            '<button type="button" class="btn btn-dark btn--sm add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="' + escapeHtml(item.id) + '" data-quantity="1">Add to cart</button>' +
+            priceHtml +
+            '<button type="button" class="btn btn-dark btn--sm add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="' + escapeHtml(item.id) + '"' + clearanceAttr + ' data-quantity="1">Add to cart</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -1237,6 +1264,7 @@ $(function() {
   }
 
   function renderProduct(product) {
+    window.CANDYBIRD_CURRENT_PRODUCT = product;
     const pageUrl = getProductUrl(product.id);
     const images = product.images.length ? product.images : [defaultImage];
     const plainDescription = stripHtml(product.description);
@@ -1257,7 +1285,10 @@ $(function() {
     renderAvailability(product);
     renderSelection(product);
     renderDetails(product);
-    renderReviews(product.id);
+    const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
+    if (!isClearance) {
+      renderReviews(product.id);
+    }
     renderPairProducts(product);
 
     $('#product-title').text(title);
@@ -1265,7 +1296,6 @@ $(function() {
     $('#product-full-description').html(product.description || escapeHtml(shortDescription));
     const salePercent = getSalePercent(product);
     const labels = [];
-    const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     if (!isClearance && product.label) labels.push('<span class="badge badge-danger top-left">' + escapeHtml(product.label) + '</span>');
     if (salePercent > 0) labels.push('<span class="badge badge-success top-right">' + salePercent + '% off</span>');
     else if (!isClearance && productMatchesTag(product, 'hot')) labels.push('<span class="badge badge-warning top-right">Hot</span>');
@@ -1294,6 +1324,21 @@ $(function() {
     $('#read-more-link').toggleClass('d-none', plainDescription.length <= 260);
     $('#product-page-state').addClass('d-none');
     $('#product-detail-section, #product-tabs-section').removeClass('d-none');
+
+    (function logProductView() {
+      if (window.CANDYBIRD_PRODUCT_VIEW_LOGGED === product.id) return;
+      if (typeof logAction !== 'function') {
+        setTimeout(logProductView, 500);
+        return;
+      }
+      window.CANDYBIRD_PRODUCT_VIEW_LOGGED = product.id;
+      logAction(
+        'UX product viewed',
+        'Product: ' + product.id + ' | Title: ' + title + ' | Clearance: ' + (isClearance ? 'yes' : 'no'),
+        <?= json_encode($userId ?? null) ?>,
+        <?= json_encode($guestIdentifier ?? '') ?>
+      );
+    })();
   }
 
   function showState(message) {

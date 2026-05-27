@@ -33,6 +33,15 @@ include 'page_menues.php';
     overflow: hidden;
   }
 
+  .product-thumbnail .first-img {
+    aspect-ratio: 1 / 1;
+    background: #f7f2ea;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
   .clearance-corner-flag {
     border-right: 108px solid transparent;
     border-top: 108px solid #d5001f;
@@ -502,8 +511,23 @@ $(document).on('click', '#mobile-category-toggle', function () {
   const $sidebar = $('.products-category-sidebar');
   const isOpen = !$sidebar.hasClass('is-open');
   $sidebar.toggleClass('is-open', isOpen);
-  $(this).attr('aria-expanded', isOpen ? 'true' : 'false');
+  $(this)
+    .attr('aria-expanded', isOpen ? 'true' : 'false')
+    .html(isOpen ? '<i class="fa fa-times"></i> Hide categories' : '<i class="fa fa-filter"></i> Browse categories');
 });
+
+document.addEventListener('click', function(event) {
+  const button = event.target.closest('#mobile-category-toggle');
+  if (!button) return;
+  const sidebar = document.querySelector('.products-category-sidebar');
+  if (!sidebar) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const isOpen = !sidebar.classList.contains('is-open');
+  sidebar.classList.toggle('is-open', isOpen);
+  button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  button.innerHTML = isOpen ? '<i class="fa fa-times"></i> Hide categories' : '<i class="fa fa-filter"></i> Browse categories';
+}, true);
 
   /* --------------------------------
      PRICE HELPER
@@ -657,8 +681,7 @@ $(document).on('click', '#mobile-category-toggle', function () {
                   <img class="first-img"
                        src="${imageUrl}"
                        onerror="this.onerror=null;this.src='assets/img/product/1.png';"
-                       alt="${title}"
-                       style="max-width:300px; max-height:300px;">
+                       alt="${title}">
                 </a>
 
                 <ul class="actions d-flex justify-content-center">
@@ -709,7 +732,7 @@ $(document).on('click', '#mobile-category-toggle', function () {
                   ${discountRate > 0 ? `<span class="badge badge-success top-right">${discountRate}% off</span>` : (!isClearance && productMatchesTag(item, 'hot') ? `<span class="badge badge-warning top-right">Hot</span>` : '')}
 
                   <a href="${getProductPath(item)}">
-                    <img class="first-img" src="${imageUrl}" onerror="this.onerror=null;this.src='assets/img/product/1.png';" alt="${title}" style="max-width:300px; max-height:300px;">
+                    <img class="first-img" src="${imageUrl}" onerror="this.onerror=null;this.src='assets/img/product/1.png';" alt="${title}">
                   </a>
                 </div>
 

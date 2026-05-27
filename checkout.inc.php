@@ -1203,6 +1203,9 @@ try {
     // Set sender and recipient(s)
     $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
     $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
+    if (!empty($billing_email_address)) {
+        $admin_mail->addReplyTo($billing_email_address, trim($billing_first_name) ?: 'CandyBird customer');
+    }
 
     // Set email subject
     $admin_mail->Subject = "CandyBird | Order Received | #".$orderId_zeropad."";

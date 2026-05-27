@@ -150,6 +150,8 @@ include 'page_menues.php';
     .orders-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; }
     .orders-toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .orders-toolbar input, .orders-toolbar select { max-width: 260px; }
+    .orders-table th.sortable { cursor: pointer; user-select: none; }
+    .orders-table th.sortable:hover { color: #5b1178; }
     .status-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; }
     .status-pending { background: #fff4d8; color: #7a4e00; }
     .status-processing { background: #ede2ff; color: #5b1178; }
@@ -199,6 +201,7 @@ include 'page_menues.php';
     </div>
 
     <div class="orders-panel">
+        <div class="alert d-none" id="ordersPageAlert"></div>
         <div class="orders-toolbar">
             <div>
                 <h2 class="h4 mb-1">Orders</h2>
@@ -216,15 +219,15 @@ include 'page_menues.php';
         </div>
 
         <div class="orders-table-wrap table-responsive">
-            <table class="table" id="ordersTable">
+            <table class="table orders-table" id="ordersTable">
                 <thead>
                     <tr>
-                        <th>Order</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                        <th>Payment</th>
-                        <th>Total</th>
-                        <th>Date</th>
+                        <th class="sortable" data-sort="order">Order</th>
+                        <th class="sortable" data-sort="customer">Customer</th>
+                        <th class="sortable" data-sort="status">Status</th>
+                        <th class="sortable" data-sort="payment">Payment</th>
+                        <th class="sortable" data-sort="total">Total</th>
+                        <th class="sortable" data-sort="date">Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -235,10 +238,11 @@ include 'page_menues.php';
                     $shippingPayable = max(0, (float) $order['shipping_amount'] - (float) $order['shipping_discount_amount']);
                     $searchText = strtolower($order['order_id'] . ' ' . $order['customer_name'] . ' ' . $order['email'] . ' ' . $status);
                 ?>
-                    <tr class="order-row" data-status="<?= cbOrderText($statusKey) ?>" data-search="<?= cbOrderText($searchText) ?>">
-                        <td><strong>#<?= cbOrderText($order['order_id']) ?></strong><br><small><?= cbOrderText($order['billing_phone_number']) ?></small></td>
+                    <tr class="order-row" data-status="<?= cbOrderText($statusKey) ?>" data-payment="<?= ((int) $order['payment_status'] > 0) ? 'paid' : 'unpaid' ?>" data-search="<?= cbOrderText($searchText) ?>" data-order="<?= cbOrderText($order['order_id']) ?>" data-customer="<?= cbOrderText(strtolower($order['customer_name'])) ?>" data-total="<?= cbOrderText($order['grand_total_amount']) ?>" data-date="<?= cbOrderText(strtotime($order['order_date'])) ?>">
+                        <td><a href="order_details?order_id=<?= urlencode($order['order_id']) ?>"><strong>#<?= cbOrderText($order['order_id']) ?></strong></a><br><small><?= cbOrderText($order['billing_phone_number']) ?></small></td>
                         <td>
-                            <strong><?= cbOrderText(trim($order['customer_name']) ?: 'Guest customer') ?></strong><br>
+                            <?php $customerHref = !empty($order['user_id']) ? 'customer_profile?user_id=' . urlencode($order['user_id']) : 'customer_profile?email=' . urlencode($order['email']); ?>
+                            <a href="<?= cbOrderText($customerHref) ?>"><strong><?= cbOrderText(trim($order['customer_name']) ?: 'Guest customer') ?></strong></a><br>
                             <a href="mailto:<?= cbOrderText($order['email']) ?>"><?= cbOrderText($order['email'] ?: 'No email') ?></a>
                         </td>
                         <td><span class="status-pill status-<?= cbOrderText($statusKey) ?>"><?= cbOrderText($status) ?></span></td>
@@ -261,6 +265,9 @@ include 'page_menues.php';
                                     data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
                                     Update Client
                                 </button>
+                                <?php if ((int) $order['payment_status'] === 0): ?>
+                                    <button class="btn btn-outline-success btn-sm send-eft-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Send EFT</button>
+                                <?php endif; ?>
                                 <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -302,6 +309,9 @@ include 'page_menues.php';
                             data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
                             Update Client
                         </button>
+                        <?php if ((int) $order['payment_status'] === 0): ?>
+                            <button class="btn btn-outline-success btn-sm send-eft-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Send EFT</button>
+                        <?php endif; ?>
                         <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -422,6 +432,8 @@ function zeroPad(num, places) {
 function showStatusMessage(success, message) {
     var alert = $('#statusAlert');
     alert.removeClass('d-none alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+    var pageAlert = $('#ordersPageAlert');
+    pageAlert.removeClass('d-none alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message);
 }
 
 function showCancelOrderMessage(success, message) {
@@ -442,6 +454,27 @@ function filterOrders() {
 
 $(function() {
     $('#orderSearch, #statusFilter').on('input change', filterOrders);
+
+    var orderSortState = { key: 'date', dir: 'desc' };
+    $('#ordersTable').on('click', 'th.sortable', function() {
+        var key = $(this).data('sort');
+        orderSortState.dir = orderSortState.key === key && orderSortState.dir === 'asc' ? 'desc' : 'asc';
+        orderSortState.key = key;
+        var rows = $('#ordersTable tbody tr').get();
+        rows.sort(function(a, b) {
+            var av = $(a).data(key);
+            var bv = $(b).data(key);
+            if (key === 'order' || key === 'total' || key === 'date') {
+                av = parseFloat(av) || 0;
+                bv = parseFloat(bv) || 0;
+                return orderSortState.dir === 'asc' ? av - bv : bv - av;
+            }
+            av = String(av || '').toLowerCase();
+            bv = String(bv || '').toLowerCase();
+            return orderSortState.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+        });
+        $('#ordersTable tbody').append(rows);
+    });
 
     $('body').on('click', '.delete-order', function() {
         var orderId = $(this).data('order-id');
@@ -606,6 +639,23 @@ $(function() {
             },
             error: function() {
                 showStatusMessage(false, 'Payment status could not be updated right now.');
+            }
+        });
+    });
+
+    $('body').on('click', '.send-eft-btn', function() {
+        var orderId = $(this).data('order-id');
+        if (!confirm('Send EFT banking details for order #' + orderId + '?')) return;
+        $.ajax({
+            url: 'send_eft_payment_email.php',
+            method: 'POST',
+            dataType: 'json',
+            data: { order_id: orderId },
+            success: function(response) {
+                showStatusMessage(!!response.success, response.message || 'EFT email processed.');
+            },
+            error: function() {
+                showStatusMessage(false, 'EFT payment email could not be sent right now.');
             }
         });
     });
