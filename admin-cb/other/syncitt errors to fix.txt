@@ -1,0 +1,103 @@
+syncitt:
+
+add new customer, customer group is required. remove this. modal version works fine.
+
+no option to delete customer from list-customers
+
+when deleting invoice or product you have to go inside product. make it so that you can delete from icon.
+
+WHen deleting an RMA, redirect to list RMAs not list invoices
+
+on dashboard, when deleting all RMAS or Invoices or Quotes etc, it should show 0 again, not a blank space.
+
+bulk_import page, add bulk payments
+
+when creating a product the tax thing doesn't work - maybe remove it, and then sellers should just add tax per invoice.
+
+
+work out a way to mark invoices as "to deliver" so that invoices can be sort on a delivery-or-collect basis. Perhaps an extra field could be to add the waybill number to that invoice.
+
+important: when editing an old invoice, the invoice number resets. very important to fix this. should always increment the latest number, NOT the old number.
+
+add expense from modal SOMETIMES inputs "0" in description, perhaps there's a problem with certain text, when it starts with number maybe.
+
+add an optional "cost" field to the product-create page. which allows seller to see how much profit they are making on that current product in % and R. make it unrelated to the batch codes. for example, if a user wants to use the batch code feature then let him, or if he wants to use the main cost feature then let him. also, if he set the cost price from the products page you can have a page showing how much profit made for each invoice.
+
+
+invocie_create (and related docs): if shipping is selected, then when editing the invoice, the shipping does not add to the total.
+Error: When an invoice has shipping set, then editing it to "none" gives an error.
+
+Also, there's no indication of which invoices have shipping set on them. This is very important because it needs to show up in "deadlines" or something on the dashboard at least.
+
+
+create a "priority" and "due date" field for invoices. This way it can be sorted by priority on the invoice list (i.e. closer due dates are automatically prioritized or invoices can be sorted by priority by default). 
+
+//Make products removable from invoice
+
+//Make the "discount" bold or green when it's not 0.00
+
+When there's a shipping method added to invoice, write it as small text underneath the charges, including the description.
+
+Include a "you saved" before the invoice total.
+
+when marking invoice as complete, a small non-ivasive pop up should appear, "add payment to invoice too?" with a small dialog pre-filled with "cash", full inv amount, and date etc. clicking outside the popup should close it.
+
+
+Add a customer "feedback" to the invoices list so that (internally) sellers can add feedback on each order. E.g. nurridin aunty phoned on 14th to say she was not happy because there was no walnuts/pistachios in her raw mixed nuts, however, there was no mention of those nuts on the message i sent them and they had accepted. it was a period where i couldn't accept spontaneous returns.
+
+On register page, include a country code for phone numbers, and a "show password".
+
+make syncitt multilingual...starting with turkish.
+
+when editing an invoice, these errors show: adjusting tax to "none" if had a value, the javascript in the totals are messed up, but it doesn't affect the backend (actually, it does now). when editing an invoice if had no tax value, adding tax gives an error. also, when editing an invoice, the taxes and shipping are not pre-selected if they were previously filled. editing the invoices multiple times messes up the taxes so we need to "redo" the tax calculations each time and ensure that they show up user side while editing.
+
+
+"Delivery", if different from billing address, *MUST* include a new set of details including Name, Contact Number and Company Name field, it should not borrow the same person details. 
+
+//If "customer id" on pay url is empty, it should ignore. currently giving an error.
+
+Edit customer: shipping address pre-filled fields is incorrect...also, test if the new "delivery information" textarea works as expected.
+
+Edit expense: delivery does not add from textbox, appears as "0". Description appears fine when adding it from the modal and from the addexpense page, only happens when editing description of existing expense 
+
+On customers page, some clients balance is not showing up correctly. Aarifah's is showing -2150 while her balance is supposed to be 0.00
+
+On the Pay page, include that customer's current balance and a link to view customer (while selecting)
+
+On the statements page, date AND time should be considered in the "payments" row otherwise payments made on the same day will give incorrect balances.
+
+The main search bar should search for anythng on the website. for example, searching for something (maybe: Sonja) it should search the following: Payments, Invoices, Products, Expenses, Credit Notes, Refunds, and more. It should provide everything in their own little row. For example if searching for "almonds" this is what a user would likely see:
+Page: Products > Almonds (title, price, description etc like a google search result)
+Page: Invoices > Invoice Number (item, quantity, order total, customer, etc)
+Page: Credit Notes/Refunds/Quotes etc > x Number (item, quantity, total amount, customer, etc)
+Page: Expenses > Comment (expense title, description, cost, date, etc)
+Page: Payments > no results
+Page: Customers > no results
+If user searches for a customer name, all the same results should come up, including payments (each payment in a separate row/result of course, etc).
+
+
+
+
+
+
+
+
+
+
+
+
+//when creating an invoice with tax (bottom of page), tax does not show or calculate on invoice total.
+
+//invoice page should include POS print
+
+//pay and refund and credit_note pages: if GET id is blank, then ignore. currently it's giving an error.
+
+//Add a "print" and "pay" to the invoice_list buttons
+
+//can't delete payment?
+
+//create pos for new syncitt..
+
+//invoice_create (and related docs): should be able to remove a product row
+
+//important: invoices, "complete" and "delivery" buttons don't work when table is sorted or next page is clicked. only SOMETIMES. also the set delivery SOMETIMES works. Play around and figure out. seems problem lies with jquery datatable.

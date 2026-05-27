@@ -1,0 +1,62 @@
+# Custom error document
+ErrorDocument 404 /404.php
+
+# Redirect old or non-existent URLs to new ones
+Redirect 301 /iqaala /return_policy
+Redirect 301 /iqala /return_policy
+Redirect 301 /iqaalah /return_policy
+Redirect 301 /iqalah /return_policy
+
+Redirect 301 /store /products
+
+Redirect 301 /favicon.ico /assets/img/favicon.png
+Redirect 301 /favicon.png /assets/img/favicon.png
+
+
+# Enable mod_rewrite
+RewriteEngine on
+Options +FollowSymLinks -MultiViews
+
+# Redirect non-www to www
+RewriteCond %{HTTP_HOST} ^candybird\.co\.za [NC]
+RewriteRule ^(.*)$ https://www.candybird.co.za/$1 [R=301,L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^candybird\.co\.za$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.candybird\.co\.za$
+RewriteRule ^/?$ "https\:\/\/www\.candybird\.co\.za\/" [R=301,L]
+
+# Keep page URLs clean and resolve extensionless PHP pages before product slugs.
+RewriteCond %{REQUEST_METHOD} GET [OR]
+RewriteCond %{REQUEST_METHOD} HEAD
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+RewriteRule ^(.+)\.php$ /$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L,QSA]
+
+# Handle 404 errors correctly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/admin-cb/ [NC]
+RewriteCond %{REQUEST_URI} !^/(assets|uploads|PHPMailer|vendor|crons|emails)/ [NC]
+RewriteRule ^([a-z0-9][a-z0-9-]{2,120})/?$ /route_slug.php?slug=$1 [L,QSA]
+
+# Handle 404 errors correctly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /404.php [L]
+
+#Redirect shop to products
+RewriteCond %{HTTP_HOST} ^shop\.candybird\.co\.za$ [NC]
+RewriteRule ^(.*)$ https://candybird.co.za/products [R=301,L]
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php80” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php80___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

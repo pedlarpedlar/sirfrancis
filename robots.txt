@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin-cb/
+Disallow: /shop/
+
+Allow: /
+Allow: /products
+Allow: /products?category=1
+Allow: /products?category=40
+Allow: /contact
+Allow: /about
+Allow: /return_policy
+
+Sitemap: https://www.candybird.co.za/sitemap.xml

@@ -1,0 +1,40 @@
+# Secrets / config
+.env
+*.env
+*.ini
+.user.ini
+configs/
+dbh.inc.php
+admin-cb/dbh.inc.php
+
+# Logs/cache/backups
+*.log
+error_log
+debug.log
+sheet_cache/
+backups/
+uploads/backups/
+*.zip
+*.tar
+*.gz
+*.sql
+
+# Local/generated/test clutter
+test.php
+test_add.php
+testasdasd.php
+path_to_your_logging_script.php
+*-old.php
+*_backup.php
+*-backup.php
+
+# Old exports / drafts
+Website CSV Product Lists/
+
+# Dependencies if installed by package managers
+node_modules/
+vendor/
+
+# OS
+.DS_Store
+Thumbs.db
