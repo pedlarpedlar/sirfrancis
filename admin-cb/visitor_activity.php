@@ -227,7 +227,7 @@ if ($hasSessions) {
         WHERE COALESCE(s.end_time, s.start_time) BETWEEN '$fromSql' AND '$toSql'
           AND s.user_agent NOT REGEXP 'bot|crawl|spider|preview|facebookexternalhit|whatsapp|telegrambot|curl|wget|monitor|uptime|headless|python|httpclient'
         ORDER BY is_online DESC, last_seen DESC
-        LIMIT 300
+        LIMIT 120
     ");
 }
 
@@ -264,6 +264,13 @@ foreach ($sessionRows as $row) {
 $hourStats = [];
 $weekdayStats = [];
 $abandonHourStats = [];
+
+$groups = array_values($groups);
+usort($groups, function ($a, $b) {
+    if ((int) $a['is_online'] !== (int) $b['is_online']) return (int) $b['is_online'] <=> (int) $a['is_online'];
+    return strcmp((string) $b['last_seen'], (string) $a['last_seen']);
+});
+$groups = array_slice($groups, 0, 10);
 
 foreach ($groups as &$visitor) {
     $visitor['session_ids'] = array_values(array_unique($visitor['session_ids']));
@@ -336,11 +343,6 @@ foreach ($groups as &$visitor) {
 unset($visitor);
 
 $visitors = array_values($groups);
-usort($visitors, function ($a, $b) {
-    if ((int) $a['is_online'] !== (int) $b['is_online']) return (int) $b['is_online'] <=> (int) $a['is_online'];
-    return strcmp((string) $b['last_seen'], (string) $a['last_seen']);
-});
-$visitors = array_slice($visitors, 0, 10);
 
 arsort($hourStats);
 arsort($weekdayStats);
