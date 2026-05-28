@@ -60,6 +60,56 @@ if (!function_exists('cbPricelistPricing')) {
     }
 }
 
+if (!function_exists('cbPricelistProductGroupTitle')) {
+    function cbPricelistProductGroupTitle($product) {
+        $name = trim((string) ($product['name'] ?? $product['title'] ?? ''));
+        return $name !== '' ? $name : 'Unnamed Product';
+    }
+}
+
+if (!function_exists('cbPricelistProductGroups')) {
+    function cbPricelistProductGroups($products) {
+        $groups = [];
+
+        foreach ($products as $product) {
+            $title = cbPricelistProductGroupTitle($product);
+            $key = strtolower(trim(preg_replace('/\s+/', ' ', $title)));
+            if ($key === '') {
+                $key = 'product-' . (string) ($product['id'] ?? count($groups));
+            }
+
+            if (!isset($groups[$key])) {
+                $groups[$key] = [
+                    'id' => 'plg-' . substr(md5($key), 0, 10),
+                    'title' => $title,
+                    'products' => [],
+                    'min_price' => null,
+                    'max_price' => null,
+                ];
+            }
+
+            $pricing = cbPricelistPricing($product);
+            $price = (float) $pricing['sale_price'];
+            $groups[$key]['products'][] = $product;
+            $groups[$key]['min_price'] = $groups[$key]['min_price'] === null ? $price : min($groups[$key]['min_price'], $price);
+            $groups[$key]['max_price'] = $groups[$key]['max_price'] === null ? $price : max($groups[$key]['max_price'], $price);
+        }
+
+        return array_values($groups);
+    }
+}
+
+if (!function_exists('cbPricelistPriceRange')) {
+    function cbPricelistPriceRange($group) {
+        $min = (float) ($group['min_price'] ?? 0);
+        $max = (float) ($group['max_price'] ?? 0);
+        if (abs($min - $max) < 0.01) {
+            return 'R' . number_format($min, 2);
+        }
+        return 'R' . number_format($min, 2) . ' to R' . number_format($max, 2);
+    }
+}
+
 if (!function_exists('cbPricelistProductsByCategory')) {
     function cbPricelistProductsByCategory($sort = 'name', $direction = 'asc') {
         $sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';

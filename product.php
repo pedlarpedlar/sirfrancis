@@ -914,12 +914,15 @@ $(function() {
 
     const endDate = parseSpecialDate(untilValue, true);
     const $badge = $('#product-special-countdown');
-    if (!endDate || !$badge.length) return;
+    if (!endDate || !$badge.length || endDate.getTime() <= Date.now()) {
+      $badge.removeClass('urgent').text('');
+      return;
+    }
 
     function tick() {
       const remaining = endDate.getTime() - Date.now();
       if (remaining <= 0) {
-        $badge.addClass('urgent').text('Special ending now');
+        $badge.removeClass('urgent').text('');
         clearInterval(specialCountdownTimer);
         specialCountdownTimer = null;
         return;
@@ -973,7 +976,18 @@ $(function() {
   }
 
   function getProductPath(product) {
-    return product && product.slug ? encodeURIComponent(product.slug) : 'product?id=' + encodeURIComponent(product.id);
+    if (product && product.slug) {
+      return encodeURIComponent(product.slug);
+    }
+
+    const isClearance = product && String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
+    if (isClearance) {
+      const text = [product.name || '', displaySize(product), 'clearance', product.clearance_id || product.id || ''].join(' ');
+      const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      if (slug) return encodeURIComponent(slug);
+    }
+
+    return product ? 'product?id=' + encodeURIComponent(product.id) : 'products';
   }
 
   function convertToStars(rating) {
@@ -1053,10 +1067,12 @@ $(function() {
 
   function renderPrice(product) {
     const hasDiscount = product.discount > 0 || product.discountRate > 0 || product.discountedPrice < product.price;
+    const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
+    const specialActive = isProductSpecialActive(product.raw || product);
     const salePercent = getSalePercent(product);
-    const saveText = salePercent > 0 ? '<span class="badge position-static bg-dark rounded-0">Save ' + salePercent + '%</span>' : '';
+    const saveText = (!isClearance && salePercent > 0) ? '<span class="badge position-static bg-dark rounded-0">Save ' + salePercent + '%</span>' : '';
     const discountUntil = product.raw.discount_valid_until || product.raw.special_valid_until || product.raw.sale_valid_until || '';
-    const endsText = hasDiscount && discountUntil ? '<div class="product-special-window"><span>Special ends ' + escapeHtml(formatSpecialDate(discountUntil)) + '</span><span class="product-special-countdown" id="product-special-countdown"></span></div>' : '';
+    const endsText = (!isClearance && hasDiscount && specialActive && discountUntil) ? '<div class="product-special-window"><span>Special ends ' + escapeHtml(formatSpecialDate(discountUntil)) + '</span><span class="product-special-countdown" id="product-special-countdown"></span></div>' : '';
 
     $('#price-section').html(
       '<div class="d-flex align-items-center mb-30">' +
@@ -1070,11 +1086,12 @@ $(function() {
       endsText
     );
 
-    if (hasDiscount && discountUntil) {
+    if (!isClearance && hasDiscount && specialActive && discountUntil) {
       startSpecialCountdown(discountUntil);
     } else if (specialCountdownTimer) {
       clearInterval(specialCountdownTimer);
       specialCountdownTimer = null;
+      $('#product-special-countdown').removeClass('urgent').text('');
     }
   }
 

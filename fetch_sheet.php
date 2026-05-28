@@ -133,7 +133,12 @@ include 'page_menues.php';
       display: none;
     }
 
-    .products-category-sidebar.is-open {
+    .mobile-category-sidebar {
+      display: none;
+      margin-bottom: 18px;
+    }
+
+    .mobile-category-sidebar.is-open {
       display: block;
     }
 
@@ -253,6 +258,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
         <button type="button" class="mobile-category-toggle" id="mobile-category-toggle" aria-expanded="false">
           <i class="fa fa-filter"></i> Browse categories
         </button>
+        <div id="mobile-category-sidebar" class="mobile-category-sidebar d-lg-none"></div>
         
         <div class="grid-nav-wraper bg-lighten2 mb-30">
           <div class="row align-items-center">
@@ -481,7 +487,8 @@ function renderCategoriesSidebar(products) {
 
   html += `</ul></div>`;
 
-  $('.left-sidebar').prepend(html);
+  $('#category-sidebar').html(html);
+  $('#mobile-category-sidebar').html(html);
 }
 
 function normalizeSearchText(value) {
@@ -563,7 +570,18 @@ function displayProductTitle(product) {
 }
 
 function getProductPath(product) {
-  return product && product.slug ? encodeURIComponent(product.slug) : `product?id=${encodeURIComponent(product.id)}`;
+  if (product && product.slug) {
+    return encodeURIComponent(product.slug);
+  }
+
+  const isClearance = product && String(product.is_clearance || '').toLowerCase() === 'yes';
+  if (isClearance) {
+    const text = [product.name || product.title || '', displayProductSize(product), 'clearance', product.clearance_id || product.id || ''].join(' ');
+    const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    if (slug) return encodeURIComponent(slug);
+  }
+
+  return product ? `product?id=${encodeURIComponent(product.id)}` : 'products';
 }
 
 $(document).on('click', '.category-toggle', function () {
@@ -574,7 +592,7 @@ $(document).on('click', '.category-toggle', function () {
 });
 
 $(document).on('click', '#mobile-category-toggle', function () {
-  const $sidebar = $('.products-category-sidebar');
+  const $sidebar = $('#mobile-category-sidebar');
   const isOpen = !$sidebar.hasClass('is-open');
   $sidebar.toggleClass('is-open', isOpen);
   $(this)
@@ -585,7 +603,7 @@ $(document).on('click', '#mobile-category-toggle', function () {
 document.addEventListener('click', function(event) {
   const button = event.target.closest('#mobile-category-toggle');
   if (!button) return;
-  const sidebar = document.querySelector('.products-category-sidebar');
+  const sidebar = document.querySelector('#mobile-category-sidebar');
   if (!sidebar) return;
   event.preventDefault();
   event.stopPropagation();

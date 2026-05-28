@@ -85,6 +85,39 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
     font-weight: 800;
     padding: 7px 10px;
   }
+  .pricelist-group-row td {
+    background: #fffdf8;
+    padding: 0;
+  }
+  .pricelist-group-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #2c2926;
+    cursor: pointer;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 28px minmax(0, 1fr) auto auto;
+    padding: 8px 10px;
+    text-align: left;
+    width: 100%;
+  }
+  .pricelist-group-icon {
+    align-items: center;
+    background: #f0e8f4;
+    border-radius: 50%;
+    color: #5b1178;
+    display: inline-flex;
+    font-weight: 900;
+    height: 22px;
+    justify-content: center;
+    width: 22px;
+  }
+  .pricelist-group-title { font-weight: 800; min-width: 0; }
+  .pricelist-group-range { color: #5b1178; font-weight: 900; white-space: nowrap; }
+  .pricelist-group-count { color: #6d6270; font-size: 12px; white-space: nowrap; }
+  .pricelist-size-row[hidden] { display: none !important; }
+  .pricelist-size-row td:first-child { padding-left: 38px; }
   .product-link { color: #2c2926; font-weight: 700; text-decoration: none; }
   .product-link:hover { color: #6b0099; }
   .price-cell { color: #5b1178; font-weight: 800; white-space: nowrap; }
@@ -119,6 +152,8 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
     .pricelist-note { grid-template-columns: 1fr; }
     .pricelist-table { font-size: 12px; }
     .pricelist-table td, .pricelist-table thead th { padding: 6px 7px; }
+    .pricelist-group-toggle { grid-template-columns: 24px minmax(0, 1fr); }
+    .pricelist-group-range, .pricelist-group-count { grid-column: 2; }
     .id-cell { display: none; }
   }
   @media print {
@@ -177,7 +212,18 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
               <tr class="pricelist-category">
                 <td colspan="6"><?= cbPricelistText($categoryName) ?></td>
               </tr>
-              <?php foreach ($products as $product): ?>
+              <?php foreach (cbPricelistProductGroups($products) as $group): ?>
+                <tr class="pricelist-group-row">
+                  <td colspan="6">
+                    <button type="button" class="pricelist-group-toggle" data-group="<?= cbPricelistText($group['id']) ?>" aria-expanded="false">
+                      <span class="pricelist-group-icon">+</span>
+                      <span class="pricelist-group-title"><?= cbPricelistText($group['title']) ?></span>
+                      <span class="pricelist-group-range"><?= cbPricelistText(cbPricelistPriceRange($group)) ?></span>
+                      <span class="pricelist-group-count"><?= count($group['products']) ?> option<?= count($group['products']) === 1 ? '' : 's' ?></span>
+                    </button>
+                  </td>
+                </tr>
+                <?php foreach ($group['products'] as $product): ?>
                 <?php
                   $id = (string) ($product['id'] ?? '');
                   $name = (string) ($product['name'] ?? '');
@@ -185,7 +231,7 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
                   $pricing = cbPricelistPricing($product);
                   $productLink = getSheetProductUrl($product);
                 ?>
-                <tr>
+                <tr class="pricelist-size-row" data-group-row="<?= cbPricelistText($group['id']) ?>" hidden>
                   <td class="id-cell"><?= cbPricelistText($id) ?></td>
                   <td><a class="product-link" href="<?= cbPricelistText($productLink) ?>"><?= cbPricelistText($name) ?></a></td>
                   <td class="size-cell"><?= cbPricelistText($size) ?></td>
@@ -209,6 +255,7 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
                   </td>
                   <td class="cart-cell no-print"><a href="#" class="add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-quantity="1" data-product-id="<?= cbPricelistText($id) ?>" title="Add to cart"><i class="icon-basket"></i></a></td>
                 </tr>
+                <?php endforeach; ?>
               <?php endforeach; ?>
             <?php endforeach; ?>
           </tbody>
@@ -227,6 +274,18 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
 
 <script>
 window.CANDYBIRD_PRODUCTS = <?= json_encode(array_merge(...array_values($productsByCategory ?: [[]])), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+document.addEventListener('click', function(event) {
+  var button = event.target.closest('.pricelist-group-toggle');
+  if (!button) return;
+  var group = button.getAttribute('data-group');
+  var open = button.getAttribute('aria-expanded') !== 'true';
+  button.setAttribute('aria-expanded', open ? 'true' : 'false');
+  var icon = button.querySelector('.pricelist-group-icon');
+  if (icon) icon.textContent = open ? '-' : '+';
+  document.querySelectorAll('[data-group-row="' + group + '"]').forEach(function(row) {
+    row.hidden = !open;
+  });
+});
 </script>
 
 <?php include 'footer.php'; ?>
