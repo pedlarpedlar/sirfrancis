@@ -45,6 +45,35 @@ if (!function_exists('cbCandybirdSendMail')) {
 
         $lastError = '';
         $altBody = trim(strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", (string) $htmlBody)));
+        $mailFallbackFrom = $GLOBALS['smtp_username1'] ?? ($accounts[0]['email'] ?? '');
+
+        if (!empty($options['prefer_mail_transport']) && filter_var((string) $mailFallbackFrom, FILTER_VALIDATE_EMAIL)) {
+            try {
+                $mail = new PHPMailer(true);
+                $mail->isMail();
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->Sender = $mailFallbackFrom;
+                $mail->XMailer = 'CandyBird Mailer';
+                $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'CandyBird');
+                $mail->addAddress($toEmail, $toName ?: $toEmail);
+                if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
+                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
+                } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
+                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'CandyBird');
+                }
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body = $htmlBody;
+                $mail->AltBody = $altBody;
+                $mail->send();
+                return ['success' => true, 'sender' => $mailFallbackFrom, 'transport' => 'mail'];
+            } catch (Throwable $e) {
+                $lastError = 'mail() preferred route: ' . $e->getMessage();
+                error_log('CandyBird preferred mail() route failed via ' . $mailFallbackFrom . ': ' . $e->getMessage());
+            }
+        }
+
         foreach ($accounts as $account) {
             try {
                 $mail = new PHPMailer(true);
@@ -80,7 +109,6 @@ if (!function_exists('cbCandybirdSendMail')) {
             }
         }
 
-        $mailFallbackFrom = $GLOBALS['smtp_username1'] ?? ($accounts[0]['email'] ?? '');
         if (filter_var((string) $mailFallbackFrom, FILTER_VALIDATE_EMAIL)) {
             try {
                 $mail = new PHPMailer(true);

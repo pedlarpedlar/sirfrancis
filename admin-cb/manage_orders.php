@@ -67,7 +67,7 @@ function cbAdminListOrderHasSuccessfulPayfastPayment($conn, $orderId) {
     return false;
 }
 
-$statusOptions = ['Pending', 'Processing', 'Packing', 'Ready to collect', 'Shipped', 'Partially delivered', 'Partially collected', 'Complete', 'Cancelled'];
+$statusOptions = ['Pending', 'Awaiting EFT payment', 'Processing', 'Packing', 'Ready to collect', 'Shipped', 'Partially delivered', 'Partially collected', 'Complete', 'Cancelled'];
 
 function cbOrderStatusKey($status) {
     $key = strtolower(trim((string) $status));
@@ -130,6 +130,12 @@ foreach ($orders as $order) {
     } else {
         $counts['unpaid']++;
     }
+}
+
+$adminBankingDetailsPlain = '';
+$settingsResult = $conn->query("SELECT banking_details FROM admin_website_settings ORDER BY id ASC LIMIT 1");
+if ($settingsResult && ($settingsRow = $settingsResult->fetch_assoc())) {
+    $adminBankingDetailsPlain = trim(strip_tags((string) ($settingsRow['banking_details'] ?? '')));
 }
 
 include 'header.php';
@@ -262,12 +268,10 @@ include 'page_menues.php';
                                 <button class="btn btn-warning btn-sm order-status-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-current-status="<?= cbOrderText($status) ?>"
-                                    data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
+                                    data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
+                                    data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
                                     Update Client
                                 </button>
-                                <?php if ((int) $order['payment_status'] === 0): ?>
-                                    <button class="btn btn-outline-success btn-sm send-eft-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Send EFT</button>
-                                <?php endif; ?>
                                 <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -306,12 +310,10 @@ include 'page_menues.php';
                         <button class="btn btn-warning btn-sm order-status-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-current-status="<?= cbOrderText($status) ?>"
-                            data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
+                            data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
+                            data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
                             Update Client
                         </button>
-                        <?php if ((int) $order['payment_status'] === 0): ?>
-                            <button class="btn btn-outline-success btn-sm send-eft-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Send EFT</button>
-                        <?php endif; ?>
                         <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -423,6 +425,10 @@ include 'page_menues.php';
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+var candybirdBankingDetails = <?= json_encode($adminBankingDetailsPlain, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+var currentOrderCustomer = 'customer';
+var currentOrderTotal = '0.00';
+
 function zeroPad(num, places) {
     var stringValue = String(num);
     while (stringValue.length < places) stringValue = '0' + stringValue;
@@ -543,9 +549,12 @@ $(function() {
     $('body').on('click', '.order-status-btn', function() {
         var orderId = $(this).data('order-id');
         var customer = $(this).data('customer') || 'customer';
+        var total = parseFloat($(this).data('total') || 0) || 0;
         var currentStatus = $(this).data('current-status') || 'Pending';
         var paddedOrderId = zeroPad(orderId, 7);
 
+        currentOrderCustomer = customer;
+        currentOrderTotal = total.toFixed(2);
         $('#statusAlert').addClass('d-none').text('');
         $('#current_order_id').val(orderId);
         $('#updatedStatus').val(currentStatus);
@@ -556,6 +565,16 @@ $(function() {
         $('#emailBody').val('Hi ' + customer + ',\n\nYour order status has been updated to: ' + currentStatus + '.\n\nThank you for shopping with CandyBird.');
         $('#statusModal').modal('show');
     });
+
+    function eftPaymentBody(customer, total) {
+        return 'Hi ' + (customer || 'there') + ',\n\n' +
+            'Thank you for placing an order with us.\n\n' +
+            'Kindly use the banking details below for EFT payments, or if you prefer a secure payment link let me know.\n\n' +
+            (candybirdBankingDetails || 'Banking details are available from CandyBird.') + '\n\n' +
+            'Total: R' + (parseFloat(total || 0) || 0).toFixed(2) + '\n\n' +
+            'Once payment is received we will dispatch your order.\n\n' +
+            'Warm Regards\nCandyBird Team.';
+    }
 
     function partialFulfillmentText() {
         var partial = $('#partialFulfillment').val();
@@ -591,6 +610,11 @@ $(function() {
     $('#updatedStatus').on('change', function() {
         var status = $(this).val();
         var orderId = $('#current_order_id').val();
+        if (status === 'Awaiting EFT payment') {
+            $('#emailSubject').val('EFT payment details for Order ' + zeroPad(orderId, 7) + ' | CandyBird');
+            $('#emailBody').val(eftPaymentBody(currentOrderCustomer, currentOrderTotal));
+            return;
+        }
         var partialText = partialFulfillmentText();
         $('#emailSubject').val('Update on your Order ' + zeroPad(orderId, 7) + ' | CandyBird');
         $('#emailBody').val('Your order status has been updated to: ' + status + '.' + (partialText ? '\n\n' + partialText : '') + '\n\nThank you for shopping with CandyBird.');
@@ -679,29 +703,6 @@ $(function() {
             },
             error: function(xhr) {
                 showStatusMessage(false, ajaxMessage(xhr, 'Payment status could not be updated right now.'));
-            },
-            complete: function() {
-                setButtonWorking($button, false);
-            }
-        });
-    });
-
-    $('body').on('click', '.send-eft-btn', function() {
-        var $button = $(this);
-        var orderId = $(this).data('order-id');
-        if (!confirm('Send EFT banking details for order #' + orderId + '?')) return;
-        showWorkingMessage('Sending EFT banking details for order #' + orderId + '...');
-        setButtonWorking($button, true, 'Sending...');
-        $.ajax({
-            url: 'send_eft_payment_email.php',
-            method: 'POST',
-            dataType: 'json',
-            data: { order_id: orderId },
-            success: function(response) {
-                showStatusMessage(!!response.success, response.message || 'EFT email processed.');
-            },
-            error: function(xhr) {
-                showStatusMessage(false, ajaxMessage(xhr, 'EFT payment email could not be sent right now.'));
             },
             complete: function() {
                 setButtonWorking($button, false);

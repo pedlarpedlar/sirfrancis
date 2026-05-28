@@ -154,7 +154,8 @@ try {
         $billing_email_address,
         $billing_first_name,
         $emailSubject,
-        $email_body
+        $email_body,
+        ['prefer_mail_transport' => true]
     );
 
     if (!empty($mailResult['success'])) {
@@ -183,6 +184,7 @@ try {
         [
             'reply_to_email' => $billing_email_address,
             'reply_to_name' => $billing_first_name ?: 'CandyBird customer',
+            'prefer_mail_transport' => true,
         ]
     );
 
