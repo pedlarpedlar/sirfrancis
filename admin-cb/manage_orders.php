@@ -96,9 +96,7 @@ FROM orders o
 LEFT JOIN users u ON o.user_id = u.id
 LEFT JOIN user_addresses ua ON o.guest_identifier = ua.guest_identifier OR o.user_id = ua.user_id
 GROUP BY o.id
-ORDER BY
-    FIELD(o.order_status, 'Pending', 'Processing', 'Packing', 'Ready to collect', 'Shipped', 'Partially delivered', 'Partially collected', 'Complete', 'Cancelled'),
-    o.order_date DESC";
+ORDER BY o.order_date DESC, o.id DESC";
 
 $result = $conn->query($sql);
 $orders = [];
