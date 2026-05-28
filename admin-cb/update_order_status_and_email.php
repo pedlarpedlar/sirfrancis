@@ -97,23 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $executeResult = $stmt->execute();
 
-        // Check if execute was successful
-        if ($executeResult) {
-            // Check if update was successful
-            if ($stmt->affected_rows > 0) {
-
-            } else {
-                // No rows affected, so likely no update made
-                $response = array(
-                    'status' => 'error',
-                    'message' => 'No changes made. Order status might already be "'.$updatedStatus.'".'
-                );
-                // Set content type to JSON
-                header('Content-Type: application/json');
-                echo json_encode($response);
-                exit();
-            }
-        } else {
+        if (!$executeResult) {
             // Execution error
             $response = array(
                 'status' => 'error',

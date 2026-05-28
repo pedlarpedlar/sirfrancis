@@ -431,9 +431,34 @@ function zeroPad(num, places) {
 
 function showStatusMessage(success, message) {
     var alert = $('#statusAlert');
-    alert.removeClass('d-none alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+    alert.removeClass('d-none alert-success alert-danger alert-info').addClass(success ? 'alert-success' : 'alert-danger').text(message);
     var pageAlert = $('#ordersPageAlert');
-    pageAlert.removeClass('d-none alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+    pageAlert.removeClass('d-none alert-success alert-danger alert-info').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+}
+
+function showWorkingMessage(message) {
+    $('#statusAlert').removeClass('d-none alert-success alert-danger').addClass('alert-info').text(message);
+    $('#ordersPageAlert').removeClass('d-none alert-success alert-danger').addClass('alert-info').text(message);
+}
+
+function ajaxMessage(xhr, fallback) {
+    if (xhr && xhr.responseJSON && xhr.responseJSON.message) return xhr.responseJSON.message;
+    if (xhr && xhr.responseText) {
+        try {
+            var parsed = JSON.parse(xhr.responseText);
+            if (parsed.message) return parsed.message;
+        } catch (e) {}
+    }
+    return fallback;
+}
+
+function setButtonWorking($button, isWorking, text) {
+    if (!$button.length) return;
+    if (isWorking) {
+        $button.data('original-text', $button.text()).prop('disabled', true).text(text || 'Working...');
+    } else {
+        $button.prop('disabled', false).text($button.data('original-text') || $button.text());
+    }
 }
 
 function showCancelOrderMessage(success, message) {
@@ -576,6 +601,9 @@ $(function() {
     });
 
     $('#confirmSend').on('click', function() {
+        var $button = $(this);
+        showWorkingMessage('Updating the order and sending the client email...');
+        setButtonWorking($button, true, 'Sending...');
         $.ajax({
             url: 'update_order_status_and_email.php',
             method: 'POST',
@@ -591,16 +619,22 @@ $(function() {
             success: function(response) {
                 showStatusMessage(response.status === 'success', response.message || 'Order updated.');
                 if (response.status === 'success') {
-                    setTimeout(function() { window.location.reload(); }, 900);
+                    setTimeout(function() { window.location.reload(); }, 1800);
                 }
             },
-            error: function() {
-                showStatusMessage(false, 'The order could not be updated or emailed right now.');
+            error: function(xhr) {
+                showStatusMessage(false, ajaxMessage(xhr, 'The order could not be updated or emailed right now.'));
+            },
+            complete: function() {
+                setButtonWorking($button, false);
             }
         });
     });
 
     $('#updateWithoutEmail').on('click', function() {
+        var $button = $(this);
+        showWorkingMessage('Updating the order without emailing the client...');
+        setButtonWorking($button, true, 'Updating...');
         $.ajax({
             url: 'update_order_status.php',
             method: 'POST',
@@ -617,15 +651,21 @@ $(function() {
                     setTimeout(function() { window.location.reload(); }, 700);
                 }
             },
-            error: function() {
-                showStatusMessage(false, 'The order status could not be updated right now.');
+            error: function(xhr) {
+                showStatusMessage(false, ajaxMessage(xhr, 'The order status could not be updated right now.'));
+            },
+            complete: function() {
+                setButtonWorking($button, false);
             }
         });
     });
 
     $('body').on('click', '.mark-paid-btn', function() {
+        var $button = $(this);
         var orderId = $(this).data('order-id');
         if (!confirm('Mark order #' + orderId + ' as paid?')) return;
+        showWorkingMessage('Marking order #' + orderId + ' as paid...');
+        setButtonWorking($button, true, 'Saving...');
         $.ajax({
             url: 'mark_order_paid.php',
             method: 'POST',
@@ -637,15 +677,21 @@ $(function() {
                     setTimeout(function() { window.location.reload(); }, 700);
                 }
             },
-            error: function() {
-                showStatusMessage(false, 'Payment status could not be updated right now.');
+            error: function(xhr) {
+                showStatusMessage(false, ajaxMessage(xhr, 'Payment status could not be updated right now.'));
+            },
+            complete: function() {
+                setButtonWorking($button, false);
             }
         });
     });
 
     $('body').on('click', '.send-eft-btn', function() {
+        var $button = $(this);
         var orderId = $(this).data('order-id');
         if (!confirm('Send EFT banking details for order #' + orderId + '?')) return;
+        showWorkingMessage('Sending EFT banking details for order #' + orderId + '...');
+        setButtonWorking($button, true, 'Sending...');
         $.ajax({
             url: 'send_eft_payment_email.php',
             method: 'POST',
@@ -654,8 +700,11 @@ $(function() {
             success: function(response) {
                 showStatusMessage(!!response.success, response.message || 'EFT email processed.');
             },
-            error: function() {
-                showStatusMessage(false, 'EFT payment email could not be sent right now.');
+            error: function(xhr) {
+                showStatusMessage(false, ajaxMessage(xhr, 'EFT payment email could not be sent right now.'));
+            },
+            complete: function() {
+                setButtonWorking($button, false);
             }
         });
     });

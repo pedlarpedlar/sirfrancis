@@ -69,26 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Check if execute was successful
         if ($executeResult) {
-            // Check if update was successful
-            if ($stmt->affected_rows > 0) {
-                // Success response
-                $response = array(
-                    'status' => 'success',
-                    'message' => 'Order '.$orderId.' status updated to '.$updatedStatus.' successfully.'
-                );
-                // Set content type to JSON
+            $response = array(
+                'status' => 'success',
+                'message' => $stmt->affected_rows > 0
+                    ? 'Order '.$orderId.' status updated to '.$updatedStatus.' successfully.'
+                    : 'No status change was needed. The order is already marked as '.$updatedStatus.'.'
+            );
             header('Content-Type: application/json');
-                echo json_encode($response);
-            } else {
-                // No rows affected, so likely no update made
-                $response = array(
-                    'status' => 'error',
-                    'message' => 'No changes made. Order status might already be "'.$updatedStatus.'".'
-                );
-                // Set content type to JSON
-            header('Content-Type: application/json');
-                echo json_encode($response);
-            }
+            echo json_encode($response);
         } else {
             // Execution error
             $response = array(
