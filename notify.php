@@ -388,27 +388,10 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/candybird_mail_helpers.php';
 require_once('/home/candybirdco/configs_candybird/candybird_config.php');
 
 try {
-    $mail = new PHPMailer(true);
-
-    // SMTP configuration
-    $mail->isSMTP();
-    $mail->Host = $smtp_server;
-    $mail->SMTPAuth = true;
-    $mail->Username = $smtp_username5;
-    $mail->Password = $smtp_password5;
-    $mail->SMTPSecure = $smtp_type;
-    $mail->Port = $smtp_port;
-
-    // Set sender and recipient(s)
-    $mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
-    $mail->addAddress($client_email, $client_name); // Recipient's email address and name
-
-    // Set email subject
-    $mail->Subject = $email_subject;
-
     // // Get the email body from the template file
     // $email_body = file_get_contents('emails/email_payment.php');
 
@@ -433,35 +416,12 @@ try {
     $email_body = str_replace('{payment_method}', $order[0]['payment_method'], $email_body);
     $email_body = str_replace('{order_notes}', $order[0]['order_notes'], $email_body);
 
-    // Set the email body
-    $mail->Body = $email_body;
-
-    // Set the email content type to HTML
-    $mail->isHTML(true);
-
-    // Send the email
-    if ($mail->send()) {
+    $clientMailResult = cbCandybirdSendMail($client_email, $client_name, $email_subject, $email_body);
+    if (!empty($clientMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Email sent successfully!');
     } else {
-        error_log("Error sending email to " . $client_email);
+        error_log("CandyBird payment email failed for order " . $orderId_zeropad . ": " . ($clientMailResult['error'] ?? 'unknown error'));
     }
-
-    // Send a separate email to the admin
-    $admin_mail = new PHPMailer(true);
-    $admin_mail->isSMTP();
-    $admin_mail->Host = $smtp_server;
-    $admin_mail->SMTPAuth = true;
-    $admin_mail->Username = $smtp_username5;
-    $admin_mail->Password = $smtp_password5;
-    $admin_mail->SMTPSecure = $smtp_type;
-    $admin_mail->Port = $smtp_port;
-
-    // Set sender and recipient(s)
-    $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
-    $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
-
-    // Set email subject
-    $admin_mail->Subject = $admin_email_subject;
 
     // // Get the email body for admin from the template file
     // $admin_email_body = file_get_contents('emails/email_payment_admin.php');
@@ -487,19 +447,20 @@ try {
     $admin_email_body = str_replace('{payment_method}', $order[0]['payment_method'], $admin_email_body);
     $admin_email_body = str_replace('{order_notes}', $order[0]['order_notes'], $admin_email_body);
 
-
-
-    // Set the email body for admin
-    $admin_mail->Body = $admin_email_body;
-
-    // Set the email content type to HTML
-    $admin_mail->isHTML(true);
-
-    // Send the email to the admin
-    if ($admin_mail->send()) {
+    $adminMailResult = cbCandybirdSendMail(
+        $smtp_username1,
+        'Admin',
+        $admin_email_subject,
+        $admin_email_body,
+        [
+            'reply_to_email' => $client_email,
+            'reply_to_name' => $client_name ?: 'CandyBird customer',
+        ]
+    );
+    if (!empty($adminMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Admin email sent successfully!');
     } else {
-        error_log("Error sending email to Admin");
+        error_log("CandyBird admin payment email failed for order " . $orderId_zeropad . ": " . ($adminMailResult['error'] ?? 'unknown error'));
     }
 
 
