@@ -14,6 +14,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 require '../PHPMailer/PHPMailer/src/PHPMailer.php';
 require '../PHPMailer/PHPMailer/src/Exception.php';
 require '../PHPMailer/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/../candybird_mail_helpers.php';
 
 $liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
 if (file_exists($liveConfigPath)) {
@@ -94,24 +95,21 @@ $body = str_replace('{order_status}', 'Awaiting EFT payment', $body);
 $body = str_replace('{custom_message}', $messageHtml, $body);
 
 try {
-    $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host = $smtp_server;
-    $mail->SMTPAuth = true;
-    $mail->Username = $smtp_username5;
-    $mail->Password = $smtp_password5;
-    $mail->SMTPSecure = $smtp_type;
-    $mail->Port = $smtp_port;
-    $mail->setFrom($smtp_username5, 'CandyBird');
-    $mail->addAddress($order['customer_email'], $customerName);
-    $mail->addReplyTo($smtp_username1, 'CandyBird');
-    $mail->Subject = 'EFT payment details for Order ' . $orderNumber . ' | CandyBird';
-    $mail->Body = $body;
-    $mail->isHTML(true);
-    $mail->send();
+    $mailResult = cbCandybirdSendMail(
+        $order['customer_email'],
+        $customerName,
+        'EFT payment details for Order ' . $orderNumber . ' | CandyBird',
+        $body
+    );
+    if (empty($mailResult['success'])) {
+        error_log('CandyBird EFT email failed for order ' . $orderNumber . ': ' . ($mailResult['error'] ?? 'unknown error'));
+        echo json_encode(['success' => false, 'message' => 'EFT email could not be sent right now. The exact SMTP error has been logged.']);
+        exit;
+    }
 
     echo json_encode(['success' => true, 'message' => 'EFT payment email sent to the customer.']);
 } catch (Throwable $e) {
-    echo json_encode(['success' => false, 'message' => 'EFT email could not be sent right now.']);
+    error_log('CandyBird EFT email exception for order ' . $orderNumber . ': ' . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'EFT email could not be sent right now. The exact SMTP error has been logged.']);
 }
 ?>
