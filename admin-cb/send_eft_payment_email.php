@@ -102,14 +102,15 @@ try {
         $body
     );
     if (empty($mailResult['success'])) {
-        error_log('CandyBird EFT email failed for order ' . $orderNumber . ': ' . ($mailResult['error'] ?? 'unknown error'));
-        echo json_encode(['success' => false, 'message' => 'EFT email could not be sent right now. The exact SMTP error has been logged.']);
+        $mailError = $mailResult['error'] ?? 'unknown email error';
+        error_log('CandyBird EFT email failed for order ' . $orderNumber . ': ' . $mailError);
+        echo json_encode(['success' => false, 'message' => 'EFT email could not be sent: ' . $mailError]);
         exit;
     }
 
-    echo json_encode(['success' => true, 'message' => 'EFT payment email sent to the customer.']);
+    echo json_encode(['success' => true, 'message' => 'EFT payment email sent to the customer via ' . ($mailResult['sender'] ?? 'CandyBird mail') . '.']);
 } catch (Throwable $e) {
     error_log('CandyBird EFT email exception for order ' . $orderNumber . ': ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'EFT email could not be sent right now. The exact SMTP error has been logged.']);
+    echo json_encode(['success' => false, 'message' => 'EFT email could not be sent: ' . $e->getMessage()]);
 }
 ?>
