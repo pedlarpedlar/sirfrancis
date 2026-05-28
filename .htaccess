@@ -8,6 +8,7 @@ Redirect 301 /iqaalah /return_policy
 Redirect 301 /iqalah /return_policy
 
 Redirect 301 /store /products
+Redirect 301 /gifts /gifting
 
 Redirect 301 /favicon.ico /assets/img/favicon.png
 Redirect 301 /favicon.png /assets/img/favicon.png

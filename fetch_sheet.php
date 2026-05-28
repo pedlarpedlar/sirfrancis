@@ -84,6 +84,50 @@ include 'page_menues.php';
     width: 100%;
   }
 
+  .gifting-category-intro {
+    background: #fbfaf7;
+    border-bottom: 1px solid #eadfd2;
+    padding: 30px 0 24px;
+  }
+
+  .gifting-category-panel {
+    background: #fff;
+    border: 1px solid #eee1d4;
+    border-radius: 8px;
+    padding: clamp(18px, 3vw, 28px);
+  }
+
+  .gifting-category-panel h1 {
+    color: #251d18;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.08;
+    margin: 0 0 10px;
+  }
+
+  .gifting-category-panel p {
+    color: #5d514b;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    max-width: 850px;
+  }
+
+  .gifting-category-highlights {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 16px;
+  }
+
+  .gifting-category-highlights span {
+    background: #fff7ed;
+    border: 1px solid #eadfd2;
+    border-radius: 8px;
+    color: #4b3528;
+    display: block;
+    font-weight: 700;
+    padding: 10px 12px;
+  }
+
   @media (max-width: 991.98px) {
     .products-category-sidebar {
       display: none;
@@ -95,6 +139,12 @@ include 'page_menues.php';
 
     .mobile-category-toggle {
       display: flex;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .gifting-category-highlights {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -166,6 +216,22 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : null;
 generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 
 ?>
+
+<?php if (isset($_GET['gifting_intro']) || strcasecmp((string) $selectedCategory, 'Gifting') === 0): ?>
+<section class="gifting-category-intro">
+  <div class="container">
+    <div class="gifting-category-panel">
+      <h1>Gifting</h1>
+      <p>Beautiful edible gifts for Eid, Ramadan, weddings, staff appreciation, client drops and thoughtful family occasions. Choose from ready-to-shop gift trays, snack boxes and premium treats, or contact us for a curated gift plan when you need something more specific.</p>
+      <div class="gifting-category-highlights">
+        <span>Ready-to-shop gift trays and treat boxes</span>
+        <span>Custom notes, ribbons and curated selections</span>
+        <span>Corporate, event and family gifting support</span>
+      </div>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 
 <!-- product tab start -->
 <div id="sentinel-parent" class="product-tab bg-white pt-0 pb-50">

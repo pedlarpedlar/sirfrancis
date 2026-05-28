@@ -73,7 +73,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <h3>Shop</h3>
       <a href="<?=$home_directory?>products">Online Shop</a>
       <a href="<?=$home_directory?>pricelist">Pricelist</a>
-      <a href="<?=$home_directory?>gifts">Shop Gifts</a>
+      <a href="<?=$home_directory?>gifting">Shop Gifts</a>
       <a href="<?=$home_directory?>recipes">Recipes</a>
     </div>
     <div>
