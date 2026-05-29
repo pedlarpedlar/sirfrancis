@@ -205,10 +205,10 @@ if (!function_exists('getSheetClearanceRows')) {
             $row = normalizeCandybirdSheetMoneyFields($row);
             $clearanceId = strtoupper(trim((string) ($row['clearance_id'] ?? $row['id'] ?? '')));
             $sourceProductId = trim((string) ($row['product_id'] ?? $row['source_product_id'] ?? ''));
-            $qtyAvailable = (int) ($row['qty_available'] ?? $row['quantity'] ?? $row['stock'] ?? 0);
+            $qtyAvailable = max(0, (int) ($row['qty_available'] ?? $row['quantity'] ?? $row['stock'] ?? 0));
             $clearancePrice = candybirdParseSheetMoney($row['clearance_price'] ?? $row['price'] ?? 0);
 
-            if ($clearanceId === '' || $sourceProductId === '' || $qtyAvailable <= 0 || $clearancePrice <= 0 || !isCandybirdClearanceRowActive($row)) {
+            if ($clearanceId === '' || $sourceProductId === '' || $clearancePrice <= 0 || !isCandybirdClearanceRowActive($row)) {
                 continue;
             }
 
@@ -1143,7 +1143,7 @@ if (!function_exists('getSheetProductUrl')) {
 
 if (!function_exists('getSheetProductStockQty')) {
     function getSheetProductStockQty($product) {
-        foreach (['stock_qty', 'stock', 'qty_available', 'quantity_available', 'available_qty', 'inventory'] as $field) {
+        foreach (['stock_qty', 'qty_in_stock', 'stock', 'qty_available', 'quantity_available', 'available_qty', 'inventory'] as $field) {
             if (isset($product[$field]) && trim((string) $product[$field]) !== '' && is_numeric($product[$field])) {
                 return max(0, (int) floor((float) $product[$field]));
             }
@@ -1319,6 +1319,11 @@ if (!function_exists('searchSheetProducts')) {
         $matches = [];
         $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
         foreach ($products as $product) {
+            $stockQty = getSheetProductStockQty($product);
+            if ($stockQty !== null && $stockQty <= 0) {
+                continue;
+            }
+
             $haystack = getSheetProductSearchText($product);
             $name = normalizeCandybirdSearchText($product['name'] ?? $product['title'] ?? '');
             $score = 0;
@@ -1445,6 +1450,7 @@ if (!function_exists('buildSheetCartItem')) {
             'product_weight' => getSheetProductDisplaySize($product),
             'weight' => getSheetProductDisplaySize($product),
             'shipping_weight_kg' => getSheetProductWeightKg($product),
+            'stock_qty' => getSheetProductStockQty($product),
             'price' => $price,
             'discount_rate' => 0,
             'discount_amount' => $discountAmount,

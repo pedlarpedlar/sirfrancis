@@ -120,7 +120,8 @@ if (!$checkStmt) {
         $availableStock = getCandybirdAvailableStockForCart($conn, $sheetProductForStock, $userId, $guestIdentifier);
         if ($availableStock !== null && $newQuantity > $availableStock) {
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Only ' . $availableStock . ' available for this item right now.', 'product_id' => $productId]);
+            $stockMessage = $availableStock <= 0 ? 'This clearance item is sold out.' : 'Only ' . $availableStock . ' available for this item right now.';
+            echo json_encode(['success' => false, 'message' => $stockMessage, 'product_id' => $productId]);
             exit;
         }
 
@@ -156,7 +157,8 @@ if (!$checkStmt) {
         $availableStock = getCandybirdAvailableStockForCart($conn, $sheetProductForStock, $userId, $guestIdentifier);
         if ($availableStock !== null && $quantity > $availableStock) {
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Only ' . $availableStock . ' available for this item right now.', 'product_id' => $productId]);
+            $stockMessage = $availableStock <= 0 ? 'This clearance item is sold out.' : 'Only ' . $availableStock . ' available for this item right now.';
+            echo json_encode(['success' => false, 'message' => $stockMessage, 'product_id' => $productId]);
             exit;
         }
 

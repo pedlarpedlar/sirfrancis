@@ -69,6 +69,27 @@ include 'page_menues.php';
     width: 82px;
   }
 
+  .sold-out-badge {
+    background: #111;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .04em;
+    padding: 5px 8px;
+    position: absolute;
+    right: 8px;
+    text-transform: uppercase;
+    top: 8px;
+    z-index: 7;
+  }
+
+  .sold-out-button {
+    background: #6c757d !important;
+    border-color: #6c757d !important;
+    cursor: not-allowed;
+    opacity: .8;
+  }
+
   .mobile-category-toggle {
     align-items: center;
     background: #171717;
@@ -631,6 +652,17 @@ document.addEventListener('click', function(event) {
     return price;
   }
 
+  function getStockNumber(product) {
+    const fields = ['stock_qty', 'qty_in_stock', 'stock', 'qty_available', 'quantity_available', 'available_qty', 'inventory'];
+    for (let i = 0; i < fields.length; i++) {
+      const value = product && product[fields[i]];
+      if (value !== undefined && value !== null && String(value).trim() !== '' && !isNaN(parseFloat(value))) {
+        return Math.max(0, Math.floor(parseFloat(value)));
+      }
+    }
+    return null;
+  }
+
   function parseSpecialDate(value, endOfDay) {
     value = String(value || '').trim();
     if (!value) return null;
@@ -741,6 +773,8 @@ document.addEventListener('click', function(event) {
       const label = item.label || '';
       const isClearance = String(item.is_clearance || '').toLowerCase() === 'yes';
       const clearanceAttr = isClearance && item.clearance_id ? ` data-clearance-id="${item.clearance_id}"` : '';
+      const stockNumber = getStockNumber(item);
+      const isSoldOut = stockNumber !== null && stockNumber <= 0;
       const rating = isClearance ? 0 : parseInt(item.rating || 0);
       const imageUrl = getProductImages(item)[0];
 
@@ -759,7 +793,7 @@ document.addEventListener('click', function(event) {
               <div class="product-thumbnail position-relative">
 
                 ${isClearance ? `<span class="clearance-corner-flag"><span>Clearance<br>to go</span></span>` : (label ? `<span class="badge badge-danger top-left">${label}</span>` : '')}
-                ${discountRate > 0 ? `<span class="badge badge-success top-right">${discountRate}% off</span>` : (!isClearance && productMatchesTag(item, 'hot') ? `<span class="badge badge-warning top-right">Hot</span>` : '')}
+                ${isSoldOut ? `<span class="sold-out-badge">Sold out</span>` : (discountRate > 0 ? `<span class="badge badge-success top-right">${discountRate}% off</span>` : (!isClearance && productMatchesTag(item, 'hot') ? `<span class="badge badge-warning top-right">Hot</span>` : ''))}
 
                 <a href="${getProductPath(item)}">
                   <img class="first-img"
@@ -792,9 +826,9 @@ document.addEventListener('click', function(event) {
                     }
                   </span>
 
-                  <button class="pro-btn add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}>
-                    <i class="icon-basket"></i>
-                  </button>
+                  ${isSoldOut
+                    ? `<button class="pro-btn sold-out-button" type="button" disabled aria-disabled="true"><span style="font-size:10px;font-weight:900;">Sold</span></button>`
+                    : `<button class="pro-btn add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}><i class="icon-basket"></i></button>`}
                 </div>
               </div>
             </div>
@@ -813,7 +847,7 @@ document.addEventListener('click', function(event) {
 
                 <div class="product-thumbnail position-relative">
                   ${isClearance ? `<span class="clearance-corner-flag"><span>Clearance<br>to go</span></span>` : (label ? `<span class="badge badge-danger top-left">${label}</span>` : '')}
-                  ${discountRate > 0 ? `<span class="badge badge-success top-right">${discountRate}% off</span>` : (!isClearance && productMatchesTag(item, 'hot') ? `<span class="badge badge-warning top-right">Hot</span>` : '')}
+                  ${isSoldOut ? `<span class="sold-out-badge">Sold out</span>` : (discountRate > 0 ? `<span class="badge badge-success top-right">${discountRate}% off</span>` : (!isClearance && productMatchesTag(item, 'hot') ? `<span class="badge badge-warning top-right">Hot</span>` : ''))}
 
                   <a href="${getProductPath(item)}">
                     <img class="first-img" src="${imageUrl}" onerror="this.onerror=null;this.src='assets/img/product/1.png';" alt="${title}">
@@ -835,9 +869,9 @@ document.addEventListener('click', function(event) {
 
                   <ul class="product-list-des"><li>${limitedDescription}</li></ul>
 
-                  <button class="btn btn-dark btn--xl add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}>
-                    Add to cart
-                  </button>
+                  ${isSoldOut
+                    ? `<button class="btn btn-secondary btn--xl sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
+                    : `<button class="btn btn-dark btn--xl add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}>Add to cart</button>`}
                 </div>
 
               </div>
@@ -1063,17 +1097,17 @@ function populateQuickView(group, activeProduct) {
 
 function updateQuickViewFooter(product) {
   const price = getPrice(product);
+  const stockNumber = getStockNumber(product);
+  const isSoldOut = stockNumber !== null && stockNumber <= 0;
 
   $('.modal-product-info .product-footer').html(`
     <div class="product-price mb-20">
       R${price.toFixed(2)}
     </div>
 
-    <button
-      class="btn btn-dark btn--xl add-to-cart"
-      data-product-id="${product.id}"${String(product.is_clearance || '').toLowerCase() === 'yes' && product.clearance_id ? ` data-clearance-id="${product.clearance_id}"` : ''}>
-      Add to cart
-    </button>
+    ${isSoldOut
+      ? `<button class="btn btn-secondary btn--xl sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
+      : `<button class="btn btn-dark btn--xl add-to-cart" data-product-id="${product.id}"${String(product.is_clearance || '').toLowerCase() === 'yes' && product.clearance_id ? ` data-clearance-id="${product.clearance_id}"` : ''}>Add to cart</button>`}
   `);
 }
 
@@ -1138,7 +1172,8 @@ function loadProductDetails(productId) {
         child_category_1: product.child_category_1,
         child_category_2: product.child_category_2,
         is_clearance: product.is_clearance || '',
-        clearance_id: product.clearance_id || ''
+        clearance_id: product.clearance_id || '',
+        stock_qty: product.stock_qty || product.qty_in_stock || product.stock || product.qty_available || product.quantity_available || product.available_qty || product.inventory || ''
     };
 
 
@@ -1241,6 +1276,8 @@ function updateModal(productData) {
     var productTitle = productData.title;
     var productId = productData.id;
     var productCategory = productData.category_name;
+    var quickStockNumber = getStockNumber(productData);
+    var quickSoldOut = quickStockNumber !== null && quickStockNumber <= 0;
 
     // Dynamically collect all category levels
     const categories = [
@@ -1317,11 +1354,9 @@ function updateModal(productData) {
             </div>
           </div>
           <div>
-            <button class="btn btn-dark btn--xl mt-5 mt-sm-0 add-to-cart" data-product-id="${productId}"${String(productData.is_clearance || '').toLowerCase() === 'yes' && productData.clearance_id ? ` data-clearance-id="${productData.clearance_id}"` : ''} data-toggle="modal"
-                      data-target="#add-to-cart">
-              <span class="mr-2"><i class="ion-android-add"></i></span>
-              Add to cart
-            </button>
+            ${quickSoldOut
+              ? `<button class="btn btn-secondary btn--xl mt-5 mt-sm-0 sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
+              : `<button class="btn btn-dark btn--xl mt-5 mt-sm-0 add-to-cart" data-product-id="${productId}"${String(productData.is_clearance || '').toLowerCase() === 'yes' && productData.clearance_id ? ` data-clearance-id="${productData.clearance_id}"` : ''} data-toggle="modal" data-target="#add-to-cart"><span class="mr-2"><i class="ion-android-add"></i></span>Add to cart</button>`}
           </div>
         </div>
         <div class="addto-whish-list">

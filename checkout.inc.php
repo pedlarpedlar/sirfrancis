@@ -557,9 +557,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $availableStock = getCandybirdAvailableStockForCart($conn, $sheetProduct, $userId, $guestIdentifier);
             if ($availableStock !== null && (int) $quantity > $availableStock) {
                 $stockTitle = getSheetProductDisplayTitle($sheetProduct);
+                $stockMessage = $availableStock <= 0
+                    ? $stockTitle . " is sold out. Please remove it from your cart before checkout."
+                    : "Only " . $availableStock . " available for " . $stockTitle . ". Please update your cart before checkout.";
                 $response = [
                     "success" => false,
-                    "message" => "Only " . $availableStock . " available for " . $stockTitle . ". Please update your cart before checkout."
+                    "message" => $stockMessage
                 ];
                 header('Content-Type: application/json');
                 echo json_encode($response);

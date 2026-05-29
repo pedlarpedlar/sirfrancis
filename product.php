@@ -1099,11 +1099,13 @@ $(function() {
     const stockValue = String(product.stockQty || '').trim();
     const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
     const leadTime = String(product.leadTime || '').trim();
+    const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     let html = '';
 
     if (leadTime !== '') {
       html += '<span class="lead-time-required mr-2">Lead-time required: ' + escapeHtml(leadTime) + '</span>';
       if (stockNumber !== null && stockNumber <= 0) {
+        html += '<span class="badge badge-secondary position-static mr-2">' + (isClearance ? 'Sold out' : 'Out of stock') + '</span>';
         $('.add-to-cart-quantity').attr('max', 0).val(1);
         $('#add-to-cart-btn').prop('disabled', true).addClass('disabled');
       } else {
@@ -1116,7 +1118,7 @@ $(function() {
         $('.add-to-cart-quantity').attr('max', Math.floor(stockNumber));
         $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled');
       } else {
-        html += '<span class="badge badge-secondary position-static mr-2">Out of stock</span>';
+        html += '<span class="badge badge-secondary position-static mr-2">' + (isClearance ? 'Sold out' : 'Out of stock') + '</span>';
         $('.add-to-cart-quantity').attr('max', 0).val(1);
         $('#add-to-cart-btn').prop('disabled', true).addClass('disabled');
       }

@@ -41,7 +41,8 @@ ensureCandybirdCartTimestampColumn($conn);
 $availableStock = getCandybirdAvailableStockForCart($conn, $sheetProductForStock, $userId, $guestIdentifier);
 if ($availableStock !== null && $quantity > $availableStock) {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'Only ' . $availableStock . ' available for this item right now.']);
+    $stockMessage = $availableStock <= 0 ? 'This item is sold out. Please remove it from your cart.' : 'Only ' . $availableStock . ' available for this item right now.';
+    echo json_encode(['success' => false, 'message' => $stockMessage]);
     exit;
 }
 

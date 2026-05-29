@@ -161,6 +161,8 @@ foreach ($cartItems as $item) {
     $isClearance = !empty($item['is_clearance']) && $item['is_clearance'] === 'yes';
     $sheetProduct = $isClearance ? getSheetProductById($item['source_product_id'] ?? $item['product_id'] ?? '') : getSheetProductById($item['id']);
     $displayTitle = $isClearance ? trim((string) $item['title']) : trim($item['title'] . ' ' . ($item['product_weight'] ?? ''));
+    $stockQty = isset($item['stock_qty']) && $item['stock_qty'] !== '' ? (int) $item['stock_qty'] : null;
+    $isSoldOut = $stockQty !== null && $stockQty <= 0;
     $rowWeightKg = 0;
     if ($sheetProduct) {
       $rowWeightKg = getSheetProductWeightKg($sheetProduct);
@@ -181,6 +183,9 @@ foreach ($cartItems as $item) {
     $cart_table .= '<span class="whish-title"><a href="' . htmlspecialchars($cartLink, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($displayTitle, ENT_QUOTES, 'UTF-8') . '</a></span>';
     if ($isClearance) {
       $cart_table .= '<div><span style="display:inline-block;margin-top:4px;background:#dc3545;color:#fff;font-size:12px;font-weight:700;padding:3px 6px;border-radius:4px;">Clearance item</span></div>';
+    }
+    if ($isSoldOut) {
+      $cart_table .= '<div><span style="display:inline-block;margin-top:4px;background:#111;color:#fff;font-size:12px;font-weight:700;padding:3px 6px;border-radius:4px;">Sold out - please remove</span></div>';
     }
     $cart_table .= '</td>';
     $cart_table .= '<td class="text-center">';
