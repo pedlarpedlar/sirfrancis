@@ -137,6 +137,10 @@ foreach ($items as $item) {
 
     $sheetProduct = getSheetProductById($item['product_id']);
     $title = trim((string) ($item['product_title'] ?? ''));
+    $weight = trim((string) ($item['product_weight'] ?? ''));
+    if ($title !== '' && $weight !== '' && stripos($title, $weight) === false) {
+        $title = trim($title . ' ' . $weight);
+    }
     if ($title === '' && $sheetProduct) {
         $title = getSheetProductDisplayTitle($sheetProduct);
     }

@@ -769,7 +769,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("Could not sync product mirror for sheet product " . $productId . ".");
                 }
 
-                $productTitle = $clearanceId !== '' ? $product_title : getSheetProductDisplayTitle($sheetProductForMirror);
+                if ($clearanceId !== '') {
+                    $clearanceProductForMirror = buildCandybirdClearanceProduct(getSheetClearanceRowById($clearanceId));
+                    $productTitle = $clearanceProductForMirror ? getSheetProductDisplayTitle($clearanceProductForMirror) : trim($product_title . ($product_weight !== '' && stripos($product_title, $product_weight) === false ? ' ' . $product_weight : ''));
+                } else {
+                    $productTitle = getSheetProductDisplayTitle($sheetProductForMirror);
+                }
                 $image_url = $rowCart1['image_url'] ?? getSheetProductEmailImage($sheetProductForMirror);
                 $clearanceNote = $clearanceId !== '' ? trim('Clearance item: ' . ($rowCart1['clearance_reason'] ?? 'Clearance stock')) : '';
 

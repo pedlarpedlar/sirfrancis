@@ -160,7 +160,7 @@ foreach ($cartItems as $item) {
 
     $isClearance = !empty($item['is_clearance']) && $item['is_clearance'] === 'yes';
     $sheetProduct = $isClearance ? getSheetProductById($item['source_product_id'] ?? $item['product_id'] ?? '') : getSheetProductById($item['id']);
-    $displayTitle = trim($item['title'] . ' ' . ($item['product_weight'] ?? ''));
+    $displayTitle = $isClearance ? trim((string) $item['title']) : trim($item['title'] . ' ' . ($item['product_weight'] ?? ''));
     $rowWeightKg = 0;
     if ($sheetProduct) {
       $rowWeightKg = getSheetProductWeightKg($sheetProduct);

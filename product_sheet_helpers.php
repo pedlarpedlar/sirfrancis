@@ -1263,6 +1263,9 @@ if (!function_exists('getSheetProductDisplayTitle')) {
     function getSheetProductDisplayTitle($product) {
         $name = trim((string) ($product['name'] ?? $product['title'] ?? ''));
         $size = getSheetProductDisplaySize($product);
+        if ($size !== '' && stripos($name, $size) !== false) {
+            return $name;
+        }
         return trim($name . ($size !== '' ? ' ' . $size : ''));
     }
 }
@@ -1438,7 +1441,7 @@ if (!function_exists('buildSheetCartItem')) {
             'is_clearance' => $clearanceRow ? 'yes' : 'no',
             'clearance_reason' => $product['clearance_reason'] ?? '',
             'clearance_notes' => $product['clearance_notes'] ?? '',
-            'title' => $product['name'],
+            'title' => getSheetProductDisplayTitle($product),
             'product_weight' => getSheetProductDisplaySize($product),
             'weight' => getSheetProductDisplaySize($product),
             'shipping_weight_kg' => getSheetProductWeightKg($product),

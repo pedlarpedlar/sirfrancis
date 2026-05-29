@@ -84,6 +84,10 @@ foreach ($orderItems as $item) {
     $sheetProduct = getSheetProductById($item['id']);
     $savedImage = trim((string) ($item['product_image_url'] ?? ''));
     $savedTitle = trim((string) ($item['title'] ?? ''));
+    $savedWeight = trim((string) ($item['product_weight'] ?? ''));
+    if ($savedTitle !== '' && $savedWeight !== '' && stripos($savedTitle, $savedWeight) === false) {
+        $savedTitle = trim($savedTitle . ' ' . $savedWeight);
+    }
     $image_url = $savedImage !== '' ? $savedImage : ($sheetProduct ? getSheetProductImage($sheetProduct) : '../assets/img/product/1.png');
     $displayTitle = $savedTitle !== '' ? $savedTitle : ($sheetProduct ? getSheetProductDisplayTitle($sheetProduct) : 'Product #' . $item['id']);
 

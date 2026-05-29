@@ -187,6 +187,10 @@ if (mysqli_num_rows($result) > 0) {
     $order_items = '';
     foreach ($order as $item) {
         $savedTitle = trim((string) ($item['product_title'] ?? ''));
+        $savedWeight = trim((string) ($item['product_weight'] ?? ''));
+        if ($savedTitle !== '' && $savedWeight !== '' && stripos($savedTitle, $savedWeight) === false) {
+            $savedTitle = trim($savedTitle . ' ' . $savedWeight);
+        }
         $savedImage = trim((string) ($item['product_image_url'] ?? ''));
         $sheetProduct = getSheetProductById($item['product_id']);
         $image_url = htmlspecialchars($savedImage !== '' ? $savedImage : ($sheetProduct ? getSheetProductImage($sheetProduct) : '../assets/img/product/1.png'));
