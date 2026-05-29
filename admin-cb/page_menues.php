@@ -12,75 +12,18 @@
       <button class="offcanvas-close">×</button>
     </div>
     <div class="offcanvas-head mb-4">
-      <nav class="offcanvas-top-nav">
-        <ul class="d-flex flex-wrap">
-          <li class="my-2 mx-2">
-            <a href="wishlist">
-              <i class="icon-bag"></i> Wishlist <span>(0)</span></a
-            >
-          </li>
-          <li class="my-2 mx-2">
-            <a href="wishlist">
-              <i class="ion-android-favorite-outline"></i> Wishlist
-              <span>(3)</span></a
-            >
-          </li>
-          <li class="my-2 mx-2">
-            <a href="compare"
-              ><i class="ion-ios-loop-strong"></i> Compare <span>(2)</span>
-            </a>
-          </li>
-          <li class="my-2 mx-2">
-            <a class="search search-toggle" href="javascript:void(0)">
-              <i class="icon-magnifier"></i> Search</a
-            >
-          </li>
-        </ul>
-      </nav>
+      <strong>Admin Navigation</strong>
     </div>
     <nav class="offcanvas-menu">
       <ul>
-        <li>
-          <a href="index">Home</a>
-        </li>
-        <li>
-          <a href="dashboard">Dashboard</a>
-        </li>
-
-        <li>
-          <a href="#"><span class="menu-text">Products</span></a>
-          <ul class="offcanvas-submenu">
-            <li><a href="index">Admin Sitemap</a></li>
-            <li><a href="sheets">Sheet Sources</a></li>
-            <li><a href="category_order">Category Order</a></li>
-            <li><a href="manage_products">Product Sheet Health</a></li>
-            <li><a href="sync_sheet_products">Sync Sheet Mirror</a></li>
-            <li><a href="category_order">Category Order</a></li>
-            <li><a href="create_order">Create Order</a></li>
-            <li><a href="manage_orders">Manage Orders</a></li>
-            <li><a href="manage_users">Manage Users</a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="#">Recipes <i class="ion-ios-arrow-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="create_recipe">Create Recipe</a></li>
-            <li><a href="manage_recipes">Manage Recipes</a></li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="#">Admin Settings <i class="ion-ios-arrow-down"></i></a>
-          <ul class="sub-menu">
-            <li><a href="manage_website_information">Website Information</a></li>
-            <li><a href="schedule_email">Broadcast Emails</a></li>
-            <li><a href="sheets">Sheet Sources</a></li>
-            <li><a href="category_order">Category Order</a></li>
-            <li><a href="visitor_activity">Visitor Activity</a></li>
-            <li><a href="manage_gallery">Product Gallery</a></li>
-          </ul>
-        </li>
+        <li><a href="dashboard">Admin Dashboard</a></li>
+        <li><a href="manage_orders">Orders</a></li>
+        <li><a href="manage_users">Customers</a></li>
+        <li><a href="manage_website_information#contact-info">Contact Info</a></li>
+        <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+        <li><a href="sheets#sheet-products">Products</a></li>
+        <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
+        <li><a href="category_order">Categories</a></li>
 
 
       </ul>
@@ -287,48 +230,19 @@
           </div>
         </div>
         <div class="col-xl-8 col-lg-7 d-none d-lg-block">
-          <ul class="main-menu d-flex justify-content-center">
-            <li class="active ml-0">
-              <a href="index">Home</a>
-            </li>
-            
-  
-            <li>
-              <a href="#">Manage <i class="ion-ios-arrow-down"></i></a>
-              <ul class="sub-menu">
-                <li><a href="sheets">Sheet Sources</a></li>
-                <li><a href="category_order">Category Order</a></li>
-                <li><a href="manage_products">Product Sheet Health</a></li>
-                <li><a href="sync_sheet_products">Sync Sheet Mirror</a></li>
-                <li><a href="backups">Website Backups</a></li>
-                <li><a href="category_order">Category Order</a></li>
-                <li><a href="create_order">Create Order</a></li>
-                <li><a href="manage_orders">Manage Orders</a></li>
-                <li><a href="manage_users">Manage Users</a></li>
-              </ul>
-            </li>
-
-            <li>
-              <a href="#">Recipes <i class="ion-ios-arrow-down"></i></a>
-              <ul class="sub-menu">
-                <li><a href="create_recipe">Create Recipe</a></li>
-                <li><a href="manage_recipes">Manage Recipes</a></li>
-              </ul>
-            </li>
-
-
-            <li>
-              <a href="#">Admin Settings <i class="ion-ios-arrow-down"></i></a>
-              <ul class="sub-menu">
-                <li><a href="manage_website_information">Website Information</a></li>
-                <li><a href="schedule_email">Broadcast Emails</a></li>
-                <li><a href="backups">Website Backups</a></li>
-                <li><a href="sheets">Sheet Sources</a></li>
-                <li><a href="category_order">Category Order</a></li>
-                <li><a href="visitor_activity">Visitor Activity</a></li>
-                <li><a href="manage_gallery">Product Gallery</a></li>
-              </ul>
-            </li>
+          <style>
+            .admin-nav-menu { gap: 14px; flex-wrap: wrap; }
+            .admin-nav-menu > li > a { font-size: 13px; padding-left: 0; padding-right: 0; white-space: nowrap; }
+          </style>
+          <ul class="main-menu admin-nav-menu d-flex justify-content-center">
+            <li class="active ml-0"><a href="dashboard">Admin Dashboard</a></li>
+            <li><a href="manage_orders">Orders</a></li>
+            <li><a href="manage_users">Customers</a></li>
+            <li><a href="manage_website_information#contact-info">Contact Info</a></li>
+            <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+            <li><a href="sheets#sheet-products">Products</a></li>
+            <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
+            <li><a href="category_order">Categories</a></li>
 
 
           </ul>

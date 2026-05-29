@@ -230,7 +230,7 @@ include __DIR__ . '/page_menues.php';
                 <button class="btn btn-warning" type="submit">Mega-force refresh all sheets</button>
             </form>
             <a class="btn btn-light" href="sync_sheet_products">Sync product mirror</a>
-            <a class="btn btn-outline-light" href="category_order">Category order</a>
+            <a class="btn btn-outline-light" href="category_order">Categories</a>
         </div>
     </div>
 
@@ -246,7 +246,7 @@ include __DIR__ . '/page_menues.php';
 
             <?php foreach ($sourceKeys as $key): ?>
                 <?php $source = $sheetSources[$key]; ?>
-                <div class="border rounded p-3 mb-3">
+                <div class="border rounded p-3 mb-3" id="sheet-<?= cbSheetAdminText($key) ?>">
                     <h3 class="h5 mb-3"><?= cbSheetAdminText($source['label']) ?></h3>
                     <div class="form-group">
                         <label>Published TSV URL</label>

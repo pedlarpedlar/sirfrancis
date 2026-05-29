@@ -2,7 +2,10 @@
 include 'session_logins.php';
 require_once __DIR__ . '/pricelist_helpers.php';
 
-$productsByCategory = cbPricelistProductsByCategory();
+$sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'name';
+$sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+$direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
+$productsByCategory = cbPricelistProductsByCategory($sort, $direction);
 $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
@@ -76,7 +79,7 @@ $downloadTitle = 'CandyBird Pricelist ' . date('F Y');
     </thead>
     <tbody>
       <?php foreach ($productsByCategory as $categoryName => $products): ?>
-        <tr class="category"><td colspan="5"><?= cbPricelistText($categoryName) ?></td></tr>
+        <tr class="category"><td colspan="5"><?= cbPricelistText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($categoryName) : $categoryName) ?></td></tr>
         <?php foreach ($products as $product): ?>
           <?php
             $id = (string) ($product['id'] ?? '');

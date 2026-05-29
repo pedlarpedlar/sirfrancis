@@ -68,7 +68,9 @@ if (!function_exists('cbPricelistProductGroupTitle')) {
 }
 
 if (!function_exists('cbPricelistProductGroups')) {
-    function cbPricelistProductGroups($products) {
+    function cbPricelistProductGroups($products, $sort = 'name', $direction = 'asc') {
+        $sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+        $direction = strtolower((string) $direction) === 'desc' ? 'desc' : 'asc';
         $groups = [];
 
         foreach ($products as $product) {
@@ -85,6 +87,8 @@ if (!function_exists('cbPricelistProductGroups')) {
                     'products' => [],
                     'min_price' => null,
                     'max_price' => null,
+                    'first_id' => (string) ($product['id'] ?? ''),
+                    'min_size_sort' => cbPricelistSortValue($product['size'] ?? ''),
                 ];
             }
 
@@ -93,9 +97,34 @@ if (!function_exists('cbPricelistProductGroups')) {
             $groups[$key]['products'][] = $product;
             $groups[$key]['min_price'] = $groups[$key]['min_price'] === null ? $price : min($groups[$key]['min_price'], $price);
             $groups[$key]['max_price'] = $groups[$key]['max_price'] === null ? $price : max($groups[$key]['max_price'], $price);
+            $groups[$key]['first_id'] = strnatcasecmp((string) ($product['id'] ?? ''), (string) $groups[$key]['first_id']) < 0 ? (string) ($product['id'] ?? '') : $groups[$key]['first_id'];
+            $groups[$key]['min_size_sort'] = min((float) $groups[$key]['min_size_sort'], (float) cbPricelistSortValue($product['size'] ?? ''));
         }
 
-        return array_values($groups);
+        $groups = array_values($groups);
+        usort($groups, static function($a, $b) use ($sort, $direction) {
+            switch ($sort) {
+                case 'id':
+                    $compare = strnatcasecmp((string) ($a['first_id'] ?? ''), (string) ($b['first_id'] ?? ''));
+                    break;
+                case 'price':
+                    $compare = ((float) ($a['min_price'] ?? 0)) <=> ((float) ($b['min_price'] ?? 0));
+                    break;
+                case 'size':
+                    $compare = ((float) ($a['min_size_sort'] ?? PHP_INT_MAX)) <=> ((float) ($b['min_size_sort'] ?? PHP_INT_MAX));
+                    break;
+                case 'name':
+                default:
+                    $compare = strnatcasecmp((string) ($a['title'] ?? ''), (string) ($b['title'] ?? ''));
+                    break;
+            }
+            if ($compare === 0) {
+                $compare = strnatcasecmp((string) ($a['title'] ?? ''), (string) ($b['title'] ?? ''));
+            }
+            return $direction === 'desc' ? -$compare : $compare;
+        });
+
+        return $groups;
     }
 }
 
@@ -124,7 +153,9 @@ if (!function_exists('cbPricelistProductsByCategory')) {
             $id = trim((string) ($product['id'] ?? ''));
             $name = trim((string) ($product['name'] ?? ''));
             $enabled = strtolower(trim((string) ($product['enabled'] ?? '1')));
-            return $id !== '' && $name !== '' && !in_array($enabled, ['0', 'false', 'no', 'disabled'], true);
+            $category = cbPricelistCategoryName($product);
+            return $id !== '' && $name !== '' && !in_array($enabled, ['0', 'false', 'no', 'disabled'], true)
+                && (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category));
         });
 
         $productsByCategory = [];

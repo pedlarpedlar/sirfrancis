@@ -408,7 +408,7 @@ $dashboardCronJobs = [
             <a href="run_cron" class="btn btn-light btn-sm">Run Cron Jobs</a>
             <a href="backups" class="btn btn-light btn-sm">Backups</a>
             <a href="sheets" class="btn btn-light btn-sm">Sheet Sources</a>
-            <a href="category_order" class="btn btn-light btn-sm">Category Order</a>
+            <a href="category_order" class="btn btn-light btn-sm">Categories</a>
             <a href="<?= htmlspecialchars(getCandybirdSheetEditUrl('products'), ENT_QUOTES, 'UTF-8') ?>" class="btn btn-light btn-sm" target="_blank" rel="noopener noreferrer">Product Sheet</a>
             <a href="<?= htmlspecialchars(getCandybirdSheetEditUrl('coupons'), ENT_QUOTES, 'UTF-8') ?>" class="btn btn-light btn-sm" target="_blank" rel="noopener noreferrer">Coupon Sheet</a>
             <a href="../products" class="btn btn-outline-light btn-sm" target="_blank">View Shop</a>

@@ -28,6 +28,16 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
     $icon = $currentSort === $key ? ($currentDirection === 'asc' ? ' ^' : ' v') : '';
     return '<a class="pricelist-sort-link" href="pricelist?sort=' . rawurlencode($key) . '&dir=' . rawurlencode($nextDirection) . '">' . cbPricelistText($label . $icon) . '</a>';
 }
+
+function cbPricelistCategorySortControls($currentSort, $currentDirection) {
+    $links = [
+        cbPricelistSortLink('name', 'Name', $currentSort, $currentDirection),
+        cbPricelistSortLink('price', 'Price', $currentSort, $currentDirection),
+        cbPricelistSortLink('size', 'Size', $currentSort, $currentDirection),
+        cbPricelistSortLink('id', 'ID', $currentSort, $currentDirection),
+    ];
+    return '<span class="pricelist-category-sort no-print"><span>Sort by</span>' . implode('', $links) . '</span>';
+}
 ?>
 
 <style>
@@ -84,6 +94,33 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
     color: #fcb42f;
     font-weight: 800;
     padding: 7px 10px;
+  }
+  .pricelist-category-bar {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    justify-content: space-between;
+  }
+  .pricelist-category-sort {
+    align-items: center;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .pricelist-category-sort span { color: #f9e7ff; }
+  .pricelist-category-sort .pricelist-sort-link {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    color: #fff;
+    padding: 3px 7px;
+  }
+  .pricelist-category-sort .pricelist-sort-link:hover {
+    background: #fcb42f;
+    color: #2d1739;
+    text-decoration: none;
   }
   .pricelist-group-row td {
     background: #fffdf8;
@@ -178,7 +215,7 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
         <p><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?></p>
       </div>
       <div class="pricelist-actions no-print">
-        <a href="pricelist-download" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
+        <a href="pricelist-download?sort=<?= cbPricelistText($sort) ?>&dir=<?= cbPricelistText($direction) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="products" class="btn btn-light"><i class="fas fa-shopping-basket mr-1"></i> Shop online</a>
       </div>
     </div>
@@ -210,9 +247,14 @@ function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
 
             <?php foreach ($productsByCategory as $categoryName => $products): ?>
               <tr class="pricelist-category">
-                <td colspan="6"><?= cbPricelistText($categoryName) ?></td>
+                <td colspan="6">
+                  <div class="pricelist-category-bar">
+                    <span><?= cbPricelistText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($categoryName) : $categoryName) ?></span>
+                    <?= cbPricelistCategorySortControls($sort, $direction) ?>
+                  </div>
+                </td>
               </tr>
-              <?php foreach (cbPricelistProductGroups($products) as $group): ?>
+              <?php foreach (cbPricelistProductGroups($products, $sort, $direction) as $group): ?>
                 <tr class="pricelist-group-row">
                   <td colspan="6">
                     <button type="button" class="pricelist-group-toggle" data-group="<?= cbPricelistText($group['id']) ?>" aria-expanded="false">

@@ -88,7 +88,7 @@ include 'page_menues.php';
 <?php endif; ?>
 <form id="website-settings-form" action="update_settings.php?ajax=1&v=2026-05-19-3" method="post">
     <small class="text-muted d-block mb-3">Settings save handler version: 2026-05-19-3</small>
-    <div class="form-group">
+    <div id="contact-info" class="form-group">
         <label for="tel">Telephone</label>
         <input type="text" class="form-control" id="tel" name="tel" value="<?php echo htmlspecialchars($row['tel'] ?? '', ENT_QUOTES); ?>">
     </div>
@@ -149,7 +149,7 @@ include 'page_menues.php';
             <small class="form-text text-muted">Private secret key used by the server to verify the contact form response.</small>
         </div>
     </div>
-    <div class="border rounded p-3 mb-4">
+    <div id="shipping-settings" class="border rounded p-3 mb-4">
         <h4 class="mb-3">Shipping Prices</h4>
         <p class="text-muted mb-3">These values feed cart, checkout, admin edit order, emails, and PayFast totals. At least one customer-facing method must be enabled.</p>
         <div class="alert <?= $enabledDeliveryCount > 0 ? 'alert-success' : 'alert-danger' ?>">
