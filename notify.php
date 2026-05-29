@@ -389,7 +389,12 @@ require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/candybird_mail_helpers.php';
-require_once('/home/candybirdco/configs_candybird/candybird_config.php');
+$liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+if (file_exists($liveConfigPath)) {
+    require_once $liveConfigPath;
+} elseif (file_exists(__DIR__ . '/configs/email_config.php')) {
+    require_once __DIR__ . '/configs/email_config.php';
+}
 
 try {
     // // Get the email body from the template file
@@ -416,7 +421,13 @@ try {
     $email_body = str_replace('{payment_method}', $order[0]['payment_method'], $email_body);
     $email_body = str_replace('{order_notes}', $order[0]['order_notes'], $email_body);
 
-    $clientMailResult = cbCandybirdSendMail($client_email, $client_name, $email_subject, $email_body);
+    $clientMailResult = cbCandybirdSendMail(
+        $client_email,
+        $client_name,
+        $email_subject,
+        $email_body,
+        ['prefer_mail_transport' => true]
+    );
     if (!empty($clientMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Email sent successfully!');
     } else {
@@ -455,6 +466,7 @@ try {
         [
             'reply_to_email' => $client_email,
             'reply_to_name' => $client_name ?: 'CandyBird customer',
+            'prefer_mail_transport' => true,
         ]
     );
     if (!empty($adminMailResult['success'])) {

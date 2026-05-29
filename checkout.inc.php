@@ -1163,7 +1163,8 @@ try {
         $billing_email_address,
         $billing_first_name,
         "CandyBird | Order Confirmation | #".$orderId_zeropad,
-        $email_body
+        $email_body,
+        ['prefer_mail_transport' => true]
     );
     if (!empty($customerMailResult['success'])) {
         $response['email_message'] = 'Order email sent successfully.';
@@ -1189,6 +1190,7 @@ try {
         [
             'reply_to_email' => $billing_email_address,
             'reply_to_name' => trim($billing_first_name) ?: 'CandyBird customer',
+            'prefer_mail_transport' => true,
         ]
     );
     if (!empty($adminMailResult['success'])) {
