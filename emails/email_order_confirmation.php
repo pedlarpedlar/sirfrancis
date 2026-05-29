@@ -26,6 +26,7 @@
                         <td style="padding:28px;">
                             <p style="margin:0 0 10px;font-size:16px;line-height:1.5;">Hi {recipient_name},</p>
                             <p style="margin:0;color:#51475a;font-size:14px;line-height:1.6;">Thank you, we have received order <strong>#{order_id}</strong>. You can view the order, payment status, and full breakdown at any time.</p>
+                            {resend_notice}
                             <table cellpadding="0" cellspacing="0" role="presentation" style="margin-top:20px;">
                                 <tr>
                                     <td style="background:#5b1178;">

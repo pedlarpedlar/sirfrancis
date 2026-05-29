@@ -270,6 +270,11 @@ include 'page_menues.php';
                                     data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
                                     Update Client
                                 </button>
+                                <button class="btn btn-outline-success btn-sm resend-order-email-btn" type="button"
+                                    data-order-id="<?= cbOrderText($order['order_id']) ?>"
+                                    data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
+                                    Resend Email
+                                </button>
                                 <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -312,6 +317,11 @@ include 'page_menues.php';
                             data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
                             Update Client
                         </button>
+                        <button class="btn btn-outline-success btn-sm resend-order-email-btn" type="button"
+                            data-order-id="<?= cbOrderText($order['order_id']) ?>"
+                            data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
+                            Resend Email
+                        </button>
                         <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
@@ -322,6 +332,30 @@ include 'page_menues.php';
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resendOrderEmailModal" tabindex="-1" aria-labelledby="resendOrderEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resendOrderEmailModalLabel">Resend order confirmation</h5>
+                <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert d-none" id="resendOrderEmailAlert"></div>
+                <p>Send the latest order confirmation for <strong id="resendOrderEmailLabel"></strong> to the client and admin.</p>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="includeEditedCartNotice" checked>
+                    <label class="custom-control-label" for="includeEditedCartNotice">Include a note that the order was updated by CandyBird.</label>
+                </div>
+                <small class="form-text text-muted mt-2">Leave this ticked if products, quantities, delivery, coupon, or totals were changed after checkout.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmResendOrderEmail">Resend to client and admin</button>
+            </div>
         </div>
     </div>
 </div>
@@ -470,6 +504,13 @@ function showCancelOrderMessage(success, message) {
     alert.removeClass('d-none alert-success alert-danger').addClass(success ? 'alert-success' : 'alert-danger').text(message);
 }
 
+function showResendOrderEmailMessage(success, message) {
+    var alert = $('#resendOrderEmailAlert');
+    alert.removeClass('d-none alert-success alert-danger alert-info').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+    var pageAlert = $('#ordersPageAlert');
+    pageAlert.removeClass('d-none alert-success alert-danger alert-info').addClass(success ? 'alert-success' : 'alert-danger').text(message);
+}
+
 function filterOrders() {
     var query = ($('#orderSearch').val() || '').toLowerCase();
     var status = $('#statusFilter').val();
@@ -520,6 +561,45 @@ $(function() {
         $('#confirmCancelOrder').data('order-id', orderId);
         $('.paid-refund-note').toggleClass('d-none', String($(this).data('paid')) !== '1');
         $('#cancelOrderModal').modal('show');
+    });
+
+    $('body').on('click', '.resend-order-email-btn', function() {
+        var orderId = $(this).data('order-id');
+        var customer = $(this).data('customer') || 'customer';
+        $('#resendOrderEmailAlert').addClass('d-none').text('');
+        $('#resendOrderEmailLabel').text('#' + orderId + ' for ' + customer);
+        $('#includeEditedCartNotice').prop('checked', true);
+        $('#confirmResendOrderEmail').data('order-id', orderId);
+        $('#resendOrderEmailModal').modal('show');
+    });
+
+    $('#confirmResendOrderEmail').on('click', function() {
+        var $button = $(this);
+        var orderId = $button.data('order-id');
+        showWorkingMessage('Resending the latest order confirmation...');
+        $('#resendOrderEmailAlert').removeClass('d-none alert-success alert-danger').addClass('alert-info').text('Sending the latest order confirmation...');
+        setButtonWorking($button, true, 'Sending...');
+        $.ajax({
+            url: 'resend_order_confirmation_email.php',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                order_id: orderId,
+                include_edit_note: $('#includeEditedCartNotice').is(':checked') ? '1' : '0'
+            },
+            success: function(response) {
+                showResendOrderEmailMessage(!!response.success, response.message || 'Order confirmation resent.');
+                if (response.success) {
+                    setTimeout(function() { $('#resendOrderEmailModal').modal('hide'); }, 900);
+                }
+            },
+            error: function(xhr) {
+                showResendOrderEmailMessage(false, ajaxMessage(xhr, 'The order confirmation could not be resent right now.'));
+            },
+            complete: function() {
+                setButtonWorking($button, false);
+            }
+        });
     });
 
     $('#confirmCancelOrder').on('click', function() {

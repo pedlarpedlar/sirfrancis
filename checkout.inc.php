@@ -1155,7 +1155,8 @@ $emailReplacements = array(
     '{order_status}' => candybirdEmailText($order_status),
     '{payment_method}' => candybirdEmailText($payment_method_name),
     '{order_notes}' => trim((string) $order_notes) !== '' ? candybirdEmailText($order_notes) : 'No order notes.',
-    '{user_email_unsubscribe}' => urlencode((string) $billing_email_address)
+    '{user_email_unsubscribe}' => urlencode((string) $billing_email_address),
+    '{resend_notice}' => ''
 );
 
 
