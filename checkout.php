@@ -844,6 +844,25 @@ foreach ($paymentMethods as $paymentMethod) {
 </form>
 <!-- checkout area end -->
 
+<div class="modal fade" id="pudoLockerConfirmModal" tabindex="-1" aria-labelledby="pudoLockerConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pudoLockerConfirmModalLabel">Confirm Pudo locker delivery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">You selected delivery to your nearest Pudo locker.</p>
+        <p class="mb-0">Please make sure you are happy for your parcel to be delivered to a nearby locker based on your address details. If you prefer delivery directly to your door, go back and choose door-to-door delivery before placing the order.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" id="changeToDoorDeliveryBtn">Go back and change delivery</button>
+        <button type="button" class="btn btn-primary" id="confirmPudoLockerBtn">Yes, continue with Pudo locker</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Include jQuery library -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -859,6 +878,8 @@ var deliveryOptions = <?=json_encode($delivery_options)?>;
 var defaultDeliveryMethod = <?=json_encode($default_delivery_method)?>;
 var checkoutCouponAmount = <?=json_encode(isset($_SESSION['coupon']['coupon_savings']) ? (float) $_SESSION['coupon']['coupon_savings'] : 0)?>;
 var checkoutBaseSubtotal = checkoutSubtotal + checkoutCouponAmount;
+var pudoLockerConfirmed = false;
+var pendingCheckoutSubmit = false;
 
 function formatRand(amount) {
     return 'R' + (parseFloat(amount) || 0).toFixed(2);
@@ -1084,7 +1105,56 @@ function validateCheckoutForm($form) {
     return true;
 }
 
+function selectedDeliveryMethod() {
+    return $('input[name="delivery_method"]:checked').val() || defaultDeliveryMethod;
+}
+
+function focusDeliveryMethods() {
+    var $deliveryCard = $('.checkout-delivery-card').first();
+    if ($deliveryCard.length) {
+        $('html, body').animate({ scrollTop: $deliveryCard.offset().top - 110 }, 250);
+    }
+}
+
+function submitCheckoutAjax($form) {
+    var formData = $form.serialize();
+    var $submitButton = $form.find('button[type="submit"]');
+
+    $submitButton.prop('disabled', true);
+
+    $.ajax({
+        type: 'POST',
+        url: 'checkout.inc.php',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+            showNotification(response.success, response.message);
+
+            if (response.success) {
+                window.location.href = response.redirect_url || ('order_details?order_id=' + response.orderId);
+            } else {
+                clearCheckoutErrors();
+                showCheckoutSummary($form, [response.message || 'Checkout could not be completed. Please check your details and try again.']);
+                if (response.account_exists) {
+                    renderAccountHint(true, response.message, response.login_url);
+                }
+            }
+        },
+        error: function (x, y, z) {
+            showNotification(false, 'Checkout could not be completed. Please check the highlighted details and try again.');
+            clearCheckoutErrors();
+            showCheckoutSummary($form, ['Checkout could not be completed. Please check your details and try again.']);
+            console.log('Error:', x, y, z);
+        },
+        complete: function() {
+            $submitButton.prop('disabled', false);
+            pendingCheckoutSubmit = false;
+        }
+    });
+}
+
 $('body').on('change', 'input[name="delivery_method"]', function() {
+    pudoLockerConfirmed = false;
     $('.delivery-method-option').removeClass('active');
     $(this).closest('.delivery-method-option').addClass('active');
     $('.delivery-tier-box').addClass('d-none');
@@ -1145,57 +1215,38 @@ $('body').on('click', '#checkout-remove-coupon', function(e) {
 });
 
 $('body').on('submit', '#checkout-form', function(e){
-    // Prevent the default form submission
     e.preventDefault();
 
-    // Get all form fields securely/serialized
-    var formData = $(this).serialize();
-    var user_session = <?=json_encode($_SESSION['session_id'] ?? session_id())?>;
-    // console.log(user_session);
-    // return;
-    // Reference to the form and submit button
     var $form = $(this);
-    var $submitButton = $form.find('button[type="submit"]');
 
     if (!validateCheckoutForm($form)) {
         return;
     }
 
-    // Disable the submit button to prevent multiple submissions
-    $submitButton.prop('disabled', true);
+    if (selectedDeliveryMethod() === 'locker' && checkoutWeightKg > 0 && !pudoLockerConfirmed) {
+        pendingCheckoutSubmit = true;
+        $('#pudoLockerConfirmModal').modal('show');
+        return;
+    }
 
-    // Perform the AJAX request
-    $.ajax({
-        type: 'POST',
-        url: 'checkout.inc.php',
-        data: formData,
-        dataType: 'json',
-        success: function (response) {
-            // Handle the JSON response
-            showNotification(response.success, response.message);
-            
-            if (response.success) {
-                window.location.href = response.redirect_url || ('order_details?order_id=' + response.orderId);
-            } else {
-                clearCheckoutErrors();
-                showCheckoutSummary($form, [response.message || 'Checkout could not be completed. Please check your details and try again.']);
-                if (response.account_exists) {
-                    renderAccountHint(true, response.message, response.login_url);
-                }
-            }
-        },
-        error: function (x, y, z) {
-            showNotification(false, 'Checkout could not be completed. Please check the highlighted details and try again.');
-            clearCheckoutErrors();
-            showCheckoutSummary($form, ['Checkout could not be completed. Please check your details and try again.']);
-            console.log('Error:', x, y, z);
-            // Handle error
-        },
-        complete: function() {
-            // Re-enable the submit button after the request is complete
-            $submitButton.prop('disabled', false);
-        }
-    });
+    submitCheckoutAjax($form);
+});
+
+$('#confirmPudoLockerBtn').on('click', function() {
+    pudoLockerConfirmed = true;
+    $('#pudoLockerConfirmModal').modal('hide');
+    if (pendingCheckoutSubmit) {
+        $('#checkout-form').trigger('submit');
+    }
+});
+
+$('#changeToDoorDeliveryBtn').on('click', function() {
+    pendingCheckoutSubmit = false;
+    $('#pudoLockerConfirmModal').modal('hide');
+    if ($('#delivery-door').length) {
+        $('#delivery-door').prop('checked', true).trigger('change');
+    }
+    focusDeliveryMethods();
 });
 
 
