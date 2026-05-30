@@ -28,7 +28,9 @@ $linkGroups = [
         ['Email Broadcasts', 'schedule_email', 'Schedule and test campaign emails'],
     ],
     'Sheets & Products' => [
-        ['Sheet Sources', 'sheets', 'Product, coupon and clearance sheet links and force refresh'],
+        ['Products', 'products', 'Product sheet links, health, template and force sync'],
+        ['Coupons', 'coupons', 'Coupon sheet links, health, template and force sync'],
+        ['Clearance Basket', 'clearance', 'Clearance sheet links, health, template and force sync'],
         ['Categories', 'category_order', 'Edit category labels, visibility and display order'],
         ['Sync Product Mirror', 'sync_sheet_products', 'Force the database mirror to match the product sheet'],
         ['Product Sheet', 'https://docs.google.com/spreadsheets/d/17L-lvBdS0W2Fvf9tzjQj55CweIKpKAdqlcP4aAPLZT8/edit?gid=380423212#gid=380423212', 'Open Google product sheet'],

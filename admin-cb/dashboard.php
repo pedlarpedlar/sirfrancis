@@ -281,46 +281,40 @@ $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
     LIMIT 10") : [];
 $importantLinks = [
     [
-        'label' => 'Edit Product Sheet',
-        'description' => 'Add, edit, price, describe, and image sheet products.',
-        'url' => getCandybirdSheetEditUrl('products'),
-        'button' => 'Open products sheet'
+        'label' => 'Products',
+        'description' => 'Manage product sheet links, health checks, template and product mirror sync.',
+        'url' => 'products',
+        'button' => 'Open products'
     ],
     [
-        'label' => 'Add Coupon Codes',
-        'description' => 'Create coupon rows, dates, discounts, and minimum order values.',
-        'url' => getCandybirdSheetEditUrl('coupons'),
-        'button' => 'Open coupon sheet'
-    ],
-    [
-        'label' => 'Google Shopping Feed',
-        'description' => 'Check the feed generated from the live product sheet.',
-        'url' => '../uploads/google_products/google_shopping_feed.txt',
-        'button' => 'View feed'
-    ],
-    [
-        'label' => 'Email Broadcasts',
-        'description' => 'Create tests, schedule campaigns, and confirm subscriber mailouts.',
-        'url' => 'schedule_email',
-        'button' => 'Create broadcast'
-    ],
-    [
-        'label' => 'Order Control Center',
-        'description' => 'Edit orders, delete orders, update statuses, and send client messages.',
+        'label' => 'Orders',
+        'description' => 'View, edit, print, update and message customer orders.',
         'url' => 'manage_orders',
-        'button' => 'Manage orders'
+        'button' => 'Open orders'
     ],
     [
-        'label' => 'Visitor Activity',
-        'description' => 'See live guests/users, page views, cart activity, and checkout trails.',
-        'url' => 'visitor_activity',
-        'button' => 'Open visitor view'
+        'label' => 'Customers',
+        'description' => 'Registered customers plus guest checkout customers and copyable email lists.',
+        'url' => 'manage_users',
+        'button' => 'Open customers'
     ],
     [
-        'label' => 'Sheet Mirror Sync',
-        'description' => 'Refresh the old product table mirror used by legacy relationships.',
-        'url' => 'sync_sheet_products',
-        'button' => 'Sync mirror'
+        'label' => 'Subscribers',
+        'description' => 'Create tests, schedule campaigns and send broadcasts to active subscribers.',
+        'url' => 'schedule_email',
+        'button' => 'Open subscribers'
+    ],
+    [
+        'label' => 'Mega Sync All Sheets',
+        'description' => 'Force refresh products, coupons and clearance caches after sheet edits.',
+        'url' => 'sheets',
+        'button' => 'Mega sync'
+    ],
+    [
+        'label' => 'View Shop',
+        'description' => 'Open the public storefront in a new tab.',
+        'url' => '../products',
+        'button' => 'View shop'
     ],
 ];
 
@@ -396,22 +390,15 @@ $dashboardCronJobs = [
         <h1>Admin Dashboard</h1>
         <p class="mb-0">Orders, payments, campaigns, reviews, sheet products, and recent website activity at a glance.</p>
         <div class="quick-actions">
+            <a href="products" class="btn btn-warning btn-sm">Products</a>
             <a href="manage_orders" class="btn btn-warning btn-sm">Orders</a>
-            <a href="visitor_activity" class="btn btn-warning btn-sm">Visitor Activity</a>
-            <a href="schedule_email" class="btn btn-light btn-sm">Email Broadcast</a>
-            <a href="sync_sheet_products" class="btn btn-light btn-sm">Sync Sheet Mirror</a>
-            <form method="post" action="dashboard">
-                <input type="hidden" name="dashboard_action" value="refresh_coupons">
-                <button type="submit" class="btn btn-light btn-sm">Refresh Coupons</button>
+            <a href="manage_users" class="btn btn-warning btn-sm">Customers</a>
+            <a href="schedule_email" class="btn btn-light btn-sm">Subscribers</a>
+            <form method="post" action="sheets" class="m-0">
+                <input type="hidden" name="sheet_action" value="refresh_all">
+                <button type="submit" class="btn btn-light btn-sm">Mega Sync All Sheets</button>
             </form>
-            <a href="index" class="btn btn-light btn-sm">Sitemap</a>
-            <a href="run_cron" class="btn btn-light btn-sm">Run Cron Jobs</a>
-            <a href="backups" class="btn btn-light btn-sm">Backups</a>
-            <a href="sheets" class="btn btn-light btn-sm">Sheet Sources</a>
-            <a href="category_order" class="btn btn-light btn-sm">Categories</a>
-            <a href="<?= htmlspecialchars(getCandybirdSheetEditUrl('products'), ENT_QUOTES, 'UTF-8') ?>" class="btn btn-light btn-sm" target="_blank" rel="noopener noreferrer">Product Sheet</a>
-            <a href="<?= htmlspecialchars(getCandybirdSheetEditUrl('coupons'), ENT_QUOTES, 'UTF-8') ?>" class="btn btn-light btn-sm" target="_blank" rel="noopener noreferrer">Coupon Sheet</a>
-            <a href="../products" class="btn btn-outline-light btn-sm" target="_blank">View Shop</a>
+            <a href="../products" class="btn btn-outline-light btn-sm" target="_blank" rel="noopener noreferrer">View Shop</a>
         </div>
     </div>
 
