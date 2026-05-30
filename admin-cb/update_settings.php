@@ -145,7 +145,11 @@ try {
     $contact_recaptcha_type = $isRecaptchaSave ? (in_array($_POST['contact_recaptcha_type'] ?? 'v3', ['v3', 'v2_checkbox'], true) ? $_POST['contact_recaptcha_type'] : 'v3') : (string) ($existingSettings['contact_recaptcha_type'] ?? 'v3');
     $contact_recaptcha_site_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_site_key') : (string) ($existingSettings['contact_recaptcha_site_key'] ?? '');
     $contact_recaptcha_secret_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_secret_key') : (string) ($existingSettings['contact_recaptcha_secret_key'] ?? '');
-    $default_unit_weight_kg = $isShippingSave ? (float) ($_POST['default_unit_weight_kg'] ?? 0.25) : (float) ($existingSettings['default_unit_weight_kg'] ?? 0.25);
+    if ($isShippingSave && array_key_exists('default_unit_weight_g', $_POST)) {
+        $default_unit_weight_kg = ((float) str_replace(',', '.', (string) $_POST['default_unit_weight_g'])) / 1000;
+    } else {
+        $default_unit_weight_kg = $isShippingSave ? (float) ($_POST['default_unit_weight_kg'] ?? 0.25) : (float) ($existingSettings['default_unit_weight_kg'] ?? 0.25);
+    }
     if ($default_unit_weight_kg <= 0) {
         $default_unit_weight_kg = 0.25;
     }

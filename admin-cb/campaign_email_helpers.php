@@ -222,9 +222,18 @@ function cbCampaignConfigureMailer(PHPMailer $mail)
 
 function cbCampaignSendEmail($recipientEmail, $recipientName, $payload)
 {
+    global $smtp_username1;
+
     $mail = new PHPMailer(true);
     cbCampaignConfigureMailer($mail);
     $mail->addAddress($recipientEmail, $recipientName ?: $recipientEmail);
+    $adminCopyEmail = trim((string) ($payload['admin_copy_email'] ?? ''));
+    if ($adminCopyEmail === '' && !empty($payload['send_admin_copy'])) {
+        $adminCopyEmail = (string) ($smtp_username1 ?? '');
+    }
+    if ($adminCopyEmail !== '' && filter_var($adminCopyEmail, FILTER_VALIDATE_EMAIL) && strcasecmp($adminCopyEmail, $recipientEmail) !== 0) {
+        $mail->addBCC($adminCopyEmail, 'CandyBird Admin');
+    }
     $mail->Subject = $payload['subject'];
     $mail->Body = cbCampaignRenderEmail($payload, $recipientEmail);
     $mail->AltBody = trim(strip_tags(str_replace('{coupon_code}', $payload['coupon_code'] ?? '', $payload['body_html'] ?? '')));

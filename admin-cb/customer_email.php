@@ -28,6 +28,27 @@ function cbCustomerEmailText($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
+function cbCustomerEmailAdminCopyAddress($conn) {
+    global $smtp_username1;
+
+    $fallback = trim((string) ($smtp_username1 ?? ''));
+    if (!($conn instanceof mysqli)) {
+        return $fallback;
+    }
+
+    $result = $conn->query("SELECT support_email, email_1 FROM admin_website_settings LIMIT 1");
+    if ($result && ($row = $result->fetch_assoc())) {
+        foreach (['support_email', 'email_1'] as $field) {
+            $email = trim((string) ($row[$field] ?? ''));
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $email;
+            }
+        }
+    }
+
+    return $fallback;
+}
+
 $recipientEmail = trim((string) ($_POST['recipient_email'] ?? $_GET['email'] ?? ''));
 $recipientName = trim((string) ($_POST['recipient_name'] ?? $_GET['name'] ?? ''));
 $subject = trim((string) ($_POST['subject'] ?? 'A message from CandyBird'));
@@ -53,6 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'body_html' => cbCampaignCleanHtml($personalBody),
                 'cta_label' => trim((string) ($_POST['cta_label'] ?? '')),
                 'cta_url' => trim((string) ($_POST['cta_url'] ?? '')),
+                'send_admin_copy' => true,
+                'admin_copy_email' => cbCustomerEmailAdminCopyAddress($conn),
                 'created_by_admin_id' => (int) ($_SESSION['admin_id'] ?? 0),
                 'created_at' => date('Y-m-d H:i:s'),
             ];
@@ -84,7 +107,7 @@ include 'page_menues.php';
         <div class="col-lg-6 mb-4">
             <div class="customer-email-panel">
                 <h1>Send Email To Customer</h1>
-                <p class="customer-email-help">Use this for one customer only. Their name and email are pre-filled from the customer profile where available.</p>
+                <p class="customer-email-help">Use this for one customer only. Their name and email are pre-filled from the customer profile where available. A copy is sent to admin automatically.</p>
                 <?php if ($message): ?>
                     <div class="alert <?= $success ? 'alert-success' : 'alert-danger' ?>"><?= cbCustomerEmailText($message) ?></div>
                 <?php endif; ?>
@@ -159,8 +182,33 @@ function updateCustomerEmailPreview() {
 }
 tinymce.init({
     selector: '#body',
-    plugins: 'link lists table',
-    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link table',
+    plugins: 'image link lists table',
+    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image table',
+    images_upload_handler: function(blobInfo, success, failure) {
+        var formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+        $.ajax({
+            type: 'POST',
+            url: 'rich_editor_upload_image.php',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.location) {
+                    success(response.location);
+                    updateCustomerEmailPreview();
+                } else {
+                    failure(response.error || 'Invalid upload response');
+                }
+            },
+            error: function() {
+                failure('Upload error');
+            }
+        });
+    },
+    image_dimensions: false,
+    paste_data_images: true,
     setup: function(editor) {
         editor.on('init change keyup nodechange', updateCustomerEmailPreview);
     }
