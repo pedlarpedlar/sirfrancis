@@ -19,7 +19,15 @@ if (file_exists($rootDir . '/dbh.inc.php')) {
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
+$seenUrls = [];
+
 function outputUrl($loc, $changefreq, $priority) {
+    global $seenUrls;
+    if (isset($seenUrls[$loc])) {
+        return;
+    }
+    $seenUrls[$loc] = true;
+
     echo '<url>';
     echo '<loc>' . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . '</loc>';
     echo '<changefreq>' . htmlspecialchars($changefreq, ENT_XML1, 'UTF-8') . '</changefreq>';
@@ -31,13 +39,22 @@ outputUrl('https://www.candybird.co.za/', 'weekly', '1.0');
 outputUrl('https://www.candybird.co.za/products', 'daily', '0.8');
 outputUrl('https://www.candybird.co.za/contact', 'monthly', '0.5');
 outputUrl('https://www.candybird.co.za/about', 'monthly', '0.5');
-outputUrl('https://www.candybird.co.za/return_policy', 'yearly', '0.3');
+outputUrl('https://www.candybird.co.za/gifting', 'weekly', '0.7');
+outputUrl('https://www.candybird.co.za/pricelist', 'weekly', '0.7');
+outputUrl('https://www.candybird.co.za/wholesale', 'monthly', '0.6');
+outputUrl('https://www.candybird.co.za/private_labelling', 'monthly', '0.6');
+outputUrl('https://www.candybird.co.za/bulk_ordering', 'monthly', '0.6');
+outputUrl('https://www.candybird.co.za/delivery_policy', 'monthly', '0.5');
+outputUrl('https://www.candybird.co.za/return_policy', 'monthly', '0.5');
+outputUrl('https://www.candybird.co.za/terms', 'yearly', '0.4');
+outputUrl('https://www.candybird.co.za/privacypolicy', 'yearly', '0.4');
 outputUrl('https://www.candybird.co.za/bankingdetails', 'yearly', '0.3');
-outputUrl('https://www.candybird.co.za/wholesale', 'monthly', '0.5');
 outputUrl('https://www.candybird.co.za/global-services', 'monthly', '0.5');
+outputUrl('https://www.candybird.co.za/recipes', 'weekly', '0.5');
 
 $categoryLinks = [];
-foreach (getSheetProducts() as $product) {
+$products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
+foreach ($products as $product) {
     foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
         $category = trim((string) ($product[$field] ?? ''));
         if ($category !== '') {
@@ -47,12 +64,18 @@ foreach (getSheetProducts() as $product) {
 
     $id = trim((string) ($product['id'] ?? ''));
     if ($id !== '') {
-        outputUrl('https://www.candybird.co.za/product?id=' . urlencode($id), 'weekly', '0.6');
+        $productUrl = function_exists('getSheetProductUrl')
+            ? getSheetProductUrl($product, true)
+            : 'https://www.candybird.co.za/product?id=' . urlencode($id);
+        outputUrl($productUrl, 'weekly', '0.6');
     }
 }
 
 foreach (array_keys($categoryLinks) as $category) {
-    outputUrl('https://www.candybird.co.za/products?category=' . urlencode($category), 'weekly', '0.7');
+    $categoryUrl = function_exists('getCandybirdCategoryUrl')
+        ? getCandybirdCategoryUrl($category, true)
+        : 'https://www.candybird.co.za/products?category=' . urlencode($category);
+    outputUrl($categoryUrl, 'weekly', '0.7');
 }
 
 $recipeFile = $rootDir . '/recipe_posts.php';

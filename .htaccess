@@ -29,6 +29,9 @@ RewriteCond %{HTTP_HOST} ^candybird\.co\.za$ [OR]
 RewriteCond %{HTTP_HOST} ^www\.candybird\.co\.za$
 RewriteRule ^/?$ "https\:\/\/www\.candybird\.co\.za\/" [R=301,L]
 
+# Serve a fresh XML sitemap at the standard search-engine URL.
+RewriteRule ^sitemap\.xml$ /crons/generate_sitemap.php [L]
+
 # Keep page URLs clean and resolve extensionless PHP pages before product slugs.
 RewriteCond %{REQUEST_METHOD} GET [OR]
 RewriteCond %{REQUEST_METHOD} HEAD

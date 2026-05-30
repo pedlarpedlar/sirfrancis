@@ -130,6 +130,40 @@ include 'header.php';
 <meta name="twitter:description" content="<?=htmlspecialchars($metaDescription, ENT_QUOTES, 'UTF-8')?>">
 <meta name="twitter:image" content="<?=htmlspecialchars($metaImage, ENT_QUOTES, 'UTF-8')?>">
 <title id="page-title"><?=htmlspecialchars($metaTitle, ENT_QUOTES, 'UTF-8')?></title>
+<?php if ($metaProduct): ?>
+<?php
+    $productStockQty = function_exists('getSheetProductStockQty') ? getSheetProductStockQty($metaProduct) : null;
+    $productSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => $metaProductTitle,
+        'description' => $metaDescription,
+        'image' => $metaImages,
+        'sku' => (string) ($metaProduct['id'] ?? ''),
+        'brand' => [
+            '@type' => 'Brand',
+            'name' => 'CandyBird',
+        ],
+        'category' => trim(implode(' > ', array_filter([
+            $metaProduct['parent_category'] ?? '',
+            $metaProduct['child_category_1'] ?? '',
+            $metaProduct['child_category_2'] ?? '',
+        ]))),
+        'offers' => [
+            '@type' => 'Offer',
+            'url' => $metaUrl,
+            'priceCurrency' => 'ZAR',
+            'price' => number_format((float) $metaPrice, 2, '.', ''),
+            'availability' => $productStockQty === 0 ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+            'itemCondition' => 'https://schema.org/NewCondition',
+            'seller' => [
+                '@id' => 'https://www.candybird.co.za/#organization',
+            ],
+        ],
+    ];
+?>
+<script type="application/ld+json"><?= json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
+<?php endif; ?>
 
 <style>
   .product-gallery-main {

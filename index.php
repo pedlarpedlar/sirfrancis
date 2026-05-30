@@ -1,5 +1,11 @@
 <?php
 include 'session_logins.php';
+$page_url_canonical = 'https://www.candybird.co.za/';
+$page_url_og = 'https://www.candybird.co.za/';
+$title_og = 'Premium Nut Packs, Dried Fruit & Unique Gifts in South Africa | CandyBird';
+$description_meta = 'Shop quality nuts, dried fruit, nut packs and unique gifting from CandyBird in Port Elizabeth. Secure checkout, delivery and collection across South Africa, ideal for overseas gifts to family and clients in SA.';
+$description_og = $description_meta;
+$image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']);
 ?>
@@ -15,8 +21,12 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 <meta property="og:image" content="<?=$image_url_og?>">
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?=$title_og?>">
+<meta name="twitter:description" content="<?=$description_og?>">
+<meta name="twitter:image" content="<?=$image_url_og?>">
 
-<title>CandyBird - Nuts | Dried Fruit | Candy</title>
+<title>Premium Nut Packs, Dried Fruit & Unique Gifts South Africa | CandyBird</title>
 
 <?php
 include 'page_menues.php';
@@ -101,6 +111,52 @@ include 'page_menues.php';
 .homepage-info-link:hover .title,
 .homepage-info-link:focus .title {
   color: #5b1178;
+}
+
+.homepage-seo-intro {
+  border-bottom: 1px solid #f0e8df;
+}
+
+.homepage-seo-intro h1 {
+  color: #241716;
+  font-family: "Hanken Grotesk", sans-serif;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.08;
+  margin-bottom: 16px;
+}
+
+.homepage-seo-intro p {
+  color: #5f504c;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.homepage-seo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.homepage-seo-links a {
+  background: #fff7ef;
+  border: 1px solid #ead7c9;
+  border-radius: 6px;
+  color: #4d2620;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 13px;
+  text-decoration: none;
+}
+
+.homepage-seo-links a:hover,
+.homepage-seo-links a:focus {
+  background: #4d2620;
+  border-color: #4d2620;
+  color: #fff;
 }
 
 </style>
@@ -262,6 +318,28 @@ foreach ($slides as $slide) {
 </div>
 <!-- common banner  end -->
 
+<section class="homepage-seo-intro bg-white pt-25 pb-35">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mb-3 mb-lg-0">
+        <h1>Quality nuts, dried fruit and thoughtful gifting from Port Elizabeth</h1>
+        <p>
+          CandyBird is a South African online shop for premium nut packs, dried fruit, sweets, corporate gifts and unique gifting. We serve Port Elizabeth and surrounding areas, deliver across South Africa, and make it simple for customers in Canada, Germany and abroad to send trusted gifts to family, friends or clients in South Africa.
+        </p>
+      </div>
+      <div class="col-lg-4">
+        <div class="homepage-seo-links">
+          <a href="nuts">Shop nuts</a>
+          <a href="dried-fruit">Shop dried fruit</a>
+          <a href="gifting">Unique gifting</a>
+          <a href="wholesale">Wholesale</a>
+          <a href="private_labelling">Private labelling</a>
+          <a href="delivery_policy">Delivery info</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- customer reviews start -->
 <section class="customer-reviews-section bg-white pt-30 pb-50">

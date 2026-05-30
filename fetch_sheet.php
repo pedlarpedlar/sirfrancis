@@ -1,12 +1,13 @@
 <?php
 include 'session_logins.php';
+$page_url_canonical = "https://www.candybird.co.za/products";
+$title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
+$page_url_og = "https://www.candybird.co.za/products";
+$description_meta = 'Shop CandyBird for quality nuts, nut packs, dried fruit, sweets, health mixes and unique gifting online. Port Elizabeth based with secure checkout, collection and delivery across South Africa.';
+$description_og = $description_meta;
+$image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
-?>
-<?php
-$page_url_canonical = "https://www.candybird.co.za/products";
-$title_og = 'Quality Gifting, Nuts, Dried Fruit, Health Mixes - CandyBird';
-$page_url_og = "https://www.candybird.co.za/products"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -21,8 +22,12 @@ $page_url_og = "https://www.candybird.co.za/products"
 <meta property="og:image" content="<?=$image_url_og?>">
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?=$title_og?>">
+<meta name="twitter:description" content="<?=$description_og?>">
+<meta name="twitter:image" content="<?=$image_url_og?>">
 
-<title>Nuts, Dried Fruit, Health Mixes Online Store - CandyBird</title>
+<title>Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird</title>
 
 <?php
 include 'page_menues.php';

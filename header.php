@@ -9,13 +9,13 @@ date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 
 // echo $currentTime;
 
-//Set defaults
-$page_url_canonical = 'https://www.candybird.co.za/';
-$title_og = 'CandyBird | Premium Nuts, Dried Fruit, Sweets and Gifting';
-$image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
-$page_url_og = 'https://www.candybird.co.za/';
-$description_og = "Shop CandyBird for premium nuts, dried fruit, sweets, gifting, wholesale and private labelling. Secure online checkout with delivery and collection options across South Africa.";
-$description_meta = "Shop CandyBird for premium nuts, dried fruit, sweets, gifting, wholesale and private labelling. Secure online checkout with delivery and collection options across South Africa.";
+//Set defaults. Pages may define these before including the shared header.
+$page_url_canonical = $page_url_canonical ?? 'https://www.candybird.co.za/';
+$title_og = $title_og ?? 'CandyBird | Premium Nuts, Dried Fruit, Sweets and Gifting';
+$image_url_og = $image_url_og ?? 'https://www.candybird.co.za/assets/img/product/1.png';
+$page_url_og = $page_url_og ?? 'https://www.candybird.co.za/';
+$description_og = $description_og ?? "Shop CandyBird in Port Elizabeth for premium nut packs, quality nuts, dried fruit, sweets, unique gifting, wholesale and private labelling. Secure online checkout with delivery and collection options across South Africa.";
+$description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for premium nut packs, quality nuts, dried fruit, sweets, unique gifting, wholesale and private labelling. Secure online checkout with delivery and collection options across South Africa.";
 
 
 ?>
@@ -32,28 +32,64 @@ $description_meta = "Shop CandyBird for premium nuts, dried fruit, sweets, gifti
 
     <!-- Author and Keywords Meta Tags -->
     <meta name="author" content="CandyBird">
-    <meta name="keywords" content="almonds, walnuts, dried apricots, raisins, premium dried fruits, quality nuts, private labeling, local stockist, healthy snacks industry">
+    <meta name="keywords" content="nut packs, quality nuts South Africa, nuts Port Elizabeth, dried fruit South Africa, unique gifting South Africa, corporate gifting South Africa, gift hampers South Africa, send gifts to South Africa, nuts online South Africa, private labelling nuts">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="https://www.candybird.co.za/assets/img/favicon.png">
     <link rel="shortcut icon" type="image/png" href="https://www.candybird.co.za/assets/img/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://www.candybird.co.za/assets/img/favicon.png">
     <meta name="theme-color" content="#2a1b1b">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "CandyBird",
-      "url": "https://www.candybird.co.za/",
-      "description": "Shop CandyBird for premium nuts, dried fruit, sweets, gifting, wholesale and private labelling. Secure online checkout with delivery and collection options across South Africa.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "CandyBird",
-        "url": "https://www.candybird.co.za/",
-        "logo": "https://www.candybird.co.za/assets/img/logo/logo.png"
-      }
-    }
-    </script>
+    <?php
+    $siteSchema = [
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => ['Organization', 'Store'],
+                '@id' => 'https://www.candybird.co.za/#organization',
+                'name' => 'CandyBird',
+                'url' => 'https://www.candybird.co.za/',
+                'logo' => 'https://www.candybird.co.za/assets/img/logo/logo.png',
+                'image' => 'https://www.candybird.co.za/assets/img/product/1.png',
+                'description' => 'CandyBird supplies premium nut packs, quality nuts, dried fruit, sweets, unique gifting, wholesale and private labelling from Port Elizabeth, South Africa. Overseas customers can order online to send gifts to family, friends and clients in South Africa.',
+                'email' => 'consumer@candybird.co.za',
+                'telephone' => '+27410011786',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => '18 Babiana Road, Malabar',
+                    'addressLocality' => 'Port Elizabeth',
+                    'addressRegion' => 'Eastern Cape',
+                    'addressCountry' => 'ZA',
+                ],
+                'areaServed' => [
+                    ['@type' => 'Country', 'name' => 'South Africa'],
+                ],
+                'knowsAbout' => [
+                    'Nut packs',
+                    'Quality nuts',
+                    'Dried fruit',
+                    'Unique gifting',
+                    'Corporate gifting',
+                    'Wholesale nuts',
+                    'Private labelling',
+                    'Gifts delivered in South Africa',
+                ],
+            ],
+            [
+                '@type' => 'WebSite',
+                '@id' => 'https://www.candybird.co.za/#website',
+                'name' => 'CandyBird',
+                'url' => 'https://www.candybird.co.za/',
+                'publisher' => ['@id' => 'https://www.candybird.co.za/#organization'],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => 'https://www.candybird.co.za/products?search={search_term_string}',
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ],
+        ],
+    ];
+    ?>
+    <script type="application/ld+json"><?= json_encode($siteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 
     <!--********************************** 
         all css files 
