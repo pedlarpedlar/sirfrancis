@@ -860,7 +860,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Return a success response (you can adjust this based on your needs)
             $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
-            $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam;
+            $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&thankyou=1';
             $isPayFast = stripos((string) $payment_method_name, 'payfast') !== false || (string) $payment_method === '1';
             if ($isPayFast) {
                 $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&payfast=1';

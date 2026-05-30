@@ -20,7 +20,7 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
 
 ?>
 
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
 
 <head>

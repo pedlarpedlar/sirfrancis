@@ -1730,6 +1730,22 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
         logAction('Clicked on slider next/prev button, slider ID: ' + sliderId, 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
     });
 </script>
+<script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+<script>
+  (function() {
+    var merchantWidgetScript = document.getElementById('merchantWidgetScript');
+    if (!merchantWidgetScript) return;
+
+    merchantWidgetScript.addEventListener('load', function() {
+      if (!window.merchantwidget || typeof window.merchantwidget.start !== 'function') return;
+      window.merchantwidget.start({
+        merchant_id: 5312147848,
+        position: 'BOTTOM_RIGHT',
+        region: 'ZA'
+      });
+    });
+  })();
+</script>
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
 
     <!--*************************** 

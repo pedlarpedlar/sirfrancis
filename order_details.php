@@ -15,6 +15,49 @@ $payNowButton = '';
 $statusText = '';
 $order_items = '';
 $autoSubmitPayfast = isset($_GET['payfast']) && $_GET['payfast'] === '1';
+$showGoogleCustomerReviewsOptIn = false;
+$googleCustomerReviewsOrder = [];
+
+if (!function_exists('cbGoogleCustomerReviewsCountryCode')) {
+    function cbGoogleCustomerReviewsCountryCode($country, $address = '') {
+        $country = strtolower(trim((string) $country));
+        $address = strtolower(trim((string) $address));
+        $combined = trim($country . ' ' . $address);
+
+        if ($country === '' || in_array($country, ['south africa', 'sa', 'za', 'zaf'], true) || strpos($combined, 'south africa') !== false) {
+            return 'ZA';
+        }
+        if (in_array($country, ['canada', 'ca'], true)) {
+            return 'CA';
+        }
+        if (in_array($country, ['germany', 'de', 'deu'], true)) {
+            return 'DE';
+        }
+        if (preg_match('/^[a-z]{2}$/', $country)) {
+            return strtoupper($country);
+        }
+
+        return 'ZA';
+    }
+}
+
+if (!function_exists('cbGoogleCustomerReviewsDeliveryDate')) {
+    function cbGoogleCustomerReviewsDeliveryDate($orderDate) {
+        try {
+            $base = new DateTime($orderDate ?: 'now', new DateTimeZone('Africa/Johannesburg'));
+        } catch (Exception $exception) {
+            $base = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+        }
+
+        $base->modify('+7 days');
+        $tomorrow = new DateTime('tomorrow', new DateTimeZone('Africa/Johannesburg'));
+        if ($base < $tomorrow) {
+            $base = $tomorrow;
+        }
+
+        return $base->format('Y-m-d');
+    }
+}
 
 if (!function_exists('cbOrderHasSuccessfulPayfastPayment')) {
     function cbOrderHasSuccessfulPayfastPayment($conn, $orderId) {
@@ -112,7 +155,8 @@ $sql = "SELECT
     oi.product_weight AS product_weight,
     ua.billing_first_name AS billing_first_name,
     ua.billing_last_name AS billing_last_name,
-    ua.billing_email_address AS billing_email_address
+    ua.billing_email_address AS billing_email_address,
+    ua.shipping_country AS shipping_country
 FROM 
     orders o
 LEFT JOIN 
@@ -142,6 +186,7 @@ if (mysqli_num_rows($result) > 0) {
 
      // Store necessary data before freeing the result
     $cartTotal = $order[0]['grand_total_amount'];
+    $fetched_order_date = $order[0]['order_date'];
     $payment_status = $order[0]['payment_status'];
     if ((int) $payment_status === 0 && cbOrderHasSuccessfulPayfastPayment($conn, (int) $order[0]['order_id'])) {
         $payment_status = 1;
@@ -154,6 +199,7 @@ if (mysqli_num_rows($result) > 0) {
     $fetched_billing_last_name = $order[0]['billing_last_name'];
     $fetched_billing_email_address = $order[0]['billing_email_address'];
     $fetched_shipping_address = $order[0]['shipping_address'];
+    $fetched_shipping_country = $order[0]['shipping_country'];
     $fetched_order_status = $order[0]['order_status'];
     $fetched_payment_method_label = $order[0]['payment_method_label'];
     $fetched_order_notes = $order[0]['order_notes'];
@@ -179,6 +225,17 @@ if (mysqli_num_rows($result) > 0) {
         if (empty($fetched_billing_last_name)) {
             $fetched_billing_last_name = $nameParts[1] ?? '';
         }
+    }
+
+    $showGoogleCustomerReviewsOptIn = isset($_GET['thankyou']) && !empty($fetched_billing_email_address) && empty($admin_id);
+    if ($showGoogleCustomerReviewsOptIn) {
+        $googleCustomerReviewsOrder = [
+            'merchant_id' => 5312147848,
+            'order_id' => (string) $fetched_id,
+            'email' => (string) $fetched_billing_email_address,
+            'delivery_country' => cbGoogleCustomerReviewsCountryCode($fetched_shipping_country, $fetched_shipping_address),
+            'estimated_delivery_date' => cbGoogleCustomerReviewsDeliveryDate($fetched_order_date),
+        ];
     }
 
     
@@ -532,5 +589,15 @@ if ($admin_id !== NULL) {
   </div>
 </div>
 
+<?php if ($showGoogleCustomerReviewsOptIn && !empty($googleCustomerReviewsOrder)): ?>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+<script>
+  window.renderOptIn = function() {
+    window.gapi.load('surveyoptin', function() {
+      window.gapi.surveyoptin.render(<?=json_encode($googleCustomerReviewsOrder, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)?>);
+    });
+  };
+</script>
+<?php endif; ?>
 
 <?php include "footer.php"; ?>
