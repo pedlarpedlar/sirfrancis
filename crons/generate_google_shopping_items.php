@@ -73,7 +73,9 @@ foreach ($products as $product) {
         $additionalImages[] = getCandybirdAbsoluteImageUrl($image);
     }
 
-    $link = 'https://www.candybird.co.za/product?id=' . urlencode($id);
+    $link = function_exists('getSheetProductUrl')
+        ? getSheetProductUrl($product, true)
+        : 'https://www.candybird.co.za/' . rawurlencode(getSheetProductSlug($product));
     $itemGroupId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($name));
 
     $values = [
