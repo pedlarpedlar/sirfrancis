@@ -62,6 +62,36 @@ include 'page_menues.php';
   background-size: cover;
 }
 
+.product-tab .product-card .product-thumbnail {
+  aspect-ratio: 1 / 1;
+  background: #f7f3ee;
+  overflow: hidden;
+  width: 100%;
+}
+
+.product-tab .product-card .product-thumbnail > a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.product-tab .product-card .product-thumbnail img.first-img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.product-tab .product-card .product-thumbnail .product-thumbnail {
+  aspect-ratio: auto;
+  background: transparent;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  position: absolute !important;
+}
+
 </style>
 
   <style>
