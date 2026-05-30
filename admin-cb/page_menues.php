@@ -2,6 +2,122 @@
 
 <body>
 
+<?php
+$adminCurrentPage = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php');
+function cbAdminMenuOpen($pages, $currentPage) {
+  return in_array($currentPage, (array) $pages, true) ? ' open' : '';
+}
+function cbAdminMenuActive($page, $currentPage) {
+  return $page === $currentPage ? ' class="active"' : '';
+}
+?>
+
+<style>
+  .admin-sidebar {
+    background: #2d1739;
+    bottom: 0;
+    box-shadow: 10px 0 30px rgba(45, 23, 57, .16);
+    color: #fff;
+    left: 0;
+    overflow-y: auto;
+    padding: 18px 16px;
+    position: fixed;
+    top: 0;
+    width: 270px;
+    z-index: 1040;
+  }
+  .admin-sidebar-logo {
+    background: #fff;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 18px;
+    padding: 12px;
+  }
+  .admin-sidebar-logo img { display: block; max-width: 165px; width: 100%; }
+  .admin-sidebar-title {
+    color: #fcb42f;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  .admin-sidebar-nav,
+  .admin-sidebar-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .admin-sidebar-nav a,
+  .admin-sidebar-nav summary {
+    align-items: center;
+    border-radius: 8px;
+    color: #f8ecff;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    justify-content: space-between;
+    line-height: 1.25;
+    padding: 10px 11px;
+    text-decoration: none;
+  }
+  .admin-sidebar-nav a:hover,
+  .admin-sidebar-nav summary:hover,
+  .admin-sidebar-nav a.active {
+    background: rgba(252, 180, 47, .14);
+    color: #fcb42f;
+  }
+  .admin-sidebar-nav details {
+    margin: 3px 0;
+  }
+  .admin-sidebar-nav summary::-webkit-details-marker { display: none; }
+  .admin-sidebar-nav summary::after {
+    content: "+";
+    color: #fcb42f;
+    font-weight: 900;
+  }
+  .admin-sidebar-nav details[open] > summary::after {
+    content: "-";
+  }
+  .admin-sidebar-nav details ul {
+    border-left: 1px solid rgba(252, 180, 47, .25);
+    margin: 4px 0 8px 12px;
+    padding-left: 8px;
+  }
+  .admin-sidebar-nav details ul a {
+    color: #eadff1;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .admin-sidebar-footer {
+    border-top: 1px solid rgba(255,255,255,.12);
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+  .admin-mobile-menu details {
+    border-bottom: 1px solid #eee;
+    padding: 6px 0;
+  }
+  .admin-mobile-menu summary {
+    cursor: pointer;
+    font-weight: 800;
+    list-style: none;
+    padding: 8px 0;
+  }
+  .admin-mobile-menu summary::-webkit-details-marker { display: none; }
+  .admin-mobile-menu summary::after {
+    content: "+";
+    float: right;
+  }
+  .admin-mobile-menu details[open] summary::after { content: "-"; }
+  .admin-mobile-menu details ul { padding-left: 14px; }
+  @media (min-width: 992px) {
+    body { padding-left: 270px; }
+    header.no-print { display: none; }
+  }
+</style>
+
 <!-- offcanvas-overlay start -->
 <div class="offcanvas-overlay"></div>
 <!-- offcanvas-overlay end -->
@@ -15,29 +131,94 @@
       <strong>Admin Navigation</strong>
     </div>
     <nav class="offcanvas-menu">
-      <ul>
-        <li><a href="dashboard">Admin Dashboard</a></li>
-        <li><a href="manage_orders">Orders</a></li>
-        <li><a href="manage_users">Customers</a></li>
-        <li><a href="manage_website_information#contact-info">Contact Info</a></li>
-        <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
-        <li><a href="sheets#sheet-products">Products</a></li>
-        <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
-        <li><a href="category_order">Categories</a></li>
-
-
-      </ul>
-
-
-
-
-
-
+      <div class="admin-mobile-menu">
+        <ul>
+          <li><a href="dashboard">Admin Dashboard</a></li>
+          <li>
+            <details<?= cbAdminMenuOpen(['manage_orders', 'create_order', 'manage_order', 'order_details'], $adminCurrentPage) ?>>
+              <summary>Orders</summary>
+              <ul>
+                <li><a href="manage_orders">Manage Orders</a></li>
+                <li><a href="create_order">Create Order</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a href="manage_users">Customers</a></li>
+          <li>
+            <details<?= cbAdminMenuOpen(['manage_website_information'], $adminCurrentPage) ?>>
+              <summary>Website Settings</summary>
+              <ul>
+                <li><a href="manage_website_information#contact-info">Contact Info</a></li>
+                <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details<?= cbAdminMenuOpen(['sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+              <summary>Products & Sheets</summary>
+              <ul>
+                <li><a href="sheets#sheet-products">Products</a></li>
+                <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
+                <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a href="category_order">Categories</a></li>
+        </ul>
+      </div>
     </nav>
 
   </div>
 </div>
 <!-- offcanvas-mobile-menu end -->
+
+<aside class="admin-sidebar d-none d-lg-block no-print" aria-label="Admin navigation">
+  <a class="admin-sidebar-logo" href="dashboard">
+    <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="CandyBird">
+  </a>
+  <p class="admin-sidebar-title">Admin Panel</p>
+  <nav>
+    <ul class="admin-sidebar-nav">
+      <li><a href="dashboard"<?= cbAdminMenuActive('dashboard', $adminCurrentPage) ?>>Admin Dashboard</a></li>
+      <li>
+        <details<?= cbAdminMenuOpen(['manage_orders', 'create_order', 'manage_order', 'order_details'], $adminCurrentPage) ?>>
+          <summary>Orders</summary>
+          <ul>
+            <li><a href="manage_orders"<?= cbAdminMenuActive('manage_orders', $adminCurrentPage) ?>>Manage Orders</a></li>
+            <li><a href="create_order"<?= cbAdminMenuActive('create_order', $adminCurrentPage) ?>>Create Order</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="manage_users"<?= cbAdminMenuActive('manage_users', $adminCurrentPage) ?>>Customers</a></li>
+      <li>
+        <details<?= cbAdminMenuOpen(['manage_website_information'], $adminCurrentPage) ?>>
+          <summary>Website Settings</summary>
+          <ul>
+            <li><a href="manage_website_information#contact-info">Contact Info</a></li>
+            <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details<?= cbAdminMenuOpen(['sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+          <summary>Products & Sheets</summary>
+          <ul>
+            <li><a href="sheets#sheet-products">Products</a></li>
+            <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
+            <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="category_order"<?= cbAdminMenuActive('category_order', $adminCurrentPage) ?>>Categories</a></li>
+    </ul>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <ul class="admin-sidebar-nav">
+      <li><a href="index">Admin Sitemap</a></li>
+      <li><a href="<?php echo isset($_SESSION['admin_id']) ? 'logout' : 'admin_login'; ?>"><?php echo isset($_SESSION['admin_id']) ? 'Sign Out' : 'Sign In'; ?></a></li>
+    </ul>
+  </div>
+</aside>
 <!-- OffCanvas Wishlist Start -->
 <div id="offcanvas-wishlist" class="offcanvas offcanvas-wishlist theme1">
   <div class="inner">
@@ -228,44 +409,6 @@
               ><img src="<?=$home_directory?>assets/img/logo/logo.png" alt="logo"
             /></a>
           </div>
-        </div>
-        <div class="col-6 col-lg-10 col-xl-10 d-none d-lg-block">
-          <style>
-            .admin-nav-menu {
-              align-items: center;
-              gap: 10px;
-              justify-content: flex-end;
-              margin: 0;
-              width: 100%;
-            }
-            .admin-nav-menu > li > a {
-              font-size: 12px;
-              font-weight: 700;
-              line-height: 1.2;
-              padding: 12px 0;
-              white-space: nowrap;
-            }
-            .admin-nav-menu > li.active > a,
-            .admin-nav-menu > li > a:hover {
-              color: #5b1178;
-            }
-            @media (min-width: 1200px) {
-              .admin-nav-menu { gap: 16px; }
-              .admin-nav-menu > li > a { font-size: 13px; }
-            }
-          </style>
-          <ul class="main-menu admin-nav-menu d-flex">
-            <li class="active ml-0"><a href="dashboard">Admin Dashboard</a></li>
-            <li><a href="manage_orders">Orders</a></li>
-            <li><a href="manage_users">Customers</a></li>
-            <li><a href="manage_website_information#contact-info">Contact Info</a></li>
-            <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
-            <li><a href="sheets#sheet-products">Products</a></li>
-            <li><a href="sheets#sheet-coupons">Coupons and Clearance</a></li>
-            <li><a href="category_order">Categories</a></li>
-
-
-          </ul>
         </div>
       </div>
     </div>
