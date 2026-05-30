@@ -20,7 +20,7 @@ $current_session_id = 0;
 // Use $currentTime in your SQL queries or wherever necessary
 
 
-include 'dbh.inc.php';
+include __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/../product_sheet_helpers.php';
 
 // Fetch website configurations from the database

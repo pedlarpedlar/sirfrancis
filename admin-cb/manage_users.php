@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-include 'dbh.inc.php';
+include __DIR__ . '/db_connect.php';
 
 function cbCustomersText($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');

@@ -837,7 +837,7 @@ document.addEventListener('click', function(event) {
                   </span>
 
                   ${isSoldOut
-                    ? `<button class="pro-btn sold-out-button" type="button" disabled aria-disabled="true"><span style="font-size:10px;font-weight:900;">Sold</span></button>`
+                    ? ``
                     : `<button class="pro-btn add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}><i class="icon-basket"></i></button>`}
                 </div>
               </div>
@@ -880,7 +880,7 @@ document.addEventListener('click', function(event) {
                   <ul class="product-list-des"><li>${limitedDescription}</li></ul>
 
                   ${isSoldOut
-                    ? `<button class="btn btn-secondary btn--xl sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
+                    ? `<span class="sold-out-button d-inline-block" aria-disabled="true">Sold out</span>`
                     : `<button class="btn btn-dark btn--xl add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="${productId}"${clearanceAttr}>Add to cart</button>`}
                 </div>
 
@@ -1116,7 +1116,7 @@ function updateQuickViewFooter(product) {
     </div>
 
     ${isSoldOut
-      ? `<button class="btn btn-secondary btn--xl sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
+      ? `<span class="sold-out-button d-inline-block" aria-disabled="true">Sold out</span>`
       : `<button class="btn btn-dark btn--xl add-to-cart" data-product-id="${product.id}"${String(product.is_clearance || '').toLowerCase() === 'yes' && product.clearance_id ? ` data-clearance-id="${product.clearance_id}"` : ''}>Add to cart</button>`}
   `);
 }
@@ -1349,26 +1349,24 @@ function updateModal(productData) {
     `);
 
     $('#quick-view .product-footer').html(`
-        <div
-          class="product-count style d-flex flex-column flex-sm-row my-4"
-        >
-          <div class="count d-flex">
-            <input type="number" min="1" max="999" step="1" value="1" class="add-to-cart-quantity" />
-            <div class="button-group">
-              <button class="count-btn increment">
-                <i class="fas fa-chevron-up"></i>
-              </button>
-              <button class="count-btn decrement">
-                <i class="fas fa-chevron-down"></i>
-              </button>
-            </div>
-          </div>
-          <div>
-            ${quickSoldOut
-              ? `<button class="btn btn-secondary btn--xl mt-5 mt-sm-0 sold-out-button" type="button" disabled aria-disabled="true">Sold out</button>`
-              : `<button class="btn btn-dark btn--xl mt-5 mt-sm-0 add-to-cart" data-product-id="${productId}"${String(productData.is_clearance || '').toLowerCase() === 'yes' && productData.clearance_id ? ` data-clearance-id="${productData.clearance_id}"` : ''} data-toggle="modal" data-target="#add-to-cart"><span class="mr-2"><i class="ion-android-add"></i></span>Add to cart</button>`}
-          </div>
-        </div>
+        ${quickSoldOut
+          ? `<div class="my-4"><span class="sold-out-button d-inline-block" aria-disabled="true">Sold out</span></div>`
+          : `<div class="product-count style d-flex flex-column flex-sm-row my-4">
+              <div class="count d-flex">
+                <input type="number" min="1" max="999" step="1" value="1" class="add-to-cart-quantity" />
+                <div class="button-group">
+                  <button class="count-btn increment">
+                    <i class="fas fa-chevron-up"></i>
+                  </button>
+                  <button class="count-btn decrement">
+                    <i class="fas fa-chevron-down"></i>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-dark btn--xl mt-5 mt-sm-0 add-to-cart" data-product-id="${productId}"${String(productData.is_clearance || '').toLowerCase() === 'yes' && productData.clearance_id ? ` data-clearance-id="${productData.clearance_id}"` : ''} data-toggle="modal" data-target="#add-to-cart"><span class="mr-2"><i class="ion-android-add"></i></span>Add to cart</button>
+              </div>
+            </div>`}
         <div class="addto-whish-list">
           <a href="#" class="add-to-wishlist" data-product-id="${productId}"><i class="icon-heart"></i> Add to wishlist</a>
           <a href="#" class="add-to-compare" data-product-id="${productId}"><i class="icon-shuffle"></i> Add to compare</a>

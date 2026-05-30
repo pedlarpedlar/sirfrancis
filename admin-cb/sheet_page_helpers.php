@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../product_sheet_helpers.php';
 if (!isset($conn) || !($conn instanceof mysqli)) {
-    @include_once __DIR__ . '/../dbh.inc.php';
+    @include_once __DIR__ . '/db_connect.php';
 }
 
 if (!function_exists('cbAdminSheetText')) {
