@@ -405,6 +405,7 @@ const SERVER_SELECTED_CATEGORY = <?=json_encode($selectedCategory ?: '')?>;
 const activeCategory = new URLSearchParams(window.location.search).get('category') || SERVER_SELECTED_CATEGORY;
 const CATEGORY_DISPLAY_ORDER = <?=json_encode(function_exists('getCandybirdCategoryDisplayOrder') ? getCandybirdCategoryDisplayOrder() : [])?>;
 const CATEGORY_DISPLAY_MAP = <?=json_encode(function_exists('getCandybirdCategoryDisplayMap') ? getCandybirdCategoryDisplayMap() : [])?>;
+const CATEGORY_DISPLAY_POSITIONS = <?=json_encode(function_exists('getCandybirdCategoryDisplayMap') ? array_map(static function($item) { return (int) ($item['position'] ?? 9999); }, getCandybirdCategoryDisplayMap()) : [])?>;
 
 function isCategoryVisible(category) {
   return !CATEGORY_DISPLAY_MAP[category] || CATEGORY_DISPLAY_MAP[category].visible !== false;
@@ -426,10 +427,14 @@ function getCategoryPath(category) {
 
 function sortCategoryNames(names) {
   return names.sort((a, b) => {
-    const posA = CATEGORY_DISPLAY_ORDER.indexOf(a);
-    const posB = CATEGORY_DISPLAY_ORDER.indexOf(b);
-    if (posA !== -1 || posB !== -1) {
-      return (posA === -1 ? 9999 : posA) - (posB === -1 ? 9999 : posB);
+    const slugA = slugifyCategory(a);
+    const slugB = slugifyCategory(b);
+    const orderA = CATEGORY_DISPLAY_ORDER.findIndex(name => name === a || slugifyCategory(name) === slugA || slugifyCategory(getCategoryLabel(name)) === slugA);
+    const orderB = CATEGORY_DISPLAY_ORDER.findIndex(name => name === b || slugifyCategory(name) === slugB || slugifyCategory(getCategoryLabel(name)) === slugB);
+    const posA = CATEGORY_DISPLAY_POSITIONS[a] !== undefined ? CATEGORY_DISPLAY_POSITIONS[a] : (orderA === -1 ? 9999 : orderA);
+    const posB = CATEGORY_DISPLAY_POSITIONS[b] !== undefined ? CATEGORY_DISPLAY_POSITIONS[b] : (orderB === -1 ? 9999 : orderB);
+    if (posA !== 9999 || posB !== 9999) {
+      return posA - posB;
     }
     return a.localeCompare(b);
   });

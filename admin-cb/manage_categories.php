@@ -118,8 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['category_action'] ?? '') =
     }
 
     usort($items, static function($a, $b) {
-        return ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+        $posCompare = ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+        return $posCompare !== 0 ? $posCompare : strnatcasecmp($a['name'] ?? '', $b['name'] ?? '');
     });
+    foreach ($items as $itemIndex => $item) {
+        $items[$itemIndex]['position'] = $itemIndex + 1;
+    }
 
     $categorySuccess = cbManageCategorySaveDisplay($conn ?? null, $items);
     $categoryMessage = $categorySuccess ? 'Category display settings saved.' : 'Category display settings could not be saved.';
@@ -144,22 +148,22 @@ foreach ($products as $product) {
 
 $displayMap = getCandybirdCategoryDisplayMap();
 $displayRows = [];
-foreach (array_keys($sourceCategories) as $name) {
+foreach ($displayMap as $name => $item) {
     $displayRows[$name] = [
         'name' => $name,
-        'label' => $displayMap[$name]['label'] ?? $name,
-        'position' => $displayMap[$name]['position'] ?? 9999,
-        'visible' => !isset($displayMap[$name]) || !empty($displayMap[$name]['visible']),
+        'label' => $item['label'] ?? $name,
+        'position' => $item['position'] ?? 9999,
+        'visible' => !empty($item['visible']),
+        'missing_from_sheet' => !isset($sourceCategories[$name]),
     ];
 }
-foreach ($displayMap as $name => $item) {
+foreach (array_keys($sourceCategories) as $name) {
     if (!isset($displayRows[$name])) {
         $displayRows[$name] = [
             'name' => $name,
-            'label' => $item['label'] ?? $name,
-            'position' => $item['position'] ?? 9999,
-            'visible' => !empty($item['visible']),
-            'missing_from_sheet' => true,
+            'label' => $name,
+            'position' => 9999,
+            'visible' => true,
         ];
     }
 }
@@ -171,6 +175,10 @@ uasort($displayRows, static function($a, $b) {
     }
     return $posA <=> $posB;
 });
+$rowPosition = 1;
+foreach ($displayRows as $name => $row) {
+    $displayRows[$name]['display_position'] = $rowPosition++;
+}
 
 include 'header.php';
 ?>
@@ -241,7 +249,7 @@ include 'page_menues.php';
                                         <input type="hidden" name="category_name[<?= $i ?>]" value="<?= cbManageCategoryText($row['name']) ?>">
                                     </td>
                                     <td><input type="text" class="form-control" name="category_label[<?= $i ?>]" value="<?= cbManageCategoryText($row['label']) ?>"></td>
-                                    <td><input type="number" class="form-control" name="category_position[<?= $i ?>]" value="<?= cbManageCategoryText($row['position'] === 9999 ? ($i + 1) : $row['position']) ?>"></td>
+                                    <td><input type="number" class="form-control" name="category_position[<?= $i ?>]" value="<?= cbManageCategoryText($row['display_position'] ?? ($i + 1)) ?>"></td>
                                 </tr>
                             <?php $i++; endforeach; ?>
                         </tbody>

@@ -1875,21 +1875,59 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
             ];
         }
         uasort($map, static function($a, $b) {
-            return ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+            $posCompare = ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+            if ($posCompare !== 0) {
+                return $posCompare;
+            }
+            return strnatcasecmp($a['label'] ?? '', $b['label'] ?? '');
         });
         return $map;
+    }
+
+    function getCandybirdCategoryDisplayPosition($categoryName) {
+        $categoryName = trim((string) $categoryName);
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryName) : strtolower($categoryName);
+        foreach (getCandybirdCategoryDisplayMap() as $sourceName => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourceName) : strtolower($sourceName);
+            $labelSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($item['label'] ?? $sourceName) : strtolower((string) ($item['label'] ?? $sourceName));
+            if ($categoryName === $sourceName || $categorySlug === $sourceSlug || $categorySlug === $labelSlug) {
+                return (int) ($item['position'] ?? 9999);
+            }
+        }
+        return PHP_INT_MAX;
     }
 
     function getCandybirdCategoryDisplayLabel($categoryName) {
         $categoryName = trim((string) $categoryName);
         $map = getCandybirdCategoryDisplayMap();
-        return $map[$categoryName]['label'] ?? $categoryName;
+        if (isset($map[$categoryName])) {
+            return $map[$categoryName]['label'] ?? $categoryName;
+        }
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryName) : strtolower($categoryName);
+        foreach ($map as $sourceName => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourceName) : strtolower($sourceName);
+            if ($categorySlug === $sourceSlug) {
+                return $item['label'] ?? $categoryName;
+            }
+        }
+        return $categoryName;
     }
 
     function isCandybirdCategoryVisible($categoryName) {
         $categoryName = trim((string) $categoryName);
         $map = getCandybirdCategoryDisplayMap();
-        return !isset($map[$categoryName]) || !empty($map[$categoryName]['visible']);
+        if (isset($map[$categoryName])) {
+            return !empty($map[$categoryName]['visible']);
+        }
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryName) : strtolower($categoryName);
+        foreach ($map as $sourceName => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourceName) : strtolower($sourceName);
+            $labelSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($item['label'] ?? $sourceName) : strtolower((string) ($item['label'] ?? $sourceName));
+            if ($categorySlug === $sourceSlug || $categorySlug === $labelSlug) {
+                return !empty($item['visible']);
+            }
+        }
+        return true;
     }
 
     function getCandybirdCategoryDisplayOrder() {

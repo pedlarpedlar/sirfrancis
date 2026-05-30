@@ -96,12 +96,23 @@ function buildSheetMenuCategories() {
     $order = [];
     foreach (getCandybirdCategoryDisplayOrder() as $index => $categoryName) {
         $order[$categoryName] = $index;
+        if (function_exists('getCandybirdCategoryDisplayLabel')) {
+            $order[getCandybirdCategoryDisplayLabel($categoryName)] = $index;
+        }
+        if (function_exists('getCandybirdCategorySlug')) {
+            $order[getCandybirdCategorySlug($categoryName)] = $index;
+            if (function_exists('getCandybirdCategoryDisplayLabel')) {
+                $order[getCandybirdCategorySlug(getCandybirdCategoryDisplayLabel($categoryName))] = $index;
+            }
+        }
     }
 
     $sortNodes = function($nodes) use (&$sortNodes, $order) {
         uksort($nodes, function($a, $b) use ($order) {
-            $posA = $order[$a] ?? PHP_INT_MAX;
-            $posB = $order[$b] ?? PHP_INT_MAX;
+            $keyA = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($a) : $a;
+            $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($b) : $b;
+            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : ($order[$a] ?? ($order[$keyA] ?? PHP_INT_MAX));
+            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : ($order[$b] ?? ($order[$keyB] ?? PHP_INT_MAX));
             if ($posA === $posB) {
                 return strnatcasecmp($a, $b);
             }

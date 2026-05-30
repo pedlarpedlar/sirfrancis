@@ -147,6 +147,9 @@ if (!function_exists('cbPricelistProductsByCategory')) {
         $customCategoryOrder = [];
         foreach ($categoryOrder as $index => $categoryName) {
             $customCategoryOrder[$categoryName] = $index;
+            if (function_exists('getCandybirdCategorySlug')) {
+                $customCategoryOrder[getCandybirdCategorySlug($categoryName)] = $index;
+            }
         }
         $products = array_values(getSheetProducts());
         $products = array_filter($products, function($product) {
@@ -164,8 +167,10 @@ if (!function_exists('cbPricelistProductsByCategory')) {
         }
 
         uksort($productsByCategory, function($a, $b) use ($customCategoryOrder) {
-            $posA = $customCategoryOrder[$a] ?? PHP_INT_MAX;
-            $posB = $customCategoryOrder[$b] ?? PHP_INT_MAX;
+            $keyA = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($a) : $a;
+            $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($b) : $b;
+            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : ($customCategoryOrder[$a] ?? ($customCategoryOrder[$keyA] ?? PHP_INT_MAX));
+            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : ($customCategoryOrder[$b] ?? ($customCategoryOrder[$keyB] ?? PHP_INT_MAX));
             return $posA === $posB ? strnatcasecmp($a, $b) : $posA <=> $posB;
         });
 
