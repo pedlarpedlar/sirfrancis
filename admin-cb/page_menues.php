@@ -229,12 +229,32 @@
             /></a>
           </div>
         </div>
-        <div class="col-xl-8 col-lg-7 d-none d-lg-block">
+        <div class="col-6 col-lg-10 col-xl-10 d-none d-lg-block">
           <style>
-            .admin-nav-menu { gap: 14px; flex-wrap: wrap; }
-            .admin-nav-menu > li > a { font-size: 13px; padding-left: 0; padding-right: 0; white-space: nowrap; }
+            .admin-nav-menu {
+              align-items: center;
+              gap: 10px;
+              justify-content: flex-end;
+              margin: 0;
+              width: 100%;
+            }
+            .admin-nav-menu > li > a {
+              font-size: 12px;
+              font-weight: 700;
+              line-height: 1.2;
+              padding: 12px 0;
+              white-space: nowrap;
+            }
+            .admin-nav-menu > li.active > a,
+            .admin-nav-menu > li > a:hover {
+              color: #5b1178;
+            }
+            @media (min-width: 1200px) {
+              .admin-nav-menu { gap: 16px; }
+              .admin-nav-menu > li > a { font-size: 13px; }
+            }
           </style>
-          <ul class="main-menu admin-nav-menu d-flex justify-content-center">
+          <ul class="main-menu admin-nav-menu d-flex">
             <li class="active ml-0"><a href="dashboard">Admin Dashboard</a></li>
             <li><a href="manage_orders">Orders</a></li>
             <li><a href="manage_users">Customers</a></li>
