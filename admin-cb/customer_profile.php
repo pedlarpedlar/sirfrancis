@@ -60,6 +60,10 @@ if (!$customer && $email !== '') {
 }
 
 $resolvedEmail = trim((string) ($customer['email'] ?? $email));
+$resolvedName = trim((string) (($customer['billing_first_name'] ?? '') . ' ' . ($customer['billing_last_name'] ?? '')));
+if ($resolvedName === '') {
+    $resolvedName = trim((string) ($customer['username'] ?? ''));
+}
 $orders = [];
 $statementTotal = 0;
 if ($resolvedEmail !== '' || $userId > 0) {
@@ -108,6 +112,9 @@ include 'page_menues.php';
     <div class="customer-profile-hero">
         <h1><?= cbCustomerProfileText(trim(($customer['billing_first_name'] ?? '') . ' ' . ($customer['billing_last_name'] ?? '')) ?: ($customer['username'] ?? 'Customer profile')) ?></h1>
         <p class="mb-0">Contact details, delivery details, and order history in one place.</p>
+        <?php if ($resolvedEmail !== ''): ?>
+            <a class="btn btn-warning mt-3" href="customer_email?email=<?= urlencode($resolvedEmail) ?>&name=<?= urlencode($resolvedName) ?>">Send email to customer</a>
+        <?php endif; ?>
     </div>
 
     <?php if (!$customer && empty($orders)): ?>

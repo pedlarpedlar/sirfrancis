@@ -110,21 +110,49 @@ if ($result) {
     }
 }
 
+$summaryPeriod = trim((string) ($_GET['summary_period'] ?? date('Y-m')));
+if ($summaryPeriod !== 'all' && !preg_match('/^\d{4}-\d{2}$/', $summaryPeriod)) {
+    $summaryPeriod = date('Y-m');
+}
+
+$summaryMonths = [];
+foreach ($orders as $order) {
+    $timestamp = strtotime((string) ($order['order_date'] ?? ''));
+    if ($timestamp) {
+        $summaryMonths[date('Y-m', $timestamp)] = date('F Y', $timestamp);
+    }
+}
+krsort($summaryMonths);
+if (!isset($summaryMonths[date('Y-m')])) {
+    $summaryMonths[date('Y-m')] = date('F Y');
+}
+
+$summaryOrders = array_values(array_filter($orders, static function($order) use ($summaryPeriod) {
+    if ($summaryPeriod === 'all') {
+        return true;
+    }
+    $timestamp = strtotime((string) ($order['order_date'] ?? ''));
+    return $timestamp && date('Y-m', $timestamp) === $summaryPeriod;
+}));
+
+$summaryLabel = $summaryPeriod === 'all' ? 'All time' : ($summaryMonths[$summaryPeriod] ?? date('F Y', strtotime($summaryPeriod . '-01')));
 $counts = [
-    'all' => count($orders),
+    'all' => count($summaryOrders),
     'pending' => 0,
     'processing' => 0,
     'paid' => 0,
     'unpaid' => 0,
+    'sales' => 0,
 ];
 
-foreach ($orders as $order) {
+foreach ($summaryOrders as $order) {
     $status = cbOrderStatusKey($order['order_status'] ?: 'pending');
     if (isset($counts[$status])) {
         $counts[$status]++;
     }
     if ((int) $order['payment_status'] > 0) {
         $counts['paid']++;
+        $counts['sales'] += (float) ($order['grand_total_amount'] ?? 0);
     } else {
         $counts['unpaid']++;
     }
@@ -147,6 +175,10 @@ include 'page_menues.php';
     .orders-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
     .orders-hero h1 { color: #fcb42f; margin-bottom: 6px; }
     .orders-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .order-summary-header { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin-bottom: 12px; }
+    .order-summary-header h2 { color: #5b1178; font-size: 20px; margin: 0; }
+    .order-summary-header form { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+    .order-summary-header select { min-width: 190px; }
     .order-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
     .order-stat { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; }
     .order-stat strong { display: block; color: #5b1178; font-size: 24px; line-height: 1.1; }
@@ -154,6 +186,15 @@ include 'page_menues.php';
     .orders-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; }
     .orders-toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .orders-toolbar input, .orders-toolbar select { max-width: 260px; }
+    .orders-table { table-layout: fixed; }
+    .orders-table th, .orders-table td { font-size: 13px; vertical-align: middle; }
+    .orders-table th:nth-child(1) { width: 10%; }
+    .orders-table th:nth-child(2) { width: 25%; }
+    .orders-table th:nth-child(3) { width: 14%; }
+    .orders-table th:nth-child(4) { width: 11%; }
+    .orders-table th:nth-child(5) { width: 13%; }
+    .orders-table th:nth-child(6) { width: 15%; }
+    .orders-table th:nth-child(7) { width: 12%; }
     .orders-table th.sortable { cursor: pointer; user-select: none; }
     .orders-table th.sortable:hover { color: #5b1178; }
     .status-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; }
@@ -168,15 +209,25 @@ include 'page_menues.php';
     .status-cancelled { background: #ffe4e4; color: #9f1d1d; }
     .payment-pill { display: inline-flex; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; background: #f4f1ed; color: #675c69; }
     .payment-paid { background: #e3f8e8; color: #186f33; }
-    .order-action-row { display: flex; flex-wrap: wrap; gap: 6px; min-width: 245px; }
+    .order-action-row { display: none; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .order-action-row.is-open { display: flex; }
+    .order-action-row .btn { white-space: nowrap; }
+    .order-details-row { display: none; }
+    .order-details-row.is-open { display: table-row; }
+    .order-details-panel { background: #fbf8f3; border: 1px solid #eadfd2; border-radius: 8px; padding: 12px; }
+    .order-detail-grid { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 12px; }
+    .order-detail-grid span { color: #6d6270; display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .order-detail-grid strong, .order-detail-grid a { word-break: break-word; }
     .mobile-order-card { display: none; border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; margin-bottom: 12px; background: #fff; }
     .mobile-order-card h3 { font-size: 18px; color: #5b1178; margin-bottom: 4px; }
     .mobile-order-meta { color: #6d6270; font-size: 13px; margin-bottom: 10px; }
     .modal textarea { min-height: 130px; }
     @media (max-width: 991px) {
         .order-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .order-detail-grid { grid-template-columns: 1fr; }
         .orders-table-wrap { display: none; }
         .mobile-order-card { display: block; }
+        .mobile-order-card .order-action-row { display: flex; }
         .orders-toolbar input, .orders-toolbar select { max-width: 100%; width: 100%; }
     }
     @media (max-width: 575px) {
@@ -196,10 +247,22 @@ include 'page_menues.php';
         </div>
     </div>
 
+    <div class="order-summary-header">
+        <h2>Sales summary: <?= cbOrderText($summaryLabel) ?></h2>
+        <form method="get" action="manage_orders">
+            <label class="mb-0" for="summaryPeriod">Show</label>
+            <select class="form-control" id="summaryPeriod" name="summary_period" onchange="this.form.submit()">
+                <?php foreach ($summaryMonths as $monthValue => $monthLabel): ?>
+                    <option value="<?= cbOrderText($monthValue) ?>" <?= $summaryPeriod === $monthValue ? 'selected' : '' ?>><?= cbOrderText($monthLabel) ?></option>
+                <?php endforeach; ?>
+                <option value="all" <?= $summaryPeriod === 'all' ? 'selected' : '' ?>>All time</option>
+            </select>
+        </form>
+    </div>
     <div class="order-stats">
-        <div class="order-stat"><strong><?= number_format($counts['all']) ?></strong><span>Total</span></div>
+        <div class="order-stat"><strong><?= cbOrderMoney($counts['sales']) ?></strong><span>Paid sales</span></div>
+        <div class="order-stat"><strong><?= number_format($counts['all']) ?></strong><span>Orders</span></div>
         <div class="order-stat"><strong><?= number_format($counts['pending']) ?></strong><span>Pending</span></div>
-        <div class="order-stat"><strong><?= number_format($counts['processing']) ?></strong><span>Processing</span></div>
         <div class="order-stat"><strong><?= number_format($counts['paid']) ?></strong><span>Paid</span></div>
         <div class="order-stat"><strong><?= number_format($counts['unpaid']) ?></strong><span>Unpaid</span></div>
     </div>
@@ -216,7 +279,7 @@ include 'page_menues.php';
                 <select class="form-control" id="statusFilter">
                     <option value="">All statuses</option>
                     <?php foreach ($statusOptions as $status): ?>
-                        <option value="<?= cbOrderText(strtolower($status)) ?>"><?= cbOrderText($status) ?></option>
+                        <option value="<?= cbOrderText(cbOrderStatusKey($status)) ?>"><?= cbOrderText($status) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -242,8 +305,8 @@ include 'page_menues.php';
                     $shippingPayable = max(0, (float) $order['shipping_amount'] - (float) $order['shipping_discount_amount']);
                     $searchText = strtolower($order['order_id'] . ' ' . $order['customer_name'] . ' ' . $order['email'] . ' ' . $status);
                 ?>
-                    <tr class="order-row" data-status="<?= cbOrderText($statusKey) ?>" data-payment="<?= ((int) $order['payment_status'] > 0) ? 'paid' : 'unpaid' ?>" data-search="<?= cbOrderText($searchText) ?>" data-order="<?= cbOrderText($order['order_id']) ?>" data-customer="<?= cbOrderText(strtolower($order['customer_name'])) ?>" data-total="<?= cbOrderText($order['grand_total_amount']) ?>" data-date="<?= cbOrderText(strtotime($order['order_date'])) ?>">
-                        <td><a href="order_details?order_id=<?= urlencode($order['order_id']) ?>"><strong>#<?= cbOrderText($order['order_id']) ?></strong></a><br><small><?= cbOrderText($order['billing_phone_number']) ?></small></td>
+                    <tr class="order-row order-main-row" data-order-id="<?= cbOrderText($order['order_id']) ?>" data-status="<?= cbOrderText($statusKey) ?>" data-payment="<?= ((int) $order['payment_status'] > 0) ? 'paid' : 'unpaid' ?>" data-search="<?= cbOrderText($searchText) ?>" data-order="<?= cbOrderText($order['order_id']) ?>" data-customer="<?= cbOrderText(strtolower($order['customer_name'])) ?>" data-total="<?= cbOrderText($order['grand_total_amount']) ?>" data-date="<?= cbOrderText(strtotime($order['order_date'])) ?>">
+                        <td><a href="order_details?order_id=<?= urlencode($order['order_id']) ?>"><strong>#<?= cbOrderText($order['order_id']) ?></strong></a></td>
                         <td>
                             <?php $customerHref = !empty($order['user_id']) ? 'customer_profile?user_id=' . urlencode($order['user_id']) : 'customer_profile?email=' . urlencode($order['email']); ?>
                             <a href="<?= cbOrderText($customerHref) ?>"><strong><?= cbOrderText(trim($order['customer_name']) ?: 'Guest customer') ?></strong></a><br>
@@ -257,6 +320,7 @@ include 'page_menues.php';
                         </td>
                         <td><?= cbOrderText($order['order_date']) ?></td>
                         <td>
+                            <button class="btn btn-outline-primary btn-sm order-action-toggle" type="button">Open actions</button>
                             <div class="order-action-row">
                                 <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
                                 <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
@@ -514,16 +578,27 @@ function showResendOrderEmailMessage(success, message) {
 function filterOrders() {
     var query = ($('#orderSearch').val() || '').toLowerCase();
     var status = $('#statusFilter').val();
-    $('.order-row').each(function() {
+    $('.order-main-row, .mobile-order-card').each(function() {
         var row = $(this);
         var matchesSearch = !query || row.data('search').indexOf(query) !== -1;
         var matchesStatus = !status || row.data('status') === status;
         row.toggle(matchesSearch && matchesStatus);
+        if (!matchesSearch || !matchesStatus) {
+            row.find('.order-action-row').removeClass('is-open');
+            row.find('.order-action-toggle').text('Open actions');
+        }
     });
 }
 
 $(function() {
     $('#orderSearch, #statusFilter').on('input change', filterOrders);
+
+    $('body').on('click', '.order-action-toggle', function() {
+        var $button = $(this);
+        var $actions = $button.siblings('.order-action-row');
+        var isOpen = $actions.toggleClass('is-open').hasClass('is-open');
+        $button.text(isOpen ? 'Close actions' : 'Open actions');
+    });
 
     var orderSortState = { key: 'date', dir: 'desc' };
     $('#ordersTable').on('click', 'th.sortable', function() {
