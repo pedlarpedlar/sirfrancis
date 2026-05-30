@@ -92,6 +92,17 @@ include 'page_menues.php';
   position: absolute !important;
 }
 
+.homepage-info-link {
+  color: inherit;
+  height: 100%;
+  text-decoration: none;
+}
+
+.homepage-info-link:hover .title,
+.homepage-info-link:focus .title {
+  color: #5b1178;
+}
+
 </style>
 
   <style>
@@ -494,7 +505,7 @@ foreach ($slides as $slide) {
       <div class="row">
         <?php foreach ($staticMedia as $item): ?>
         <div class="col-lg-3 col-sm-6 py-3">
-          <div class="d-flex static-media2 flex-column flex-sm-row">
+          <a href="<?php echo htmlspecialchars($item['link'] ?? './', ENT_QUOTES, 'UTF-8'); ?>" class="d-flex static-media2 flex-column flex-sm-row homepage-info-link">
             <img
               class="align-self-center mb-2 mb-sm-0 mr-auto mr-sm-3"
               src="assets/img/icon/<?php echo $item['img']; ?>"
@@ -504,7 +515,7 @@ foreach ($slides as $slide) {
               <h4 class="title"><?php echo $item['title']; ?></h4>
               <p class="text"><?php echo $item['text']; ?></p>
             </div>
-          </div>
+          </a>
         </div>
         <?php endforeach; ?>
       </div>
@@ -622,8 +633,8 @@ foreach ($slides as $slide) {
           <?php foreach ($brands as $brand): ?>
           <div class="slider-item">
             <div class="single-brand">
-              <a href="./" class="brand-thumb">
-                <img src="assets/img/brand/<?php echo $brand['img']; ?>" alt="brand-thumb-nail" /> <!-- <?php echo $brand['alt']; ?> -->
+              <a href="<?php echo htmlspecialchars($brand['link'] ?? './', ENT_QUOTES, 'UTF-8'); ?>" class="brand-thumb" aria-label="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+                <img src="assets/img/brand/<?php echo $brand['img']; ?>" alt="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>" />
               </a>
             </div>
           </div>

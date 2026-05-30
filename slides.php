@@ -172,33 +172,37 @@ $staticMedia = [
     [
         'img' => '2.png',
         'title' => 'Free Shipping',
-        'text' => "Free shipping to your nearest Pudo locker on all orders over R$free_shipping_amount"
+        'text' => "Free shipping to your nearest Pudo locker on all orders over R$free_shipping_amount",
+        'link' => 'delivery_policy'
     ],
     [
         'img' => '3.png',
         'title' => '100% Satisfaction',
-        'text' => "Unsatisfied with your purchase? Return within $return_window to get a full refund."
+        'text' => "Unsatisfied with your purchase? Return within $return_window to get a full refund.",
+        'link' => 'return_policy'
     ],
     [
         'img' => '4.png',
         'title' => '100% Payment Secure',
-        'text' => 'Your payments are safely processed with Payfast.'
+        'text' => 'Your payments are safely processed with Payfast.',
+        'link' => 'terms'
     ],
     [
         'img' => '5.png',
         'title' => 'Open 24/7',
-        'text' => "Our online chat is open 24 hours a day, WhatsApp $hotline"
+        'text' => "Our online chat is open 24 hours a day, WhatsApp $hotline",
+        'link' => 'contact'
     ]
 ];
 
 
 // Array containing brand information
 $brands = [
-    ['img' => '1.png', 'alt' => 'wholesale'],
-    ['img' => '2.png', 'alt' => 'free delivery'],
-    ['img' => '3.png', 'alt' => 'gifting'],
-    ['img' => '4.png', 'alt' => 'private labelling'],
-    ['img' => '5.png', 'alt' => 'buyer protection'],
-    ['img' => '2.png', 'alt' => 'free delivery'],
-    ['img' => '3.png', 'alt' => 'gifting']
+    ['img' => '1.png', 'alt' => 'wholesale', 'link' => 'wholesale'],
+    ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
+    ['img' => '3.png', 'alt' => 'gifting', 'link' => 'gifting'],
+    ['img' => '4.png', 'alt' => 'private labelling', 'link' => 'private_labelling'],
+    ['img' => '5.png', 'alt' => 'buyer protection', 'link' => 'return_policy'],
+    ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
+    ['img' => '3.png', 'alt' => 'gifting', 'link' => 'gifting']
 ];
