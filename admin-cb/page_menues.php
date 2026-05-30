@@ -144,6 +144,10 @@ function cbAdminMenuActive($page, $currentPage) {
             </details>
           </li>
           <li><a href="manage_users">Customers</a></li>
+          <li><a href="schedule_email">Newsletter Broadcaster / Email Scheduler</a></li>
+          <li><a href="backups">Website Backups</a></li>
+          <li><a href="visitor_activity">Visitor Analytics</a></li>
+          <li><a href="recipe">Recipe Corner</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>
               <summary>Website Settings</summary>
@@ -192,6 +196,10 @@ function cbAdminMenuActive($page, $currentPage) {
         </details>
       </li>
       <li><a href="manage_users"<?= cbAdminMenuActive('manage_users', $adminCurrentPage) ?>>Customers</a></li>
+      <li><a href="schedule_email"<?= cbAdminMenuActive('schedule_email', $adminCurrentPage) ?>>Newsletter Broadcaster / Email Scheduler</a></li>
+      <li><a href="backups"<?= cbAdminMenuActive('backups', $adminCurrentPage) ?>>Website Backups</a></li>
+      <li><a href="visitor_activity"<?= cbAdminMenuActive('visitor_activity', $adminCurrentPage) ?>>Visitor Analytics</a></li>
+      <li><a href="recipe"<?= cbAdminMenuActive('recipe', $adminCurrentPage) ?>>Recipe Corner</a></li>
       <li>
         <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>
           <summary>Website Settings</summary>

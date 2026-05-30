@@ -63,6 +63,142 @@ function cbCustomersRows($conn, $sql) {
     return $rows;
 }
 
+function cbCustomersTableExists($conn, $table) {
+    $safeTable = $conn->real_escape_string($table);
+    $result = $conn->query("SHOW TABLES LIKE '{$safeTable}'");
+    return $result && $result->num_rows > 0;
+}
+
+function cbCustomersDeleteByInt($conn, $table, $column, $value) {
+    if (!cbCustomersTableExists($conn, $table)) {
+        return true;
+    }
+    $columns = cbCustomersColumns($conn, $table);
+    if (!isset($columns[$column])) {
+        return true;
+    }
+    $safeTable = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $safeColumn = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+    $stmt = $conn->prepare("DELETE FROM `$safeTable` WHERE `$safeColumn` = ?");
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('i', $value);
+    $ok = $stmt->execute();
+    $stmt->close();
+    return $ok;
+}
+
+function cbCustomersDeleteByString($conn, $table, $column, $value) {
+    if (!cbCustomersTableExists($conn, $table) || trim((string) $value) === '') {
+        return true;
+    }
+    $columns = cbCustomersColumns($conn, $table);
+    if (!isset($columns[$column])) {
+        return true;
+    }
+    $safeTable = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $safeColumn = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+    $stmt = $conn->prepare("DELETE FROM `$safeTable` WHERE `$safeColumn` = ?");
+    if (!$stmt) {
+        return false;
+    }
+    $stmt->bind_param('s', $value);
+    $ok = $stmt->execute();
+    $stmt->close();
+    return $ok;
+}
+
+function cbCustomersDeleteCustomerCompletely($conn, $userId) {
+    $userId = (int) $userId;
+    if ($userId <= 0) {
+        return false;
+    }
+
+    $email = '';
+    $stmt = $conn->prepare('SELECT email FROM users WHERE id = ? LIMIT 1');
+    if ($stmt) {
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $email = trim((string) ($row['email'] ?? ''));
+        $stmt->close();
+    }
+
+    $guestIds = [];
+    if (cbCustomersTableExists($conn, 'user_addresses')) {
+        $stmt = $conn->prepare("SELECT DISTINCT guest_identifier FROM user_addresses WHERE user_id = ? OR LOWER(billing_email_address) = LOWER(?)");
+        if ($stmt) {
+            $stmt->bind_param('is', $userId, $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $guestId = trim((string) ($row['guest_identifier'] ?? ''));
+                if ($guestId !== '') {
+                    $guestIds[] = $guestId;
+                }
+            }
+            $stmt->close();
+        }
+    }
+
+    $orderIds = [];
+    if (cbCustomersTableExists($conn, 'orders')) {
+        $stmt = $conn->prepare("SELECT DISTINCT id FROM orders WHERE user_id = ?");
+        if ($stmt) {
+            $stmt->bind_param('i', $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $orderIds[] = (int) $row['id'];
+            }
+            $stmt->close();
+        }
+        foreach ($guestIds as $guestId) {
+            $stmt = $conn->prepare("SELECT DISTINCT id FROM orders WHERE guest_identifier = ?");
+            if ($stmt) {
+                $stmt->bind_param('s', $guestId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+                    $orderIds[] = (int) $row['id'];
+                }
+                $stmt->close();
+            }
+        }
+    }
+
+    $orderIds = array_values(array_unique(array_filter($orderIds)));
+    $conn->begin_transaction();
+    try {
+        foreach ($orderIds as $orderId) {
+            foreach (['order_items', 'payment_checks', 'coupon_email_usage'] as $table) {
+                cbCustomersDeleteByInt($conn, $table, 'order_id', $orderId);
+            }
+            cbCustomersDeleteByInt($conn, 'orders', 'id', $orderId);
+        }
+
+        foreach (['cart', 'wishlist', 'compare', 'reviews', 'recipe_comments', 'sessions', 'action_logs', 'page_views'] as $table) {
+            cbCustomersDeleteByInt($conn, $table, 'user_id', $userId);
+        }
+        foreach ($guestIds as $guestId) {
+            foreach (['cart', 'wishlist', 'compare', 'sessions', 'action_logs', 'page_views'] as $table) {
+                cbCustomersDeleteByString($conn, $table, 'guest_identifier', $guestId);
+            }
+        }
+        cbCustomersDeleteByInt($conn, 'user_addresses', 'user_id', $userId);
+        if ($email !== '') {
+            cbCustomersDeleteByString($conn, 'user_addresses', 'billing_email_address', $email);
+        }
+        cbCustomersDeleteByInt($conn, 'users', 'id', $userId);
+        $conn->commit();
+        return true;
+    } catch (Throwable $e) {
+        $conn->rollback();
+        return false;
+    }
+}
+
 $userColumns = cbCustomersColumns($conn, 'users');
 $addressColumns = cbCustomersColumns($conn, 'user_addresses');
 $message = '';
@@ -134,14 +270,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'delete_user') {
         $userId = (int) ($_POST['user_id'] ?? 0);
         if ($userId > 0) {
-            $stmt = $conn->prepare('DELETE FROM users WHERE id = ?');
-            if ($stmt) {
-                $stmt->bind_param('i', $userId);
-                $ok = $stmt->execute();
-                $message = $ok ? 'Customer deleted.' : 'Customer could not be deleted because existing records depend on this account.';
-                $messageType = $ok ? 'success' : 'danger';
-                $stmt->close();
-            }
+            $ok = cbCustomersDeleteCustomerCompletely($conn, $userId);
+            $message = $ok ? 'Customer and their linked order information were deleted.' : 'Customer could not be deleted. Please check database permissions and linked records.';
+            $messageType = $ok ? 'success' : 'danger';
         }
     }
 }
@@ -309,7 +440,7 @@ include 'page_menues.php';
                                         data-username="<?= cbCustomersText($customer['username']) ?>"
                                         data-email="<?= cbCustomersText($customer['email']) ?>"
                                         data-status="<?= cbCustomersText($customer['status']) ?>">Edit</button>
-                                    <form method="post" onsubmit="return confirm('Delete this customer account? Orders may prevent deletion.');">
+                                    <form method="post" onsubmit="return confirm('Deleting this customer means deleting ALL their order information. Are you sure you want to proceed?');">
                                         <input type="hidden" name="customer_action" value="delete_user">
                                         <input type="hidden" name="user_id" value="<?= (int) $customer['id'] ?>">
                                         <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>

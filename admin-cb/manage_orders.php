@@ -242,6 +242,7 @@ include 'page_menues.php';
         <p class="mb-0">Create orders for customers, edit order carts, update statuses, send friendly client updates, and delete orders when needed.</p>
         <div class="orders-actions">
             <a href="create_order" class="btn btn-warning">Create order for customer</a>
+            <a href="create_order" class="btn btn-light">New blank order</a>
             <a href="index" class="btn btn-light">Dashboard</a>
             <a href="../products" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">Shop as customer</a>
         </div>
@@ -324,6 +325,7 @@ include 'page_menues.php';
                             <div class="order-action-row">
                                 <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
                                 <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');">Copy Order</a>
                                 <?php if ((int) $order['payment_status'] === 0): ?>
                                     <button class="btn btn-success btn-sm mark-paid-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Mark Paid</button>
                                 <?php endif; ?>
@@ -374,6 +376,7 @@ include 'page_menues.php';
                     <div class="order-action-row">
                         <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
                         <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');">Copy Order</a>
                         <button class="btn btn-warning btn-sm order-status-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-current-status="<?= cbOrderText($status) ?>"

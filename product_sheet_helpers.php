@@ -1835,24 +1835,26 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
         $config = ['items' => []];
         if (function_exists('mysqli_connect')) {
             $configPath = __DIR__ . '/dbh.inc.php';
-            if (is_file($configPath)) {
-                $settingsConn = null;
+            $settingsConn = null;
+            if (isset($GLOBALS['conn']) && $GLOBALS['conn'] instanceof mysqli && !$GLOBALS['conn']->connect_error) {
+                $settingsConn = $GLOBALS['conn'];
+            } elseif (is_file($configPath)) {
                 include $configPath;
                 if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
                     $settingsConn = $conn;
                 }
-                if ($settingsConn instanceof mysqli) {
-                    $columnCheck = $settingsConn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'category_display_config'");
-                    if ($columnCheck && $columnCheck->num_rows === 0) {
-                        $settingsConn->query("ALTER TABLE admin_website_settings ADD COLUMN category_display_config LONGTEXT NULL");
-                    }
-                    $result = $settingsConn->query("SELECT category_display_config FROM admin_website_settings ORDER BY id ASC");
-                    while ($result && ($row = $result->fetch_assoc())) {
-                        $decoded = json_decode((string) ($row['category_display_config'] ?? ''), true);
-                        if (is_array($decoded) && !empty($decoded['items']) && is_array($decoded['items'])) {
-                            $config = $decoded;
-                            break;
-                        }
+            }
+            if ($settingsConn instanceof mysqli) {
+                $columnCheck = $settingsConn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'category_display_config'");
+                if ($columnCheck && $columnCheck->num_rows === 0) {
+                    $settingsConn->query("ALTER TABLE admin_website_settings ADD COLUMN category_display_config LONGTEXT NULL");
+                }
+                $result = $settingsConn->query("SELECT category_display_config FROM admin_website_settings ORDER BY id ASC");
+                while ($result && ($row = $result->fetch_assoc())) {
+                    $decoded = json_decode((string) ($row['category_display_config'] ?? ''), true);
+                    if (is_array($decoded) && !empty($decoded['items']) && is_array($decoded['items'])) {
+                        $config = $decoded;
+                        break;
                     }
                 }
             }
@@ -1952,24 +1954,26 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
 
         if (function_exists('mysqli_connect')) {
             $configPath = __DIR__ . '/dbh.inc.php';
-            if (is_file($configPath)) {
-                $settingsConn = null;
+            $settingsConn = null;
+            if (isset($GLOBALS['conn']) && $GLOBALS['conn'] instanceof mysqli && !$GLOBALS['conn']->connect_error) {
+                $settingsConn = $GLOBALS['conn'];
+            } elseif (is_file($configPath)) {
                 include $configPath;
                 if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
                     $settingsConn = $conn;
                 }
-                if ($settingsConn instanceof mysqli) {
-                    $columnCheck = $settingsConn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'category_display_order'");
-                    if ($columnCheck && $columnCheck->num_rows === 0) {
-                        $settingsConn->query("ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
-                    }
-                    $result = $settingsConn->query("SELECT category_display_order FROM admin_website_settings ORDER BY id ASC");
-                    while ($result && ($row = $result->fetch_assoc())) {
-                        $saved = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', (string) ($row['category_display_order'] ?? '')))));
-                        if (!empty($saved)) {
-                            $order = $saved;
-                            break;
-                        }
+            }
+            if ($settingsConn instanceof mysqli) {
+                $columnCheck = $settingsConn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'category_display_order'");
+                if ($columnCheck && $columnCheck->num_rows === 0) {
+                    $settingsConn->query("ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
+                }
+                $result = $settingsConn->query("SELECT category_display_order FROM admin_website_settings ORDER BY id ASC");
+                while ($result && ($row = $result->fetch_assoc())) {
+                    $saved = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', (string) ($row['category_display_order'] ?? '')))));
+                    if (!empty($saved)) {
+                        $order = $saved;
+                        break;
                     }
                 }
             }
