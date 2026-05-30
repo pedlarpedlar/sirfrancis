@@ -2045,6 +2045,9 @@ if (!function_exists('normalizeCandybirdDeliveryOptions')) {
             if (isset($savedOptions[$methodKey]['estimate'])) {
                 $options[$methodKey]['estimate'] = trim((string) $savedOptions[$methodKey]['estimate']);
             }
+            if (array_key_exists('free_shipping_eligible', $savedOptions[$methodKey] ?? [])) {
+                $options[$methodKey]['free_shipping_eligible'] = filter_var($savedOptions[$methodKey]['free_shipping_eligible'], FILTER_VALIDATE_BOOLEAN);
+            }
             if ($methodKey === 'collect' && isset($savedOptions[$methodKey]['collection_address'])) {
                 $options[$methodKey]['collection_address'] = trim((string) $savedOptions[$methodKey]['collection_address']);
             }

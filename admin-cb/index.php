@@ -39,10 +39,12 @@ $linkGroups = [
         ['Categories', 'manage_categories', 'Category management'],
     ],
     'Website & Settings' => [
-        ['Website Settings', 'manage_website_information', 'Company, contact, shipping, checkout and website settings'],
+        ['Contact Info', 'manage_website_information', 'Company, contact, address and banking settings'],
+        ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices, free shipping and Maps API'],
+        ['Google reCAPTCHA', 'google_recaptcha', 'Contact form spam protection settings'],
         ['Run Cron Jobs', 'run_cron', 'Manually trigger available cron jobs'],
         ['Backups', 'backups', 'Backup downloads and backup cron status'],
-        ['Shipping Settings', 'shipping', 'Legacy shipping page if still needed'],
+        ['Legacy Shipping Zones', 'shipping', 'Old province/country shipping zone page'],
         ['Admin Settings', 'settings', 'Admin account settings'],
     ],
     'Public Website' => [

@@ -115,70 +115,86 @@ try {
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_secret_key', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_secret_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'category_display_order', "ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
 
-    $tel = trim((string) ($_POST['tel'] ?? ''));
-    $hotline = trim((string) ($_POST['hotline'] ?? ''));
-    $email_1 = trim((string) ($_POST['email_1'] ?? ''));
-    $email_2 = trim((string) ($_POST['email_2'] ?? ''));
-    $address = trim((string) ($_POST['address'] ?? ''));
-    $headquarters = trim((string) ($_POST['headquarters'] ?? ''));
-    $free_shipping_amount = is_numeric($_POST['free_shipping_amount'] ?? null) ? (string) $_POST['free_shipping_amount'] : '0';
-    $google_maps_api_key = trim((string) ($_POST['google_maps_api_key'] ?? ''));
-    $contact_recaptcha_enabled = isset($_POST['contact_recaptcha_enabled']) ? 1 : 0;
-    $contact_recaptcha_type = in_array($_POST['contact_recaptcha_type'] ?? 'v3', ['v3', 'v2_checkbox'], true) ? $_POST['contact_recaptcha_type'] : 'v3';
-    $contact_recaptcha_site_key = trim((string) ($_POST['contact_recaptcha_site_key'] ?? ''));
-    $contact_recaptcha_secret_key = trim((string) ($_POST['contact_recaptcha_secret_key'] ?? ''));
-    $default_unit_weight_kg = (float) ($_POST['default_unit_weight_kg'] ?? 0.25);
-    if ($default_unit_weight_kg <= 0) {
-        $default_unit_weight_kg = 0.25;
-    }
-    $banking_details = (string) ($_POST['banking_details'] ?? '');
-    $website_company_name = trim((string) ($_POST['website_company_name'] ?? ''));
-    $support_email = trim((string) ($_POST['support_email'] ?? ''));
-    $category_display_order = trim((string) ($_POST['category_display_order'] ?? ''));
-    $postedShippingRates = $_POST['shipping_rates'] ?? [];
-    $enabledShippingMethods = $_POST['shipping_enabled'] ?? [];
-    foreach (['locker', 'door', 'collect'] as $methodKey) {
-        if (!isset($postedShippingRates[$methodKey]) || !is_array($postedShippingRates[$methodKey])) {
-            $postedShippingRates[$methodKey] = [];
-        }
-        $postedShippingRates[$methodKey]['enabled'] = isset($enabledShippingMethods[$methodKey]);
-        $postedShippingRates[$methodKey]['estimate'] = trim((string) ($_POST['shipping_estimate'][$methodKey] ?? ''));
-    }
-    $postedShippingRates['collect']['collection_address'] = trim((string) ($_POST['collection_address'] ?? ''));
-    $enabledCount = 0;
-    foreach (['locker', 'door', 'collect'] as $methodKey) {
-        if (!empty($postedShippingRates[$methodKey]['enabled'])) {
-            $enabledCount++;
-        }
-    }
-    if ($enabledCount < 1) {
-        throw new RuntimeException('Enable at least one customer delivery or collection method.');
-    }
-    $extraTierLines = preg_split('/\r\n|\r|\n/', (string) ($_POST['shipping_extra_tiers'] ?? ''));
-    foreach ($extraTierLines as $lineIndex => $line) {
-        $parts = array_map('trim', explode(',', $line, 4));
-        if (count($parts) < 3 || $parts[0] === '') {
-            continue;
-        }
-        [$methodKey, $maxKg, $price] = $parts;
-        if (!in_array($methodKey, ['locker', 'door'], true) || !is_numeric($maxKg) || !is_numeric($price) || (float) $maxKg <= 20) {
-            continue;
-        }
-        $tierKey = $methodKey . '_custom_' . str_replace('.', '_', (string) (float) $maxKg) . 'kg_' . $lineIndex;
-        $postedShippingRates[$methodKey]['tiers'][$tierKey] = [
-            'label' => $parts[3] ?? ('Up to ' . (float) $maxKg . 'kg'),
-            'max_kg' => (float) $maxKg,
-            'price' => (float) $price,
-        ];
-    }
-    $shipping_rates_json = json_encode(normalizeCandybirdDeliveryOptions($postedShippingRates));
-
     $settingsId = 1;
     $hasSettingsRow = false;
-    $settingsResult = $conn->query("SELECT id FROM admin_website_settings ORDER BY id ASC LIMIT 1");
+    $existingSettings = [];
+    $settingsResult = $conn->query("SELECT * FROM admin_website_settings ORDER BY id ASC LIMIT 1");
     if ($settingsResult && ($settingsRow = $settingsResult->fetch_assoc())) {
         $settingsId = (int) $settingsRow['id'];
         $hasSettingsRow = true;
+        $existingSettings = $settingsRow;
+    }
+
+    $settingsSection = trim((string) ($_POST['settings_section'] ?? $_GET['section'] ?? 'all'));
+    $isContactSave = in_array($settingsSection, ['all', 'contact'], true);
+    $isShippingSave = in_array($settingsSection, ['all', 'shipping'], true);
+    $isRecaptchaSave = in_array($settingsSection, ['all', 'recaptcha'], true);
+    $postedOrExisting = static function($field, $default = '') use ($existingSettings) {
+        return array_key_exists($field, $_POST) ? trim((string) $_POST[$field]) : (string) ($existingSettings[$field] ?? $default);
+    };
+
+    $tel = $isContactSave ? $postedOrExisting('tel') : (string) ($existingSettings['tel'] ?? '');
+    $hotline = $isContactSave ? $postedOrExisting('hotline') : (string) ($existingSettings['hotline'] ?? '');
+    $email_1 = $isContactSave ? $postedOrExisting('email_1') : (string) ($existingSettings['email_1'] ?? '');
+    $email_2 = $isContactSave ? $postedOrExisting('email_2') : (string) ($existingSettings['email_2'] ?? '');
+    $address = $isContactSave ? $postedOrExisting('address') : (string) ($existingSettings['address'] ?? '');
+    $headquarters = $isContactSave ? $postedOrExisting('headquarters') : (string) ($existingSettings['headquarters'] ?? '');
+    $free_shipping_amount = $isShippingSave ? (is_numeric($_POST['free_shipping_amount'] ?? null) ? (string) $_POST['free_shipping_amount'] : '0') : (string) ($existingSettings['free_shipping_amount'] ?? '0');
+    $google_maps_api_key = $isShippingSave ? $postedOrExisting('google_maps_api_key') : (string) ($existingSettings['google_maps_api_key'] ?? '');
+    $contact_recaptcha_enabled = $isRecaptchaSave ? (isset($_POST['contact_recaptcha_enabled']) ? 1 : 0) : (int) ($existingSettings['contact_recaptcha_enabled'] ?? 0);
+    $contact_recaptcha_type = $isRecaptchaSave ? (in_array($_POST['contact_recaptcha_type'] ?? 'v3', ['v3', 'v2_checkbox'], true) ? $_POST['contact_recaptcha_type'] : 'v3') : (string) ($existingSettings['contact_recaptcha_type'] ?? 'v3');
+    $contact_recaptcha_site_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_site_key') : (string) ($existingSettings['contact_recaptcha_site_key'] ?? '');
+    $contact_recaptcha_secret_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_secret_key') : (string) ($existingSettings['contact_recaptcha_secret_key'] ?? '');
+    $default_unit_weight_kg = $isShippingSave ? (float) ($_POST['default_unit_weight_kg'] ?? 0.25) : (float) ($existingSettings['default_unit_weight_kg'] ?? 0.25);
+    if ($default_unit_weight_kg <= 0) {
+        $default_unit_weight_kg = 0.25;
+    }
+    $banking_details = $isContactSave ? (string) ($_POST['banking_details'] ?? '') : (string) ($existingSettings['banking_details'] ?? '');
+    $website_company_name = $isContactSave ? $postedOrExisting('website_company_name') : (string) ($existingSettings['website_company_name'] ?? '');
+    $support_email = $isContactSave ? $postedOrExisting('support_email') : (string) ($existingSettings['support_email'] ?? '');
+    $category_display_order = array_key_exists('category_display_order', $_POST) ? trim((string) $_POST['category_display_order']) : (string) ($existingSettings['category_display_order'] ?? '');
+
+    $shipping_rates_json = (string) ($existingSettings['shipping_rates_json'] ?? '');
+    if ($isShippingSave) {
+        $postedShippingRates = $_POST['shipping_rates'] ?? [];
+        $enabledShippingMethods = $_POST['shipping_enabled'] ?? [];
+        $freeEligibleMethods = $_POST['shipping_free_eligible'] ?? [];
+        foreach (['locker', 'door', 'collect'] as $methodKey) {
+            if (!isset($postedShippingRates[$methodKey]) || !is_array($postedShippingRates[$methodKey])) {
+                $postedShippingRates[$methodKey] = [];
+            }
+            $postedShippingRates[$methodKey]['enabled'] = isset($enabledShippingMethods[$methodKey]);
+            $postedShippingRates[$methodKey]['estimate'] = trim((string) ($_POST['shipping_estimate'][$methodKey] ?? ''));
+            $postedShippingRates[$methodKey]['free_shipping_eligible'] = $methodKey !== 'collect' && isset($freeEligibleMethods[$methodKey]);
+        }
+        $postedShippingRates['collect']['collection_address'] = trim((string) ($_POST['collection_address'] ?? ''));
+        $enabledCount = 0;
+        foreach (['locker', 'door', 'collect'] as $methodKey) {
+            if (!empty($postedShippingRates[$methodKey]['enabled'])) {
+                $enabledCount++;
+            }
+        }
+        if ($enabledCount < 1) {
+            throw new RuntimeException('Enable at least one customer delivery or collection method.');
+        }
+        $extraTierLines = preg_split('/\r\n|\r|\n/', (string) ($_POST['shipping_extra_tiers'] ?? ''));
+        foreach ($extraTierLines as $lineIndex => $line) {
+            $parts = array_map('trim', explode(',', $line, 4));
+            if (count($parts) < 3 || $parts[0] === '') {
+                continue;
+            }
+            [$methodKey, $maxKg, $price] = $parts;
+            if (!in_array($methodKey, ['locker', 'door'], true) || !is_numeric($maxKg) || !is_numeric($price) || (float) $maxKg <= 20) {
+                continue;
+            }
+            $tierKey = $methodKey . '_custom_' . str_replace('.', '_', (string) (float) $maxKg) . 'kg_' . $lineIndex;
+            $postedShippingRates[$methodKey]['tiers'][$tierKey] = [
+                'label' => $parts[3] ?? ('Up to ' . (float) $maxKg . 'kg'),
+                'max_kg' => (float) $maxKg,
+                'price' => (float) $price,
+            ];
+        }
+        $shipping_rates_json = json_encode(normalizeCandybirdDeliveryOptions($postedShippingRates));
     }
 
     $stmt = $conn->prepare("UPDATE admin_website_settings SET 

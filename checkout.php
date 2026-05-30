@@ -989,12 +989,12 @@ function updateCheckoutTotals() {
             note += ' Collection address: ' + quote.collectionAddress + '.';
         }
     }
-    if (method === 'locker' && quote.shippingDiscount > 0) {
-        note += ' Free locker shipping applied.';
-    } else if (method === 'locker' && freeShippingAmount > checkoutSubtotal) {
-        note += ' Add ' + formatRand(freeShippingAmount - checkoutSubtotal) + ' more for free locker shipping.';
-    } else if (method === 'door') {
-        note += ' Free shipping does not apply to door-to-door delivery.';
+    if (quote.shippingDiscount > 0) {
+        note += ' Free shipping applied.';
+    } else if (quote.freeEligible && freeShippingAmount > checkoutSubtotal) {
+        note += ' Add ' + formatRand(freeShippingAmount - checkoutSubtotal) + ' more for free shipping.';
+    } else if (!quote.freeEligible && method !== 'collect') {
+        note += ' Free shipping does not apply to this delivery method.';
     }
     if (quote.estimate) {
         note += ' Estimate: ' + quote.estimate + '.';

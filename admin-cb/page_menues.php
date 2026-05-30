@@ -145,11 +145,12 @@ function cbAdminMenuActive($page, $currentPage) {
           </li>
           <li><a href="manage_users">Customers</a></li>
           <li>
-            <details<?= cbAdminMenuOpen(['manage_website_information'], $adminCurrentPage) ?>>
+            <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>
               <summary>Website Settings</summary>
               <ul>
-                <li><a href="manage_website_information#contact-info">Contact Info</a></li>
-                <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+                <li><a href="manage_website_information">Contact Info</a></li>
+                <li><a href="shipping_settings">Shipping</a></li>
+                <li><a href="google_recaptcha">Google reCAPTCHA</a></li>
               </ul>
             </details>
           </li>
@@ -192,11 +193,12 @@ function cbAdminMenuActive($page, $currentPage) {
       </li>
       <li><a href="manage_users"<?= cbAdminMenuActive('manage_users', $adminCurrentPage) ?>>Customers</a></li>
       <li>
-        <details<?= cbAdminMenuOpen(['manage_website_information'], $adminCurrentPage) ?>>
+        <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>
           <summary>Website Settings</summary>
           <ul>
-            <li><a href="manage_website_information#contact-info">Contact Info</a></li>
-            <li><a href="manage_website_information#shipping-settings">Shipping</a></li>
+            <li><a href="manage_website_information">Contact Info</a></li>
+            <li><a href="shipping_settings">Shipping</a></li>
+            <li><a href="google_recaptcha">Google reCAPTCHA</a></li>
           </ul>
         </details>
       </li>

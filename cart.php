@@ -337,7 +337,7 @@ $default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $c
                         <?php
                             $isDefaultMethod = $methodKey === $default_delivery_method;
                             $methodHelp = $method['estimate'] ?? '';
-                            if ($methodKey === 'locker') {
+                            if (!empty($method['free_shipping_eligible'])) {
                                 $methodHelp = 'Free shipping can apply here' . ($methodHelp ? '. ' . $methodHelp : '');
                             } elseif ($methodKey === 'collect') {
                                 $methodHelp = 'No courier fee' . ($methodHelp ? '. ' . $methodHelp : '');
@@ -555,12 +555,12 @@ $(document).ready(function () {
           if (quote.collectionAddress) {
               note += ' Collection address: ' + quote.collectionAddress + '.';
           }
-      } else if (method === 'locker' && quote.shippingDiscount > 0) {
-          note += ' Free locker shipping applied.';
-      } else if (method === 'locker' && freeShippingAmount > cartSubtotal) {
-          note += ' Add ' + formatRand(freeShippingAmount - cartSubtotal) + ' more for free locker shipping.';
-      } else if (method === 'door') {
-          note += ' Free shipping does not apply to door-to-door delivery.';
+      } else if (quote.shippingDiscount > 0) {
+          note += ' Free shipping applied.';
+      } else if (option.free_shipping_eligible && freeShippingAmount > cartSubtotal) {
+          note += ' Add ' + formatRand(freeShippingAmount - cartSubtotal) + ' more for free shipping.';
+      } else if (!option.free_shipping_eligible) {
+          note += ' Free shipping does not apply to this delivery method.';
       }
       $('.cart-delivery-note').text('Estimated order weight: ' + cartWeightKg.toFixed(2) + 'kg. ' + note);
   }
