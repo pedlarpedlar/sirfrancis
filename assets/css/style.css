@@ -70,12 +70,14 @@
   src: url("https://www.candybird.co.za/assets/fonts/PinyonScript-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Playfair Display";
   src: url("https://www.candybird.co.za/assets/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 /*---------------------------*
  #Template default CSS
@@ -7595,3 +7597,82 @@ span.required {
 /* ***************
    map page End
  ******************/
+
+/* Final Core Web Vitals stability overrides. Keep near the end so template rules cannot undo them. */
+.logo img {
+  aspect-ratio: 4400 / 669;
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 168px;
+}
+
+.header-middle {
+  min-height: 82px;
+}
+
+.header-top {
+  min-height: 50px;
+}
+
+.product-thumbnail {
+  aspect-ratio: 1 / 1;
+  background: #f7f2ea;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-thumbnail > a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.product-thumbnail img,
+.grid-view-list .product-thumbnail img,
+.grid-view .product-thumbnail img,
+.featured-init .product-thumbnail img,
+.featured-init2 .product-thumbnail img {
+  display: block;
+  height: 100%;
+  margin: 0 !important;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.product-sync-init,
+.product-gallery-main {
+  min-height: 420px;
+}
+
+.product-sync-nav {
+  min-height: 96px;
+}
+
+.offcanvas-cart .thumb,
+.offcanvas-wishlist .thumb {
+  aspect-ratio: 1 / 1;
+  background: #f7f2ea;
+  overflow: hidden;
+}
+
+.offcanvas-cart .thumb img,
+.offcanvas-wishlist .thumb img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.modal.style3 .product-image {
+  aspect-ratio: 4508 / 5025;
+  display: block;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  width: 100%;
+}
+
+.login-register-area {
+  min-height: 720px;
+}

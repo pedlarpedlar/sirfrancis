@@ -534,6 +534,27 @@ include 'header.php';
     margin: 10px 0 0;
   }
 
+  .product-page-state {
+    min-height: 680px;
+  }
+
+  .product-page-state .container {
+    align-items: center;
+    display: flex;
+    min-height: 620px;
+  }
+
+  .product-page-state p {
+    background: #fff7ef;
+    border: 1px solid #ead7c9;
+    border-radius: 6px;
+    color: #4d2620;
+    font-weight: 800;
+    margin: 0;
+    padding: 14px 16px;
+    width: 100%;
+  }
+
   @media (max-width: 575px) {
     .product-payment-methods {
       padding: 12px;
@@ -626,19 +647,19 @@ include 'header.php';
               <p class="product-payment-methods__title"><i class="fas fa-lock"></i> Secure checkout powered by PayFast</p>
               <div class="product-payment-methods__grid">
                 <span class="payment-method-logo" title="Visa">
-                  <img src="https://cdn.simpleicons.org/visa/1a1f71" alt="Visa" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Visa</span>');">
+                  <img src="https://cdn.simpleicons.org/visa/1a1f71" alt="Visa" width="72" height="24" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Visa</span>');">
                 </span>
                 <span class="payment-method-logo" title="Mastercard">
-                  <img src="https://cdn.simpleicons.org/mastercard/eb001b" alt="Mastercard" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Mastercard</span>');">
+                  <img src="https://cdn.simpleicons.org/mastercard/eb001b" alt="Mastercard" width="72" height="24" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Mastercard</span>');">
                 </span>
                 <span class="payment-method-logo payment-method-logo--wide" title="Apple Pay">
-                  <img src="https://cdn.simpleicons.org/applepay/000000" alt="Apple Pay" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Apple Pay</span>');">
+                  <img src="https://cdn.simpleicons.org/applepay/000000" alt="Apple Pay" width="92" height="24" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Apple Pay</span>');">
                 </span>
                 <span class="payment-method-logo payment-method-logo--wide" title="Google Pay">
-                  <img src="https://cdn.simpleicons.org/googlepay/4285F4" alt="Google Pay" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Google Pay</span>');">
+                  <img src="https://cdn.simpleicons.org/googlepay/4285F4" alt="Google Pay" width="92" height="24" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Google Pay</span>');">
                 </span>
                 <span class="payment-method-logo payment-method-logo--wide" title="Samsung Pay">
-                  <img src="https://cdn.simpleicons.org/samsungpay/1428A0" alt="Samsung Pay" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Samsung Pay</span>');">
+                  <img src="https://cdn.simpleicons.org/samsungpay/1428A0" alt="Samsung Pay" width="92" height="24" loading="lazy" onerror="this.remove(); this.parentElement.insertAdjacentHTML('beforeend','<span>Samsung Pay</span>');">
                 </span>
                 <span class="payment-method-logo payment-method-logo--wide" title="PayFast">
                   <span>PayFast</span>

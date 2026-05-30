@@ -416,7 +416,7 @@ foreach ($offCanvasCartItems as $item) {
         <div class="col-6 col-lg-2 col-xl-2">
           <div class="logo">
             <a href="./"
-              ><img src="<?=$home_directory?>assets/img/logo/logo.png" alt="logo"
+              ><img src="<?=$home_directory?>assets/img/logo/logo.png" alt="CandyBird" width="4400" height="669"
             /></a>
           </div>
         </div>

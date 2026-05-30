@@ -367,7 +367,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <div class="modal-body">
         <div class="row align-items-center">
           <div class="col-md-4 text-center mb-4 mb-md-0">
-            <img class="product-image img-fluid" src="<?=$home_directory?>assets/img/product/1.png" onerror="this.onerror=null;this.src='<?=$home_directory?>assets/img/product/1.png';" alt="Product image">
+            <img class="product-image img-fluid" src="<?=$home_directory?>assets/img/product/1.png" width="4508" height="5025" onerror="this.onerror=null;this.src='<?=$home_directory?>assets/img/product/1.png';" alt="Product image">
           </div>
           <div class="col-md-8">
             <h5 class="product-name mb-2"></h5>
