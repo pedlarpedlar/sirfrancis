@@ -14,8 +14,6 @@ STALE_LIVE_PATHS=(
   "candybird2025"
   "candybird-libs"
   "TCPDF-main"
-  "expomedia.co.za"
-  "syncitt.co.za"
 )
 
 for stale_path in "${STALE_LIVE_PATHS[@]}"; do
