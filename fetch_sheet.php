@@ -664,9 +664,12 @@ document.addEventListener('click', function(event) {
   }
 
   function getStockNumber(product) {
-    const fields = ['stock_qty', 'qty_in_stock', 'stock', 'qty_available', 'quantity_available', 'available_qty', 'inventory'];
+    const fields = ['qty_available', 'stock_qty', 'qty_in_stock', 'quantity_available', 'available_qty', 'inventory', 'stock'];
     for (let i = 0; i < fields.length; i++) {
-      const value = product && product[fields[i]];
+      if (!Object.prototype.hasOwnProperty.call(product || {}, fields[i])) {
+        continue;
+      }
+      const value = product[fields[i]];
       if (value !== undefined && value !== null && String(value).trim() !== '' && !isNaN(parseFloat(value))) {
         return Math.max(0, Math.floor(parseFloat(value)));
       }

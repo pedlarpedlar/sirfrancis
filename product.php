@@ -875,6 +875,19 @@ $(function() {
     return $wrap.html();
   }
 
+  function firstProductStockValue(product) {
+    const fields = ['qty_available', 'stock_qty', 'qty_in_stock', 'quantity_available', 'available_qty', 'inventory', 'stock'];
+    for (let i = 0; i < fields.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(product || {}, fields[i])) {
+        const value = product[fields[i]];
+        if (value !== null && value !== undefined && String(value).trim() !== '') {
+          return value;
+        }
+      }
+    }
+    return '';
+  }
+
   function normalizeProduct(product) {
     const price = parseFloat(product.price) || 0;
     const isClearance = String(product.is_clearance || '').toLowerCase() === 'yes';
@@ -910,7 +923,7 @@ $(function() {
       dimensions: product.dimensions || '',
       otherInfo: product.other_info || '',
       productType: product.product_type || product.type || product.delivery_type || '',
-      stockQty: product.stock_qty || product.stock || product.qty_available || product.quantity_available || product.available_qty || product.inventory || product.qty_in_stock || '',
+      stockQty: firstProductStockValue(product),
       leadTime: product.lead_time || product.leadtime || product.preparation_time || '',
       slug: product.slug || '',
       is_clearance: product.is_clearance || '',
@@ -1164,7 +1177,7 @@ $(function() {
   }
 
   function renderAvailability(product) {
-    const stockValue = String(product.stockQty || product.raw?.stock_qty || product.raw?.qty_in_stock || product.raw?.stock || product.raw?.qty_available || product.raw?.quantity_available || product.raw?.available_qty || product.raw?.inventory || '').trim();
+    const stockValue = String(product.stockQty !== '' && product.stockQty !== null && product.stockQty !== undefined ? product.stockQty : firstProductStockValue(product.raw || {})).trim();
     const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
     const leadTime = String(product.leadTime || '').trim();
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
@@ -1297,7 +1310,7 @@ $(function() {
       .map(normalizeProduct)
       .filter(function(item) {
         if (item.id === product.id) return false;
-        const stockValue = String(item.stockQty || item.raw?.stock_qty || item.raw?.qty_in_stock || item.raw?.stock || item.raw?.qty_available || item.raw?.quantity_available || item.raw?.available_qty || item.raw?.inventory || '').trim();
+        const stockValue = String(item.stockQty !== '' && item.stockQty !== null && item.stockQty !== undefined ? item.stockQty : firstProductStockValue(item.raw || {})).trim();
         const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
         if (stockNumber !== null && stockNumber <= 0) return false;
         return item.childCategory2 === category || item.childCategory1 === category || item.parentCategory === category || item.childCategory1 === product.childCategory1 || item.parentCategory === product.parentCategory;
@@ -1315,7 +1328,7 @@ $(function() {
       const title = displayTitle(item);
       const salePercent = getSalePercent(item);
       const isClearance = String(item.is_clearance || item.raw?.is_clearance || '').toLowerCase() === 'yes';
-      const stockValue = String(item.stockQty || item.raw?.stock_qty || item.raw?.qty_in_stock || '').trim();
+      const stockValue = String(item.stockQty !== '' && item.stockQty !== null && item.stockQty !== undefined ? item.stockQty : firstProductStockValue(item.raw || {})).trim();
       const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
       const isSoldOut = stockNumber !== null && stockNumber <= 0;
       const priceHtml = salePercent > 0

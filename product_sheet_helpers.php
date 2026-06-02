@@ -1150,7 +1150,7 @@ if (!function_exists('getSheetProductUrl')) {
 
 if (!function_exists('getSheetProductStockQty')) {
     function getSheetProductStockQty($product) {
-        foreach (['stock_qty', 'qty_in_stock', 'stock', 'qty_available', 'quantity_available', 'available_qty', 'inventory'] as $field) {
+        foreach (['qty_available', 'stock_qty', 'qty_in_stock', 'quantity_available', 'available_qty', 'inventory', 'stock'] as $field) {
             if (isset($product[$field]) && trim((string) $product[$field]) !== '' && is_numeric($product[$field])) {
                 return max(0, (int) floor((float) $product[$field]));
             }
