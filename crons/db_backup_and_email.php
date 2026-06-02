@@ -223,8 +223,12 @@ function cbBackupShouldSkip($path, $rootDir, $backupDir) {
         '/node_modules/',
         '/.well-known/acme-challenge/',
         '/backups/',
+        '/candybird2025/',
+        '/candybird-libs/',
         '/cache/',
+        '/expomedia.co.za/',
         '/sheet_cache/',
+        '/syncitt.co.za/',
         '/logs/',
         '/tmp/',
         '/temp/',
@@ -235,6 +239,7 @@ function cbBackupShouldSkip($path, $rootDir, $backupDir) {
         '/admin-cb/uploads/databases/',
         '/uploads/backups/',
         '/uploads/databases/',
+        '/TCPDF-main/',
         '/TCPDF-main/TCPDF-main.zip',
     ];
 
