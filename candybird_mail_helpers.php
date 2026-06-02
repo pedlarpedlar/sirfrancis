@@ -44,7 +44,20 @@ if (!function_exists('cbCandybirdSendMail')) {
         }
 
         $lastError = '';
-        $altBody = trim(strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", (string) $htmlBody)));
+        $altBody = isset($options['alt_body'])
+            ? (string) $options['alt_body']
+            : trim(strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", (string) $htmlBody)));
+        $bccRecipients = [];
+        foreach ((array) ($options['bcc'] ?? []) as $bccEmail => $bccName) {
+            if (is_int($bccEmail)) {
+                $bccEmail = $bccName;
+                $bccName = '';
+            }
+            $bccEmail = trim((string) $bccEmail);
+            if ($bccEmail !== '' && filter_var($bccEmail, FILTER_VALIDATE_EMAIL)) {
+                $bccRecipients[$bccEmail] = $bccName ?: $bccEmail;
+            }
+        }
         $mailFallbackFrom = $GLOBALS['smtp_username1'] ?? ($accounts[0]['email'] ?? '');
 
         if (!empty($options['prefer_mail_transport']) && filter_var((string) $mailFallbackFrom, FILTER_VALIDATE_EMAIL)) {
@@ -57,6 +70,11 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->XMailer = 'CandyBird Mailer';
                 $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'CandyBird');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
+                foreach ($bccRecipients as $bccEmail => $bccName) {
+                    if (strcasecmp($bccEmail, $toEmail) !== 0) {
+                        $mail->addBCC($bccEmail, $bccName);
+                    }
+                }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
                     $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
@@ -92,6 +110,11 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->XMailer = 'CandyBird Mailer';
                 $mail->setFrom($account['email'], $options['from_name'] ?? 'CandyBird');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
+                foreach ($bccRecipients as $bccEmail => $bccName) {
+                    if (strcasecmp($bccEmail, $toEmail) !== 0) {
+                        $mail->addBCC($bccEmail, $bccName);
+                    }
+                }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
                     $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
@@ -119,6 +142,11 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->XMailer = 'CandyBird Mailer';
                 $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'CandyBird');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
+                foreach ($bccRecipients as $bccEmail => $bccName) {
+                    if (strcasecmp($bccEmail, $toEmail) !== 0) {
+                        $mail->addBCC($bccEmail, $bccName);
+                    }
+                }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
                     $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {

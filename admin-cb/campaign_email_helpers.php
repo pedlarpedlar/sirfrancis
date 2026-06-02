@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('Africa/Johannesburg');
 
-use PHPMailer\PHPMailer\PHPMailer;
+require_once __DIR__ . '/../candybird_mail_helpers.php';
 
 function cbCampaignText($value)
 {
@@ -269,53 +269,44 @@ function cbCampaignTrackedUrl($url, $payload)
     return $url . $separator . http_build_query($params);
 }
 
-function cbCampaignConfigureMailer(PHPMailer $mail)
-{
-    global $smtp_server, $smtp_port, $smtp_type, $smtp_username1, $smtp_username2, $smtp_password2, $smtp_username5, $smtp_password5;
-
-    if (empty($smtp_server) || empty($smtp_port) || (empty($smtp_username5) && empty($smtp_username2)) || (empty($smtp_password5) && empty($smtp_password2))) {
-        throw new Exception('SMTP settings are not loaded. Please check the website email configuration file.');
-    }
-
-    $fromEmail = !empty($smtp_username5) ? $smtp_username5 : $smtp_username2;
-    $fromPassword = !empty($smtp_password5) ? $smtp_password5 : $smtp_password2;
-
-    $mail->isSMTP();
-    $mail->Host = $smtp_server;
-    $mail->SMTPAuth = true;
-    $mail->Username = $fromEmail;
-    $mail->Password = $fromPassword;
-    if (!empty($smtp_type)) {
-        $mail->SMTPSecure = $smtp_type;
-    }
-    $mail->Port = $smtp_port;
-    $mail->setFrom($fromEmail, 'CandyBird');
-    $mail->CharSet = 'UTF-8';
-    $mail->Encoding = 'base64';
-    if (!empty($smtp_username1)) {
-        $mail->addReplyTo($smtp_username1, 'CandyBird');
-    }
-    $mail->isHTML(true);
-}
-
 function cbCampaignSendEmail($recipientEmail, $recipientName, $payload)
 {
     global $smtp_username1;
 
-    $mail = new PHPMailer(true);
-    cbCampaignConfigureMailer($mail);
-    $mail->addAddress($recipientEmail, $recipientName ?: $recipientEmail);
     $adminCopyEmail = trim((string) ($payload['admin_copy_email'] ?? ''));
     if ($adminCopyEmail === '' && !empty($payload['send_admin_copy'])) {
         $adminCopyEmail = (string) ($smtp_username1 ?? '');
     }
+
+    $bcc = [];
     if ($adminCopyEmail !== '' && filter_var($adminCopyEmail, FILTER_VALIDATE_EMAIL) && strcasecmp($adminCopyEmail, $recipientEmail) !== 0) {
-        $mail->addBCC($adminCopyEmail, 'CandyBird Admin');
+        $bcc[$adminCopyEmail] = 'CandyBird Admin';
     }
-    $mail->Subject = $payload['subject'];
-    $mail->Body = cbCampaignRenderEmail($payload, $recipientEmail);
-    $mail->AltBody = trim(strip_tags(str_replace('{coupon_code}', $payload['coupon_code'] ?? '', $payload['body_html'] ?? '')));
-    $mail->send();
+
+    $html = cbCampaignRenderEmail($payload, $recipientEmail);
+    $alt = trim(strip_tags(str_replace('{coupon_code}', $payload['coupon_code'] ?? '', $payload['body_html'] ?? '')));
+    if ($alt === '' && !empty($payload['coupon_code'])) {
+        $alt = 'CandyBird coupon code: ' . $payload['coupon_code'];
+    }
+
+    $result = cbCandybirdSendMail(
+        $recipientEmail,
+        $recipientName ?: $recipientEmail,
+        $payload['subject'],
+        $html,
+        [
+            'from_name' => 'CandyBird',
+            'prefer_mail_transport' => true,
+            'reply_to_email' => $smtp_username1 ?? '',
+            'reply_to_name' => 'CandyBird',
+            'bcc' => $bcc,
+            'alt_body' => $alt,
+        ]
+    );
+
+    if (empty($result['success'])) {
+        throw new Exception($result['error'] ?? 'Campaign email could not be sent.');
+    }
 }
 
 function cbCampaignSendAdminSummary($subject, $message, $payload, $stats = array())
@@ -342,11 +333,20 @@ function cbCampaignSendAdminSummary($subject, $message, $payload, $stats = array
         . cbCampaignRenderEmail($payload, $smtp_username1)
         . '</div>';
 
-    $mail = new PHPMailer(true);
-    cbCampaignConfigureMailer($mail);
-    $mail->addAddress($smtp_username1, 'CandyBird Admin');
-    $mail->Subject = $subject;
-    $mail->Body = $body;
-    $mail->isHTML(true);
-    $mail->send();
+    $result = cbCandybirdSendMail(
+        $smtp_username1,
+        'CandyBird Admin',
+        $subject,
+        $body,
+        [
+            'from_name' => 'CandyBird',
+            'prefer_mail_transport' => true,
+            'reply_to_email' => $smtp_username1,
+            'reply_to_name' => 'CandyBird',
+        ]
+    );
+
+    if (empty($result['success'])) {
+        throw new Exception($result['error'] ?? 'Campaign admin summary could not be sent.');
+    }
 }
