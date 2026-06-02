@@ -41,9 +41,18 @@ function cbCampaignEnsureTables($conn)
 function cbCampaignCleanHtml($html)
 {
     $html = preg_replace('#<script\b[^>]*>.*?</script>#is', '', (string) $html);
+    $html = preg_replace('#<img\b[^>]*\bsrc\s*=\s*["\']?\s*data:[^>]*>#i', '', $html);
+    $html = preg_replace('#\s(src|href)\s*=\s*["\']?\s*data:[^"\'\s>]+["\']?#i', '', $html);
     $html = preg_replace('/\son\w+\s*=\s*(".*?"|\'.*?\'|[^\s>]+)/i', '', $html);
     $html = preg_replace('/javascript\s*:/i', '', $html);
     return strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><a><img><h1><h2><h3><h4><blockquote><table><thead><tbody><tr><td><th><span><div>');
+}
+
+function cbCampaignCleanHeaderText($value)
+{
+    $value = preg_replace('/[\r\n]+/', ' ', (string) $value);
+    $value = preg_replace('/[^\P{C}\t ]/u', '', $value);
+    return trim($value);
 }
 
 function cbCampaignPayloadFromPost()
@@ -54,13 +63,13 @@ function cbCampaignPayloadFromPost()
     }
 
     return array(
-        'email_heading' => trim($_POST['email_heading'] ?? ''),
-        'subject' => trim($_POST['subject'] ?? ''),
-        'coupon_code' => strtoupper(trim($_POST['coupon_code'] ?? '')),
+        'email_heading' => cbCampaignCleanHeaderText($_POST['email_heading'] ?? ''),
+        'subject' => cbCampaignCleanHeaderText($_POST['subject'] ?? ''),
+        'coupon_code' => strtoupper(cbCampaignCleanHeaderText($_POST['coupon_code'] ?? '')),
         'hero_image_url' => trim($_POST['hero_image_url'] ?? ''),
         'manual_recipients' => trim($_POST['manual_recipients'] ?? ''),
         'body_html' => cbCampaignCleanHtml($_POST['body'] ?? ''),
-        'cta_label' => trim($_POST['cta_label'] ?? 'Shop now'),
+        'cta_label' => cbCampaignCleanHeaderText($_POST['cta_label'] ?? 'Shop now'),
         'cta_url' => $ctaUrl,
         'created_by_admin_id' => isset($_SESSION['admin_id']) ? (int) $_SESSION['admin_id'] : null,
         'created_at' => date('Y-m-d H:i:s')
@@ -200,6 +209,12 @@ function cbCampaignValidatePayload($payload)
     }
     if ($payload['cta_url'] !== '' && !filter_var($payload['cta_url'], FILTER_VALIDATE_URL)) {
         $errors[] = 'Use a full button URL, starting with https://.';
+    }
+    if (stripos((string) ($payload['body_html'] ?? ''), 'data:') !== false) {
+        $errors[] = 'Please upload pictures with the editor image button instead of pasting images directly into the body.';
+    }
+    if (strlen((string) ($payload['body_html'] ?? '')) > 250000) {
+        $errors[] = 'The email body is too large. Use image links or uploaded pictures instead of embedded image data.';
     }
     foreach (cbCampaignParseManualRecipients($payload['manual_recipients'] ?? '') as $email) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

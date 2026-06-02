@@ -227,7 +227,7 @@ include 'header.php';
             });
         },
         image_dimensions: false,
-        paste_data_images: true,
+        paste_data_images: false,
         setup: function(editor) {
             editor.on('init change keyup nodechange', updatePreview);
         }
