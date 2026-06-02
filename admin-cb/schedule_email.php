@@ -25,15 +25,32 @@ $oldForm = $broadcastFlash['old'] ?? [];
 $formValue = function ($name, $default = '') use ($oldForm) {
     return htmlspecialchars((string) ($oldForm[$name] ?? $default), ENT_QUOTES, 'UTF-8');
 };
-$datetimeValue = function ($name) use ($oldForm) {
-    $value = trim((string) ($oldForm[$name] ?? ''));
+$scheduleParts = function () use ($oldForm) {
+    $date = trim((string) ($oldForm['scheduled_date'] ?? ''));
+    $time = trim((string) ($oldForm['scheduled_time'] ?? ''));
+    if ($date !== '' && $time !== '') {
+        return [
+            htmlspecialchars($date, ENT_QUOTES, 'UTF-8'),
+            htmlspecialchars(substr($time, 0, 5), ENT_QUOTES, 'UTF-8')
+        ];
+    }
+
+    $value = trim((string) ($oldForm['scheduled_at'] ?? ''));
     if ($value === '') {
-        return '';
+        return ['', ''];
     }
     $timestamp = strtotime(str_replace('T', ' ', $value));
-    return $timestamp ? htmlspecialchars(date('Y-m-d\TH:i', $timestamp), ENT_QUOTES, 'UTF-8') : htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    if (!$timestamp) {
+        return ['', ''];
+    }
+
+    return [
+        htmlspecialchars(date('Y-m-d', $timestamp), ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars(date('H:i', $timestamp), ENT_QUOTES, 'UTF-8')
+    ];
 };
-$bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? '<p>Use code <strong>{coupon_code}</strong> at checkout for a limited time.</p>'), ENT_QUOTES, 'UTF-8');
+[$scheduledDateValue, $scheduledTimeValue] = $scheduleParts();
+$bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? ''), ENT_QUOTES, 'UTF-8');
 
 include 'header.php';
 ?>
@@ -71,7 +88,7 @@ include 'header.php';
                     <div class="form-group">
                         <label for="email_heading">Email heading</label>
                         <input type="text" class="form-control" id="email_heading" name="email_heading" value="<?= $formValue('email_heading') ?>" required>
-                        <div class="field-help">Short title shown inside the email, for example “Payday treats are here”.</div>
+                        <div class="field-help">Short title shown inside the email, for example "Payday treats are here".</div>
                     </div>
 
                     <div class="form-group">
@@ -100,17 +117,27 @@ include 'header.php';
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="cta_label">Button text</label>
-                            <input type="text" class="form-control" id="cta_label" name="cta_label" value="<?= $formValue('cta_label', 'Shop now') ?>">
+                            <input type="text" class="form-control" id="cta_label" name="cta_label" value="<?= $formValue('cta_label') ?>">
+                            <div class="field-help">Optional. Leave blank if you do not want a button.</div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="cta_url">Button link</label>
-                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url', 'https://www.candybird.co.za/products') ?>">
+                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url') ?>">
+                            <div class="field-help">Optional. Use a full link starting with https://.</div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="scheduled_at">Send date and time</label>
-                        <input type="datetime-local" class="form-control" id="scheduled_at" name="scheduled_at" value="<?= $datetimeValue('scheduled_at') ?>" autocomplete="off">
+                        <input type="hidden" id="scheduled_at" name="scheduled_at" value="">
+                        <div class="form-row">
+                            <div class="form-group col-md-6 mb-md-0">
+                                <input type="date" class="form-control" id="scheduled_date" name="scheduled_date" value="<?= $scheduledDateValue ?>" autocomplete="off">
+                            </div>
+                            <div class="form-group col-md-6 mb-0">
+                                <input type="time" class="form-control" id="scheduled_time" name="scheduled_time" value="<?= $scheduledTimeValue ?>" autocomplete="off">
+                            </div>
+                        </div>
                         <div class="field-help">Choose the send date and time in South Africa time. The sender cron will send it when this time is due.</div>
                     </div>
 
@@ -123,9 +150,8 @@ include 'header.php';
                     <div class="form-group">
                         <label for="test_email">Test email address</label>
                         <input type="email" class="form-control" id="test_email" name="test_email" value="<?= $formValue('test_email') ?>">
-                        <div class="field-help">Use this only for “Send test email”. It does not schedule the broadcast.</div>
+                        <div class="field-help">Use this only for "Send test email". It does not schedule the broadcast.</div>
                     </div>
-
                     <div class="button-row">
                         <button type="submit" name="action" value="test" class="btn btn-outline-primary">Send test email</button>
                         <button type="submit" name="action" value="schedule" class="btn btn-primary">Schedule broadcast</button>
@@ -158,8 +184,8 @@ include 'header.php';
         var coupon = ($('#coupon_code').val() || '').toUpperCase();
         var hero = $('#hero_image_url').val();
         var body = tinymce.get('body') ? tinymce.get('body').getContent() : $('#body').val();
-        var ctaLabel = $('#cta_label').val() || 'Shop now';
-        var ctaUrl = $('#cta_url').val() || 'https://www.candybird.co.za/products';
+        var ctaLabel = $('#cta_label').val();
+        var ctaUrl = $('#cta_url').val();
 
         body = body.split('{coupon_code}').join(escapeHtml(coupon));
 
@@ -207,13 +233,22 @@ include 'header.php';
         }
     });
 
+    function syncScheduledAt() {
+        var date = $('#scheduled_date').val();
+        var time = $('#scheduled_time').val();
+        $('#scheduled_at').val(date && time ? date + 'T' + time : '');
+    }
+
     $('#email_heading, #subject, #coupon_code, #hero_image_url, #cta_label, #cta_url').on('input', updatePreview);
+    $('#scheduled_date, #scheduled_time').on('input change blur', syncScheduledAt);
     $('#email-form').on('submit', function() {
+        syncScheduledAt();
         if (tinymce.get('body')) {
             tinymce.triggerSave();
         }
     });
     $(document).ready(function() {
+        syncScheduledAt();
         updatePreview();
     });
 </script>

@@ -47,7 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payload = cbCampaignPayloadFromPost();
     $errors = cbCampaignValidatePayload($payload);
 
-    $scheduledAtInput = trim($_POST['scheduled_at'] ?? date('Y-m-d\TH:i', strtotime('+10 minutes')));
+    $scheduledAtInput = trim($_POST['scheduled_at'] ?? '');
+    if ($scheduledAtInput === '') {
+        $scheduledDate = trim((string) ($_POST['scheduled_date'] ?? ''));
+        $scheduledTime = trim((string) ($_POST['scheduled_time'] ?? ''));
+        if ($scheduledDate !== '' && $scheduledTime !== '') {
+            $scheduledAtInput = $scheduledDate . 'T' . $scheduledTime;
+        }
+    }
     $scheduledAt = null;
 
     if ($action === 'schedule') {

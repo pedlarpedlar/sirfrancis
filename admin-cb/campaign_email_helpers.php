@@ -49,9 +49,6 @@ function cbCampaignCleanHtml($html)
 function cbCampaignPayloadFromPost()
 {
     $ctaUrl = trim($_POST['cta_url'] ?? '');
-    if ($ctaUrl === '') {
-        $ctaUrl = 'https://www.candybird.co.za/products';
-    }
 
     return array(
         'email_heading' => trim($_POST['email_heading'] ?? ''),
@@ -60,7 +57,7 @@ function cbCampaignPayloadFromPost()
         'hero_image_url' => trim($_POST['hero_image_url'] ?? ''),
         'manual_recipients' => trim($_POST['manual_recipients'] ?? ''),
         'body_html' => cbCampaignCleanHtml($_POST['body'] ?? ''),
-        'cta_label' => trim($_POST['cta_label'] ?? 'Shop now'),
+        'cta_label' => trim($_POST['cta_label'] ?? ''),
         'cta_url' => $ctaUrl,
         'created_by_admin_id' => isset($_SESSION['admin_id']) ? (int) $_SESSION['admin_id'] : null,
         'created_at' => date('Y-m-d H:i:s')
