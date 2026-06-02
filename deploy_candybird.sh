@@ -23,8 +23,13 @@ for stale_path in "${STALE_LIVE_PATHS[@]}"; do
   case "$target" in
     "$LIVE_DIR"/*)
       if [ -e "$target" ]; then
-        rm -rf -- "$target"
-        echo "Removed stale live folder: $target"
+        chmod -R u+rwX -- "$target" 2>/dev/null || true
+        if rm -rf -- "$target" 2>/dev/null; then
+          echo "Removed stale live folder: $target"
+        else
+          echo "Warning: could not remove stale live folder because of server file permissions: $target" >&2
+          echo "Ask hosting support to remove this folder or fix ownership, then rerun deploy." >&2
+        fi
       fi
       ;;
     *)
