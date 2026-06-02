@@ -207,6 +207,99 @@ if (!function_exists('saveCandybirdCheckoutAddress')) {
     }
 }
 
+if (!function_exists('candybirdCheckoutAttachGuestRecordsToUser')) {
+    function candybirdCheckoutAttachGuestRecordsToUser($conn, $userId, $guestIdentifier)
+    {
+        if (!($conn instanceof mysqli) || !$userId || !$guestIdentifier) {
+            return;
+        }
+
+        foreach (['reviews', 'cart', 'wishlist', 'compare', 'applied_coupons'] as $table) {
+            $sqlUpdateOwner = "UPDATE $table SET user_id = ? WHERE guest_identifier = ?";
+            $stmtUpdateOwner = mysqli_prepare($conn, $sqlUpdateOwner);
+            if ($stmtUpdateOwner) {
+                mysqli_stmt_bind_param($stmtUpdateOwner, "is", $userId, $guestIdentifier);
+                mysqli_stmt_execute($stmtUpdateOwner);
+                mysqli_stmt_close($stmtUpdateOwner);
+            }
+        }
+    }
+}
+
+if (!function_exists('candybirdCheckoutAvailableUsername')) {
+    function candybirdCheckoutAvailableUsername($conn, $firstName, $lastName, $email)
+    {
+        $base = strtolower(trim($firstName . '_' . $lastName));
+        if ($base === '_') {
+            $base = strtolower((string) strtok($email, '@'));
+        }
+        $base = preg_replace('/[^a-z0-9_]+/', '_', $base);
+        $base = trim($base, '_');
+        if (strlen($base) < 3) {
+            $base = 'customer';
+        }
+        $base = substr($base, 0, 16);
+        $candidate = $base;
+        $suffix = 0;
+
+        while (true) {
+            $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? LIMIT 1");
+            if (!$stmt) {
+                return $base . '_' . random_int(1000, 9999);
+            }
+            mysqli_stmt_bind_param($stmt, "s", $candidate);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+            $exists = mysqli_stmt_num_rows($stmt) > 0;
+            mysqli_stmt_close($stmt);
+            if (!$exists) {
+                return $candidate;
+            }
+            $suffix++;
+            $candidate = substr($base, 0, 15 - strlen((string) $suffix)) . '_' . $suffix;
+        }
+    }
+}
+
+if (!function_exists('candybirdCheckoutFindOrCreateUser')) {
+    function candybirdCheckoutFindOrCreateUser($conn, $email, $firstName, $lastName, $guestIdentifier)
+    {
+        if (!($conn instanceof mysqli) || !filter_var((string) $email, FILTER_VALIDATE_EMAIL)) {
+            return null;
+        }
+
+        $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $email);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $matchedUserId);
+            if (mysqli_stmt_fetch($stmt)) {
+                mysqli_stmt_close($stmt);
+                candybirdCheckoutAttachGuestRecordsToUser($conn, (int) $matchedUserId, $guestIdentifier);
+                return (int) $matchedUserId;
+            }
+            mysqli_stmt_close($stmt);
+        }
+
+        $username = candybirdCheckoutAvailableUsername($conn, $firstName, $lastName, $email);
+        $passwordHash = password_hash(bin2hex(random_bytes(24)), PASSWORD_DEFAULT);
+        $stmtInsertUser = mysqli_prepare($conn, "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
+        if (!$stmtInsertUser) {
+            return null;
+        }
+        mysqli_stmt_bind_param($stmtInsertUser, "sss", $username, $email, $passwordHash);
+        if (!mysqli_stmt_execute($stmtInsertUser)) {
+            mysqli_stmt_close($stmtInsertUser);
+            return null;
+        }
+        $newUserId = (int) mysqli_insert_id($conn);
+        mysqli_stmt_close($stmtInsertUser);
+        candybirdCheckoutAttachGuestRecordsToUser($conn, $newUserId, $guestIdentifier);
+        logAction('Registered User', 'Auto-created from checkout', $newUserId, $email);
+        return $newUserId;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!($conn instanceof mysqli)) {
         $response = array(
@@ -365,15 +458,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $userId = $_SESSION['user_id'];
 
-                foreach (['reviews', 'cart', 'wishlist', 'compare', 'applied_coupons'] as $table) {
-                    $sqlUpdateOwner = "UPDATE $table SET user_id = ? WHERE guest_identifier = ?";
-                    $stmtUpdateOwner = mysqli_prepare($conn, $sqlUpdateOwner);
-                    if ($stmtUpdateOwner) {
-                        mysqli_stmt_bind_param($stmtUpdateOwner, "is", $userId, $guestIdentifier);
-                        mysqli_stmt_execute($stmtUpdateOwner);
-                        mysqli_stmt_close($stmtUpdateOwner);
-                    }
-                }
+                candybirdCheckoutAttachGuestRecordsToUser($conn, $userId, $guestIdentifier);
 
                 logAction('Registered User', 'from checkout page', $userId, $billing_email_address);
                 
@@ -401,17 +486,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $orderUserId = $userId;
         if (!$orderUserId && filter_var($billing_email_address, FILTER_VALIDATE_EMAIL)) {
-            $stmtExistingEmailUser = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
-            if ($stmtExistingEmailUser) {
-                mysqli_stmt_bind_param($stmtExistingEmailUser, "s", $billing_email_address);
-                mysqli_stmt_execute($stmtExistingEmailUser);
-                mysqli_stmt_bind_result($stmtExistingEmailUser, $matchedUserId);
-                if (mysqli_stmt_fetch($stmtExistingEmailUser)) {
-                    $orderUserId = (int) $matchedUserId;
-                }
-                mysqli_stmt_close($stmtExistingEmailUser);
-            }
+            $orderUserId = candybirdCheckoutFindOrCreateUser(
+                $conn,
+                $billing_email_address,
+                $billing_first_name,
+                $billing_last_name,
+                $guestIdentifier
+            );
         }
+        $profileUserId = $orderUserId ?: $userId;
     
     // ...............
     // add the order into the orders and order-items table here
@@ -457,7 +540,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         saveCandybirdCheckoutAddress(
             $conn,
-            $userId,
+            $profileUserId,
             $guestIdentifier,
             $billing_first_name,
             $billing_last_name,
@@ -909,7 +992,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if a row exists for the user or guest identifier
     $sqlCheckExistence = "SELECT id FROM user_addresses WHERE user_id = ? OR guest_identifier = ?";
     $stmtCheckExistence = mysqli_prepare($conn, $sqlCheckExistence);
-    mysqli_stmt_bind_param($stmtCheckExistence, "is", $userId, $guestIdentifier);
+    mysqli_stmt_bind_param($stmtCheckExistence, "is", $profileUserId, $guestIdentifier);
     mysqli_stmt_execute($stmtCheckExistence);
     $resultCheckExistence = mysqli_stmt_get_result($stmtCheckExistence);
 
@@ -968,14 +1051,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $shipping_country,
             $shipping_province,
             $shipping_post_code,
-            $userId,
+            $profileUserId,
             $guestIdentifier
         );
 
         if (mysqli_stmt_execute($stmtUpdateAddress)) {
-            logAction('Address Update', 'from checkout page', $userId, $guestIdentifier);
+            logAction('Address Update', 'from checkout page', $profileUserId, $guestIdentifier);
         } else {
-            logAction('Address Update Error', mysqli_stmt_error($stmtUpdateAddress), $userId, $guestIdentifier);
+            logAction('Address Update Error', mysqli_stmt_error($stmtUpdateAddress), $profileUserId, $guestIdentifier);
         }
 
         mysqli_stmt_close($stmtUpdateAddress);
@@ -1013,7 +1096,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param(
             $stmtInsertAddress,
             "sssssssssssssssssssssssss",
-            $userId,
+            $profileUserId,
             $guestIdentifier,
             $billing_first_name,
             $billing_last_name,
@@ -1041,9 +1124,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if (mysqli_stmt_execute($stmtInsertAddress)) {
-            logAction('Address Insert', 'from checkout page', $userId, $guestIdentifier);
+            logAction('Address Insert', 'from checkout page', $profileUserId, $guestIdentifier);
         } else {
-            logAction('Address Insert Error', mysqli_stmt_error($stmtInsertAddress), $userId, $guestIdentifier);
+            logAction('Address Insert Error', mysqli_stmt_error($stmtInsertAddress), $profileUserId, $guestIdentifier);
         }
 
         mysqli_stmt_close($stmtInsertAddress);

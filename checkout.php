@@ -1352,7 +1352,7 @@ function updateShippingInformation(shippingCost) {
               data: { email: email },
               success: function (response) {
                   if (response && response.exists) {
-                      renderAccountHint(true, 'This email already has an account. You can log in to use saved details, or continue as a guest.', response.login_url);
+                      renderAccountHint(true, 'This email already has a profile. You can log in to use saved details, or continue and this order will still be saved to that profile.', response.login_url);
                   } else {
                       renderAccountHint(false, '', '');
                   }
