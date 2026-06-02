@@ -241,6 +241,18 @@ include 'header.php';
     width: 90px;
   }
 
+  .sold-out-button {
+    background: #8f8f8f;
+    border: 1px solid #8f8f8f;
+    color: #fff;
+    cursor: not-allowed;
+    font-weight: 800;
+    letter-spacing: .02em;
+    padding: 10px 16px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
   .product-image-lightbox {
     align-items: center;
     background: rgba(0, 0, 0, 0.84);
@@ -1162,24 +1174,24 @@ $(function() {
       if (stockNumber !== null && stockNumber <= 0) {
         html += '<span class="badge badge-secondary position-static mr-2">' + (isClearance ? 'Sold out' : 'Out of stock') + '</span>';
         $('.add-to-cart-quantity').attr('max', 0).val(1);
-        $('#add-to-cart-btn').prop('disabled', true).addClass('disabled');
+        $('#add-to-cart-btn').prop('disabled', true).addClass('disabled sold-out-button').removeClass('btn-dark add-to-cart').html('Sold Out');
       } else {
         $('.add-to-cart-quantity').attr('max', stockNumber !== null ? Math.floor(stockNumber) : 999);
-        $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled');
+        $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled sold-out-button').addClass('btn-dark add-to-cart').html('<span class="mr-2"><i class="ion-android-add"></i></span>Add to cart');
       }
     } else if (stockNumber !== null) {
       if (stockNumber > 0) {
         html += '<span class="badge badge-success position-static mr-2">In stock: ' + escapeHtml(stockNumber) + '</span>';
         $('.add-to-cart-quantity').attr('max', Math.floor(stockNumber));
-        $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled');
+        $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled sold-out-button').addClass('btn-dark add-to-cart').html('<span class="mr-2"><i class="ion-android-add"></i></span>Add to cart');
       } else {
         html += '<span class="badge badge-secondary position-static mr-2">' + (isClearance ? 'Sold out' : 'Out of stock') + '</span>';
         $('.add-to-cart-quantity').attr('max', 0).val(1);
-        $('#add-to-cart-btn').prop('disabled', true).addClass('disabled');
+        $('#add-to-cart-btn').prop('disabled', true).addClass('disabled sold-out-button').removeClass('btn-dark add-to-cart').html('Sold Out');
       }
     } else {
       $('.add-to-cart-quantity').attr('max', 999);
-      $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled');
+      $('#add-to-cart-btn').prop('disabled', false).removeClass('disabled sold-out-button').addClass('btn-dark add-to-cart').html('<span class="mr-2"><i class="ion-android-add"></i></span>Add to cart');
     }
 
     $('#product-availability').remove();
@@ -1299,19 +1311,25 @@ $(function() {
       const title = displayTitle(item);
       const salePercent = getSalePercent(item);
       const isClearance = String(item.is_clearance || item.raw?.is_clearance || '').toLowerCase() === 'yes';
+      const stockValue = String(item.stockQty || item.raw?.stock_qty || item.raw?.qty_in_stock || '').trim();
+      const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
+      const isSoldOut = stockNumber !== null && stockNumber <= 0;
       const priceHtml = salePercent > 0
         ? '<p class="mb-3 pair-price"><del>R' + item.price.toFixed(2) + '</del> <span>R' + item.discountedPrice.toFixed(2) + '</span></p>'
         : '<p class="mb-3 pair-price">R' + item.discountedPrice.toFixed(2) + '</p>';
       const badges = (isClearance ? '<span class="clearance-corner-flag"><span>Clearance<br>to go</span></span>' : '') +
-        (salePercent > 0 ? '<span class="badge badge-success top-right">' + salePercent + '% off</span>' : '');
+        (isSoldOut ? '<span class="badge badge-secondary top-right">Sold out</span>' : (salePercent > 0 ? '<span class="badge badge-success top-right">' + salePercent + '% off</span>' : ''));
       const clearanceAttr = isClearance && item.clearance_id ? ' data-clearance-id="' + escapeHtml(item.clearance_id) + '"' : '';
+      const cartControl = isSoldOut
+        ? '<span class="sold-out-button d-inline-block">Sold Out</span>'
+        : '<button type="button" class="btn btn-dark btn--sm add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="' + escapeHtml(item.id) + '"' + clearanceAttr + ' data-quantity="1">Add to cart</button>';
       return '<div class="col-sm-6 col-lg-3 mb-30">' +
         '<div class="card pair-product-card">' +
           '<a class="position-relative d-block" href="' + getProductPath(item) + '">' + badges + '<img src="' + escapeHtml(image) + '"' + imageFallback + ' alt="' + escapeHtml(title) + '"></a>' +
           '<div class="card-body">' +
             '<h3 class="h6"><a href="' + getProductPath(item) + '">' + escapeHtml(title) + '</a></h3>' +
             priceHtml +
-            '<button type="button" class="btn btn-dark btn--sm add-to-cart" data-toggle="modal" data-target="#add-to-cart" data-product-id="' + escapeHtml(item.id) + '"' + clearanceAttr + ' data-quantity="1">Add to cart</button>' +
+            cartControl +
           '</div>' +
         '</div>' +
       '</div>';
