@@ -210,6 +210,7 @@ function cbBackupZipDatabaseOnly($zipFile, $sqlFile) {
 function cbBackupShouldSkip($path, $rootDir, $backupDir) {
     $normalized = str_replace('\\', '/', $path);
     $backupNormalized = str_replace('\\', '/', $backupDir);
+    $rootNormalized = rtrim(str_replace('\\', '/', $rootDir), '/');
     $baseName = basename($normalized);
 
     if (strpos($normalized, $backupNormalized) === 0) {
@@ -218,32 +219,84 @@ function cbBackupShouldSkip($path, $rootDir, $backupDir) {
 
     $skipParts = [
         '/.git/',
+        '/.github/',
         '/node_modules/',
         '/.well-known/acme-challenge/',
+        '/backups/',
         '/cache/',
+        '/sheet_cache/',
         '/logs/',
         '/tmp/',
         '/temp/',
+        '/Website CSV Product Lists/',
         '/error_log',
         '/vendor/bin/',
         '/admin-cb/uploads/backups/',
         '/admin-cb/uploads/databases/',
+        '/uploads/backups/',
+        '/uploads/databases/',
         '/TCPDF-main/TCPDF-main.zip',
     ];
 
     foreach ($skipParts as $part) {
-        if (strpos($normalized, str_replace('\\', '/', $rootDir) . $part) === 0 || strpos($normalized, $part) !== false) {
+        if (strpos($normalized, $rootNormalized . $part) === 0 || strpos($normalized, $part) !== false) {
             return true;
         }
     }
 
-    $skipExtensions = ['zip', 'tar', 'gz', 'rar', '7z', 'bak', 'tmp', 'log'];
+    $skipExtensions = ['zip', 'tar', 'gz', 'rar', '7z', 'bak', 'tmp', 'log', 'sql'];
     $extension = strtolower(pathinfo($baseName, PATHINFO_EXTENSION));
     if (in_array($extension, $skipExtensions, true)) {
         return true;
     }
 
+    $skipExactFiles = [
+        'debug.log',
+        'error_log',
+        'PHPMailer.zip',
+    ];
+    if (in_array($baseName, $skipExactFiles, true)) {
+        return true;
+    }
+
     return false;
+}
+
+function cbBackupFormatBytes($bytes) {
+    $bytes = (float) $bytes;
+    if ($bytes >= 1073741824) {
+        return number_format($bytes / 1073741824, 2) . ' GB';
+    }
+    if ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 2) . ' MB';
+    }
+    if ($bytes >= 1024) {
+        return number_format($bytes / 1024, 2) . ' KB';
+    }
+    return number_format($bytes, 0) . ' bytes';
+}
+
+function cbBackupFileType($relativePath) {
+    $extension = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+    if ($extension === '') {
+        return 'no extension';
+    }
+    if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'], true)) {
+        return 'images';
+    }
+    if (in_array($extension, ['php', 'inc'], true)) {
+        return 'php';
+    }
+    if (in_array($extension, ['css', 'scss'], true)) {
+        return 'css';
+    }
+    if (in_array($extension, ['js', 'map'], true)) {
+        return 'javascript';
+    }
+    if (in_array($extension, ['html', 'txt', 'md'], true)) {
+        return 'text/templates';
+    }
+    return $extension;
 }
 
 function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
@@ -279,6 +332,7 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
     $includedFiles = 0;
     $includedBytes = 0;
     $largestFiles = [];
+    $typeSummary = [];
 
     foreach ($iterator as $file) {
         $path = $file->getPathname();
@@ -292,12 +346,21 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
         $includedFiles++;
         $includedBytes += $size;
         $largestFiles[] = ['path' => $relative, 'size' => $size];
+        $type = cbBackupFileType($relative);
+        if (!isset($typeSummary[$type])) {
+            $typeSummary[$type] = ['files' => 0, 'bytes' => 0];
+        }
+        $typeSummary[$type]['files']++;
+        $typeSummary[$type]['bytes'] += $size;
     }
 
     usort($largestFiles, function($a, $b) {
         return $b['size'] <=> $a['size'];
     });
     $largestFiles = array_slice($largestFiles, 0, 50);
+    uasort($typeSummary, function($a, $b) {
+        return $b['bytes'] <=> $a['bytes'];
+    });
 
     $manifest = [
         'created_at' => date('Y-m-d H:i:s'),
@@ -305,8 +368,9 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
         'included_file_bytes' => $includedBytes,
         'included_file_mb' => round($includedBytes / 1048576, 2),
         'database' => $DB_dbname,
+        'type_summary' => $typeSummary,
         'largest_files' => $largestFiles,
-        'excluded_note' => 'Archives, logs, temporary folders, cache folders, previous backups, .git, node_modules, and database backup folders are excluded.',
+        'excluded_note' => 'Archives, logs, temporary folders, sheet/cache folders, previous backups, .git, node_modules, old CSV export folders, and database backup folders are excluded.',
     ];
     $zip->addFromString('BACKUP_MANIFEST.json', json_encode($manifest, JSON_PRETTY_PRINT));
 
@@ -342,7 +406,34 @@ function cbBackupLogCron($conn, $description) {
     }
 }
 
-function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup') {
+function cbBackupManifestRows($manifest, $mode = 'types') {
+    if (empty($manifest) || !is_array($manifest)) {
+        return '';
+    }
+
+    $rows = '';
+    if ($mode === 'largest') {
+        $files = array_slice($manifest['largest_files'] ?? [], 0, 8);
+        foreach ($files as $file) {
+            $rows .= '<tr>'
+                . '<td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">' . htmlspecialchars((string) ($file['path'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '<td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars(cbBackupFormatBytes($file['size'] ?? 0), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '</tr>';
+        }
+        return $rows;
+    }
+
+    $types = array_slice($manifest['type_summary'] ?? [], 0, 8, true);
+    foreach ($types as $type => $summary) {
+        $rows .= '<tr>'
+            . '<td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">' . htmlspecialchars((string) $type, ENT_QUOTES, 'UTF-8') . ' <span style="color:#999;">(' . number_format((int) ($summary['files'] ?? 0)) . ' files)</span></td>'
+            . '<td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars(cbBackupFormatBytes($summary['bytes'] ?? 0), ENT_QUOTES, 'UTF-8') . '</td>'
+            . '</tr>';
+    }
+    return $rows;
+}
+
+function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup', $manifest = []) {
     global $smtp_server, $smtp_username1, $smtp_username5, $smtp_password, $smtp_password5, $smtp_type, $smtp_port;
 
     if (empty($smtp_server) || empty($smtp_username5) || (empty($smtp_password) && empty($smtp_password5))) {
@@ -382,6 +473,20 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup') {
         $fileNameText = htmlspecialchars($fileName, ENT_QUOTES, 'UTF-8');
         $downloadUrl = 'https://www.candybird.co.za/admin-cb/backups';
         $createdAt = date('d M Y H:i');
+        $includedFiles = number_format((int) ($manifest['included_files'] ?? 0));
+        $includedSize = cbBackupFormatBytes((float) ($manifest['included_file_bytes'] ?? 0));
+        $typeRows = cbBackupManifestRows($manifest, 'types');
+        $largestRows = cbBackupManifestRows($manifest, 'largest');
+        $manifestHtml = '';
+        if ($typeRows !== '' || $largestRows !== '') {
+            $manifestHtml = '<h2 style="font-size:16px;margin:22px 0 8px;color:#201717;">Monthly backup contents</h2>'
+                . '<table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">'
+                . '<tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">Included website files</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . $includedFiles . '</td></tr>'
+                . '<tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">Included website file size before zip compression</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars($includedSize, ENT_QUOTES, 'UTF-8') . '</td></tr>'
+                . '</table>'
+                . ($typeRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Biggest file groups</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $typeRows . '</table>' : '')
+                . ($largestRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Largest included files</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $largestRows . '</table>' : '');
+        }
 
         $mail->Subject = 'CandyBird ' . $backupType . ' completed';
         $mail->isHTML(true);
@@ -399,6 +504,7 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup') {
             . '<tr><td style="padding:10px 0;border-bottom:1px solid #eee;color:#777;">Size</td><td style="padding:10px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . $sizeMb . ' MB</td></tr>'
             . '<tr><td style="padding:10px 0;color:#777;">Created</td><td style="padding:10px 0;text-align:right;font-weight:700;">' . htmlspecialchars($createdAt, ENT_QUOTES, 'UTF-8') . '</td></tr>'
             . '</table>'
+            . $manifestHtml
             . '<p style="margin:0 0 24px;text-align:center;"><a href="' . $downloadUrl . '" style="display:inline-block;background:#c96f38;color:#ffffff;text-decoration:none;border-radius:8px;padding:13px 22px;font-weight:700;">Open backup downloads</a></p>'
             . '<p style="margin:0;color:#777;font-size:13px;line-height:1.6;">For security, the backup file is not attached to this email and is not exposed as a public link. Log in to admin to download it, then keep an offsite copy somewhere safe.</p>'
             . '</div>'
@@ -408,6 +514,8 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup') {
             . "Type: " . $backupType . "\n"
             . "File: " . $fileName . "\n"
             . "Size: " . $sizeMb . " MB\n"
+            . (!empty($manifest['included_files']) ? "Included files: " . number_format((int) $manifest['included_files']) . "\n" : '')
+            . (!empty($manifest['included_file_bytes']) ? "Included file size before compression: " . cbBackupFormatBytes($manifest['included_file_bytes']) . "\n" : '')
             . "Created: " . $createdAt . "\n"
             . "Download: " . $downloadUrl . "\n\n"
             . "For security, log in to admin to download the backup.";
@@ -460,7 +568,7 @@ try {
 
     $sizeBytes = is_file($zipFile) ? filesize($zipFile) : 0;
     $backupType = $isMonthlyFullBackup ? 'monthly full website backup' : 'daily business-data backup';
-    $notice = cbBackupNotify($zipFile, $sizeBytes, $backupType);
+    $notice = cbBackupNotify($zipFile, $sizeBytes, $backupType, $manifest);
 
     if (!$isMonthlyFullBackup && isset($dailyHash, $dailyHashFile)) {
         @file_put_contents($dailyHashFile, $dailyHash);
