@@ -25,6 +25,14 @@ $oldForm = $broadcastFlash['old'] ?? [];
 $formValue = function ($name, $default = '') use ($oldForm) {
     return htmlspecialchars((string) ($oldForm[$name] ?? $default), ENT_QUOTES, 'UTF-8');
 };
+$datetimeValue = function ($name) use ($oldForm) {
+    $value = trim((string) ($oldForm[$name] ?? ''));
+    if ($value === '') {
+        return '';
+    }
+    $timestamp = strtotime(str_replace('T', ' ', $value));
+    return $timestamp ? htmlspecialchars(date('Y-m-d\TH:i', $timestamp), ENT_QUOTES, 'UTF-8') : htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+};
 $bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? '<p>Use code <strong>{coupon_code}</strong> at checkout for a limited time.</p>'), ENT_QUOTES, 'UTF-8');
 
 include 'header.php';
@@ -62,23 +70,25 @@ include 'header.php';
                 <form action="send_email.php" method="post" id="email-form">
                     <div class="form-group">
                         <label for="email_heading">Email heading</label>
-                        <input type="text" class="form-control" id="email_heading" name="email_heading" value="<?= $formValue('email_heading') ?>" placeholder="Payday treats are here" required>
+                        <input type="text" class="form-control" id="email_heading" name="email_heading" value="<?= $formValue('email_heading') ?>" required>
+                        <div class="field-help">Short title shown inside the email, for example “Payday treats are here”.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="subject">Subject line</label>
-                        <input type="text" class="form-control" id="subject" name="subject" value="<?= $formValue('subject') ?>" placeholder="Your payday coupon is ready" required>
+                        <input type="text" class="form-control" id="subject" name="subject" value="<?= $formValue('subject') ?>" required>
+                        <div class="field-help">This is what customers see in their inbox. Keep it clear and not too long.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="coupon_code">Coupon code</label>
-                        <input type="text" class="form-control" id="coupon_code" name="coupon_code" value="<?= $formValue('coupon_code') ?>" placeholder="PAYDAY">
+                        <input type="text" class="form-control" id="coupon_code" name="coupon_code" value="<?= $formValue('coupon_code') ?>">
                         <div class="field-help">This is shown in a dedicated coupon box. The code must already exist in your coupon sheet before customers can use it.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="hero_image_url">Picture URL</label>
-                        <input type="url" class="form-control" id="hero_image_url" name="hero_image_url" value="<?= $formValue('hero_image_url') ?>" placeholder="https://www.candybird.co.za/admin-cb/uploads/email_scheduler_images/example.jpg">
+                        <input type="url" class="form-control" id="hero_image_url" name="hero_image_url" value="<?= $formValue('hero_image_url') ?>">
                         <div class="field-help">Use the image button in the editor to upload, then paste the uploaded image URL here if you want it as the main picture.</div>
                     </div>
 
@@ -100,19 +110,20 @@ include 'header.php';
 
                     <div class="form-group">
                         <label for="scheduled_at">Send date and time</label>
-                        <input type="text" class="form-control" id="scheduled_at" name="scheduled_at" value="<?= $formValue('scheduled_at') ?>" placeholder="2026-05-26 09:00" autocomplete="off" inputmode="numeric">
-                        <div class="field-help">Use South Africa time in this format: YYYY-MM-DD HH:MM. Example: 2026-05-26 09:00.</div>
+                        <input type="datetime-local" class="form-control" id="scheduled_at" name="scheduled_at" value="<?= $datetimeValue('scheduled_at') ?>" autocomplete="off">
+                        <div class="field-help">Choose the send date and time in South Africa time. The sender cron will send it when this time is due.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="manual_recipients">Extra recipient emails</label>
-                        <textarea class="form-control" id="manual_recipients" name="manual_recipients" rows="4" placeholder="client1@example.com&#10;client2@example.com"><?= htmlspecialchars((string) ($oldForm['manual_recipients'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+                        <textarea class="form-control" id="manual_recipients" name="manual_recipients" rows="4"><?= htmlspecialchars((string) ($oldForm['manual_recipients'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
                         <div class="field-help">Optional. Add internal client-base emails here, one per line or separated by commas. They will be included with scheduled broadcasts but will not be added to the subscriber database.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="test_email">Test email address</label>
-                        <input type="email" class="form-control" id="test_email" name="test_email" value="<?= $formValue('test_email') ?>" placeholder="sales@candybird.co.za">
+                        <input type="email" class="form-control" id="test_email" name="test_email" value="<?= $formValue('test_email') ?>">
+                        <div class="field-help">Use this only for “Send test email”. It does not schedule the broadcast.</div>
                     </div>
 
                     <div class="button-row">
