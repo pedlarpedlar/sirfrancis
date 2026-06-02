@@ -1714,13 +1714,16 @@ if (!function_exists('parseCandybirdWeightToKg')) {
         }
 
         $raw = str_replace(',', '.', $raw);
-
         if (preg_match('/(\d+(?:\.\d+)?)\s*(kg|kgs|kilogram|kilograms)\b/', $raw, $match)) {
             return max(0, (float) $match[1]);
         }
 
         if (preg_match('/(\d+(?:\.\d+)?)\s*(g|gram|grams)\b/', $raw, $match)) {
             return max(0, ((float) $match[1]) / 1000);
+        }
+
+        if (preg_match('/\b(ml|millilitre|milliliter|millilitres|milliliters|l|lt|ltr|litre|liter|litres|liters|pc|pcs|piece|pieces|unit|units|box|boxes|bottle|bottles)\b/', $raw)) {
+            return null;
         }
 
         if (is_numeric($raw)) {
@@ -1787,7 +1790,11 @@ if (!function_exists('getCandybirdDefaultUnitWeightKg')) {
         static $cachedWeight = null;
         if ($configuredWeight !== null && is_numeric($configuredWeight)) {
             $weight = (float) $configuredWeight;
-            return $weight > 0 ? $weight : 0.25;
+            if ($weight <= 0) {
+                return 0.25;
+            }
+
+            return $weight > 20 ? $weight / 1000 : $weight;
         }
         if ($cachedWeight !== null) {
             return $cachedWeight;

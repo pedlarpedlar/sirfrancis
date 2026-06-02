@@ -9,12 +9,13 @@ if (!isset($_SESSION['admin_id'])) {
 include 'header.php';
 include 'dbh.inc.php';
 require_once __DIR__ . '/website_settings_helpers.php';
+require_once __DIR__ . '/../product_sheet_helpers.php';
 
 $row = cbWebsiteSettingsLoad($conn);
 $settingsFlash = cbWebsiteSettingsFlash();
 $deliveryOptions = getCandybirdDeliveryOptions();
 $enabledDeliveryCount = count(getCandybirdEnabledDeliveryOptions($deliveryOptions));
-$defaultUnitWeightGrams = (float) ($row['default_unit_weight_kg'] ?? 0.25) * 1000;
+$defaultUnitWeightGrams = getCandybirdDefaultUnitWeightKg($row['default_unit_weight_kg'] ?? 0.25) * 1000;
 $extraTierLines = [];
 foreach ($deliveryOptions as $methodKey => $method) {
     foreach ($method['tiers'] as $tierKey => $tier) {
