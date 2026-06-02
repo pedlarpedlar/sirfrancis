@@ -265,7 +265,14 @@ if (!function_exists('buildCandybirdClearanceProduct')) {
         $product['discount'] = max(0, (float) $product['price'] - $clearancePrice);
         $product['discount_amount'] = $product['discount'];
         $product['discount_rate'] = (float) $product['price'] > 0 ? round(($product['discount'] / (float) $product['price']) * 100, 2) : 0;
-        $product['qty_in_stock'] = (int) ($clearanceRow['qty_available'] ?? 0);
+        $clearanceQty = (int) ($clearanceRow['qty_available'] ?? 0);
+        $product['qty_in_stock'] = $clearanceQty;
+        $product['stock_qty'] = $clearanceQty;
+        $product['qty_available'] = $clearanceQty;
+        $product['quantity_available'] = $clearanceQty;
+        $product['available_qty'] = $clearanceQty;
+        $product['stock'] = $clearanceQty;
+        $product['inventory'] = $clearanceQty;
         $product['clearance_reason'] = trim((string) ($clearanceRow['clearance_reason'] ?? 'Clearance stock'));
         $product['clearance_notes'] = trim((string) ($clearanceRow['clearance_notes'] ?? ''));
         $product['html_description'] = $descriptionOverride !== '' ? $descriptionOverride : ($sourceProduct['html_description'] ?? '');
@@ -1049,8 +1056,8 @@ if (!function_exists('getSheetProductSlug')) {
         $title = trim((string) ($product['name'] ?? $product['title'] ?? ''));
         $size = trim((string) ($product['size'] ?? $product['weight'] ?? ''));
         if (strtolower((string) ($product['is_clearance'] ?? '')) === 'yes') {
-            $clearanceId = trim((string) ($product['clearance_id'] ?? ''));
-            return normalizeCandybirdProductSlug(trim($title . ' ' . $size . ' clearance ' . $clearanceId));
+            $title = preg_replace('/\bclearance\b/i', '', $title);
+            return normalizeCandybirdProductSlug(trim($title . ' ' . $size . ' clearance'));
         }
         return normalizeCandybirdProductSlug(trim($title . ' ' . $size));
     }

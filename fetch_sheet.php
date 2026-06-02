@@ -607,7 +607,8 @@ function getProductPath(product) {
 
   const isClearance = product && String(product.is_clearance || '').toLowerCase() === 'yes';
   if (isClearance) {
-    const text = [product.name || product.title || '', displayProductSize(product), 'clearance', product.clearance_id || product.id || ''].join(' ');
+    const name = String(product.name || product.title || '').replace(/\bclearance\b/ig, '');
+    const text = [name, displayProductSize(product), 'clearance'].join(' ');
     const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     if (slug) return encodeURIComponent(slug);
   }

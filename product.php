@@ -1049,7 +1049,8 @@ $(function() {
 
     const isClearance = product && String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     if (isClearance) {
-      const text = [product.name || '', displaySize(product), 'clearance', product.clearance_id || product.id || ''].join(' ');
+      const name = String(product.name || '').replace(/\bclearance\b/ig, '');
+      const text = [name, displaySize(product), 'clearance'].join(' ');
       const slug = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
       if (slug) return encodeURIComponent(slug);
     }
@@ -1163,7 +1164,7 @@ $(function() {
   }
 
   function renderAvailability(product) {
-    const stockValue = String(product.stockQty || '').trim();
+    const stockValue = String(product.stockQty || product.raw?.stock_qty || product.raw?.qty_in_stock || product.raw?.stock || product.raw?.qty_available || product.raw?.quantity_available || product.raw?.available_qty || product.raw?.inventory || '').trim();
     const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
     const leadTime = String(product.leadTime || '').trim();
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
