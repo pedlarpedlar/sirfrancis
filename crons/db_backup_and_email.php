@@ -299,6 +299,17 @@ function cbBackupFileType($relativePath) {
     return $extension;
 }
 
+function cbBackupFolderKey($relativePath) {
+    $relativePath = trim(str_replace('\\', '/', (string) $relativePath), '/');
+    $parts = explode('/', $relativePath);
+
+    if (count($parts) <= 2) {
+        return dirname($relativePath) !== '.' ? dirname($relativePath) : 'website root';
+    }
+
+    return implode('/', array_slice($parts, 0, min(4, count($parts) - 1)));
+}
+
 function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
     global $DB_dbname;
 
@@ -333,6 +344,7 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
     $includedBytes = 0;
     $largestFiles = [];
     $typeSummary = [];
+    $folderSummary = [];
 
     foreach ($iterator as $file) {
         $path = $file->getPathname();
@@ -352,6 +364,16 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
         }
         $typeSummary[$type]['files']++;
         $typeSummary[$type]['bytes'] += $size;
+
+        $folder = cbBackupFolderKey($relative);
+        if (!isset($folderSummary[$folder])) {
+            $folderSummary[$folder] = ['files' => 0, 'bytes' => 0, 'images' => 0];
+        }
+        $folderSummary[$folder]['files']++;
+        $folderSummary[$folder]['bytes'] += $size;
+        if ($type === 'images') {
+            $folderSummary[$folder]['images']++;
+        }
     }
 
     usort($largestFiles, function($a, $b) {
@@ -359,6 +381,9 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
     });
     $largestFiles = array_slice($largestFiles, 0, 50);
     uasort($typeSummary, function($a, $b) {
+        return $b['bytes'] <=> $a['bytes'];
+    });
+    uasort($folderSummary, function($a, $b) {
         return $b['bytes'] <=> $a['bytes'];
     });
 
@@ -369,6 +394,7 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
         'included_file_mb' => round($includedBytes / 1048576, 2),
         'database' => $DB_dbname,
         'type_summary' => $typeSummary,
+        'folder_summary' => $folderSummary,
         'largest_files' => $largestFiles,
         'excluded_note' => 'Archives, logs, temporary folders, sheet/cache folders, previous backups, .git, node_modules, old CSV export folders, and database backup folders are excluded.',
     ];
@@ -418,6 +444,18 @@ function cbBackupManifestRows($manifest, $mode = 'types') {
             $rows .= '<tr>'
                 . '<td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">' . htmlspecialchars((string) ($file['path'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
                 . '<td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars(cbBackupFormatBytes($file['size'] ?? 0), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '</tr>';
+        }
+        return $rows;
+    }
+
+    if ($mode === 'folders') {
+        $folders = array_slice($manifest['folder_summary'] ?? [], 0, 12, true);
+        foreach ($folders as $folder => $summary) {
+            $imageText = !empty($summary['images']) ? ' | ' . number_format((int) $summary['images']) . ' images' : '';
+            $rows .= '<tr>'
+                . '<td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">' . htmlspecialchars((string) $folder, ENT_QUOTES, 'UTF-8') . ' <span style="color:#999;">(' . number_format((int) ($summary['files'] ?? 0)) . ' files' . $imageText . ')</span></td>'
+                . '<td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars(cbBackupFormatBytes($summary['bytes'] ?? 0), ENT_QUOTES, 'UTF-8') . '</td>'
                 . '</tr>';
         }
         return $rows;
@@ -476,14 +514,16 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup', $manifest 
         $includedFiles = number_format((int) ($manifest['included_files'] ?? 0));
         $includedSize = cbBackupFormatBytes((float) ($manifest['included_file_bytes'] ?? 0));
         $typeRows = cbBackupManifestRows($manifest, 'types');
+        $folderRows = cbBackupManifestRows($manifest, 'folders');
         $largestRows = cbBackupManifestRows($manifest, 'largest');
         $manifestHtml = '';
-        if ($typeRows !== '' || $largestRows !== '') {
+        if ($typeRows !== '' || $folderRows !== '' || $largestRows !== '') {
             $manifestHtml = '<h2 style="font-size:16px;margin:22px 0 8px;color:#201717;">Monthly backup contents</h2>'
                 . '<table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">'
                 . '<tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">Included website files</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . $includedFiles . '</td></tr>'
                 . '<tr><td style="padding:8px 0;border-bottom:1px solid #eee;color:#777;">Included website file size before zip compression</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;font-weight:700;">' . htmlspecialchars($includedSize, ENT_QUOTES, 'UTF-8') . '</td></tr>'
                 . '</table>'
+                . ($folderRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Largest folders included</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $folderRows . '</table>' : '')
                 . ($typeRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Biggest file groups</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $typeRows . '</table>' : '')
                 . ($largestRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Largest included files</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $largestRows . '</table>' : '');
         }
