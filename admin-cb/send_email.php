@@ -93,12 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
                 $payload['campaign_id'] = $campaignId;
 
-                $countResult = $conn->query("SELECT COUNT(*) AS total FROM subscribers WHERE is_subscribed = 1");
-                $subscriberCount = 0;
-                if ($countResult && $row = $countResult->fetch_assoc()) {
-                    $subscriberCount = (int) $row['total'];
-                }
-                $manualRecipientCount = count(cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''));
+                $recipientBuild = cbCampaignRecipientStatsForSchedule($conn, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''));
+                $recipientStats = $recipientBuild['stats'];
 
                 $summaryMessage = 'A confirmation email was sent to the web admin.';
                 try {
@@ -109,8 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         array(
                             'Campaign ID' => $campaignId,
                             'Scheduled for' => $scheduledAt,
-                            'Active subscribers' => $subscriberCount,
-                            'Extra recipients' => $manualRecipientCount,
+                            'Active subscribers' => $recipientStats['subscriber_count'],
+                            'Extra recipients entered' => $recipientStats['manual_count'],
+                            'Unique recipients queued' => $recipientStats['unique_count'],
+                            'Duplicates skipped' => $recipientStats['duplicate_count'],
+                            'Invalid extras skipped' => $recipientStats['invalid_count'],
                             'Created by admin ID' => $_SESSION['admin_id']
                         )
                     );
@@ -118,7 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $summaryMessage = 'The campaign was scheduled, but the admin confirmation email could not be sent: ' . $summaryError->getMessage();
                 }
 
-                $message = 'Broadcast scheduled successfully. ' . $summaryMessage;
+                $skippedNote = '';
+                if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count'])) {
+                    $skippedNote = ' Skipped ' . (int) $recipientStats['duplicate_count'] . ' duplicate email(s) and ' . (int) $recipientStats['invalid_count'] . ' invalid extra email(s).';
+                }
+                $message = 'Broadcast scheduled successfully for ' . number_format((int) $recipientStats['unique_count']) . ' unique recipient(s).' . $skippedNote . ' ' . $summaryMessage;
                 $success = true;
             }
         } catch (Exception $e) {

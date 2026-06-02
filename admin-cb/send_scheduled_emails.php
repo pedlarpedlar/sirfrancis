@@ -44,7 +44,7 @@ while ($email = $emails->fetch_assoc()) {
     $failedCount = 0;
     $failures = array();
 
-    $recipientEmails = [];
+    $subscriberRows = [];
     $recipients = $conn->query("SELECT id, email FROM subscribers WHERE is_subscribed = 1 AND email <> '' ORDER BY id ASC");
     if (!$recipients) {
         cbCampaignLog("Campaign {$emailId} could not fetch subscribers: " . $conn->error);
@@ -52,15 +52,12 @@ while ($email = $emails->fetch_assoc()) {
     }
 
     while ($recipient = $recipients->fetch_assoc()) {
-        $recipientEmail = trim($recipient['email']);
-        if ($recipientEmail !== '') {
-            $recipientEmails[strtolower($recipientEmail)] = $recipientEmail;
-        }
+        $subscriberRows[] = $recipient;
     }
 
-    foreach (cbCampaignParseManualRecipients($payload['manual_recipients'] ?? '') as $manualEmail) {
-        $recipientEmails[strtolower($manualEmail)] = $manualEmail;
-    }
+    $recipientBuild = cbCampaignBuildRecipientList($subscriberRows, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''));
+    $recipientEmails = $recipientBuild['recipients'];
+    $recipientStats = $recipientBuild['stats'];
 
     foreach ($recipientEmails as $recipientEmail) {
         if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
@@ -97,7 +94,9 @@ while ($email = $emails->fetch_assoc()) {
                 'Sent' => $sentCount,
                 'Failed' => $failedCount,
                 'Total recipients' => count($recipientEmails),
-                'Extra recipients' => count(cbCampaignParseManualRecipients($payload['manual_recipients'] ?? '')),
+                'Extra recipients entered' => $recipientStats['manual_count'],
+                'Duplicates skipped' => $recipientStats['duplicate_count'],
+                'Invalid extras skipped' => $recipientStats['invalid_count'],
                 'Scheduled for' => $email['scheduled_at']
             )
         );
@@ -107,5 +106,8 @@ while ($email = $emails->fetch_assoc()) {
 
     if (!empty($failures)) {
         cbCampaignLog("Campaign {$emailId} failures: " . implode(' | ', array_slice($failures, 0, 20)));
+    }
+    if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count'])) {
+        cbCampaignLog("Campaign {$emailId} skipped {$recipientStats['duplicate_count']} duplicate(s) and {$recipientStats['invalid_count']} invalid extra recipient(s).");
     }
 }

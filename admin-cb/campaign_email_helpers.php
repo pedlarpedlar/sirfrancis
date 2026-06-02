@@ -105,6 +105,84 @@ function cbCampaignParseManualRecipients($value)
     return array_values(array_unique($emails));
 }
 
+function cbCampaignNormalizeEmailKey($email)
+{
+    return strtolower(trim((string) $email));
+}
+
+function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
+{
+    $recipients = [];
+    $stats = [
+        'subscriber_count' => 0,
+        'manual_count' => 0,
+        'unique_count' => 0,
+        'duplicate_count' => 0,
+        'invalid_count' => 0,
+        'duplicate_emails' => [],
+        'invalid_emails' => [],
+    ];
+
+    foreach ($subscriberRows as $row) {
+        $email = trim((string) ($row['email'] ?? $row));
+        if ($email === '') {
+            continue;
+        }
+        $stats['subscriber_count']++;
+        $key = cbCampaignNormalizeEmailKey($email);
+        if (isset($recipients[$key])) {
+            $stats['duplicate_count']++;
+            $stats['duplicate_emails'][] = $email;
+            continue;
+        }
+        $recipients[$key] = $email;
+    }
+
+    foreach ($manualRecipients as $email) {
+        $email = trim((string) $email);
+        if ($email === '') {
+            continue;
+        }
+        $stats['manual_count']++;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $stats['invalid_count']++;
+            $stats['invalid_emails'][] = $email;
+            continue;
+        }
+        $key = cbCampaignNormalizeEmailKey($email);
+        if (isset($recipients[$key])) {
+            $stats['duplicate_count']++;
+            $stats['duplicate_emails'][] = $email;
+            continue;
+        }
+        $recipients[$key] = $email;
+    }
+
+    $stats['unique_count'] = count($recipients);
+    $stats['duplicate_emails'] = array_values(array_unique(array_map('strtolower', $stats['duplicate_emails'])));
+    $stats['invalid_emails'] = array_values(array_unique($stats['invalid_emails']));
+
+    return [
+        'recipients' => $recipients,
+        'stats' => $stats,
+    ];
+}
+
+function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients)
+{
+    $subscriberRows = [];
+    if ($conn instanceof mysqli) {
+        $result = $conn->query("SELECT email FROM subscribers WHERE is_subscribed = 1 AND email <> '' ORDER BY id ASC");
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $subscriberRows[] = $row;
+            }
+        }
+    }
+
+    return cbCampaignBuildRecipientList($subscriberRows, $manualRecipients);
+}
+
 function cbCampaignValidatePayload($payload)
 {
     $errors = array();
