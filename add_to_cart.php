@@ -53,7 +53,8 @@ $_SESSION['cart_total'] = $cart_total;
 // Retrieve product ID from the AJAX request
 $productId = isset($_POST['productId']) ? trim((string) $_POST['productId']) : null;
 $postedClearanceId = strtoupper(trim((string) ($_POST['clearanceId'] ?? $_POST['clearance_id'] ?? '')));
-$quantity = isset($_POST['quantity']) ? max(1, (int) $_POST['quantity']) : 1;
+$postedQuantity = $_POST['quantity'] ?? $_POST['qty'] ?? 1;
+$quantity = max(1, (int) floor((float) str_replace(',', '.', (string) $postedQuantity)));
 
 $offcanvas_cart = "";
 

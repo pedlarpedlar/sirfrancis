@@ -694,6 +694,46 @@ function getLiveProductId($element) {
     return $element.attr('data-product-id') || $element.data('product-id');
 }
 
+function getAddToCartQuantity($button) {
+    var selectors = [
+        '.product-count .add-to-cart-quantity',
+        '.single-product-info .add-to-cart-quantity',
+        '.modal-product-info .add-to-cart-quantity',
+        '.product-card .add-to-cart-quantity',
+        '.product-list .add-to-cart-quantity',
+        '.cart-plus-minus .add-to-cart-quantity',
+        'tr .add-to-cart-quantity'
+    ];
+    var $input = $button.closest('.product-count').find('.add-to-cart-quantity').first();
+
+    if (!$input.length) {
+        for (var i = 0; i < selectors.length; i++) {
+            $input = $button.closest('.single-product-info, .modal-product-info, .product-card, .product-list, tr, .product-inner').find(selectors[i]).first();
+            if ($input.length) {
+                break;
+            }
+        }
+    }
+
+    if (!$input.length && $button.attr('id') === 'add-to-cart-btn') {
+        $input = $('.single-product-info .add-to-cart-quantity').first();
+    }
+
+    var rawQuantity = $input.length ? $input.val() : ($button.attr('data-quantity') || $button.data('quantity') || 1);
+    var quantity = parseInt(rawQuantity, 10);
+    var max = $input.length ? parseInt($input.attr('max'), 10) : NaN;
+
+    if (isNaN(quantity) || quantity < 1) {
+        quantity = 1;
+    }
+    if (!isNaN(max) && max > 0 && quantity > max) {
+        quantity = max;
+        $input.val(max);
+    }
+
+    return quantity;
+}
+
 $(document).ready(function () {
 
   updateBadgeCounts();
@@ -709,16 +749,7 @@ $(document).ready(function () {
 
       logAction('Clicked on add-to-cart (product id: '+productId+')', 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
 
-      var quantity = $(this).data('quantity');
-      var input_quantity = $(this).closest('.product-count').find('.add-to-cart-quantity').val();
-
-      var inputValue = $(this).closest('.product-count').find('.add-to-cart-quantity').length ? $(this).closest('.product-count').find('.add-to-cart-quantity') : $(this).closest('tr').find('.product-count .add-to-cart-quantity');
-
-      var input_quantity = inputValue.val();
-
-
-      // Use a conditional statement to prioritize quantity from data attribute, or fallback to input value
-      var finalQuantity = input_quantity !== undefined ? input_quantity : quantity;
+      var finalQuantity = getAddToCartQuantity($(this));
 
       // console.log('Product ID:', productId);
       // console.log('Quantity:', finalQuantity);
