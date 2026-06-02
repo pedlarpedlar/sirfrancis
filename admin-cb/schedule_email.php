@@ -117,13 +117,13 @@ include 'header.php';
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="cta_label">Button text</label>
-                            <input type="text" class="form-control" id="cta_label" name="cta_label" value="<?= $formValue('cta_label') ?>">
-                            <div class="field-help">Optional. Leave blank if you do not want a button.</div>
+                            <input type="text" class="form-control" id="cta_label" name="cta_label" value="<?= $formValue('cta_label', 'Shop now') ?>">
+                            <div class="field-help">Change this if you want different button wording.</div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="cta_url">Button link</label>
-                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url') ?>">
-                            <div class="field-help">Optional. Use a full link starting with https://.</div>
+                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url', 'https://www.candybird.co.za/products') ?>">
+                            <div class="field-help">Use a full link starting with https://. The default takes customers to the shop.</div>
                         </div>
                     </div>
 
@@ -184,8 +184,8 @@ include 'header.php';
         var coupon = ($('#coupon_code').val() || '').toUpperCase();
         var hero = $('#hero_image_url').val();
         var body = tinymce.get('body') ? tinymce.get('body').getContent() : $('#body').val();
-        var ctaLabel = $('#cta_label').val();
-        var ctaUrl = $('#cta_url').val();
+        var ctaLabel = $('#cta_label').val() || 'Shop now';
+        var ctaUrl = $('#cta_url').val() || 'https://www.candybird.co.za/products';
 
         body = body.split('{coupon_code}').join(escapeHtml(coupon));
 
