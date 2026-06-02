@@ -1296,6 +1296,9 @@ $(function() {
       .map(normalizeProduct)
       .filter(function(item) {
         if (item.id === product.id) return false;
+        const stockValue = String(item.stockQty || item.raw?.stock_qty || item.raw?.qty_in_stock || item.raw?.stock || item.raw?.qty_available || item.raw?.quantity_available || item.raw?.available_qty || item.raw?.inventory || '').trim();
+        const stockNumber = stockValue !== '' && !isNaN(parseFloat(stockValue)) ? parseFloat(stockValue) : null;
+        if (stockNumber !== null && stockNumber <= 0) return false;
         return item.childCategory2 === category || item.childCategory1 === category || item.parentCategory === category || item.childCategory1 === product.childCategory1 || item.parentCategory === product.parentCategory;
       })
       .sort(function() { return 0.5 - Math.random(); })

@@ -673,6 +673,11 @@ document.addEventListener('click', function(event) {
     return null;
   }
 
+  function isProductSoldOut(product) {
+    const stockNumber = getStockNumber(product);
+    return stockNumber !== null && stockNumber <= 0;
+  }
+
   function parseSpecialDate(value, endOfDay) {
     value = String(value || '').trim();
     if (!value) return null;
@@ -732,6 +737,12 @@ document.addEventListener('click', function(event) {
     $('#products-empty').addClass('d-none');
 
     productsToShow = [...categoryFiltered].sort((a, b) => {
+      const aSoldOut = isProductSoldOut(a);
+      const bSoldOut = isProductSoldOut(b);
+      if (aSoldOut !== bSoldOut) {
+        return aSoldOut ? 1 : -1;
+      }
+
       switch (currentSort) {
         case 'name_asc': return a.name.localeCompare(b.name);
         case 'name_desc': return b.name.localeCompare(a.name);
@@ -983,7 +994,7 @@ $.getJSON("fetch_sheet_data.php", function (data) {
   if (activeSearchTerm) {
     const searched = categoryFiltered
       .map(product => ({ product, score: getProductSearchScore(product, activeSearchTerm) }))
-      .filter(item => item.score > 0)
+      .filter(item => item.score > 0 && !isProductSoldOut(item.product))
       .sort((a, b) => b.score - a.score || String(a.product.name || '').localeCompare(String(b.product.name || '')))
       .map(item => item.product);
 
