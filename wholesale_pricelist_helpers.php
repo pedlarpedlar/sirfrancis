@@ -102,7 +102,9 @@ if (!function_exists('getCandybirdWholesaleRows')) {
 
             $product = getSheetProductById($productId);
             $pricePerKg = cbWholesaleFirstValue($row, ['price_per_kg', 'per_kg_price', 'kg_price']);
+            $retailPriceKg = cbWholesaleFirstValue($row, ['retail_price_kg', 'retail_kg_price', 'retail_per_kg']);
             $packDownFee = cbWholesaleFirstValue($row, ['pack_down_fee', 'packdown_fee', 'pack_down_price', 'packing_fee']);
+            $packDownNote = cbWholesaleFirstValue($row, ['pack_down_note', 'packdown_note', 'packing_note']);
             $description = cbWholesaleFirstValue($row, ['description', 'notes', 'bulk_description', 'boxing', 'box_description']);
 
             $rows[] = [
@@ -113,7 +115,9 @@ if (!function_exists('getCandybirdWholesaleRows')) {
                 'price' => $price,
                 'price_label' => cbWholesaleFirstValue($row, ['price_label'], ''),
                 'price_per_kg' => $pricePerKg !== '' ? cbWholesaleMoney($pricePerKg) : 0,
+                'retail_price_kg' => $retailPriceKg !== '' ? cbWholesaleMoney($retailPriceKg) : 0,
                 'pack_down_fee' => $packDownFee !== '' ? cbWholesaleMoney($packDownFee) : 0,
+                'pack_down_note' => $packDownNote,
                 'moq' => cbWholesaleFirstValue($row, ['moq', 'minimum_order', 'minimum_qty']),
                 'lead_time' => cbWholesaleFirstValue($row, ['lead_time', 'availability']),
                 'free_delivery_excluded' => isCandybirdFreeDeliveryExcluded($row) ? 'yes' : 'no',
@@ -187,9 +191,28 @@ if (!function_exists('cbWholesaleDisplayPrice')) {
             $parts[] = cbWholesaleFormatMoney($row['price_per_kg']) . ' per kg';
         }
         if ((float) ($row['pack_down_fee'] ?? 0) > 0) {
-            $parts[] = 'Pack down ' . cbWholesaleFormatMoney($row['pack_down_fee']) . ' per kg';
+            $parts[] = 'Pack-down fee ' . cbWholesaleFormatMoney($row['pack_down_fee']) . ' per requested pack/unit';
         }
         return implode(' | ', array_filter($parts));
+    }
+}
+
+if (!function_exists('cbWholesaleRetailComparison')) {
+    function cbWholesaleRetailComparison($row) {
+        $retail = (float) ($row['retail_price_kg'] ?? 0);
+        $wholesale = (float) ($row['price_per_kg'] ?? 0);
+        if ($retail <= 0) {
+            return '';
+        }
+
+        $text = 'Retail ref: ' . cbWholesaleFormatMoney($retail) . ' per kg';
+        if ($wholesale > 0 && $retail > $wholesale) {
+            $saving = round((($retail - $wholesale) / $retail) * 100);
+            if ($saving > 0) {
+                $text .= ' | Wholesale saves about ' . $saving . '%';
+            }
+        }
+        return $text;
     }
 }
 ?>

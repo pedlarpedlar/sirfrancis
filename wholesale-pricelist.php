@@ -69,7 +69,7 @@ include 'page_menues.php';
 
     <div class="wholesale-note">
       <div><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
-      <div><strong>Pack-down:</strong> when shown, pack-down fees are separate from the bulk product price.</div>
+      <div><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
       <div><strong>Final quote:</strong> stock, packing, delivery and lead time are confirmed before invoicing.</div>
     </div>
 
@@ -103,8 +103,11 @@ include 'page_menues.php';
                   <td><?= cbWholesaleText($row['size']) ?></td>
                   <td class="wholesale-price"><?= cbWholesaleText(cbWholesaleDisplayPrice($row)) ?></td>
                   <td class="wholesale-muted">
+                    <?php $retailComparison = cbWholesaleRetailComparison($row); ?>
+                    <?php if ($retailComparison !== ''): ?><strong><?= cbWholesaleText($retailComparison) ?></strong>. <?php endif; ?>
                     <?php if (!empty($row['moq'])): ?><strong>MOQ:</strong> <?= cbWholesaleText($row['moq']) ?>. <?php endif; ?>
                     <?php if (!empty($row['lead_time'])): ?><strong>Lead time:</strong> <?= cbWholesaleText($row['lead_time']) ?>. <?php endif; ?>
+                    <?php if (!empty($row['pack_down_note'])): ?><strong>Pack-down:</strong> <?= cbWholesaleText($row['pack_down_note']) ?>. <?php elseif ((float)($row['pack_down_fee'] ?? 0) > 0): ?><strong>Pack-down:</strong> fee is calculated against the actual requested packs/units. <?php endif; ?>
                     <?= cbWholesaleText($row['description']) ?>
                     <?php if (!empty($row['free_delivery_excluded']) && $row['free_delivery_excluded'] === 'yes'): ?><span class="d-block text-muted" style="font-size:11px;">Free shipping does not apply to this item.</span><?php endif; ?>
                   </td>

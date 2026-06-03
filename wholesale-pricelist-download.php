@@ -13,7 +13,7 @@ if ($format === 'tsv') {
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'pack_down_fee', 'moq', 'lead_time', 'free_delivery_excluded', 'description'], "\t");
+    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'retail_price_kg', 'pack_down_fee', 'pack_down_note', 'moq', 'lead_time', 'free_delivery_excluded', 'description'], "\t");
     foreach ($rows as $row) {
         fputcsv($out, [
             $row['product_id'],
@@ -22,7 +22,9 @@ if ($format === 'tsv') {
             $row['size'],
             number_format((float) $row['price'], 2, '.', ''),
             (float) ($row['price_per_kg'] ?? 0) > 0 ? number_format((float) $row['price_per_kg'], 2, '.', '') : '',
+            (float) ($row['retail_price_kg'] ?? 0) > 0 ? number_format((float) $row['retail_price_kg'], 2, '.', '') : '',
             (float) ($row['pack_down_fee'] ?? 0) > 0 ? number_format((float) $row['pack_down_fee'], 2, '.', '') : '',
+            $row['pack_down_note'],
             $row['moq'],
             $row['lead_time'],
             $row['free_delivery_excluded'],
@@ -83,7 +85,7 @@ $downloadTitle = 'CandyBird Wholesale Pricelist ' . date('F Y');
 
   <div class="note">
     <div><strong>Bulk use:</strong> for resellers, food service, gifting, offices and larger repeat buyers.</div>
-    <div><strong>Pack-down:</strong> listed separately when applicable.</div>
+    <div><strong>Pack-down:</strong> fees apply to requested packing work/pack units, not only the bulk case size.</div>
     <div><strong>Final quote:</strong> stock, packing, delivery and lead time are confirmed before invoicing.</div>
   </div>
 
@@ -107,8 +109,11 @@ $downloadTitle = 'CandyBird Wholesale Pricelist ' . date('F Y');
             <td class="size"><?= cbWholesaleText($row['size']) ?></td>
             <td class="price"><?= cbWholesaleText(cbWholesaleDisplayPrice($row)) ?></td>
             <td class="details">
+              <?php $retailComparison = cbWholesaleRetailComparison($row); ?>
+              <?php if ($retailComparison !== ''): ?><?= cbWholesaleText($retailComparison) ?>. <?php endif; ?>
               <?php if (!empty($row['moq'])): ?>MOQ: <?= cbWholesaleText($row['moq']) ?>. <?php endif; ?>
               <?php if (!empty($row['lead_time'])): ?>Lead time: <?= cbWholesaleText($row['lead_time']) ?>. <?php endif; ?>
+              <?php if (!empty($row['pack_down_note'])): ?>Pack-down: <?= cbWholesaleText($row['pack_down_note']) ?>. <?php elseif ((float)($row['pack_down_fee'] ?? 0) > 0): ?>Pack-down fee is calculated against the actual requested packs/units. <?php endif; ?>
               <?php if (!empty($row['free_delivery_excluded']) && $row['free_delivery_excluded'] === 'yes'): ?>Free shipping does not apply to this item. <?php endif; ?>
               <?= cbWholesaleText($row['description']) ?>
             </td>

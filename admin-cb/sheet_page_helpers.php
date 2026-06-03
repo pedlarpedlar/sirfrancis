@@ -114,8 +114,11 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'clearance_img_url' => 'Optional override image URL.',
             'clearance_description' => 'Optional override description.',
             'case_size' => 'Wholesale case or bulk size, e.g. 22kg case or 5kg bag.',
-            'price_per_kg' => 'Optional per kg price shown alongside the bulk price.',
-            'pack_down_fee' => 'Optional packing fee, e.g. 1.50 per kg.',
+            'price_per_kg' => 'Optional wholesale per kg price shown alongside the bulk price.',
+            'retail_price_kg' => 'Optional retail per kg reference shown to customers for comparison.',
+            'cost_kg' => 'Private admin-only cost per kg reference. Never shown to customers.',
+            'pack_down_fee' => 'Optional fee per requested pack/unit, e.g. 1.50. Calculated against the packing requested.',
+            'pack_down_note' => 'Optional explanation, e.g. charged per 1kg pack or per requested retail pack.',
             'moq' => 'Minimum order quantity, e.g. 1 case or 50kg.',
             'enabled' => 'yes/no. no hides this row from the wholesale list.',
         ];
@@ -187,11 +190,14 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'description' => 'Bulk case pricing. Subject to stock availability.',
                     'case_size' => '22kg',
                     'price_per_kg' => '130.00',
+                    'retail_price_kg' => '165.00',
                     'pack_down_fee' => '1.50',
+                    'pack_down_note' => 'Charged per requested pack/unit. Example: 22 x 1kg packs = 22 pack-down units.',
                     'moq' => '1 case',
                     'lead_time' => '2-5 working days',
                     'enabled' => 'yes',
                     'free_delivery_excluded' => 'no',
+                    'cost_kg' => '105.00',
                 ];
             }
             $row3[] = $examples[$header] ?? '';
