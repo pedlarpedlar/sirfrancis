@@ -91,6 +91,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'slug' => 'Clean URL slug, e.g. plain-cashews-1kg.',
             'homepage_featured' => 'yes/no. yes gives this product priority on homepage sections.',
             'shipping_weight' => 'Optional actual shipping weight, e.g. 750g or 0.75kg.',
+            'free_delivery_excluded' => 'yes/no. Blank means no. yes shows that free shipping does not apply to this item.',
             'coupon_code' => 'Coupon code customers type at checkout.',
             'valid_from' => 'Coupon/clearance start date.',
             'valid_until' => 'Coupon/clearance end date.',
@@ -144,6 +145,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'slug' => 'plain-cashews-100g',
                     'homepage_featured' => 'yes',
                     'shipping_weight' => '',
+                    'free_delivery_excluded' => '',
                 ];
             } elseif ($key === 'coupons') {
                 $examples = [
@@ -189,6 +191,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'moq' => '1 case',
                     'lead_time' => '2-5 working days',
                     'enabled' => 'yes',
+                    'free_delivery_excluded' => 'no',
                 ];
             }
             $row3[] = $examples[$header] ?? '';

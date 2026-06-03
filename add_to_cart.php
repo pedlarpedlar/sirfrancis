@@ -198,6 +198,10 @@ if (!$checkStmt) {
                     $offcanvas_cart .= '</a>';
                     $offcanvas_cart .= '<div class="content">';
                     $offcanvas_cart .= '<a href="' . $itemLink . '" class="title">' . $item['title'] . (!empty($item['is_clearance']) && $item['is_clearance'] === 'yes' ? ' <small class="text-danger">(Clearance)</small>' : '') . '</a>';
+                    $miniSheetProduct = (!empty($item['is_clearance']) && $item['is_clearance'] === 'yes') ? getSheetProductById($item['source_product_id'] ?? $item['product_id'] ?? '') : getSheetProductById($item['id']);
+                    if ((!empty($item['free_delivery_excluded']) && $item['free_delivery_excluded'] === 'yes') || isCandybirdFreeDeliveryExcluded($miniSheetProduct)) {
+                        $offcanvas_cart .= '<small style="display:block;color:#8a8178;font-size:11px;line-height:1.35;margin-top:3px;">Free shipping does not apply to this item.</small>';
+                    }
                     $offcanvas_cart .= '<span class="quantity-price">' . $item['quantity'] . ' x <span class="amount">R' . $item['discounted_price'] . '</span>';
                     $offcanvas_cart .= '<span><a href="#" class="remove removeFromCart" data-product-id="' . $item['id'] . '">×</a></span>';
                     $offcanvas_cart .= '</div>';

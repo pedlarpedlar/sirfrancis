@@ -13,7 +13,7 @@ if ($format === 'tsv') {
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'pack_down_fee', 'moq', 'lead_time', 'description'], "\t");
+    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'pack_down_fee', 'moq', 'lead_time', 'free_delivery_excluded', 'description'], "\t");
     foreach ($rows as $row) {
         fputcsv($out, [
             $row['product_id'],
@@ -25,6 +25,7 @@ if ($format === 'tsv') {
             (float) ($row['pack_down_fee'] ?? 0) > 0 ? number_format((float) $row['pack_down_fee'], 2, '.', '') : '',
             $row['moq'],
             $row['lead_time'],
+            $row['free_delivery_excluded'],
             $row['description'],
         ], "\t");
     }
@@ -108,6 +109,7 @@ $downloadTitle = 'CandyBird Wholesale Pricelist ' . date('F Y');
             <td class="details">
               <?php if (!empty($row['moq'])): ?>MOQ: <?= cbWholesaleText($row['moq']) ?>. <?php endif; ?>
               <?php if (!empty($row['lead_time'])): ?>Lead time: <?= cbWholesaleText($row['lead_time']) ?>. <?php endif; ?>
+              <?php if (!empty($row['free_delivery_excluded']) && $row['free_delivery_excluded'] === 'yes'): ?>Free shipping does not apply to this item. <?php endif; ?>
               <?= cbWholesaleText($row['description']) ?>
             </td>
           </tr>

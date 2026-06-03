@@ -106,6 +106,7 @@ include 'page_menues.php';
                     <?php if (!empty($row['moq'])): ?><strong>MOQ:</strong> <?= cbWholesaleText($row['moq']) ?>. <?php endif; ?>
                     <?php if (!empty($row['lead_time'])): ?><strong>Lead time:</strong> <?= cbWholesaleText($row['lead_time']) ?>. <?php endif; ?>
                     <?= cbWholesaleText($row['description']) ?>
+                    <?php if (!empty($row['free_delivery_excluded']) && $row['free_delivery_excluded'] === 'yes'): ?><span class="d-block text-muted" style="font-size:11px;">Free shipping does not apply to this item.</span><?php endif; ?>
                   </td>
                 </tr>
               <?php endforeach; ?>

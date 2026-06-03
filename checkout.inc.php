@@ -621,6 +621,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $couponEligibleAmount = 0; // Amount eligible for coupon
         $productTaxRate = 0;
         $cartWeightKg = 0;
+        $freeShippingBasisSubtotal = 0;
 
         if (isset($_SESSION['coupon'])) {
             calculateCouponDiscount($conn, $userId, $guestIdentifier, $billing_email_address);
@@ -675,6 +676,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($productDiscountAmount == 0) {
                 $couponEligibleAmount += $productPrice * $quantity;
             }
+
+            if (!isCandybirdFreeDeliveryExcluded($sheetProduct)) {
+                $freeShippingBasisSubtotal += max(0, $sheetPrice * $quantity);
+            }
         }
 
         // Calculate the tax amount after discounts
@@ -722,7 +727,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Calculate the grand total amount before shipping
         $grandTotalAmount = $taxableAmount + $totalTaxAmount - $couponAmount;
-        $freeShippingBasisAmount = $grandTotalAmount;
+        $freeShippingBasisAmount = max(0, $freeShippingBasisSubtotal - $couponAmount);
 
         $shippingCountryNormalized = strtolower(trim((string) $shipping_country));
         $isSouthAfricaDelivery = in_array($shippingCountryNormalized, ['', 'south africa', 'sa', 'za', 'zaf'], true);

@@ -1428,6 +1428,17 @@ if (!function_exists('getSheetProductPrice')) {
     }
 }
 
+if (!function_exists('isCandybirdFreeDeliveryExcluded')) {
+    function isCandybirdFreeDeliveryExcluded($product) {
+        if (!is_array($product)) {
+            return false;
+        }
+
+        $value = strtolower(trim((string) ($product['free_delivery_excluded'] ?? $product['free_shipping_excluded'] ?? $product['exclude_free_delivery'] ?? '')));
+        return in_array($value, ['yes', 'true', '1', 'y'], true);
+    }
+}
+
 if (!function_exists('buildSheetCartItem')) {
     function buildSheetCartItem($cartRow) {
         $clearanceId = strtoupper(trim((string) ($cartRow['clearance_id'] ?? '')));
@@ -1458,6 +1469,7 @@ if (!function_exists('buildSheetCartItem')) {
             'weight' => getSheetProductDisplaySize($product),
             'shipping_weight_kg' => getSheetProductWeightKg($product),
             'stock_qty' => getSheetProductStockQty($product),
+            'free_delivery_excluded' => isCandybirdFreeDeliveryExcluded($product) ? 'yes' : 'no',
             'price' => $price,
             'discount_rate' => 0,
             'discount_amount' => $discountAmount,

@@ -116,6 +116,7 @@ if (!function_exists('getCandybirdWholesaleRows')) {
                 'pack_down_fee' => $packDownFee !== '' ? cbWholesaleMoney($packDownFee) : 0,
                 'moq' => cbWholesaleFirstValue($row, ['moq', 'minimum_order', 'minimum_qty']),
                 'lead_time' => cbWholesaleFirstValue($row, ['lead_time', 'availability']),
+                'free_delivery_excluded' => isCandybirdFreeDeliveryExcluded($row) ? 'yes' : 'no',
                 'description' => $description,
                 'image' => is_array($product) ? getSheetProductImage($product) : '',
                 'product_url' => is_array($product) ? getSheetProductUrl($product) : '',

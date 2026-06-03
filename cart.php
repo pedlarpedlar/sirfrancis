@@ -104,6 +104,13 @@ include 'page_menues.php';
       font-size: 15px;
     }
   }
+  .free-delivery-excluded-note {
+    color: #8a8178;
+    display: block;
+    font-size: 11px;
+    line-height: 1.35;
+    margin-top: 4px;
+  }
 </style>
 
 <?php
@@ -119,6 +126,7 @@ $taxes = 0;
 $tax = 0;
 $order_total = 0;
 $cart_weight_kg = 0;
+$free_shipping_basis_total = 0;
 
 foreach ($cartItems as $item) {
     $image_url = isset($item['image_url']) ? $item['image_url'] : 'assets/img/product/1.png';
@@ -160,6 +168,7 @@ foreach ($cartItems as $item) {
 
     $isClearance = !empty($item['is_clearance']) && $item['is_clearance'] === 'yes';
     $sheetProduct = $isClearance ? getSheetProductById($item['source_product_id'] ?? $item['product_id'] ?? '') : getSheetProductById($item['id']);
+    $freeDeliveryExcluded = (!empty($item['free_delivery_excluded']) && $item['free_delivery_excluded'] === 'yes') || isCandybirdFreeDeliveryExcluded($sheetProduct);
     $displayTitle = $isClearance ? trim((string) $item['title']) : trim($item['title'] . ' ' . ($item['product_weight'] ?? ''));
     $stockQty = isset($item['stock_qty']) && $item['stock_qty'] !== '' ? (int) $item['stock_qty'] : null;
     $isSoldOut = $stockQty !== null && $stockQty <= 0;
@@ -186,6 +195,11 @@ foreach ($cartItems as $item) {
     }
     if ($isSoldOut) {
       $cart_table .= '<div><span style="display:inline-block;margin-top:4px;background:#111;color:#fff;font-size:12px;font-weight:700;padding:3px 6px;border-radius:4px;">Sold out - please remove</span></div>';
+    }
+    if ($freeDeliveryExcluded) {
+      $cart_table .= '<span class="free-delivery-excluded-note">Free shipping does not apply to this item.</span>';
+    } else {
+      $free_shipping_basis_total += $subtotal;
     }
     $cart_table .= '</td>';
     $cart_table .= '<td class="text-center">';
@@ -255,10 +269,11 @@ $order_total += $subtotals;
 $order_total += $taxes;
 $order_total -= $discounts;
 $order_total -= $coupon_amount;
+$cart_free_shipping_basis = max(0, $free_shipping_basis_total - $coupon_amount);
 $delivery_options = getCandybirdDeliveryOptions();
 $enabled_delivery_options = getCandybirdEnabledDeliveryOptions($delivery_options);
 $default_delivery_method = getCandybirdDefaultDeliveryMethod($delivery_options);
-$default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $cart_weight_kg, $order_total, $free_shipping_amount);
+$default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $cart_weight_kg, $cart_free_shipping_basis, $free_shipping_amount);
 ?>
 
         
@@ -490,12 +505,14 @@ $default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $c
 <script>
 $(document).ready(function () {
   var cartSubtotal = <?=json_encode((float) $order_total)?>;
+  var cartFreeShippingBasis = <?=json_encode((float) $cart_free_shipping_basis)?>;
   var cartWeightKg = <?=json_encode((float) $cart_weight_kg)?>;
   var freeShippingAmount = <?=json_encode((float) $free_shipping_amount)?>;
   var cartDeliveryOptions = <?=json_encode($delivery_options)?>;
   var defaultCartDeliveryMethod = <?=json_encode($default_delivery_method)?>;
   var cartCouponAmount = <?=json_encode(isset($_SESSION['coupon']['coupon_savings']) ? (float) $_SESSION['coupon']['coupon_savings'] : 0)?>;
   var cartBaseSubtotal = cartSubtotal + cartCouponAmount;
+  var cartFreeShippingBasisBase = cartFreeShippingBasis + cartCouponAmount;
 
   function formatRand(amount) {
       return 'R' + (parseFloat(amount) || 0).toFixed(2);
@@ -505,9 +522,10 @@ $(document).ready(function () {
       if (cartWeightKg <= 0) {
           return {
               tier: {label: 'Digital delivery'},
-              payableShipping: 0,
-              shippingDiscount: 0,
-              digital: true
+          payableShipping: 0,
+          shippingDiscount: 0,
+          freeEligible: false,
+          digital: true
           };
       }
 
@@ -526,12 +544,13 @@ $(document).ready(function () {
       });
 
       var shippingAmount = parseFloat(tier.price) || 0;
-      var shippingDiscount = option.free_shipping_eligible && cartSubtotal >= freeShippingAmount && tierKey !== 'locker_over_20kg' ? shippingAmount : 0;
+      var shippingDiscount = option.free_shipping_eligible && cartFreeShippingBasis >= freeShippingAmount && tierKey !== 'locker_over_20kg' ? shippingAmount : 0;
 
       return {
           tier: tier,
           payableShipping: Math.max(0, shippingAmount - shippingDiscount),
           shippingDiscount: shippingDiscount,
+          freeEligible: !!option.free_shipping_eligible,
           collectionAddress: option.collection_address || '',
           estimate: option.estimate || ''
       };
@@ -557,9 +576,9 @@ $(document).ready(function () {
           }
       } else if (quote.shippingDiscount > 0) {
           note += ' Free shipping applied.';
-      } else if (option.free_shipping_eligible && freeShippingAmount > cartSubtotal) {
-          note += ' Add ' + formatRand(freeShippingAmount - cartSubtotal) + ' more for free shipping.';
-      } else if (!option.free_shipping_eligible) {
+      } else if (quote.freeEligible && freeShippingAmount > cartFreeShippingBasis) {
+          note += ' Add ' + formatRand(freeShippingAmount - cartFreeShippingBasis) + ' more in eligible items for free shipping.';
+      } else if (!quote.freeEligible) {
           note += ' Free shipping does not apply to this delivery method.';
       }
       $('.cart-delivery-note').text('Estimated order weight: ' + cartWeightKg.toFixed(2) + 'kg. ' + note);
@@ -568,6 +587,7 @@ $(document).ready(function () {
   function setCartCouponSummary(code, amount) {
       cartCouponAmount = parseFloat(amount) || 0;
       cartSubtotal = Math.max(0, cartBaseSubtotal - cartCouponAmount);
+      cartFreeShippingBasis = Math.max(0, cartFreeShippingBasisBase - cartCouponAmount);
 
       if (cartCouponAmount > 0 && code) {
           $('#cart-coupon-summary').removeClass('d-none');

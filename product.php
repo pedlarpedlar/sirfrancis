@@ -592,6 +592,14 @@ include 'header.php';
     text-decoration: underline;
   }
 
+  .product-free-delivery-note {
+    color: #8a8178;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 6px;
+  }
+
   @media (max-width: 575px) {
     .product-payment-methods {
       padding: 12px;
@@ -951,6 +959,7 @@ $(function() {
       productType: product.product_type || product.type || product.delivery_type || '',
       stockQty: firstProductStockValue(product),
       leadTime: product.lead_time || product.leadtime || product.preparation_time || '',
+      freeDeliveryExcluded: String(product.free_delivery_excluded || product.free_shipping_excluded || product.exclude_free_delivery || '').trim().toLowerCase(),
       slug: product.slug || '',
       is_clearance: product.is_clearance || '',
       clearance_id: product.clearance_id || '',
@@ -1208,6 +1217,8 @@ $(function() {
     const leadTime = String(product.leadTime || '').trim();
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     let html = '';
+    const freeDeliveryExcluded = ['yes', 'true', '1', 'y'].indexOf(String(product.freeDeliveryExcluded || '').toLowerCase()) !== -1;
+    $('#product-free-delivery-note').remove();
 
     if (leadTime !== '') {
       html += '<span class="lead-time-required mr-2">Lead-time required: ' + escapeHtml(leadTime) + '</span>';
@@ -1237,6 +1248,12 @@ $(function() {
     $('#product-availability').remove();
     if (html !== '') {
       $('#price-section').after('<div id="product-availability" class="mb-20">' + html + '</div>');
+    }
+    if (freeDeliveryExcluded) {
+      const note = '<div id="product-free-delivery-note" class="product-free-delivery-note">Free shipping does not apply to this item.</div>';
+      $('#product-availability').length ? $('#product-availability').append(note) : $('#price-section').after(note);
+    } else {
+      $('#product-free-delivery-note').remove();
     }
   }
 
