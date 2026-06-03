@@ -49,7 +49,7 @@ include 'page_menues.php';
             <p>Wholesale at CandyBird is for buyers who need reliable supply, sensible pack sizes and clear costing for resale, hospitality, gifting, offices, schools, events and bulk pantry use. We quote based on the product, quantity, stock position, packing work and delivery requirements.</p>
             <div class="cb-service-actions">
                 <a class="primary" href="contact">Request a wholesale quote</a>
-                <a class="secondary" href="pricelist">View pricelist</a>
+                <a class="secondary" href="wholesale-pricelist">View wholesale pricelist</a>
                 <a class="secondary" href="private_labelling">Private labelling</a>
             </div>
         </div>

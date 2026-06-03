@@ -10,6 +10,33 @@ $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $downloadTitle = 'CandyBird Pricelist ' . date('F Y');
+$format = strtolower(trim((string) ($_GET['format'] ?? 'html')));
+
+if ($format === 'tsv') {
+    $filename = 'CandyBird-Pricelist-' . date('F-Y') . '.tsv';
+    header('Content-Type: text/tab-separated-values; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['id', 'product', 'category', 'size', 'normal_price', 'sale_price', 'discount_percent', 'special_valid_until', 'product_url'], "\t");
+    foreach ($productsByCategory as $categoryName => $products) {
+        foreach ($products as $product) {
+            $pricing = cbPricelistPricing($product);
+            fputcsv($out, [
+                $product['id'] ?? '',
+                $product['name'] ?? '',
+                $categoryName,
+                getSheetProductDisplaySize($product),
+                number_format((float) $pricing['normal_price'], 2, '.', ''),
+                number_format((float) $pricing['sale_price'], 2, '.', ''),
+                $pricing['is_special'] ? (string) $pricing['saving_percent'] : '',
+                $pricing['valid_until'],
+                getSheetProductUrl($product, true),
+            ], "\t");
+        }
+    }
+    fclose($out);
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +83,7 @@ $downloadTitle = 'CandyBird Pricelist ' . date('F Y');
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>
+      <a class="button" href="pricelist-download?format=tsv">TSV export</a>
       <a class="button" href="pricelist">Back</a>
     </div>
   </div>

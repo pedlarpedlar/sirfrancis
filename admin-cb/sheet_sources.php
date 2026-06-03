@@ -8,6 +8,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 require_once __DIR__ . '/../product_sheet_helpers.php';
+require_once __DIR__ . '/../wholesale_pricelist_helpers.php';
 include __DIR__ . '/dbh.inc.php';
 
 $message = '';
@@ -61,6 +62,10 @@ if (!function_exists('cbSheetRefreshSource')) {
         if ($key === 'clearance') {
             cbSheetClearPublicProductCache();
             $items = getSheetClearanceRows(true);
+            return ['ok' => true, 'count' => count($items)];
+        }
+        if ($key === 'wholesale') {
+            $items = getCandybirdWholesaleRows(true);
             return ['ok' => true, 'count' => count($items)];
         }
         return ['ok' => false, 'count' => 0];
@@ -135,7 +140,7 @@ if (!function_exists('cbSheetStatusBadge')) {
     }
 }
 
-$sourceKeys = ['products', 'coupons', 'clearance'];
+$sourceKeys = ['products', 'coupons', 'clearance', 'wholesale'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['sheet_action'] ?? 'save_sources';
@@ -153,6 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'clearance' => [
                 'published_url' => $_POST['clearance_published_url'] ?? '',
                 'edit_url' => $_POST['clearance_edit_url'] ?? '',
+            ],
+            'wholesale' => [
+                'published_url' => $_POST['wholesale_published_url'] ?? '',
+                'edit_url' => $_POST['wholesale_edit_url'] ?? '',
             ],
         ];
 

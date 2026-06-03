@@ -18,6 +18,10 @@ if ($productPageId !== '') {
 }
 $reviewLoginRedirect = $metaProduct ? getSheetProductUrl($metaProduct) . '#pills-contact' : 'product#pills-contact';
 $reviewLoginHref = 'login?redirect=' . rawurlencode($reviewLoginRedirect);
+$productWholesaleWhatsappDigits = preg_replace('/\D+/', '', (string) (($hotline ?? '') ?: ($tel ?? '')));
+if (strpos($productWholesaleWhatsappDigits, '0') === 0) {
+    $productWholesaleWhatsappDigits = '27' . substr($productWholesaleWhatsappDigits, 1);
+}
 
 function cbProductMetaText($value, $limit = 180) {
     $text = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES, 'UTF-8')));
@@ -567,6 +571,27 @@ include 'header.php';
     width: 100%;
   }
 
+  .product-wholesale-note {
+    background: #fffaf0;
+    border: 1px solid #ecd5a1;
+    border-radius: 8px;
+    color: #4b3820;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: -4px 0 18px;
+    padding: 11px 13px;
+  }
+
+  .product-wholesale-note strong {
+    color: #5b1178;
+  }
+
+  .product-wholesale-note a {
+    color: #1d6f37;
+    font-weight: 800;
+    text-decoration: underline;
+  }
+
   @media (max-width: 575px) {
     .product-payment-methods {
       padding: 12px;
@@ -842,6 +867,7 @@ $(function() {
   const productSlug = String(urlParams.get('slug') || serverProductSlug || '').trim();
   const defaultImage = 'assets/img/product/1.png';
   const imageFallback = ' onerror="this.onerror=null;this.src=\'' + defaultImage + '\';"';
+  const wholesaleWhatsappDigits = <?=json_encode($productWholesaleWhatsappDigits)?>;
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, function(char) {
@@ -1372,6 +1398,26 @@ $(function() {
     $('#product-details-list').html(details || '<li><span>Product ID</span> ' + escapeHtml(product.id) + '</li>');
   }
 
+  function renderWholesaleNotice(product) {
+    $('#product-wholesale-note').remove();
+    const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
+    if (isClearance) return;
+
+    const sourceId = String(product.source_product_id || product.id || '').trim();
+    if (!sourceId) return;
+
+    $.getJSON('fetch_wholesale_availability.php', { product_id: sourceId })
+      .done(function(response) {
+        if (!response || !response.available) return;
+        const title = displayTitle(product);
+        const message = encodeURIComponent('Assalamu alaikum / Hello CandyBird, please send me the wholesale/bulk options for ' + title + ' (Product ID ' + sourceId + ').');
+        const whatsapp = wholesaleWhatsappDigits ? ' <a href="https://wa.me/' + encodeURIComponent(wholesaleWhatsappDigits) + '?text=' + message + '" target="_blank" rel="noopener noreferrer">WhatsApp for the bulk list</a>.' : '';
+        $('#product-availability').length
+          ? $('#product-availability').after('<div id="product-wholesale-note" class="product-wholesale-note"><strong>Available in wholesale/bulk.</strong>' + whatsapp + ' <a href="wholesale-pricelist">View wholesale pricelist</a>.</div>')
+          : $('#price-section').after('<div id="product-wholesale-note" class="product-wholesale-note"><strong>Available in wholesale/bulk.</strong>' + whatsapp + ' <a href="wholesale-pricelist">View wholesale pricelist</a>.</div>');
+      });
+  }
+
   function renderProduct(product) {
     window.CANDYBIRD_CURRENT_PRODUCT = product;
     const pageUrl = getProductUrl(product.id);
@@ -1392,6 +1438,7 @@ $(function() {
     renderImages(product);
     renderPrice(product);
     renderAvailability(product);
+    renderWholesaleNotice(product);
     renderSelection(product);
     renderDetails(product);
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';

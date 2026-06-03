@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../product_sheet_helpers.php';
+require_once __DIR__ . '/../wholesale_pricelist_helpers.php';
 if (!isset($conn) || !($conn instanceof mysqli)) {
     @include_once __DIR__ . '/db_connect.php';
 }
@@ -17,6 +18,7 @@ if (!function_exists('cbAdminSheetClearPublicProductCache')) {
             dirname(__DIR__) . '/sheet_cache/products.tsv',
             dirname(__DIR__) . '/sheet_cache/coupons.tsv',
             dirname(__DIR__) . '/sheet_cache/clearance.tsv',
+            dirname(__DIR__) . '/sheet_cache/wholesale.tsv',
         ] as $cacheFile) {
             if (is_file($cacheFile)) {
                 @unlink($cacheFile);
@@ -39,6 +41,10 @@ if (!function_exists('cbAdminSheetRefreshSource')) {
         if ($key === 'clearance') {
             cbAdminSheetClearPublicProductCache();
             $items = getSheetClearanceRows(true);
+            return ['ok' => true, 'count' => count($items)];
+        }
+        if ($key === 'wholesale') {
+            $items = getCandybirdWholesaleRows(true);
             return ['ok' => true, 'count' => count($items)];
         }
         return ['ok' => false, 'count' => 0];
@@ -106,6 +112,11 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'clearance_title' => 'Optional override title.',
             'clearance_img_url' => 'Optional override image URL.',
             'clearance_description' => 'Optional override description.',
+            'case_size' => 'Wholesale case or bulk size, e.g. 22kg case or 5kg bag.',
+            'price_per_kg' => 'Optional per kg price shown alongside the bulk price.',
+            'pack_down_fee' => 'Optional packing fee, e.g. 1.50 per kg.',
+            'moq' => 'Minimum order quantity, e.g. 1 case or 50kg.',
+            'enabled' => 'yes/no. no hides this row from the wholesale list.',
         ];
 
         $row2 = [];
@@ -149,7 +160,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'email_restriction' => '',
                     'phone_restriction' => '',
                 ];
-            } else {
+            } elseif ($key === 'clearance') {
                 $examples = [
                     'clearance_id' => 'CLR-001',
                     'product_id' => '101',
@@ -165,6 +176,20 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'clearance_img_url' => '',
                     'clearance_description' => '',
                 ];
+            } else {
+                $examples = [
+                    'product_id' => '101',
+                    'title' => 'Plain Cashews',
+                    'size' => '22kg case',
+                    'price' => '2860.00',
+                    'description' => 'Bulk case pricing. Subject to stock availability.',
+                    'case_size' => '22kg',
+                    'price_per_kg' => '130.00',
+                    'pack_down_fee' => '1.50',
+                    'moq' => '1 case',
+                    'lead_time' => '2-5 working days',
+                    'enabled' => 'yes',
+                ];
             }
             $row3[] = $examples[$header] ?? '';
         }
@@ -175,7 +200,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
 
 if (!function_exists('cbAdminSheetPage')) {
     function cbAdminSheetPage($key, $title, $introHtml) {
-        $sourceKeys = ['products', 'coupons', 'clearance'];
+        $sourceKeys = ['products', 'coupons', 'clearance', 'wholesale'];
         if (!in_array($key, $sourceKeys, true)) {
             http_response_code(404);
             echo 'Unknown sheet page.';

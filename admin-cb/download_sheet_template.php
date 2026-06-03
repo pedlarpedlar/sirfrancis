@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 require __DIR__ . '/sheet_page_helpers.php';
 
 $type = strtolower(trim((string) ($_GET['type'] ?? 'products')));
-if (!in_array($type, ['products', 'coupons', 'clearance'], true)) {
+if (!in_array($type, ['products', 'coupons', 'clearance', 'wholesale'], true)) {
     $type = 'products';
 }
 

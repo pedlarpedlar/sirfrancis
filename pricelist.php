@@ -216,6 +216,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       </div>
       <div class="pricelist-actions no-print">
         <a href="pricelist-download?sort=<?= cbPricelistText($sort) ?>&dir=<?= cbPricelistText($direction) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
+        <a href="pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
         <a href="products" class="btn btn-light"><i class="fas fa-shopping-basket mr-1"></i> Shop online</a>
       </div>
     </div>

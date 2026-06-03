@@ -306,7 +306,7 @@ $importantLinks = [
     ],
     [
         'label' => 'Mega Sync All Sheets',
-        'description' => 'Force refresh products, coupons and clearance caches after sheet edits.',
+        'description' => 'Force refresh products, coupons, clearance and wholesale caches after sheet edits.',
         'url' => 'sheets',
         'button' => 'Mega sync'
     ],
@@ -394,6 +394,7 @@ $dashboardCronJobs = [
             <a href="manage_orders" class="btn btn-warning btn-sm">Orders</a>
             <a href="manage_users" class="btn btn-warning btn-sm">Customers</a>
             <a href="schedule_email" class="btn btn-light btn-sm">Subscribers</a>
+            <a href="wholesale_pricelist" class="btn btn-light btn-sm">Wholesale Pricelist</a>
             <form method="post" action="sheets" class="m-0">
                 <input type="hidden" name="sheet_action" value="refresh_all">
                 <button type="submit" class="btn btn-light btn-sm">Mega Sync All Sheets</button>

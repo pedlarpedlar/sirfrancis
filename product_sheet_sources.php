@@ -24,6 +24,13 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'required_headers' => ['clearance_id', 'product_id', 'clearance_price', 'qty_available'],
                 'optional_headers' => ['slug', 'clearance_reason', 'clearance_tag', 'clearance_notes', 'valid_from', 'valid_until', 'clearance_title', 'clearance_img_url', 'clearance_description'],
             ],
+            'wholesale' => [
+                'label' => 'Wholesale Pricelist',
+                'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhtg-QlUDokG6Tcsj29r1RMRWp9y9Fl2rcjh17s5F3xc5Re6tfaU54imMepBWNbA1xJKoVvNCUOX2d/pub?gid=0&single=true&output=tsv',
+                'edit_url' => '',
+                'required_headers' => ['product_id', 'size', 'price'],
+                'optional_headers' => ['title', 'description', 'case_size', 'price_per_kg', 'pack_down_fee', 'moq', 'lead_time', 'enabled'],
+            ],
         ];
     }
 }
@@ -78,7 +85,7 @@ if (!function_exists('getCandybirdSheetEditUrl')) {
 if (!function_exists('saveCandybirdSheetSources')) {
     function saveCandybirdSheetSources($sources) {
         $current = getCandybirdSheetSources();
-        foreach (['products', 'coupons', 'clearance'] as $key) {
+        foreach (['products', 'coupons', 'clearance', 'wholesale'] as $key) {
             if (!isset($sources[$key])) {
                 continue;
             }
@@ -155,6 +162,12 @@ if (!function_exists('checkCandybirdSheetHealth')) {
                 candybirdSheetRowHasValue($row, $headers, 'product_id') &&
                 candybirdSheetRowHasValue($row, $headers, 'clearance_price') &&
                 candybirdSheetRowHasValue($row, $headers, 'qty_available');
+        }
+
+        if ($key === 'wholesale') {
+            return candybirdSheetRowHasValue($row, $headers, 'product_id') &&
+                (candybirdSheetRowHasValue($row, $headers, 'price') || candybirdSheetRowHasValue($row, $headers, 'price_per_kg')) &&
+                (candybirdSheetRowHasValue($row, $headers, 'size') || candybirdSheetRowHasValue($row, $headers, 'case_size'));
         }
 
         foreach ($row as $cell) {

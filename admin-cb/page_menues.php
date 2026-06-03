@@ -159,12 +159,13 @@ function cbAdminMenuActive($page, $currentPage) {
             </details>
           </li>
           <li>
-            <details<?= cbAdminMenuOpen(['products', 'coupons', 'clearance', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+            <details<?= cbAdminMenuOpen(['products', 'coupons', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
               <summary>Products & Sheets</summary>
               <ul>
                 <li><a href="products">Products</a></li>
                 <li><a href="coupons">Coupons</a></li>
                 <li><a href="clearance">Clearance Basket</a></li>
+                <li><a href="wholesale_pricelist">Wholesale Pricelist</a></li>
                 <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
               </ul>
             </details>
@@ -211,12 +212,13 @@ function cbAdminMenuActive($page, $currentPage) {
         </details>
       </li>
       <li>
-        <details<?= cbAdminMenuOpen(['products', 'coupons', 'clearance', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+        <details<?= cbAdminMenuOpen(['products', 'coupons', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
           <summary>Products & Sheets</summary>
           <ul>
             <li><a href="products"<?= cbAdminMenuActive('products', $adminCurrentPage) ?>>Products</a></li>
             <li><a href="coupons"<?= cbAdminMenuActive('coupons', $adminCurrentPage) ?>>Coupons</a></li>
             <li><a href="clearance"<?= cbAdminMenuActive('clearance', $adminCurrentPage) ?>>Clearance Basket</a></li>
+            <li><a href="wholesale_pricelist"<?= cbAdminMenuActive('wholesale_pricelist', $adminCurrentPage) ?>>Wholesale Pricelist</a></li>
             <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
           </ul>
         </details>
