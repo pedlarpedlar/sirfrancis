@@ -13,7 +13,7 @@ if ($format === 'tsv') {
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'retail_price_kg', 'pack_down_fee', 'pack_down_note', 'moq', 'lead_time', 'free_delivery_excluded', 'description'], "\t");
+    fputcsv($out, ['product_id', 'title', 'category', 'bulk_size', 'price', 'price_per_kg', 'retail_price_kg', 'pack_down_fee', 'pack_down_note', 'allowed_pack_sizes', 'moq', 'lead_time', 'free_delivery_excluded', 'description'], "\t");
     foreach ($rows as $row) {
         fputcsv($out, [
             $row['product_id'],
@@ -25,6 +25,7 @@ if ($format === 'tsv') {
             (float) ($row['retail_price_kg'] ?? 0) > 0 ? number_format((float) $row['retail_price_kg'], 2, '.', '') : '',
             (float) ($row['pack_down_fee'] ?? 0) > 0 ? number_format((float) $row['pack_down_fee'], 2, '.', '') : '',
             $row['pack_down_note'],
+            implode(',', $row['allowed_pack_sizes'] ?? []),
             $row['moq'],
             $row['lead_time'],
             $row['free_delivery_excluded'],

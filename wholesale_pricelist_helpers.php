@@ -43,6 +43,35 @@ if (!function_exists('cbWholesaleSortValue')) {
     }
 }
 
+if (!function_exists('cbWholesaleAllowedPackSizes')) {
+    function cbWholesaleAllowedPackSizes($value = '') {
+        $value = trim((string) $value);
+        $sizes = $value !== ''
+            ? preg_split('/[,;|]+/', $value)
+            : ['1kg', '500g', '340g', '100g', '29g'];
+
+        $clean = [];
+        foreach ($sizes as $size) {
+            $size = trim((string) $size);
+            if ($size !== '') {
+                $clean[] = $size;
+            }
+        }
+        return array_values(array_unique($clean));
+    }
+}
+
+if (!function_exists('cbWholesaleSizeToKg')) {
+    function cbWholesaleSizeToKg($value) {
+        $value = strtolower(trim((string) $value));
+        if (!preg_match('/(\d+(?:[.,]\d+)?)\s*(kg|g)/', $value, $match)) {
+            return 0.0;
+        }
+        $number = (float) str_replace(',', '.', $match[1]);
+        return $match[2] === 'kg' ? $number : ($number / 1000);
+    }
+}
+
 if (!function_exists('cbWholesaleProductTitle')) {
     function cbWholesaleProductTitle($row, $product) {
         $title = cbWholesaleFirstValue($row, ['title', 'product_title', 'reference_title', 'name']);
@@ -105,6 +134,7 @@ if (!function_exists('getCandybirdWholesaleRows')) {
             $retailPriceKg = cbWholesaleFirstValue($row, ['retail_price_kg', 'retail_kg_price', 'retail_per_kg']);
             $packDownFee = cbWholesaleFirstValue($row, ['pack_down_fee', 'packdown_fee', 'pack_down_price', 'packing_fee']);
             $packDownNote = cbWholesaleFirstValue($row, ['pack_down_note', 'packdown_note', 'packing_note']);
+            $allowedPackSizes = cbWholesaleAllowedPackSizes(cbWholesaleFirstValue($row, ['allowed_pack_sizes', 'pack_sizes', 'allowed_sizes']));
             $description = cbWholesaleFirstValue($row, ['description', 'notes', 'bulk_description', 'boxing', 'box_description']);
 
             $rows[] = [
@@ -118,6 +148,7 @@ if (!function_exists('getCandybirdWholesaleRows')) {
                 'retail_price_kg' => $retailPriceKg !== '' ? cbWholesaleMoney($retailPriceKg) : 0,
                 'pack_down_fee' => $packDownFee !== '' ? cbWholesaleMoney($packDownFee) : 0,
                 'pack_down_note' => $packDownNote,
+                'allowed_pack_sizes' => $allowedPackSizes,
                 'moq' => cbWholesaleFirstValue($row, ['moq', 'minimum_order', 'minimum_qty']),
                 'lead_time' => cbWholesaleFirstValue($row, ['lead_time', 'availability']),
                 'free_delivery_excluded' => isCandybirdFreeDeliveryExcluded($row) ? 'yes' : 'no',

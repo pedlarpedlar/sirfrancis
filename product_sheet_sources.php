@@ -29,7 +29,7 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhtg-QlUDokG6Tcsj29r1RMRWp9y9Fl2rcjh17s5F3xc5Re6tfaU54imMepBWNbA1xJKoVvNCUOX2d/pub?gid=0&single=true&output=tsv',
                 'edit_url' => '',
                 'required_headers' => ['product_id', 'size', 'price'],
-                'optional_headers' => ['title', 'description', 'case_size', 'price_per_kg', 'retail_price_kg', 'pack_down_fee', 'pack_down_note', 'moq', 'lead_time', 'enabled', 'free_delivery_excluded', 'cost_kg'],
+                'optional_headers' => ['title', 'description', 'case_size', 'price_per_kg', 'retail_price_kg', 'pack_down_fee', 'pack_down_note', 'allowed_pack_sizes', 'moq', 'lead_time', 'enabled', 'free_delivery_excluded', 'cost_kg'],
             ],
         ];
     }

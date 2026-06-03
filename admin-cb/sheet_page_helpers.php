@@ -119,6 +119,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'cost_kg' => 'Private admin-only cost per kg reference. Never shown to customers.',
             'pack_down_fee' => 'Optional fee per requested pack/unit, e.g. 1.50. Calculated against the packing requested.',
             'pack_down_note' => 'Optional explanation, e.g. charged per 1kg pack or per requested retail pack.',
+            'allowed_pack_sizes' => 'Comma-separated calculator sizes, e.g. 1kg,500g,340g,100g,29g. Blank uses the default list.',
             'moq' => 'Minimum order quantity, e.g. 1 case or 50kg.',
             'enabled' => 'yes/no. no hides this row from the wholesale list.',
         ];
@@ -193,6 +194,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'retail_price_kg' => '165.00',
                     'pack_down_fee' => '1.50',
                     'pack_down_note' => 'Charged per requested pack/unit. Example: 22 x 1kg packs = 22 pack-down units.',
+                    'allowed_pack_sizes' => '1kg,500g,340g,100g,29g',
                     'moq' => '1 case',
                     'lead_time' => '2-5 working days',
                     'enabled' => 'yes',
