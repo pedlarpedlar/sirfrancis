@@ -30,7 +30,7 @@
                             <table cellpadding="0" cellspacing="0" role="presentation" style="margin-top:20px;">
                                 <tr>
                                     <td style="background:#5b1178;">
-                                        <a href="{admin_order_url}" style="display:inline-block;padding:12px 18px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">Open admin order</a>
+                                        <a href="{admin_order_url}" style="display:inline-block;padding:12px 18px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">Open printable order</a>
                                     </td>
                                     <td style="width:10px;"></td>
                                     <td style="background:#fcb42f;">

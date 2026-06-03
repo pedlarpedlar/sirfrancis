@@ -1191,7 +1191,7 @@ $totalSavingsAmount = $productDiscountAmount + (float) $couponAmount + (float) $
 $orderDiscountTotal = '-' . candybirdEmailMoney($totalSavingsAmount);
 $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
 $orderDetailsUrl = 'https://www.candybird.co.za/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
-$adminOrderUrl = 'https://www.candybird.co.za/admin-cb/manage_order?order_id=' . urlencode((string) $orderId);
+$adminOrderUrl = 'https://www.candybird.co.za/admin-cb/order_details?order_id=' . urlencode((string) $orderId);
 $couponLabel = $couponCode !== '' ? 'Coupon (' . candybirdEmailText($couponCode) . ')' : 'Coupon';
 
 $productDiscountRow = '';

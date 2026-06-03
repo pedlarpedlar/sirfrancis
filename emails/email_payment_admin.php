@@ -127,7 +127,7 @@
                 <th style="padding: 10px; border: none;text-align: right;"></th>
                 <th style="padding: 10px; border: none;text-align: right;"></th>
                 <th style="padding: 10px; border: none;text-align: right;">
-                    <a href="https://www.candybird.co.za/admin-cb/manage_order?order_id={order_id}" target="_blank" style="font-size: 12px; font-weight: bold; color: #FCB42F; text-decoration: none; padding: 10px 20px; display: inline-block; border-radius: 0; background-color: #6b0099;">View Order</a>
+                    <a href="https://www.candybird.co.za/admin-cb/order_details?order_id={order_id}" target="_blank" style="font-size: 12px; font-weight: bold; color: #FCB42F; text-decoration: none; padding: 10px 20px; display: inline-block; border-radius: 0; background-color: #6b0099;">View Printable Order</a>
                 </th>
             </tr>
         </tfoot>
