@@ -95,7 +95,7 @@ include 'page_menues.php';
 
     <div class="wholesale-calculator">
       <h2>Quick Wholesale Estimate</h2>
-      <p>Choose a wholesale line, add the pack sizes you want, and get a rough estimate before requesting a final quote.</p>
+      <p>Choose a wholesale line, then estimate a full bulk pack, 5kg bags, or smaller pack-down sizes before requesting a final quote.</p>
       <div class="wholesale-calc-grid">
         <div class="wholesale-calc-field">
           <label for="wholesale-calc-product">Product</label>
@@ -215,23 +215,55 @@ include 'page_menues.php';
     return row && Array.isArray(row.allowed_pack_sizes) && row.allowed_pack_sizes.length ? row.allowed_pack_sizes : defaultSizes;
   }
 
-  function renderPackRow(sizeValue, qtyValue) {
+  function normalizeSize(size) {
+    return String(size || '').toLowerCase().replace(/\s+/g, '');
+  }
+
+  function packOptions(row) {
+    var options = [];
+    var seen = {};
+    var bulkSize = row && row.size ? String(row.size) : '';
+
+    function addOption(label, size, noPackFee) {
+      var cleanSize = String(size || '').trim();
+      if (!cleanSize || sizeToKg(cleanSize) <= 0) return;
+      var key = normalizeSize(label + '|' + cleanSize);
+      if (seen[key]) return;
+      seen[key] = true;
+      options.push({label: label, size: cleanSize, noPackFee: !!noPackFee});
+    }
+
+    if (bulkSize !== '') {
+      addOption('Whole bulk pack / single bag (' + bulkSize + ')', bulkSize, true);
+    }
+
+    addOption('5kg bags', '5kg', false);
+    allowedSizes(row).forEach(function(size) {
+      if (normalizeSize(size) !== '5kg' && normalizeSize(size) !== normalizeSize(bulkSize)) {
+        addOption(size, size, false);
+      }
+    });
+
+    return options.length ? options : [{label: '1kg', size: '1kg', noPackFee: false}];
+  }
+
+  function renderPackRow(optionValue, qtyValue) {
     var row = selectedRow();
-    var sizes = allowedSizes(row);
-    var options = sizes.map(function(size) {
-      return '<option value="' + escapeHtml(size) + '"' + (size === sizeValue ? ' selected' : '') + '>' + escapeHtml(size) + '</option>';
+    var options = packOptions(row);
+    var selectedIndex = parseInt(optionValue, 10);
+    if (isNaN(selectedIndex) || !options[selectedIndex]) selectedIndex = 0;
+    var optionHtml = options.map(function(option, index) {
+      return '<option value="' + index + '"' + (index === selectedIndex ? ' selected' : '') + '>' + escapeHtml(option.label || option.size) + '</option>';
     }).join('');
     return '<div class="wholesale-pack-row">' +
-      '<div class="wholesale-calc-field"><label>Pack size</label><select class="calc-pack-size">' + options + '</select></div>' +
+      '<div class="wholesale-calc-field"><label>Pack option</label><select class="calc-pack-size">' + optionHtml + '</select></div>' +
       '<div class="wholesale-calc-field"><label>Number of packs</label><input type="number" min="0" step="1" class="calc-pack-qty" value="' + (qtyValue || 0) + '"></div>' +
       '<button type="button" class="calc-remove-pack" title="Remove pack size">×</button>' +
     '</div>';
   }
 
   function resetPackRows() {
-    var row = selectedRow();
-    var firstSize = allowedSizes(row)[0] || '1kg';
-    document.getElementById('wholesale-pack-table').innerHTML = renderPackRow(firstSize, 0);
+    document.getElementById('wholesale-pack-table').innerHTML = renderPackRow(0, 1);
   }
 
   function updateSelectedInfo() {
@@ -251,14 +283,19 @@ include 'page_menues.php';
     var totalKg = 0;
     var totalPacks = 0;
     var packSummary = [];
+    var options = packOptions(row);
     document.querySelectorAll('.wholesale-pack-row').forEach(function(packRow) {
-      var size = packRow.querySelector('.calc-pack-size').value;
+      var optionIndex = parseInt(packRow.querySelector('.calc-pack-size').value, 10);
+      var option = options[optionIndex] || options[0];
+      var size = option.size;
       var qty = parseInt(packRow.querySelector('.calc-pack-qty').value, 10) || 0;
       var kg = sizeToKg(size) * qty;
       if (qty > 0 && kg > 0) {
         totalKg += kg;
-        totalPacks += qty;
-        packSummary.push(qty + ' x ' + size);
+        if (!option.noPackFee) {
+          totalPacks += qty;
+        }
+        packSummary.push(qty + ' x ' + (option.label || size));
       }
     });
 
@@ -299,9 +336,7 @@ include 'page_menues.php';
 
   document.getElementById('wholesale-calc-product').addEventListener('change', updateSelectedInfo);
   document.getElementById('wholesale-add-pack').addEventListener('click', function() {
-    var row = selectedRow();
-    var firstSize = allowedSizes(row)[0] || '1kg';
-    document.getElementById('wholesale-pack-table').insertAdjacentHTML('beforeend', renderPackRow(firstSize, 0));
+    document.getElementById('wholesale-pack-table').insertAdjacentHTML('beforeend', renderPackRow(1, 0));
   });
   document.getElementById('wholesale-pack-table').addEventListener('click', function(event) {
     if (!event.target.classList.contains('calc-remove-pack')) return;
