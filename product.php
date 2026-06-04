@@ -112,6 +112,14 @@ if ($metaProduct) {
     $metaImage = $metaImages[0] ?? $metaImage;
 }
 
+$page_url_canonical = $metaUrl;
+$page_url_og = $metaUrl;
+$title_og = $metaTitle;
+$description_og = $metaDescription;
+$description_meta = $metaDescription;
+$image_url_og = $metaImage;
+$og_type = 'product';
+
 include 'header.php';
 ?>
 
@@ -1420,14 +1428,26 @@ $(function() {
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     if (isClearance) return;
 
-    const sourceId = String(product.source_product_id || product.id || '').trim();
-    if (!sourceId) return;
+    const candidateIds = [
+      product.source_product_id,
+      product.id,
+      product.raw && product.raw.source_product_id,
+      product.raw && product.raw.product_id,
+      product.raw && product.raw.id
+    ].map(function(value) {
+      return String(value || '').trim();
+    }).filter(function(value, index, list) {
+      return value !== '' && list.indexOf(value) === index;
+    });
+    if (!candidateIds.length) return;
+    const sourceId = candidateIds[0];
 
-    $.getJSON('fetch_wholesale_availability.php', { product_id: sourceId })
+    $.getJSON('fetch_wholesale_availability.php', { product_id: candidateIds.join(',') })
       .done(function(response) {
         if (!response || !response.available) return;
         const title = displayTitle(product);
-        const message = encodeURIComponent('Assalamu alaikum / Hello CandyBird, please send me the wholesale/bulk options for ' + title + ' (Product ID ' + sourceId + ').');
+        const matchedId = response.product_id || sourceId;
+        const message = encodeURIComponent('Assalamu alaikum / Hello CandyBird, please send me the wholesale/bulk options for ' + title + ' (Product ID ' + matchedId + ').');
         const whatsapp = wholesaleWhatsappDigits ? ' <a href="https://wa.me/' + encodeURIComponent(wholesaleWhatsappDigits) + '?text=' + message + '" target="_blank" rel="noopener noreferrer">WhatsApp for the bulk list</a>.' : '';
         $('#product-availability').length
           ? $('#product-availability').after('<div id="product-wholesale-note" class="product-wholesale-note"><strong>Available in wholesale/bulk.</strong>' + whatsapp + ' <a href="wholesale-pricelist">View wholesale pricelist</a>.</div>')

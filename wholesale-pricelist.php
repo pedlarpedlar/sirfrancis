@@ -10,6 +10,7 @@ $validMonth = date('F Y');
 $limitedDescription = 'CandyBird wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
 $page_url_canonical = 'https://www.candybird.co.za/wholesale-pricelist';
 $title_og = 'Wholesale Pricelist - CandyBird';
+$image_url_og = 'https://www.candybird.co.za/assets/img/wholesale.png';
 $page_url_og = $page_url_canonical;
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
@@ -32,9 +33,9 @@ include 'page_menues.php';
   .wholesale-hero p { color:#f8ecff; font-size:14px; line-height:1.6; margin:0; max-width:760px; }
   .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
   .wholesale-top-grid { display:grid; gap:14px; grid-template-columns:minmax(0, 1.4fr) minmax(320px, .8fr); margin-bottom:14px; }
-  .wholesale-note { background:#fff; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:9px 16px; grid-template-columns:repeat(2, minmax(0, 1fr)); padding:12px 14px; }
-  .wholesale-note div { color:#51475a; font-size:13px; line-height:1.55; }
-  .wholesale-private-note { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; grid-column:1 / -1; line-height:1.6; padding:12px; }
+  .wholesale-note { display:grid; gap:10px; }
+  .wholesale-note-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; line-height:1.55; padding:12px 14px; }
+  .wholesale-private-note { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; line-height:1.6; margin-top:14px; padding:12px 14px; }
   .wholesale-calculator { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:14px; }
   .wholesale-calculator h2 { color:#5b1178; font-size:17px; margin:0 0 5px; }
   .wholesale-calculator p { color:#6d6270; font-size:12px; line-height:1.45; margin-bottom:10px; }
@@ -68,7 +69,6 @@ include 'page_menues.php';
     .wholesale-hero { align-items:flex-start; flex-direction:column; }
     .wholesale-actions { justify-content:flex-start; }
     .wholesale-top-grid { grid-template-columns:1fr; }
-    .wholesale-note { grid-template-columns:1fr; }
     .wholesale-calc-grid,
     .wholesale-calc-result { grid-template-columns:1fr; }
     .wholesale-pack-row { grid-template-columns:1fr 86px 36px; }
@@ -93,11 +93,8 @@ include 'page_menues.php';
 
     <div class="wholesale-top-grid">
       <div class="wholesale-note">
-        <div><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
-        <div><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
-        <div class="wholesale-private-note">
-          This wholesale pricelist is for items packed according to <?= cbWholesaleText($website_company_name ?? 'CandyBird') ?> configuration sizes and branding. For private labelling with your own printed packaging, filling and supply, the minimum quantity is one full container, about 15 tons of product.
-        </div>
+        <div class="wholesale-note-card"><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
+        <div class="wholesale-note-card"><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
       </div>
 
       <div class="wholesale-calculator">
@@ -199,6 +196,9 @@ include 'page_menues.php';
       Prices are intended for <?= cbWholesaleText($validMonth) ?> and may change without notice where supplier costs, exchange rates, availability or stock refills change.
       Wholesale pricing is not displayed on individual product pages; product pages only indicate when an item has a bulk option.
     </p>
+    <div class="wholesale-private-note">
+      This wholesale pricelist is for items packed according to <?= cbWholesaleText($website_company_name ?? 'CandyBird') ?> configuration sizes and branding. For private labelling with your own printed packaging, filling and supply, the minimum quantity is one full container, about 15 tons of product.
+    </div>
   </div>
 </main>
 
