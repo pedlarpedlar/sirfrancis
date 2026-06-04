@@ -238,7 +238,7 @@ include __DIR__ . '/page_menues.php';
                 <input type="hidden" name="sheet_action" value="refresh_all">
                 <button class="btn btn-warning" type="submit">Mega-force refresh all sheets</button>
             </form>
-            <a class="btn btn-light" href="sync_sheet_products">Sync product mirror</a>
+            <a class="btn btn-light" href="sheets">Mega Sync All Sheets</a>
             <a class="btn btn-outline-light" href="category_order">Categories</a>
         </div>
     </div>

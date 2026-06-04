@@ -32,7 +32,7 @@ $linkGroups = [
         ['Coupons', 'coupons', 'Coupon sheet links, health, template and force sync'],
         ['Clearance Basket', 'clearance', 'Clearance sheet links, health, template and force sync'],
         ['Categories', 'category_order', 'Edit category labels, visibility and display order'],
-        ['Sync Product Mirror', 'sync_sheet_products', 'Force the database mirror to match the product sheet'],
+        ['Mega Sync All Sheets', 'sheets', 'Force refresh products, coupons, clearance and wholesale sheets'],
         ['Product Sheet', 'https://docs.google.com/spreadsheets/d/17L-lvBdS0W2Fvf9tzjQj55CweIKpKAdqlcP4aAPLZT8/edit?gid=380423212#gid=380423212', 'Open Google product sheet'],
         ['Coupon Sheet', 'https://docs.google.com/spreadsheets/d/1aofJluANxsJ-jtEIh9w1DDRzVuArtJVG32nFndX6bqw/edit?gid=0#gid=0', 'Open Google coupon sheet'],
         ['Product Gallery', 'manage_gallery', 'Upload and manage product images'],

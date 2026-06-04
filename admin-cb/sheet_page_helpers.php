@@ -246,7 +246,7 @@ if (!function_exists('cbAdminSheetPage')) {
 
         $sources = getCandybirdSheetSources();
         $source = $sources[$key];
-        $syncLabel = $key === 'products' ? 'Sync Product Mirror' : 'Sync ' . ($source['label'] ?? $title);
+        $syncLabel = $key === 'products' ? 'Sync Products' : 'Sync ' . ($source['label'] ?? $title);
         $health = checkCandybirdSheetHealth($key);
         include __DIR__ . '/header.php';
         include __DIR__ . '/page_menues.php';

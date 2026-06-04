@@ -166,7 +166,7 @@ function cbAdminMenuActive($page, $currentPage) {
                 <li><a href="coupons">Coupons</a></li>
                 <li><a href="clearance">Clearance Basket</a></li>
                 <li><a href="wholesale_pricelist">Wholesale Pricelist</a></li>
-                <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
+                <li><a href="sheets">Mega Sync All Sheets</a></li>
               </ul>
             </details>
           </li>
@@ -219,7 +219,7 @@ function cbAdminMenuActive($page, $currentPage) {
             <li><a href="coupons"<?= cbAdminMenuActive('coupons', $adminCurrentPage) ?>>Coupons</a></li>
             <li><a href="clearance"<?= cbAdminMenuActive('clearance', $adminCurrentPage) ?>>Clearance Basket</a></li>
             <li><a href="wholesale_pricelist"<?= cbAdminMenuActive('wholesale_pricelist', $adminCurrentPage) ?>>Wholesale Pricelist</a></li>
-            <li><a href="sync_sheet_products">Sync Product Mirror</a></li>
+            <li><a href="sheets">Mega Sync All Sheets</a></li>
           </ul>
         </details>
       </li>

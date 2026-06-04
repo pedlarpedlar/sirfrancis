@@ -31,43 +31,47 @@ include 'page_menues.php';
   .wholesale-hero h1 { color:#fcb42f; font-size:30px; margin:0 0 5px; }
   .wholesale-hero p { color:#f8ecff; font-size:14px; line-height:1.6; margin:0; max-width:760px; }
   .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
-  .wholesale-note { background:#fff; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:9px 16px; grid-template-columns:repeat(3, minmax(0, 1fr)); margin-bottom:14px; padding:12px 14px; }
+  .wholesale-top-grid { display:grid; gap:14px; grid-template-columns:minmax(0, 1.4fr) minmax(320px, .8fr); margin-bottom:14px; }
+  .wholesale-note { background:#fff; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:9px 16px; grid-template-columns:repeat(2, minmax(0, 1fr)); padding:12px 14px; }
   .wholesale-note div { color:#51475a; font-size:13px; line-height:1.55; }
-  .wholesale-calculator { background:#fff; border:1px solid #eadfd2; border-radius:8px; margin-bottom:14px; padding:18px; }
-  .wholesale-calculator h2 { color:#5b1178; font-size:20px; margin:0 0 6px; }
-  .wholesale-calculator p { color:#6d6270; font-size:13px; line-height:1.55; margin-bottom:14px; }
-  .wholesale-calc-grid { display:grid; gap:12px; grid-template-columns:1.4fr .8fr .8fr; }
+  .wholesale-private-note { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; grid-column:1 / -1; line-height:1.6; padding:12px; }
+  .wholesale-calculator { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:14px; }
+  .wholesale-calculator h2 { color:#5b1178; font-size:17px; margin:0 0 5px; }
+  .wholesale-calculator p { color:#6d6270; font-size:12px; line-height:1.45; margin-bottom:10px; }
+  .wholesale-calc-grid { display:grid; gap:9px; grid-template-columns:1fr; }
   .wholesale-calc-field label { color:#4b185f; display:block; font-size:12px; font-weight:800; margin-bottom:5px; text-transform:uppercase; }
   .wholesale-calc-field select,
-  .wholesale-calc-field input { border:1px solid #decbe7; border-radius:6px; height:42px; padding:8px 10px; width:100%; }
+  .wholesale-calc-field input { border:1px solid #decbe7; border-radius:6px; height:38px; padding:7px 9px; width:100%; }
   .wholesale-pack-table { border:1px solid #f0ebe4; border-radius:8px; margin-top:12px; overflow:hidden; }
-  .wholesale-pack-row { align-items:end; display:grid; gap:10px; grid-template-columns:1fr 1fr 42px; padding:10px; }
+  .wholesale-pack-row { align-items:end; display:grid; gap:8px; grid-template-columns:1fr 86px 36px; padding:9px; }
   .wholesale-pack-row + .wholesale-pack-row { border-top:1px solid #f0ebe4; }
-  .wholesale-pack-row button { align-items:center; background:#f6f1ea; border:1px solid #eadfd2; border-radius:6px; color:#5b1178; display:flex; height:42px; justify-content:center; width:42px; }
+  .wholesale-pack-row button { align-items:center; background:#f6f1ea; border:1px solid #eadfd2; border-radius:6px; color:#5b1178; display:flex; height:38px; justify-content:center; width:36px; }
   .wholesale-calc-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-  .wholesale-calc-result { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:8px; grid-template-columns:repeat(4, minmax(0, 1fr)); margin-top:14px; padding:12px; }
+  .wholesale-calc-result { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:8px; grid-template-columns:repeat(2, minmax(0, 1fr)); margin-top:12px; padding:10px; }
   .wholesale-calc-result span { color:#6d6270; display:block; font-size:11px; font-weight:800; text-transform:uppercase; }
   .wholesale-calc-result strong { color:#2c2926; display:block; font-size:16px; margin-top:2px; }
-  .wholesale-calc-message { color:#6d6270; font-size:12px; line-height:1.55; margin-top:10px; }
+  .wholesale-calc-message { color:#16713a; font-size:13px; font-weight:800; line-height:1.55; margin-top:10px; }
   .wholesale-shell { background:#fff; border:1px solid #eadfd2; border-radius:8px; overflow:hidden; }
   .wholesale-table { font-size:13px; margin:0; }
   .wholesale-table th { background:#f0e8f4; border-bottom:1px solid #decbe7; color:#4b185f; font-size:11px; padding:8px 10px; text-transform:uppercase; white-space:nowrap; }
   .wholesale-table td { border-top:1px solid #f0ebe4; padding:7px 10px; vertical-align:middle; }
   .wholesale-category td { background:#5b1178 !important; color:#fcb42f; font-weight:800; padding:7px 10px; }
-  .wholesale-product { align-items:center; display:flex; gap:9px; min-width:230px; }
-  .wholesale-product img { aspect-ratio:1; border:1px solid #eadfd2; border-radius:6px; object-fit:cover; width:42px; }
+  .wholesale-product { min-width:220px; }
+  .wholesale-product-image { aspect-ratio:1; border:1px solid #eadfd2; border-radius:6px; object-fit:cover; width:52px; }
   .wholesale-product a { color:#2c2926; font-weight:800; text-decoration:none; }
   .wholesale-product a:hover { color:#6b0099; }
-  .wholesale-price { color:#5b1178; font-weight:900; min-width:150px; }
+  .wholesale-price { color:#5b1178; font-size:16px; font-weight:900; min-width:145px; }
   .wholesale-muted { color:#6d6270; font-size:12px; line-height:1.45; }
+  .wholesale-mini { color:#6d6270; display:block; font-size:11px; line-height:1.45; margin-top:3px; }
   .wholesale-footnote { color:#6d6270; font-size:12px; line-height:1.65; margin-top:14px; }
   @media (max-width:767px) {
     .wholesale-hero { align-items:flex-start; flex-direction:column; }
     .wholesale-actions { justify-content:flex-start; }
+    .wholesale-top-grid { grid-template-columns:1fr; }
     .wholesale-note { grid-template-columns:1fr; }
     .wholesale-calc-grid,
     .wholesale-calc-result { grid-template-columns:1fr; }
-    .wholesale-pack-row { grid-template-columns:1fr 1fr 42px; }
+    .wholesale-pack-row { grid-template-columns:1fr 86px 36px; }
     .wholesale-table { font-size:12px; }
     .wholesale-table th, .wholesale-table td { padding:6px 7px; }
   }
@@ -87,47 +91,50 @@ include 'page_menues.php';
       </div>
     </div>
 
-    <div class="wholesale-note">
-      <div><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
-      <div><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
-      <div><strong>Final quote:</strong> stock, packing, delivery and lead time are confirmed before invoicing.</div>
-    </div>
+    <div class="wholesale-top-grid">
+      <div class="wholesale-note">
+        <div><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
+        <div><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
+        <div class="wholesale-private-note">
+          This wholesale pricelist is for items packed according to <?= cbWholesaleText($website_company_name ?? 'CandyBird') ?> configuration sizes and branding. For private labelling with your own printed packaging, filling and supply, the minimum quantity is one full container, about 15 tons of product.
+        </div>
+      </div>
 
-    <div class="wholesale-calculator">
-      <h2>Quick Wholesale Estimate</h2>
-      <p>Choose a wholesale line, then estimate a full bulk pack, 5kg bags, or smaller pack-down sizes before requesting a final quote.</p>
-      <div class="wholesale-calc-grid">
-        <div class="wholesale-calc-field">
-          <label for="wholesale-calc-product">Product</label>
-          <select id="wholesale-calc-product">
-            <option value="">Select a wholesale product</option>
-            <?php foreach ($wholesaleRows as $index => $row): ?>
-              <option value="<?= (int) $index ?>"><?= cbWholesaleText($row['title'] . ' | ' . $row['size'] . ' | ' . cbWholesaleDisplayPrice($row)) ?></option>
-            <?php endforeach; ?>
-          </select>
+      <div class="wholesale-calculator">
+        <h2>Quick Estimate</h2>
+        <p>Choose a product and packing option. The estimate updates automatically.</p>
+        <div class="wholesale-calc-grid">
+          <div class="wholesale-calc-field">
+            <label for="wholesale-calc-product">Product</label>
+            <select id="wholesale-calc-product">
+              <option value="">Select a wholesale product</option>
+              <?php foreach ($wholesaleRows as $index => $row): ?>
+                <option value="<?= (int) $index ?>"><?= cbWholesaleText($row['title'] . ' | ' . $row['size']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="wholesale-calc-field">
+            <label>Bulk line</label>
+            <input type="text" id="wholesale-calc-bulk" value="" readonly>
+          </div>
+          <div class="wholesale-calc-field">
+            <label>Pack-down fee</label>
+            <input type="text" id="wholesale-calc-fee" value="" readonly>
+          </div>
         </div>
-        <div class="wholesale-calc-field">
-          <label>Bulk line</label>
-          <input type="text" id="wholesale-calc-bulk" value="" readonly>
+        <div class="wholesale-pack-table" id="wholesale-pack-table"></div>
+        <div class="wholesale-calc-actions">
+          <button type="button" class="btn btn-light btn-sm" id="wholesale-add-pack">Add pack size</button>
+          <?php if ($whatsappDigits !== ''): ?><a href="#" class="btn btn-success btn-sm d-none" id="wholesale-calc-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Send estimate</a><?php endif; ?>
         </div>
-        <div class="wholesale-calc-field">
-          <label>Pack-down fee</label>
-          <input type="text" id="wholesale-calc-fee" value="" readonly>
+        <div class="wholesale-calc-result" id="wholesale-calc-result">
+          <div><span>Total requested</span><strong id="calc-total-kg">-</strong></div>
+          <div><span>Bulk product</span><strong id="calc-product-cost">-</strong></div>
+          <div><span>Pack-down</span><strong id="calc-pack-cost">-</strong></div>
+          <div><span>Estimate</span><strong id="calc-total-cost">-</strong></div>
         </div>
+        <div class="wholesale-calc-message" id="wholesale-calc-message">Select a product to see an estimate.</div>
       </div>
-      <div class="wholesale-pack-table" id="wholesale-pack-table"></div>
-      <div class="wholesale-calc-actions">
-        <button type="button" class="btn btn-light" id="wholesale-add-pack">Add another pack size</button>
-        <button type="button" class="btn btn-dark" id="wholesale-calc-button">Calculate estimate</button>
-        <?php if ($whatsappDigits !== ''): ?><a href="#" class="btn btn-success d-none" id="wholesale-calc-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Send estimate on WhatsApp</a><?php endif; ?>
-      </div>
-      <div class="wholesale-calc-result" id="wholesale-calc-result">
-        <div><span>Total requested</span><strong id="calc-total-kg">-</strong></div>
-        <div><span>Bulk product</span><strong id="calc-product-cost">-</strong></div>
-        <div><span>Pack-down</span><strong id="calc-pack-cost">-</strong></div>
-        <div><span>Estimate</span><strong id="calc-total-cost">-</strong></div>
-      </div>
-      <div class="wholesale-calc-message" id="wholesale-calc-message">Estimate only. Final quote depends on stock, packaging, delivery and confirmation by CandyBird.</div>
     </div>
 
     <div class="wholesale-shell">
@@ -135,11 +142,11 @@ include 'page_menues.php';
         <table class="table wholesale-table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Pic</th>
               <th>Product</th>
-              <th>Bulk Size</th>
-              <th>Wholesale Price</th>
-              <th>Details</th>
+              <th>Price / kg</th>
+              <th>Pack-down</th>
+              <th>MOQ</th>
             </tr>
           </thead>
           <tbody>
@@ -149,24 +156,36 @@ include 'page_menues.php';
             <?php foreach ($rowsByCategory as $category => $rows): ?>
               <tr class="wholesale-category"><td colspan="5"><?= cbWholesaleText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($category) : $category) ?></td></tr>
               <?php foreach ($rows as $row): ?>
+                <?php
+                  $bulkKg = cbWholesaleSizeToKg($row['size'] ?? '');
+                  $casePrice = (float) ($row['price'] ?? 0);
+                  $pricePerKg = (float) ($row['price_per_kg'] ?? 0);
+                  if ($pricePerKg <= 0 && $bulkKg > 0 && $casePrice > 0) {
+                      $pricePerKg = $casePrice / $bulkKg;
+                  }
+                  $packDownFee = (float) ($row['pack_down_fee'] ?? 0);
+                ?>
                 <tr>
-                  <td class="wholesale-muted"><?= cbWholesaleText($row['product_id']) ?></td>
                   <td>
-                    <div class="wholesale-product">
-                      <?php if (!empty($row['image'])): ?><img src="<?= cbWholesaleText($row['image']) ?>" alt="<?= cbWholesaleText($row['title']) ?>" onerror="this.src='assets/img/product/1.png'"><?php endif; ?>
-                      <?php if (!empty($row['product_url'])): ?><a href="<?= cbWholesaleText($row['product_url']) ?>"><?= cbWholesaleText($row['title']) ?></a><?php else: ?><strong><?= cbWholesaleText($row['title']) ?></strong><?php endif; ?>
-                    </div>
+                    <img class="wholesale-product-image" src="<?= cbWholesaleText($row['image'] ?: 'assets/img/product/1.png') ?>" alt="<?= cbWholesaleText($row['title']) ?>" onerror="this.src='assets/img/product/1.png'">
                   </td>
-                  <td><?= cbWholesaleText($row['size']) ?></td>
-                  <td class="wholesale-price"><?= cbWholesaleText(cbWholesaleDisplayPrice($row)) ?></td>
-                  <td class="wholesale-muted">
+                  <td class="wholesale-product">
+                    <?php if (!empty($row['product_url'])): ?><a href="<?= cbWholesaleText($row['product_url']) ?>"><?= cbWholesaleText($row['title']) ?></a><?php else: ?><strong><?= cbWholesaleText($row['title']) ?></strong><?php endif; ?>
+                    <span class="wholesale-mini"><?= cbWholesaleText($row['size']) ?> bulk line<?= !empty($row['description']) ? ' | ' . cbWholesaleText($row['description']) : '' ?></span>
+                    <?php if (!empty($row['lead_time'])): ?><span class="wholesale-mini">Lead time: <?= cbWholesaleText($row['lead_time']) ?></span><?php endif; ?>
+                  </td>
+                  <td>
+                    <strong class="wholesale-price"><?= $pricePerKg > 0 ? cbWholesaleText(cbWholesaleFormatMoney($pricePerKg) . ' / kg') : 'By quote' ?></strong>
+                    <?php if ($casePrice > 0): ?><span class="wholesale-mini">Works out to <?= cbWholesaleText(cbWholesaleFormatMoney($casePrice)) ?> per <?= cbWholesaleText($row['size']) ?></span><?php endif; ?>
                     <?php $retailComparison = cbWholesaleRetailComparison($row); ?>
-                    <?php if ($retailComparison !== ''): ?><strong><?= cbWholesaleText($retailComparison) ?></strong>. <?php endif; ?>
-                    <?php if (!empty($row['moq'])): ?><strong>MOQ:</strong> <?= cbWholesaleText($row['moq']) ?>. <?php endif; ?>
-                    <?php if (!empty($row['lead_time'])): ?><strong>Lead time:</strong> <?= cbWholesaleText($row['lead_time']) ?>. <?php endif; ?>
-                    <?php if (!empty($row['pack_down_note'])): ?><strong>Pack-down:</strong> <?= cbWholesaleText($row['pack_down_note']) ?>. <?php elseif ((float)($row['pack_down_fee'] ?? 0) > 0): ?><strong>Pack-down:</strong> fee is calculated against the actual requested packs/units. <?php endif; ?>
-                    <?= cbWholesaleText($row['description']) ?>
-                    <?php if (!empty($row['free_delivery_excluded']) && $row['free_delivery_excluded'] === 'yes'): ?><span class="d-block text-muted" style="font-size:11px;">Free shipping does not apply to this item.</span><?php endif; ?>
+                    <?php if ($retailComparison !== ''): ?><span class="wholesale-mini"><?= cbWholesaleText($retailComparison) ?></span><?php endif; ?>
+                  </td>
+                  <td class="wholesale-muted">
+                    <?= $packDownFee > 0 ? cbWholesaleText(cbWholesaleFormatMoney($packDownFee) . ' per unit') : 'No listed fee' ?>
+                    <?php if (!empty($row['pack_down_note'])): ?><span class="wholesale-mini"><?= cbWholesaleText($row['pack_down_note']) ?></span><?php endif; ?>
+                  </td>
+                  <td class="wholesale-muted">
+                    <?= cbWholesaleText($row['moq'] ?: 'By quote') ?>
                   </td>
                 </tr>
               <?php endforeach; ?>
@@ -271,12 +290,19 @@ include 'page_menues.php';
     document.getElementById('wholesale-calc-bulk').value = row ? (row.size || '') : '';
     document.getElementById('wholesale-calc-fee').value = row && parseFloat(row.pack_down_fee || 0) > 0 ? money(row.pack_down_fee) + ' per pack/unit' : 'No fee listed';
     resetPackRows();
+    calculateEstimate();
   }
 
   function calculateEstimate() {
     var row = selectedRow();
     if (!row) {
-      document.getElementById('wholesale-calc-message').textContent = 'Choose a product first.';
+      document.getElementById('calc-total-kg').textContent = '-';
+      document.getElementById('calc-product-cost').textContent = '-';
+      document.getElementById('calc-pack-cost').textContent = '-';
+      document.getElementById('calc-total-cost').textContent = '-';
+      document.getElementById('wholesale-calc-message').textContent = 'Select a product to see an estimate.';
+      var hiddenWhatsapp = document.getElementById('wholesale-calc-whatsapp');
+      if (hiddenWhatsapp) hiddenWhatsapp.classList.add('d-none');
       return;
     }
 
@@ -337,16 +363,20 @@ include 'page_menues.php';
   document.getElementById('wholesale-calc-product').addEventListener('change', updateSelectedInfo);
   document.getElementById('wholesale-add-pack').addEventListener('click', function() {
     document.getElementById('wholesale-pack-table').insertAdjacentHTML('beforeend', renderPackRow(1, 0));
+    calculateEstimate();
   });
   document.getElementById('wholesale-pack-table').addEventListener('click', function(event) {
     if (!event.target.classList.contains('calc-remove-pack')) return;
     var rows = document.querySelectorAll('.wholesale-pack-row');
     if (rows.length > 1) {
       event.target.closest('.wholesale-pack-row').remove();
+      calculateEstimate();
     }
   });
-  document.getElementById('wholesale-calc-button').addEventListener('click', calculateEstimate);
+  document.getElementById('wholesale-pack-table').addEventListener('input', calculateEstimate);
+  document.getElementById('wholesale-pack-table').addEventListener('change', calculateEstimate);
   resetPackRows();
+  calculateEstimate();
 })();
 </script>
 
