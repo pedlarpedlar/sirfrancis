@@ -12,14 +12,14 @@ $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $limitedDescription = 'Compact CandyBird pricelist with current product prices, specials, sizes and online product links.';
-
-include 'header.php';
-
 $page_url_canonical = "https://www.candybird.co.za/pricelist";
 $title_og = 'Pricelist - CandyBird';
 $page_url_og = "https://www.candybird.co.za/pricelist";
-$description_og = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
-$description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
+$description_og = $limitedDescription;
+$description_meta = $limitedDescription;
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+
+include 'header.php';
 
 include 'page_menues.php';
 

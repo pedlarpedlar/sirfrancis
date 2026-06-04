@@ -5,7 +5,15 @@ $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
 $description_meta = 'Shop CandyBird for quality nuts, nut packs, dried fruit, sweets, health mixes and unique gifting online. Port Elizabeth based with secure checkout, collection and delivery across South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+if (strcasecmp((string) ($_GET['category'] ?? ''), 'Gifting') === 0 || !empty($_GET['gifting_intro'])) {
+    $page_url_canonical = "https://www.candybird.co.za/gifting";
+    $title_og = 'Gifting, Hampers & Treat Packs Online | CandyBird';
+    $page_url_og = "https://www.candybird.co.za/gifting";
+    $description_meta = 'Shop CandyBird gifting packs, hampers and treat boxes for family, clients, staff and special occasions. Order online for collection or delivery across South Africa.';
+    $description_og = $description_meta;
+    $image_url_og = 'https://www.candybird.co.za/assets/img/gifting.png';
+}
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
 ?>
