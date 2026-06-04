@@ -18,6 +18,9 @@ $page_url_og = "https://www.candybird.co.za/pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
 $image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+$image_type_og = 'image/png';
+$image_width_og = '1200';
+$image_height_og = '630';
 
 include 'header.php';
 

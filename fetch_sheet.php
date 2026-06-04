@@ -18,23 +18,6 @@ include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
 ?>
 
-<!-- Canonical URL to Avoid Duplicate Content Issues -->
-<link rel="canonical" href="<?=$page_url_canonical?>">
-
-<!-- Meta Description Tag -->
-<meta name="description" content="<?=$description_meta?>">
-
-<!-- Open Graph Meta Tags for Facebook, Twitter, etc. -->
-<meta property="og:title" content="<?=$title_og?>">
-<meta property="og:description" content="<?=$description_og?>">
-<meta property="og:image" content="<?=$image_url_og?>">
-<meta property="og:url" content="<?=$page_url_og?>">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?=$title_og?>">
-<meta name="twitter:description" content="<?=$description_og?>">
-<meta name="twitter:image" content="<?=$image_url_og?>">
-
 <title>Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird</title>
 
 <?php

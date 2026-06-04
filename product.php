@@ -118,6 +118,9 @@ $title_og = $metaTitle;
 $description_og = $metaDescription;
 $description_meta = $metaDescription;
 $image_url_og = $metaImage;
+$image_type_og = cbProductSocialImageType($metaImage) ?: 'image/png';
+$image_width_og = '1200';
+$image_height_og = '630';
 $og_type = 'product';
 
 include 'header.php';
