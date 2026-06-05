@@ -159,6 +159,18 @@ include 'page_menues.php';
   color: #fff;
 }
 
+.home-promo-banner .banner-thumb a {
+  aspect-ratio: 1.9 / 1;
+  background: #f7f3ee;
+}
+
+.home-promo-banner .banner-thumb img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
 </style>
 
   <style>
@@ -275,41 +287,36 @@ foreach ($slides as $slide) {
 <!-- main slider end -->
 
 <!-- common banner  start -->
-<div class="common-banner bg-white pt-100 pb-20 ">
+<div class="common-banner home-promo-banner bg-white pt-100 pb-20 ">
   <div class="container">
     <div class="row">
       <div class="col-md-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="products?category=Nuts"
+            href="gifting"
             class="zoom-in d-block overflow-hidden"
           >
-            <?php
-            $values = [1]; // Keep this list to files that actually exist in assets/img/banner.
-            $shuffleBanner = $values[array_rand($values)];
-            ?>
-
-            <img src="assets/img/banner/<?=$shuffleBanner?>.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Nuts banner" />
+            <img src="assets/img/gifting.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" />
           </a>
         </div>
       </div>
       <div class="col-md-3 col-sm-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="products?category=Gifting"
+            href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/banner/2.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Gifting banner" />
+            <img src="assets/img/box_3.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" />
           </a>
         </div>
       </div>
       <div class="col-md-3 col-sm-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="products?category=For%20Resellers"
+            href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/banner/3.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Reseller banner" />
+            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird reseller packs" />
           </a>
         </div>
       </div>
