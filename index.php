@@ -160,8 +160,8 @@ include 'page_menues.php';
 }
 
 .home-promo-banner .banner-thumb a {
-  aspect-ratio: 1.9 / 1;
   background: #f7f3ee;
+  height: clamp(190px, 24vw, 330px);
 }
 
 .home-promo-banner .banner-thumb img {
