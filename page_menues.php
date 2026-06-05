@@ -185,7 +185,7 @@ $categories = buildSheetMenuCategories();
         <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
         <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
         <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
-        <li><a class="navmenu-click-mobile" href="products?category=For%20Resellers">For Resellers</a></li>
+        <li><a class="navmenu-click-mobile" href="resellers">For Resellers</a></li>
         <li><a class="navmenu-click-mobile" href="wholesale">Wholesale</a></li>
         <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
       </ul>
@@ -475,7 +475,7 @@ foreach ($offCanvasCartItems as $item) {
                 </li>
                 <li><a class="navmenu-click" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click" href="wholesale-pricelist">Wholesale Pricelist</a></li>
-                <li><a class="navmenu-click" href="products?category=For%20Resellers">For Resellers</a></li>
+                <li><a class="navmenu-click" href="resellers">For Resellers</a></li>
                 <li><a class="navmenu-click" href="wholesale">Wholesale</a></li>
                 <li><a class="navmenu-click" href="global-services">Global Services</a></li>
               </ul>

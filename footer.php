@@ -81,6 +81,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <h3>Business</h3>
       <a href="<?=$home_directory?>bulk_ordering">Bulk Ordering</a>
       <a href="<?=$home_directory?>wholesale">Wholesale</a>
+      <a href="<?=$home_directory?>resellers">For Resellers</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Bulk Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
       <a href="<?=$home_directory?>contact">Custom Quote</a>

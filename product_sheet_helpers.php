@@ -1093,6 +1093,10 @@ if (!function_exists('getSheetProductBySlug')) {
 
 if (!function_exists('getCandybirdCategorySlug')) {
     function getCandybirdCategorySlug($categoryName) {
+        $normalizedName = normalizeCandybirdProductSlug($categoryName);
+        if (in_array($normalizedName, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'reseller', 'resellers'], true)) {
+            return 'resellers';
+        }
         return normalizeCandybirdProductSlug($categoryName);
     }
 }
