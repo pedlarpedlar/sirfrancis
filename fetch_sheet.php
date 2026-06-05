@@ -1,9 +1,19 @@
 <?php
 include 'session_logins.php';
+function cbProductsPageCategoryMatches($value, $slugs) {
+    $slug = function_exists('normalizeCandybirdProductSlug')
+        ? normalizeCandybirdProductSlug($value)
+        : strtolower(trim(preg_replace('/[^a-z0-9]+/', '-', (string) $value), '-'));
+    return in_array($slug, $slugs, true);
+}
+
 $productPageCategory = trim((string) ($_GET['category'] ?? ''));
-$productPageCategoryKey = strtolower($productPageCategory);
-$isGiftingCategoryPage = strcasecmp($productPageCategory, 'Gifting') === 0 || !empty($_GET['gifting_intro']);
-$isResellerCategoryPage = in_array($productPageCategoryKey, ['for resellers', 'resellers & wholesale', 'reseller packs', 'resellers', 'reseller'], true);
+$productPageCategorySlug = trim((string) ($_GET['category_slug'] ?? ''));
+$requestPathSlug = function_exists('normalizeCandybirdProductSlug')
+    ? normalizeCandybirdProductSlug(trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '', '/'))
+    : '';
+$isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['gifting']) || !empty($_GET['gifting_intro']) || $productPageCategorySlug === 'gifting' || $requestPathSlug === 'gifting';
+$isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller']) || in_array($productPageCategorySlug, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller'], true) || $requestPathSlug === 'resellers';
 $page_url_canonical = "https://www.candybird.co.za/products";
 $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
@@ -18,7 +28,7 @@ if ($isGiftingCategoryPage) {
     $description_og = $description_meta;
     $image_url_og = 'https://www.candybird.co.za/assets/img/gifting.png';
 } elseif ($isResellerCategoryPage) {
-    $page_url_canonical = function_exists('getCandybirdCategoryUrl') ? getCandybirdCategoryUrl($productPageCategory, true) : 'https://www.candybird.co.za/products?category=' . rawurlencode($productPageCategory);
+    $page_url_canonical = 'https://www.candybird.co.za/resellers';
     $title_og = 'Reseller & Wholesale Packs Online | CandyBird';
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop CandyBird reseller and wholesale-friendly packs for stores, gifting businesses, food service and repeat bulk buyers. Order online or request support for larger quantities.';
@@ -334,7 +344,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     </div>
   </div>
 </section>
-<?php elseif (in_array(strtolower(trim((string) $selectedCategory)), ['for resellers', 'resellers & wholesale', 'reseller packs', 'resellers', 'reseller'], true)): ?>
+<?php elseif ($isResellerCategoryPage): ?>
 <section class="gifting-category-intro">
   <div class="container">
     <div class="gifting-category-panel">

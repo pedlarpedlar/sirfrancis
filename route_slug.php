@@ -18,6 +18,7 @@ if ($product) {
 $category = getCandybirdCategoryBySlug($slug);
 if ($category !== '') {
     $_GET['category'] = $category;
+    $_GET['category_slug'] = $slug;
     include __DIR__ . '/products.php';
     exit;
 }
