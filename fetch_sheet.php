@@ -126,7 +126,7 @@ include 'page_menues.php';
     border-radius: 8px;
     display: grid;
     gap: 22px;
-    grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr);
+    grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr);
     padding: clamp(18px, 3vw, 28px);
   }
 
@@ -146,12 +146,30 @@ include 'page_menues.php';
 
   .category-social-image,
   .products-page-visual img {
-    aspect-ratio: 1.9 / 1;
+    aspect-ratio: 1.55 / 1;
     border-radius: 8px;
     display: block;
     height: auto;
     object-fit: cover;
     width: 100%;
+  }
+
+  .products-page-visual-link {
+    display: block;
+    position: relative;
+  }
+
+  .products-page-visual-link::after {
+    background: rgba(37, 29, 24, .72);
+    border-radius: 999px;
+    bottom: 12px;
+    color: #fff;
+    content: "View pricelist";
+    font-size: 12px;
+    font-weight: 800;
+    padding: 7px 11px;
+    position: absolute;
+    right: 12px;
   }
 
   .products-page-visual {
@@ -167,7 +185,7 @@ include 'page_menues.php';
     border-radius: 8px;
     display: grid;
     gap: 20px;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 380px);
+    grid-template-columns: minmax(0, .85fr) minmax(340px, 1.15fr);
     padding: clamp(16px, 2.5vw, 24px);
   }
 
@@ -341,7 +359,9 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
         <h1>Online Shop</h1>
         <p>Browse CandyBird nuts, dried fruit, sweets, gifting, specials and pantry favourites. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
       </div>
-      <img src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird online product range" loading="lazy">
+      <a class="products-page-visual-link" href="pricelist" aria-label="View CandyBird pricelist">
+        <img src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird online product range" loading="lazy">
+      </a>
     </div>
   </div>
 </section>

@@ -62,9 +62,9 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   .pricelist-hero-media {
     aspect-ratio: 1.9 / 1;
     border-radius: 8px;
-    max-width: 260px;
+    max-width: 420px;
     object-fit: cover;
-    width: min(260px, 28vw);
+    width: min(420px, 38vw);
   }
   .pricelist-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .pricelist-note {

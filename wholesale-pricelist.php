@@ -35,7 +35,7 @@ include 'page_menues.php';
   .wholesale-hero h1 { color:#fcb42f; font-size:30px; margin:0 0 5px; }
   .wholesale-hero p { color:#f8ecff; font-size:14px; line-height:1.6; margin:0; max-width:760px; }
   .wholesale-hero-copy { min-width:0; }
-  .wholesale-hero-media { aspect-ratio:1.9 / 1; border-radius:8px; max-width:270px; object-fit:cover; width:min(270px, 28vw); }
+  .wholesale-hero-media { aspect-ratio:1.9 / 1; border-radius:8px; max-width:430px; object-fit:cover; width:min(430px, 38vw); }
   .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
   .wholesale-top-grid { display:grid; gap:14px; grid-template-columns:minmax(0, 1.4fr) minmax(320px, .8fr); margin-bottom:14px; }
   .wholesale-note { display:grid; gap:10px; }
