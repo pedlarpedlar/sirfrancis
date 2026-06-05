@@ -967,6 +967,7 @@ $(function() {
       childCategory2: product.child_category_2 || '',
       dimensions: product.dimensions || '',
       otherInfo: product.other_info || '',
+      disclaimers: product.disclaimers || product.disclaimer || product.product_disclaimers || '',
       productType: product.product_type || product.type || product.delivery_type || '',
       stockQty: firstProductStockValue(product),
       leadTime: product.lead_time || product.leadtime || product.preparation_time || '',
@@ -1416,7 +1417,8 @@ $(function() {
       ['Category', product.childCategory1],
       ['Subcategory', product.childCategory2],
       ['Dimensions', product.dimensions],
-      ['Other Info', product.otherInfo]
+      ['Other Info', product.otherInfo],
+      ['Disclaimer', product.disclaimers]
     ].filter(function(row) {
       return row[1];
     }).map(function(row) {
