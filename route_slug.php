@@ -8,6 +8,11 @@ if ($slug === '') {
     exit;
 }
 
+if (in_array($slug, ['reseller-packs', 'for-resellers', 'resellers-wholesale', 'reseller'], true)) {
+    header('Location: /resellers', true, 301);
+    exit;
+}
+
 $product = getSheetProductBySlug($slug);
 if ($product) {
     $_GET['slug'] = $slug;
