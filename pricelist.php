@@ -58,6 +58,14 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   }
   .pricelist-hero h1 { color: #fcb42f; font-size: 30px; margin: 0 0 4px; }
   .pricelist-hero p { margin: 0; color: #f8ecff; font-size: 14px; }
+  .pricelist-hero-copy { min-width: 0; }
+  .pricelist-hero-media {
+    aspect-ratio: 1.9 / 1;
+    border-radius: 8px;
+    max-width: 260px;
+    object-fit: cover;
+    width: min(260px, 28vw);
+  }
   .pricelist-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .pricelist-note {
     background: #fff;
@@ -188,6 +196,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   }
   @media (max-width: 767px) {
     .pricelist-hero { align-items: flex-start; flex-direction: column; }
+    .pricelist-hero-media { max-width: 100%; width: 100%; }
     .pricelist-actions { justify-content: flex-start; }
     .pricelist-note { grid-template-columns: 1fr; }
     .pricelist-table { font-size: 12px; }
@@ -202,6 +211,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     .container { max-width: 100% !important; width: 100% !important; }
     .pricelist-hero, .pricelist-note, .pricelist-shell { border-radius: 0; border: 0; }
     .pricelist-hero { background: #fff; color: #111; padding: 0 0 8px; }
+    .pricelist-hero-media { display: none; }
     .pricelist-hero h1 { color: #111; font-size: 22px; }
     .pricelist-hero p { color: #333; }
     .pricelist-table { font-size: 8px; }
@@ -213,10 +223,11 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
 <main class="pricelist-page">
   <div class="container">
     <div class="pricelist-hero">
-      <div>
+      <div class="pricelist-hero-copy">
         <h1>CandyBird Pricelist</h1>
         <p><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?></p>
       </div>
+      <img class="pricelist-hero-media no-print" src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird pricelist product range" loading="lazy">
       <div class="pricelist-actions no-print">
         <a href="pricelist-download?sort=<?= cbPricelistText($sort) ?>&dir=<?= cbPricelistText($direction) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>

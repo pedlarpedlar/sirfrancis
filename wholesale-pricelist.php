@@ -34,6 +34,8 @@ include 'page_menues.php';
   .wholesale-hero { align-items:center; background:#2d1739; border-radius:8px; color:#fff; display:flex; gap:18px; justify-content:space-between; margin-bottom:14px; padding:22px; }
   .wholesale-hero h1 { color:#fcb42f; font-size:30px; margin:0 0 5px; }
   .wholesale-hero p { color:#f8ecff; font-size:14px; line-height:1.6; margin:0; max-width:760px; }
+  .wholesale-hero-copy { min-width:0; }
+  .wholesale-hero-media { aspect-ratio:1.9 / 1; border-radius:8px; max-width:270px; object-fit:cover; width:min(270px, 28vw); }
   .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
   .wholesale-top-grid { display:grid; gap:14px; grid-template-columns:minmax(0, 1.4fr) minmax(320px, .8fr); margin-bottom:14px; }
   .wholesale-note { display:grid; gap:10px; }
@@ -70,6 +72,7 @@ include 'page_menues.php';
   .wholesale-footnote { color:#6d6270; font-size:12px; line-height:1.65; margin-top:14px; }
   @media (max-width:767px) {
     .wholesale-hero { align-items:flex-start; flex-direction:column; }
+    .wholesale-hero-media { max-width:100%; width:100%; }
     .wholesale-actions { justify-content:flex-start; }
     .wholesale-top-grid { grid-template-columns:1fr; }
     .wholesale-calc-grid,
@@ -83,10 +86,11 @@ include 'page_menues.php';
 <main class="wholesale-price-page">
   <div class="container">
     <div class="wholesale-hero">
-      <div>
+      <div class="wholesale-hero-copy">
         <h1>CandyBird Wholesale Pricelist</h1>
         <p><?= number_format($rowCount) ?> bulk line<?= $rowCount === 1 ? '' : 's' ?> | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?>. Wholesale prices are for bulk planning and confirmed by quote before invoicing.</p>
       </div>
+      <img class="wholesale-hero-media" src="https://www.candybird.co.za/assets/img/wholesale.png" alt="CandyBird wholesale and bulk pricelist" loading="lazy">
       <div class="wholesale-actions">
         <a href="wholesale-pricelist-download" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="wholesale-pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>

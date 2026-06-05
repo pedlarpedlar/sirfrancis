@@ -108,9 +108,13 @@ include 'page_menues.php';
   }
 
   .gifting-category-panel {
+    align-items: center;
     background: #fff;
     border: 1px solid #eee1d4;
     border-radius: 8px;
+    display: grid;
+    gap: 22px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr);
     padding: clamp(18px, 3vw, 28px);
   }
 
@@ -126,6 +130,45 @@ include 'page_menues.php';
     line-height: 1.7;
     margin-bottom: 14px;
     max-width: 850px;
+  }
+
+  .category-social-image,
+  .products-page-visual img {
+    aspect-ratio: 1.9 / 1;
+    border-radius: 8px;
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .products-page-visual {
+    background: #fbfaf7;
+    border-bottom: 1px solid #eadfd2;
+    padding: 24px 0;
+  }
+
+  .products-page-visual-panel {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eee1d4;
+    border-radius: 8px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 380px);
+    padding: clamp(16px, 2.5vw, 24px);
+  }
+
+  .products-page-visual h1 {
+    color: #251d18;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    margin: 0 0 8px;
+  }
+
+  .products-page-visual p {
+    color: #5d514b;
+    line-height: 1.65;
+    margin: 0;
   }
 
   .gifting-category-highlights {
@@ -165,6 +208,11 @@ include 'page_menues.php';
   }
 
   @media (max-width: 767px) {
+    .gifting-category-panel,
+    .products-page-visual-panel {
+      grid-template-columns: 1fr;
+    }
+
     .gifting-category-highlights {
       grid-template-columns: 1fr;
     }
@@ -243,13 +291,28 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <section class="gifting-category-intro">
   <div class="container">
     <div class="gifting-category-panel">
-      <h1>Gifting</h1>
-      <p>Beautiful edible gifts for Eid, Ramadan, weddings, staff appreciation, client drops and thoughtful family occasions. Choose from ready-to-shop gift trays, snack boxes and premium treats, or contact us for a curated gift plan when you need something more specific.</p>
-      <div class="gifting-category-highlights">
-        <span>Ready-to-shop gift trays and treat boxes</span>
-        <span>Custom notes, ribbons and curated selections</span>
-        <span>Corporate, event and family gifting support</span>
+      <div>
+        <h1>Gifting</h1>
+        <p>Beautiful edible gifts for Eid, Ramadan, weddings, staff appreciation, client drops and thoughtful family occasions. Choose from ready-to-shop gift trays, snack boxes and premium treats, or contact us for a curated gift plan when you need something more specific.</p>
+        <div class="gifting-category-highlights">
+          <span>Ready-to-shop gift trays and treat boxes</span>
+          <span>Custom notes, ribbons and curated selections</span>
+          <span>Corporate, event and family gifting support</span>
+        </div>
       </div>
+      <img class="category-social-image" src="https://www.candybird.co.za/assets/img/gifting.png" alt="CandyBird gifting packs and hampers" loading="lazy">
+    </div>
+  </div>
+</section>
+<?php elseif (empty($selectedCategory) && empty($searchTerm)): ?>
+<section class="products-page-visual">
+  <div class="container">
+    <div class="products-page-visual-panel">
+      <div>
+        <h1>Online Shop</h1>
+        <p>Browse CandyBird nuts, dried fruit, sweets, gifting, specials and pantry favourites. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
+      </div>
+      <img src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird online product range" loading="lazy">
     </div>
   </div>
 </section>
