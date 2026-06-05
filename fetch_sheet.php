@@ -3,7 +3,7 @@ include 'session_logins.php';
 $productPageCategory = trim((string) ($_GET['category'] ?? ''));
 $productPageCategoryKey = strtolower($productPageCategory);
 $isGiftingCategoryPage = strcasecmp($productPageCategory, 'Gifting') === 0 || !empty($_GET['gifting_intro']);
-$isResellerCategoryPage = in_array($productPageCategoryKey, ['for resellers', 'resellers & wholesale', 'resellers', 'reseller'], true);
+$isResellerCategoryPage = in_array($productPageCategoryKey, ['for resellers', 'resellers & wholesale', 'reseller packs', 'resellers', 'reseller'], true);
 $page_url_canonical = "https://www.candybird.co.za/products";
 $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
@@ -334,7 +334,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     </div>
   </div>
 </section>
-<?php elseif (in_array(strtolower(trim((string) $selectedCategory)), ['for resellers', 'resellers & wholesale', 'resellers', 'reseller'], true)): ?>
+<?php elseif (in_array(strtolower(trim((string) $selectedCategory)), ['for resellers', 'resellers & wholesale', 'reseller packs', 'resellers', 'reseller'], true)): ?>
 <section class="gifting-category-intro">
   <div class="container">
     <div class="gifting-category-panel">
