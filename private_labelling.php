@@ -45,7 +45,7 @@ include 'page_menues.php';
             <p>Build a branded snack, gifting or retail range with CandyBird support. We help serious buyers understand the right route: simple branded labels for smaller runs, or full custom packaging when the volume is large enough to justify it.</p>
             <div class="cb-service-actions">
                 <a class="primary" href="contact">Start a private-label enquiry</a>
-                <a class="secondary" href="wholesale">View wholesale</a>
+                <a class="secondary" href="wholesale-pricelist">View wholesale pricelist</a>
             </div>
         </div>
     </section>

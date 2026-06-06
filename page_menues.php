@@ -201,16 +201,22 @@ $categories = buildSheetMenuCategories();
     <a href="#"><span class="menu-text">Nuts & Things</span></a>
     <?php echo generateMenu($categories); // Generate and display the menu ?>
 </li>
+        <li>
+            <a href="#"><span class="menu-text">More</span></a>
+            <ul class="offcanvas-submenu">
+                <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
+                <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
+                <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
+                <li><a class="navmenu-click-mobile" href="about">About Us</a></li>
+                <li><a class="navmenu-click-mobile" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click-mobile" href="policies">Policies</a></li>
+            </ul>
+        </li>
         <li><a class="navmenu-click-mobile" href="recipes">Recipe Corner</a></li>
         <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
-        <li><a class="navmenu-click-mobile" href="delivery_policy">Delivery Policy</a></li>
-        <li><a class="navmenu-click-mobile" href="terms">Terms</a></li>
         <li><a class="navmenu-click-mobile" href="about">About CandyBird</a></li>
         <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
-        <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
-        <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
         <li><a class="navmenu-click-mobile" href="resellers">For Resellers</a></li>
-        <li><a class="navmenu-click-mobile" href="wholesale">Wholesale</a></li>
         <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
       </ul>
     </nav>
@@ -485,23 +491,16 @@ foreach ($offCanvasCartItems as $item) {
                 >More <i class="ion-ios-arrow-down"></i
               ></a>
               <ul class="sub-menu">
-                <li>
-                  <a class="navmenu-click" href="recipes">Recipe Corner</a>
-                </li>
+                <li><a class="navmenu-click" href="pricelist">Pricelist</a></li>
+                <li><a class="navmenu-click" href="wholesale-pricelist">Wholesale Pricelist</a></li>
                 <li>
                   <a class="navmenu-click" href="return_policy">Buyer Protection</a>
                 </li>
                 <li>
-                  <a class="navmenu-click" href="delivery_policy">Delivery Policy</a>
+                  <a class="navmenu-click" href="about">About Us</a>
                 </li>
-                <li>
-                  <a class="navmenu-click" href="about">About CandyBird</a>
-                </li>
-                <li><a class="navmenu-click" href="pricelist">Pricelist</a></li>
-                <li><a class="navmenu-click" href="wholesale-pricelist">Wholesale Pricelist</a></li>
-                <li><a class="navmenu-click" href="resellers">For Resellers</a></li>
-                <li><a class="navmenu-click" href="wholesale">Wholesale</a></li>
-                <li><a class="navmenu-click" href="global-services">Global Services</a></li>
+                <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click" href="policies">Policies</a></li>
               </ul>
             </li>
 

@@ -339,7 +339,7 @@ foreach ($slides as $slide) {
           <a href="nuts">Shop nuts</a>
           <a href="dried-fruit">Shop dried fruit</a>
           <a href="gifting">Unique gifting</a>
-          <a href="wholesale">Wholesale</a>
+          <a href="wholesale-pricelist">Wholesale pricelist</a>
           <a href="private_labelling">Private labelling</a>
           <a href="delivery_policy">Delivery info</a>
         </div>

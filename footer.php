@@ -80,7 +80,6 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <div>
       <h3>Business</h3>
       <a href="<?=$home_directory?>bulk_ordering">Bulk Ordering</a>
-      <a href="<?=$home_directory?>wholesale">Wholesale</a>
       <a href="<?=$home_directory?>resellers">For Resellers</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Bulk Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
@@ -94,6 +93,8 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <a href="<?=$home_directory?>return_policy">Buyer Protection and Returns</a>
       <a href="<?=$home_directory?>terms">Terms and Conditions</a>
       <a href="<?=$home_directory?>privacypolicy">Privacy Policy</a>
+      <a href="<?=$home_directory?>cookie_policy">Cookie Policy</a>
+      <a href="<?=$home_directory?>policies">All Policies</a>
     </div>
   </div>
 
