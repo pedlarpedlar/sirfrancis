@@ -54,12 +54,16 @@ function sheetMenuCleanCategory($value) {
 function buildSheetMenuCategories() {
     $tree = [];
     $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : (function_exists('getSheetProducts') ? getSheetProducts() : []);
+    $specialCount = 0;
 
     foreach ($products as $product) {
         $id = trim($product['id'] ?? '');
         $enabled = strtolower(trim($product['enabled'] ?? '1'));
         if ($id === '' || in_array($enabled, ['0', 'false', 'no', 'disabled'], true)) {
             continue;
+        }
+        if (function_exists('isCandybirdProductOnSpecial') && isCandybirdProductOnSpecial($product)) {
+            $specialCount++;
         }
 
         $parent = sheetMenuCleanCategory($product['parent_category'] ?? '');
@@ -92,6 +96,14 @@ function buildSheetMenuCategories() {
             }
         }
     }
+    if ($specialCount > 0 && function_exists('isCandybirdCategoryVisible') && isCandybirdCategoryVisible('Specials')) {
+        $tree['Specials'] = [
+            'category_param' => 'Specials',
+            'display_name' => 'Specials',
+            'count' => $specialCount,
+            'children' => []
+        ];
+    }
 
     $order = [];
     foreach (getCandybirdCategoryDisplayOrder() as $index => $categoryName) {
@@ -111,8 +123,20 @@ function buildSheetMenuCategories() {
         uksort($nodes, function($a, $b) use ($order) {
             $keyA = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($a) : $a;
             $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($b) : $b;
-            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : ($order[$a] ?? ($order[$keyA] ?? PHP_INT_MAX));
-            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : ($order[$b] ?? ($order[$keyB] ?? PHP_INT_MAX));
+            if ($keyA === 'specials' && $keyB === 'clearance-basket') {
+                return -1;
+            }
+            if ($keyA === 'clearance-basket' && $keyB === 'specials') {
+                return 1;
+            }
+            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : PHP_INT_MAX;
+            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : PHP_INT_MAX;
+            if ($posA === PHP_INT_MAX) {
+                $posA = $order[$a] ?? ($order[$keyA] ?? PHP_INT_MAX);
+            }
+            if ($posB === PHP_INT_MAX) {
+                $posB = $order[$b] ?? ($order[$keyB] ?? PHP_INT_MAX);
+            }
             if ($posA === $posB) {
                 return strnatcasecmp($a, $b);
             }

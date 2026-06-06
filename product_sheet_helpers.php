@@ -406,6 +406,30 @@ if (!function_exists('normalizeCandybirdProductSpecial')) {
     }
 }
 
+if (!function_exists('isCandybirdProductOnSpecial')) {
+    function isCandybirdProductOnSpecial($product) {
+        if (!is_array($product)) {
+            return false;
+        }
+        if (strtolower((string) ($product['is_clearance'] ?? '')) === 'yes') {
+            return false;
+        }
+
+        $product = normalizeCandybirdProductSpecial($product);
+        $price = isset($product['price']) ? candybirdParseSheetMoney($product['price']) : 0;
+        $discountedPrice = isset($product['discounted_price']) ? candybirdParseSheetMoney($product['discounted_price']) : 0;
+        $discountAmount = isset($product['discount_amount']) ? candybirdParseSheetMoney($product['discount_amount']) : (isset($product['discount']) ? candybirdParseSheetMoney($product['discount']) : 0);
+        $discountRate = isset($product['discount_rate']) ? (float) $product['discount_rate'] : 0;
+
+        return $price > 0 && (
+            ($discountedPrice > 0 && $discountedPrice < $price)
+            || $discountAmount > 0
+            || $discountRate > 0
+            || strtolower((string) ($product['special_active'] ?? '')) === 'yes'
+        );
+    }
+}
+
 if (!function_exists('fetchCandybirdTsvSheet')) {
     function fetchCandybirdTsvSheet($sheetUrl, $cacheKey = 'sheet', $ttlSeconds = 600, $forceRefresh = false) {
         $cacheDir = __DIR__ . '/sheet_cache';
@@ -1094,6 +1118,9 @@ if (!function_exists('getSheetProductBySlug')) {
 if (!function_exists('getCandybirdCategorySlug')) {
     function getCandybirdCategorySlug($categoryName) {
         $normalizedName = normalizeCandybirdProductSlug($categoryName);
+        if (in_array($normalizedName, ['special', 'specials', 'sale', 'sales'], true)) {
+            return 'specials';
+        }
         if (in_array($normalizedName, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'reseller', 'resellers'], true)) {
             return 'resellers';
         }
@@ -1117,6 +1144,9 @@ if (!function_exists('getCandybirdCategoryBySlug')) {
         $slug = normalizeCandybirdProductSlug($slug);
         if ($slug === '') {
             return '';
+        }
+        if (in_array($slug, ['special', 'specials', 'sale', 'sales'], true)) {
+            return 'Specials';
         }
 
         $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
@@ -1979,7 +2009,7 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
         $order = [
             'Gifting', 'Travel Treats', 'Nuts', 'Peanuts', 'Dried Fruit',
             'Sweets', 'Ingredients', 'For Resellers', 'Resellers & Wholesale',
-            'Clearance Basket'
+            'Specials', 'Clearance Basket'
         ];
 
         if (function_exists('mysqli_connect')) {

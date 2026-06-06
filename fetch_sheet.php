@@ -14,6 +14,7 @@ $requestPathSlug = function_exists('normalizeCandybirdProductSlug')
     : '';
 $isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['gifting']) || !empty($_GET['gifting_intro']) || $productPageCategorySlug === 'gifting' || $requestPathSlug === 'gifting';
 $isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller']) || in_array($productPageCategorySlug, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller'], true) || $requestPathSlug === 'resellers';
+$isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
 $page_url_canonical = "https://www.candybird.co.za/products";
 $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
@@ -35,6 +36,13 @@ if ($isGiftingCategoryPage) {
     $description_og = $description_meta;
     $image_url_og = 'https://www.candybird.co.za/assets/img/reseller.jpeg';
     $image_type_og = 'image/jpeg';
+} elseif ($isSpecialsCategoryPage) {
+    $page_url_canonical = 'https://www.candybird.co.za/specials';
+    $title_og = 'Specials on Nuts, Dried Fruit & Treats Online | CandyBird';
+    $page_url_og = $page_url_canonical;
+    $description_meta = 'Shop current CandyBird specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
+    $description_og = $description_meta;
+    $image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
 }
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
@@ -361,6 +369,25 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     </div>
   </div>
 </section>
+<?php elseif ($isSpecialsCategoryPage): ?>
+<section class="gifting-category-intro">
+  <div class="container">
+    <div class="gifting-category-panel">
+      <div>
+        <h1>Specials</h1>
+        <p>Browse current CandyBird sale items with their valid special pricing. Clearance Basket products are kept separate so these offers stay clear and easy to compare.</p>
+        <div class="gifting-category-highlights">
+          <span>Normal sale items only</span>
+          <span>Valid specials with clear original and sale pricing</span>
+          <span>Secure checkout, collection and delivery options</span>
+        </div>
+      </div>
+      <a class="products-page-visual-link" href="pricelist" aria-label="View CandyBird pricelist">
+        <img class="category-social-image" src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird specials and sale products" loading="lazy">
+      </a>
+    </div>
+  </div>
+</section>
 <?php elseif (empty($selectedCategory) && empty($searchTerm)): ?>
 <section class="products-page-visual">
   <div class="container">
@@ -514,12 +541,17 @@ function extractCategories(products) {
     }
   });
 
+  if (products.some(isProductOnSpecial)) {
+    categories.Specials = categories.Specials || {};
+  }
+
   return categories;
 }
 
 
 
 const SERVER_SELECTED_CATEGORY = <?=json_encode($selectedCategory ?: '')?>;
+const SERVER_IS_SPECIALS_CATEGORY = <?=json_encode(!empty($isSpecialsCategoryPage))?>;
 const activeCategory = new URLSearchParams(window.location.search).get('category') || SERVER_SELECTED_CATEGORY;
 const CATEGORY_DISPLAY_ORDER = <?=json_encode(function_exists('getCandybirdCategoryDisplayOrder') ? getCandybirdCategoryDisplayOrder() : [])?>;
 const CATEGORY_DISPLAY_MAP = <?=json_encode(function_exists('getCandybirdCategoryDisplayMap') ? getCandybirdCategoryDisplayMap() : [])?>;
@@ -540,6 +572,7 @@ function slugifyCategory(value) {
 function getCategoryPath(category) {
   const labelSlug = slugifyCategory(getCategoryLabel(category));
   const sourceSlug = slugifyCategory(category);
+  if (sourceSlug === 'specials' || labelSlug === 'specials') return 'specials';
   return labelSlug || sourceSlug || `products?category=${encodeURIComponent(category)}`;
 }
 
@@ -547,10 +580,16 @@ function sortCategoryNames(names) {
   return names.sort((a, b) => {
     const slugA = slugifyCategory(a);
     const slugB = slugifyCategory(b);
+    if (slugA === 'specials' && slugB === 'clearance-basket') return -1;
+    if (slugA === 'clearance-basket' && slugB === 'specials') return 1;
     const orderA = CATEGORY_DISPLAY_ORDER.findIndex(name => name === a || slugifyCategory(name) === slugA || slugifyCategory(getCategoryLabel(name)) === slugA);
     const orderB = CATEGORY_DISPLAY_ORDER.findIndex(name => name === b || slugifyCategory(name) === slugB || slugifyCategory(getCategoryLabel(name)) === slugB);
-    const posA = CATEGORY_DISPLAY_POSITIONS[a] !== undefined ? CATEGORY_DISPLAY_POSITIONS[a] : (orderA === -1 ? 9999 : orderA);
-    const posB = CATEGORY_DISPLAY_POSITIONS[b] !== undefined ? CATEGORY_DISPLAY_POSITIONS[b] : (orderB === -1 ? 9999 : orderB);
+    let posA = CATEGORY_DISPLAY_POSITIONS[a] !== undefined ? CATEGORY_DISPLAY_POSITIONS[a] : (orderA === -1 ? 9999 : orderA);
+    let posB = CATEGORY_DISPLAY_POSITIONS[b] !== undefined ? CATEGORY_DISPLAY_POSITIONS[b] : (orderB === -1 ? 9999 : orderB);
+    if (posA === 9999 && slugA === 'specials') posA = 9980;
+    if (posB === 9999 && slugB === 'specials') posB = 9980;
+    if (posA === 9999 && slugA === 'clearance-basket') posA = 9981;
+    if (posB === 9999 && slugB === 'clearance-basket') posB = 9981;
     if (posA !== 9999 || posB !== 9999) {
       return posA - posB;
     }
@@ -579,7 +618,7 @@ function renderCategoriesSidebar(products) {
     html += `
       <li class="has-sub open">
         <a href="${categoryUrl(parent)}"
-           class="category-link parent-category${activeCategory === parent ? ' active' : ''}">
+           class="category-link parent-category${slugifyCategory(activeCategory) === slugifyCategory(parent) ? ' active' : ''}">
           ${parentLabel}
         </a>
     `;
@@ -818,6 +857,22 @@ document.addEventListener('click', function(event) {
     if (from && now < from) return false;
     if (until && now > until) return false;
     return true;
+  }
+
+  function isProductOnSpecial(product) {
+    const isClearance = String(product && product.is_clearance || '').toLowerCase() === 'yes';
+    if (isClearance || !isProductSpecialActive(product || {})) return false;
+
+    const price = parseFloat(product.price) || 0;
+    const discounted = parseFloat(product.discounted_price || 0) || 0;
+    const discountAmount = parseFloat(product.discount_amount || product.discount || 0) || 0;
+    const discountRate = parseFloat(product.discount_rate || 0) || 0;
+    return price > 0 && (
+      (discounted > 0 && discounted < price)
+      || discountAmount > 0
+      || discountRate > 0
+      || String(product.special_active || '').toLowerCase() === 'yes'
+    );
   }
 
   function getSalePercent(product) {
@@ -1060,21 +1115,28 @@ $.getJSON("fetch_sheet_data.php", function (data) {
   const selectedCategory = new URLSearchParams(window.location.search).get('category') || SERVER_SELECTED_CATEGORY;
   activeSearchTerm = new URLSearchParams(window.location.search).get('search') || '';
   const normalizedSelectedCategory = cleanCategory(selectedCategory);
+  const selectedCategorySlug = slugifyCategory(normalizedSelectedCategory || '');
+  const isSpecialsSelected = SERVER_IS_SPECIALS_CATEGORY || selectedCategorySlug === 'specials';
 
   /* --------------------------------
      CATEGORY FILTER (URL)
   -------------------------------- */
-  categoryFiltered = ALL_PRODUCTS.filter(p => {
-    if (!normalizedSelectedCategory) return true;
+  if (isSpecialsSelected) {
+    categoryFiltered = ALL_PRODUCTS.filter(isProductOnSpecial);
+    $('#products-empty p').text('No specials are available right now. Please check again soon.');
+  } else {
+    categoryFiltered = ALL_PRODUCTS.filter(p => {
+      if (!normalizedSelectedCategory) return true;
 
-    return [
-      cleanCategory(p.parent_category),
-      cleanCategory(p.child_category_1),
-      cleanCategory(p.child_category_2)
-    ].includes(normalizedSelectedCategory);
-  });
+      return [
+        cleanCategory(p.parent_category),
+        cleanCategory(p.child_category_1),
+        cleanCategory(p.child_category_2)
+      ].includes(normalizedSelectedCategory);
+    });
+  }
 
-  if (normalizedSelectedCategory && !categoryFiltered.length) {
+  if (!isSpecialsSelected && normalizedSelectedCategory && !categoryFiltered.length) {
     const categories = extractCategories(data);
     const matchingParent = Object.entries(categories).find(([parent, children]) => {
       if (parent === normalizedSelectedCategory) return true;
