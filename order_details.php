@@ -1,5 +1,6 @@
 <?php
 include 'session_logins.php';
+require_once __DIR__ . '/ozow_helpers.php';
 
 // Fetch order details
 $order_id = isset($_GET['order_id']) ? preg_replace('/\D/', '', (string) $_GET['order_id']) : null;
@@ -15,6 +16,7 @@ $payNowButton = '';
 $statusText = '';
 $order_items = '';
 $autoSubmitPayfast = isset($_GET['payfast']) && $_GET['payfast'] === '1';
+$autoSubmitOzow = isset($_GET['ozow']) && $_GET['ozow'] === '1';
 $showGoogleCustomerReviewsOptIn = false;
 $googleCustomerReviewsOrder = [];
 
@@ -74,6 +76,20 @@ if (!function_exists('cbOrderHasSuccessfulPayfastPayment')) {
                 $row = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
                 if (!empty($row['payfast_payment_id'])) {
+                    return true;
+                }
+            }
+        }
+
+        $columnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'ozow_transaction_id'");
+        if ($columnCheck && $columnCheck->num_rows > 0) {
+            $stmt = $conn->prepare("SELECT ozow_transaction_id FROM orders WHERE id = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param("i", $orderId);
+                $stmt->execute();
+                $row = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+                if (!empty($row['ozow_transaction_id'])) {
                     return true;
                 }
             }
@@ -213,6 +229,29 @@ if (mysqli_num_rows($result) > 0) {
     $fetched_grand_total_amount = $order[0]['grand_total_amount'];
     $fetched_weight_kg = 0;
 
+    $ozowResponseData = array_merge($_GET, $_POST);
+    $ozowReference = (int) ($ozowResponseData['TransactionReference'] ?? $ozowResponseData['transactionReference'] ?? 0);
+    $ozowAmount = (float) ($ozowResponseData['Amount'] ?? $ozowResponseData['amount'] ?? 0);
+    if (
+        (int) $payment_status === 0
+        && $ozowReference === (int) $fetched_id
+        && candybirdOzowResponseLooksComplete($ozowResponseData)
+        && candybirdOzowResponseHashValid($ozowResponseData)
+        && abs((float) $fetched_grand_total_amount - $ozowAmount) <= 0.01
+    ) {
+        candybirdEnsureOzowOrderColumns($conn);
+        $ozowTransactionId = trim((string) ($ozowResponseData['TransactionId'] ?? $ozowResponseData['transactionId'] ?? ''));
+        $ozowStatus = trim((string) ($ozowResponseData['Status'] ?? $ozowResponseData['status'] ?? 'Complete'));
+        $stmtOzowPaid = $conn->prepare("UPDATE orders SET payment_status = 1, ozow_transaction_id = ?, ozow_payment_status = ?, order_status = CASE WHEN order_status IN ('Pending', 'Unpaid') THEN 'Processing' ELSE order_status END WHERE id = ?");
+        if ($stmtOzowPaid) {
+            $stmtOzowPaid->bind_param("ssi", $ozowTransactionId, $ozowStatus, $fetched_id);
+            $stmtOzowPaid->execute();
+            $stmtOzowPaid->close();
+            $payment_status = 1;
+            $fetched_payment_status = 1;
+        }
+    }
+
     if (empty($fetched_billing_email_address) && preg_match('/Email:\s*([^,\n]+)/i', (string) $fetched_shipping_address, $emailMatch)) {
         $fetched_billing_email_address = trim($emailMatch[1]);
     }
@@ -285,7 +324,8 @@ if (mysqli_num_rows($result) > 0) {
 
 if ($no_order_found === false && (int) $payment_status === 0) {
     $statusText = "Unpaid";
-    $payNowButton = '<input type="submit" form="payNowForm" class="btn btn-success" value="Pay Now" />';
+    $paymentFormId = candybirdIsOzowPaymentLabel($fetched_payment_method_label ?? '') ? 'ozowPayForm' : 'payNowForm';
+    $payNowButton = '<input type="submit" form="' . htmlspecialchars($paymentFormId, ENT_QUOTES, 'UTF-8') . '" class="btn btn-success" value="Pay Now" />';
 } elseif ($no_order_found === false && (int) $payment_status === 1) {
     $statusText = "Paid";
     $payNowButton = ''; // No button needed for Paid status
@@ -304,8 +344,13 @@ mysqli_free_result($result);
 
 $order_id = $order_id_raw;
 if ($no_order_found === false) {
-    include 'payNowForm.php';
-    if (empty($payNowForm)) {
+    $isOzowOrder = candybirdIsOzowPaymentLabel($fetched_payment_method_label ?? '');
+    if ($isOzowOrder) {
+        include 'ozow_pay_form.php';
+    } else {
+        include 'payNowForm.php';
+    }
+    if (($isOzowOrder && empty($ozowPayForm)) || (!$isOzowOrder && empty($payNowForm))) {
         $payNowButton = '';
     }
 }
@@ -387,10 +432,21 @@ include 'page_menues.php';
 ?>
 
 <?= $payNowForm ?? '' ?>
+<?= $ozowPayForm ?? '' ?>
 <?php if ($autoSubmitPayfast && $no_order_found === false && (int) $payment_status === 0): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('payNowForm');
+    if (form) {
+        form.submit();
+    }
+});
+</script>
+<?php endif; ?>
+<?php if ($autoSubmitOzow && $no_order_found === false && (int) $payment_status === 0): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('ozowPayForm');
     if (form) {
         form.submit();
     }

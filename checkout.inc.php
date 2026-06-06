@@ -8,6 +8,7 @@ require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/candybird_mail_helpers.php';
+require_once __DIR__ . '/ozow_helpers.php';
 if (file_exists('/home/candybirdco/configs_candybird/candybird_config.php')) {
     require_once('/home/candybirdco/configs_candybird/candybird_config.php');
 }
@@ -950,8 +951,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
             $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&thankyou=1';
             $isPayFast = stripos((string) $payment_method_name, 'payfast') !== false || (string) $payment_method === '1';
+            $isOzow = candybirdIsOzowPaymentLabel($payment_method_name);
             if ($isPayFast) {
                 $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&payfast=1';
+            } elseif ($isOzow) {
+                $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&ozow=1';
             }
 
             $response = array(

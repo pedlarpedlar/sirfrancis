@@ -15,6 +15,7 @@ $admin_id = $_SESSION['admin_id'];
 
 include 'dbh.inc.php';
 require_once __DIR__ . '/../product_sheet_helpers.php';
+require_once __DIR__ . '/../ozow_helpers.php';
 require_once __DIR__ . '/admin_order_totals.php';
 
 // Fetch order details
@@ -37,6 +38,20 @@ if (!function_exists('cbAdminOrderHasSuccessfulPayfastPayment')) {
                 $row = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
                 if (!empty($row['payfast_payment_id'])) {
+                    return true;
+                }
+            }
+        }
+
+        $columnCheck = $conn->query("SHOW COLUMNS FROM orders LIKE 'ozow_transaction_id'");
+        if ($columnCheck && $columnCheck->num_rows > 0) {
+            $stmt = $conn->prepare("SELECT ozow_transaction_id FROM orders WHERE id = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param("i", $orderId);
+                $stmt->execute();
+                $row = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+                if (!empty($row['ozow_transaction_id'])) {
                     return true;
                 }
             }

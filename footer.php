@@ -64,7 +64,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <span><i class="fab fa-cc-mastercard"></i> Mastercard</span>
     <span>PayFast</span>
     <span>EFT</span>
-    <span>Ozow coming soon</span>
+    <span>Ozow Instant EFT</span>
     <span>Buy now, pay later coming soon</span>
   </div>
 

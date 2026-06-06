@@ -732,8 +732,8 @@ include 'header.php';
                 <span class="payment-method-logo payment-method-logo--wide" title="Scan to Pay">
                   <span>Scan to Pay</span>
                 </span>
-                <span class="payment-method-logo payment-method-logo--wide payment-method-logo--soon" title="Ozow coming soon">
-                  <span>Ozow soon</span>
+                <span class="payment-method-logo payment-method-logo--wide" title="Ozow Instant EFT">
+                  <span>Ozow EFT</span>
                 </span>
               </div>
               <p class="product-payment-methods__note">Available options may depend on the device and PayFast checkout screen.</p>

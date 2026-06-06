@@ -251,6 +251,7 @@ if ($resultCountries && mysqli_num_rows($resultCountries) > 0) {
 }
 
 $payment_methods = '';
+require_once __DIR__ . '/ozow_helpers.php';
 
 // Fetch payment methods from the database
 // Initialize variables
@@ -258,6 +259,7 @@ $paymentMethods = array();
 $isFirstIteration = true; // Variable to track the first iteration
 
 if ($conn instanceof mysqli) {
+    candybirdEnsureOzowPaymentMethod($conn);
     $sql = "SELECT * FROM payment_methods";
     $result = mysqli_query($conn, $sql);
 } else {
@@ -826,7 +828,7 @@ foreach ($paymentMethods as $paymentMethod) {
                 <span><i class="fab fa-cc-mastercard"></i> Mastercard</span>
                 <span>PayFast</span>
                 <span>EFT</span>
-                <span>Ozow coming soon</span>
+                <span>Ozow Instant EFT</span>
               </div>
               <div class="payment-accordion element-mrg">
                   <div class="panel-group" id="accordion">
