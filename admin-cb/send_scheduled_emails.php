@@ -55,7 +55,8 @@ while ($email = $emails->fetch_assoc()) {
         $subscriberRows[] = $recipient;
     }
 
-    $recipientBuild = cbCampaignBuildRecipientList($subscriberRows, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''));
+    $unsubscribedKeys = !empty($payload['exclude_unsubscribed_manual']) ? cbCampaignGetUnsubscribedEmailKeys($conn) : [];
+    $recipientBuild = cbCampaignBuildRecipientList($subscriberRows, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''), $unsubscribedKeys);
     $recipientEmails = $recipientBuild['recipients'];
     $recipientStats = $recipientBuild['stats'];
 
@@ -97,6 +98,8 @@ while ($email = $emails->fetch_assoc()) {
                 'Extra recipients entered' => $recipientStats['manual_count'],
                 'Duplicates skipped' => $recipientStats['duplicate_count'],
                 'Invalid extras skipped' => $recipientStats['invalid_count'],
+                'Unsubscribed extras skipped' => $recipientStats['unsubscribed_count'],
+                'Unsubscribed filter' => !empty($payload['exclude_unsubscribed_manual']) ? 'On' : 'Off',
                 'Scheduled for' => $email['scheduled_at']
             )
         );
@@ -107,7 +110,7 @@ while ($email = $emails->fetch_assoc()) {
     if (!empty($failures)) {
         cbCampaignLog("Campaign {$emailId} failures: " . implode(' | ', array_slice($failures, 0, 20)));
     }
-    if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count'])) {
-        cbCampaignLog("Campaign {$emailId} skipped {$recipientStats['duplicate_count']} duplicate(s) and {$recipientStats['invalid_count']} invalid extra recipient(s).");
+    if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count']) || !empty($recipientStats['unsubscribed_count'])) {
+        cbCampaignLog("Campaign {$emailId} skipped {$recipientStats['duplicate_count']} duplicate(s), {$recipientStats['invalid_count']} invalid extra recipient(s), and {$recipientStats['unsubscribed_count']} unsubscribed extra recipient(s).");
     }
 }

@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
                 $payload['campaign_id'] = $campaignId;
 
-                $recipientBuild = cbCampaignRecipientStatsForSchedule($conn, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''));
+                $recipientBuild = cbCampaignRecipientStatsForSchedule($conn, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''), !empty($payload['exclude_unsubscribed_manual']));
                 $recipientStats = $recipientBuild['stats'];
 
                 $summaryMessage = 'A confirmation email was sent to the web admin.';
@@ -117,6 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'Unique recipients queued' => $recipientStats['unique_count'],
                             'Duplicates skipped' => $recipientStats['duplicate_count'],
                             'Invalid extras skipped' => $recipientStats['invalid_count'],
+                            'Unsubscribed extras skipped' => $recipientStats['unsubscribed_count'],
+                            'Unsubscribed filter' => !empty($payload['exclude_unsubscribed_manual']) ? 'On' : 'Off',
                             'Created by admin ID' => $_SESSION['admin_id']
                         )
                     );
@@ -125,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $skippedNote = '';
-                if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count'])) {
-                    $skippedNote = ' Skipped ' . (int) $recipientStats['duplicate_count'] . ' duplicate email(s) and ' . (int) $recipientStats['invalid_count'] . ' invalid extra email(s).';
+                if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count']) || !empty($recipientStats['unsubscribed_count'])) {
+                    $skippedNote = ' Skipped ' . (int) $recipientStats['duplicate_count'] . ' duplicate email(s), ' . (int) $recipientStats['invalid_count'] . ' invalid extra email(s), and ' . (int) $recipientStats['unsubscribed_count'] . ' unsubscribed extra email(s).';
                 }
                 $message = 'Broadcast scheduled successfully for ' . number_format((int) $recipientStats['unique_count']) . ' unique recipient(s).' . $skippedNote . ' ' . $summaryMessage;
                 $success = true;

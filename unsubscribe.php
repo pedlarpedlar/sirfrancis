@@ -57,7 +57,7 @@ include 'page_menues.php';
                 $admin_mail->Subject = "Oh no! User unsubscribed from mailing list on CandyBird";
 
                 // Get the email body for admin from the template file
-                $admin_email_body = file_get_contents('emails/email_subscribe_admin.php');
+                $admin_email_body = file_get_contents('emails/email_unsubscribe_admin.php');
 
                 // Replace placeholders with actual values for admin email
                 $admin_email_body = str_replace('{recipient_name}', 'Admin', $admin_email_body);

@@ -51,6 +51,7 @@ $scheduleParts = function () use ($oldForm) {
 };
 [$scheduledDateValue, $scheduledTimeValue] = $scheduleParts();
 $bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? ''), ENT_QUOTES, 'UTF-8');
+$excludeUnsubscribedChecked = !array_key_exists('exclude_unsubscribed_manual', $oldForm) || !empty($oldForm['exclude_unsubscribed_manual']);
 
 include 'header.php';
 ?>
@@ -145,6 +146,15 @@ include 'header.php';
                         <label for="manual_recipients">Extra recipient emails</label>
                         <textarea class="form-control" id="manual_recipients" name="manual_recipients" rows="4"><?= htmlspecialchars((string) ($oldForm['manual_recipients'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
                         <div class="field-help">Optional. Add internal client-base emails here, one per line or separated by commas. They will be included with scheduled broadcasts but will not be added to the subscriber database.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="exclude_unsubscribed_manual" value="0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="exclude_unsubscribed_manual" name="exclude_unsubscribed_manual" value="1" <?= $excludeUnsubscribedChecked ? 'checked' : '' ?>>
+                            <label class="custom-control-label" for="exclude_unsubscribed_manual">Exclude emails that previously unsubscribed</label>
+                        </div>
+                        <div class="field-help">Recommended. If a custom email is pasted here but that person previously unsubscribed, they will be skipped unless you untick this for an urgent service update.</div>
                     </div>
 
                     <div class="form-group">

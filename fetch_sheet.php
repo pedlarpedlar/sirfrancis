@@ -15,6 +15,7 @@ $requestPathSlug = function_exists('normalizeCandybirdProductSlug')
 $isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['gifting']) || !empty($_GET['gifting_intro']) || $productPageCategorySlug === 'gifting' || $requestPathSlug === 'gifting';
 $isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller']) || in_array($productPageCategorySlug, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller'], true) || $requestPathSlug === 'resellers';
 $isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
+$isClearanceCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['clearance-basket', 'clearance']) || in_array($productPageCategorySlug, ['clearance-basket', 'clearance'], true) || $requestPathSlug === 'clearance-basket';
 $page_url_canonical = "https://www.candybird.co.za/products";
 $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
@@ -42,7 +43,14 @@ if ($isGiftingCategoryPage) {
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop current CandyBird specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.png';
+} elseif ($isClearanceCategoryPage) {
+    $page_url_canonical = 'https://www.candybird.co.za/clearance-basket';
+    $title_og = 'Clearance Basket Deals | CandyBird';
+    $page_url_og = $page_url_canonical;
+    $description_meta = 'Shop CandyBird Clearance Basket for heavily reduced clearance stock, dated items and overstocked products. Separate from normal specials and promotions.';
+    $description_og = $description_meta;
+    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.png';
 }
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
@@ -107,6 +115,21 @@ include 'page_menues.php';
     text-transform: uppercase;
     top: 8px;
     z-index: 7;
+  }
+
+  .specials-clearance-banner {
+    background: #fff;
+    padding: 20px 0 10px;
+  }
+
+  .specials-clearance-banner img {
+    border-radius: 8px;
+    box-shadow: 0 14px 38px rgba(45, 23, 57, .08);
+    display: block;
+    height: auto;
+    margin: 0 auto;
+    max-width: 1180px;
+    width: 100%;
   }
 
   .sold-out-button {
@@ -335,6 +358,14 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 
 ?>
 
+<?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
+<section class="specials-clearance-banner">
+  <div class="container">
+    <img src="https://www.candybird.co.za/assets/img/specials_banner.png" alt="CandyBird specials and clearance basket explained" loading="eager">
+  </div>
+</section>
+<?php endif; ?>
+
 <?php if (isset($_GET['gifting_intro']) || strcasecmp((string) $selectedCategory, 'Gifting') === 0): ?>
 <section class="gifting-category-intro">
   <div class="container">
@@ -366,25 +397,6 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
         </div>
       </div>
       <img class="category-social-image" src="https://www.candybird.co.za/assets/img/reseller.jpeg" alt="CandyBird reseller and wholesale packs" loading="lazy">
-    </div>
-  </div>
-</section>
-<?php elseif ($isSpecialsCategoryPage): ?>
-<section class="gifting-category-intro">
-  <div class="container">
-    <div class="gifting-category-panel">
-      <div>
-        <h1>Specials</h1>
-        <p>Browse current CandyBird sale items with their valid special pricing. Clearance Basket products are kept separate so these offers stay clear and easy to compare.</p>
-        <div class="gifting-category-highlights">
-          <span>Normal sale items only</span>
-          <span>Valid specials with clear original and sale pricing</span>
-          <span>Secure checkout, collection and delivery options</span>
-        </div>
-      </div>
-      <a class="products-page-visual-link" href="pricelist" aria-label="View CandyBird pricelist">
-        <img class="category-social-image" src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird specials and sale products" loading="lazy">
-      </a>
     </div>
   </div>
 </section>

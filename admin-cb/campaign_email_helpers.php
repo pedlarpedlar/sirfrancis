@@ -68,6 +68,7 @@ function cbCampaignPayloadFromPost()
         'coupon_code' => strtoupper(cbCampaignCleanHeaderText($_POST['coupon_code'] ?? '')),
         'hero_image_url' => trim($_POST['hero_image_url'] ?? ''),
         'manual_recipients' => trim($_POST['manual_recipients'] ?? ''),
+        'exclude_unsubscribed_manual' => !empty($_POST['exclude_unsubscribed_manual']) ? 1 : 0,
         'body_html' => cbCampaignCleanHtml($_POST['body'] ?? ''),
         'cta_label' => cbCampaignCleanHeaderText($_POST['cta_label'] ?? 'Shop now'),
         'cta_url' => $ctaUrl,
@@ -95,6 +96,7 @@ function cbCampaignPayloadFromScheduledEmail($row)
     $payload['email_heading'] = $payload['email_heading'] ?? ($row['email_heading'] ?? '');
     $payload['subject'] = $payload['subject'] ?? ($row['subject'] ?? '');
     $payload['manual_recipients'] = $payload['manual_recipients'] ?? '';
+    $payload['exclude_unsubscribed_manual'] = array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1;
     return $payload;
 }
 
@@ -119,7 +121,27 @@ function cbCampaignNormalizeEmailKey($email)
     return strtolower(trim((string) $email));
 }
 
-function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
+function cbCampaignGetUnsubscribedEmailKeys($conn)
+{
+    $keys = [];
+    if (!($conn instanceof mysqli)) {
+        return $keys;
+    }
+
+    $result = $conn->query("SELECT email FROM subscribers WHERE is_subscribed = 0 AND email <> ''");
+    if (!$result) {
+        return $keys;
+    }
+    while ($row = $result->fetch_assoc()) {
+        $key = cbCampaignNormalizeEmailKey($row['email'] ?? '');
+        if ($key !== '') {
+            $keys[$key] = true;
+        }
+    }
+    return $keys;
+}
+
+function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients, $unsubscribedEmailKeys = [])
 {
     $recipients = [];
     $stats = [
@@ -128,8 +150,10 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
         'unique_count' => 0,
         'duplicate_count' => 0,
         'invalid_count' => 0,
+        'unsubscribed_count' => 0,
         'duplicate_emails' => [],
         'invalid_emails' => [],
+        'unsubscribed_emails' => [],
     ];
 
     foreach ($subscriberRows as $row) {
@@ -139,6 +163,11 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
         }
         $stats['subscriber_count']++;
         $key = cbCampaignNormalizeEmailKey($email);
+        if (!empty($unsubscribedEmailKeys[$key])) {
+            $stats['unsubscribed_count']++;
+            $stats['unsubscribed_emails'][] = $email;
+            continue;
+        }
         if (isset($recipients[$key])) {
             $stats['duplicate_count']++;
             $stats['duplicate_emails'][] = $email;
@@ -170,6 +199,7 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
     $stats['unique_count'] = count($recipients);
     $stats['duplicate_emails'] = array_values(array_unique(array_map('strtolower', $stats['duplicate_emails'])));
     $stats['invalid_emails'] = array_values(array_unique($stats['invalid_emails']));
+    $stats['unsubscribed_emails'] = array_values(array_unique(array_map('strtolower', $stats['unsubscribed_emails'])));
 
     return [
         'recipients' => $recipients,
@@ -177,7 +207,7 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients)
     ];
 }
 
-function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients)
+function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients, $excludeUnsubscribedManual = true)
 {
     $subscriberRows = [];
     if ($conn instanceof mysqli) {
@@ -189,7 +219,8 @@ function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients)
         }
     }
 
-    return cbCampaignBuildRecipientList($subscriberRows, $manualRecipients);
+    $unsubscribedKeys = $excludeUnsubscribedManual ? cbCampaignGetUnsubscribedEmailKeys($conn) : [];
+    return cbCampaignBuildRecipientList($subscriberRows, $manualRecipients, $unsubscribedKeys);
 }
 
 function cbCampaignValidatePayload($payload)

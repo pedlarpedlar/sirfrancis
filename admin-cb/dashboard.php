@@ -78,6 +78,19 @@ function cbAdminPercentChange($current, $previous) {
     return ($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs previous period';
 }
 
+function cbAdminMetricLabel($value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return 'No data yet';
+    }
+    $value = preg_replace('/\s*\|\s*From page.*$/i', '', $value);
+    $value = preg_replace('/^Query:\s*/i', '', $value);
+    $value = preg_replace('/^To:\s*/i', '', $value);
+    $value = preg_replace('/^Clicked on add-to-cart \(product id:\s*/i', 'Product ', $value);
+    $value = preg_replace('/\)$/', '', $value);
+    return trim($value) !== '' ? trim($value) : 'No data yet';
+}
+
 function cbAdminReconcilePayfastPayments($conn) {
     if (!($conn instanceof mysqli) || !cbAdminTableExists($conn, 'orders')) {
         return;
@@ -255,6 +268,71 @@ $visitorCities = ($hasActionLogs && $hasIpGeolocation) ? cbAdminRows($conn, "SEL
     GROUP BY city, country
     ORDER BY actions DESC
     LIMIT 10") : [];
+$weeklyVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT DATE(s.start_time) AS visit_day, COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, ''))) AS visitors
+    FROM sessions s
+    WHERE $humanSessionFilter
+      AND s.start_time >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+    GROUP BY DATE(s.start_time)
+    ORDER BY visit_day ASC") : [];
+$weeklyVisitorsByDay = [];
+foreach ($weeklyVisitorRows as $row) {
+    $weeklyVisitorsByDay[(string) ($row['visit_day'] ?? '')] = (int) ($row['visitors'] ?? 0);
+}
+$weeklyVisitors = [];
+for ($i = 6; $i >= 0; $i--) {
+    $dayKey = date('Y-m-d', strtotime("-{$i} days"));
+    $weeklyVisitors[] = [
+        'label' => date('D d M', strtotime($dayKey)),
+        'count' => $weeklyVisitorsByDay[$dayKey] ?? 0,
+    ];
+}
+$weeklyTopSearch = $hasSearchTerms ? cbAdminRows($conn, "SELECT term AS label, COUNT(*) AS total
+    FROM search_terms
+    WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+      AND COALESCE(term, '') <> ''
+    GROUP BY term
+    ORDER BY total DESC, MAX(timestamp) DESC
+    LIMIT 1") : [];
+if (empty($weeklyTopSearch) && $hasActionLogs) {
+    $weeklyTopSearch = cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
+        FROM action_logs
+        WHERE $humanActionFilter
+          AND action = 'UX search submitted'
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        GROUP BY details
+        ORDER BY total DESC, MAX(created_at) DESC
+        LIMIT 1");
+}
+$weeklyTopProductClick = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
+    FROM action_logs
+    WHERE $humanActionFilter
+      AND action = 'UX product click'
+      AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    GROUP BY details
+    ORDER BY total DESC, MAX(created_at) DESC
+    LIMIT 1") : [];
+$weeklyTopCategoryClick = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
+    FROM action_logs
+    WHERE $humanActionFilter
+      AND action = 'UX category click'
+      AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    GROUP BY details
+    ORDER BY total DESC, MAX(created_at) DESC
+    LIMIT 1") : [];
+$weeklyTopAddToCart = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
+    FROM action_logs
+    WHERE $humanActionFilter
+      AND (action LIKE '%add-to-cart%' OR action LIKE 'Added item%')
+      AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    GROUP BY details
+    ORDER BY total DESC, MAX(created_at) DESC
+    LIMIT 1") : [];
+$weeklyMetricCards = [
+    ['label' => 'Most searched', 'row' => $weeklyTopSearch[0] ?? null],
+    ['label' => 'Most clicked product', 'row' => $weeklyTopProductClick[0] ?? null],
+    ['label' => 'Most clicked category', 'row' => $weeklyTopCategoryClick[0] ?? null],
+    ['label' => 'Most clicked add-to-cart', 'row' => $weeklyTopAddToCart[0] ?? null],
+];
 $recentActivity = $hasActionLogs ? cbAdminRows($conn, "SELECT al.action, al.details, al.created_at, al.user_id, al.guest_identifier, COALESCE(u.username, 'Guest') AS visitor_name
     FROM action_logs al
     LEFT JOIN users u ON al.user_id = u.id
@@ -377,12 +455,22 @@ $dashboardCronJobs = [
     .cron-card h3 { color: #5b1178; font-size: 16px; margin-bottom: 6px; }
     .cron-card p { color: #6d6270; font-size: 13px; min-height: 40px; margin-bottom: 12px; }
     .cron-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .weekly-summary-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 22px; }
+    .weekly-summary-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 16px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); }
+    .weekly-summary-card h2, .weekly-summary-card h3 { color: #5b1178; font-size: 17px; margin: 0 0 12px; }
+    .weekly-visitors-list { display: grid; gap: 7px; }
+    .weekly-visitors-row { align-items: center; display: grid; grid-template-columns: 84px 1fr 46px; gap: 8px; color: #4b3d46; font-size: 13px; }
+    .weekly-visitors-bar { background: #f4ece3; border-radius: 999px; height: 8px; overflow: hidden; }
+    .weekly-visitors-bar span { background: #5b1178; display: block; height: 100%; min-width: 4px; }
+    .weekly-metric-label { color: #6d6270; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .weekly-metric-value { color: #2d1739; font-size: 17px; font-weight: 900; line-height: 1.35; margin-top: 8px; word-break: break-word; }
+    .weekly-metric-count { color: #6d6270; font-size: 13px; margin-top: 8px; }
     .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: #2aa85a; }
     .status-dot.warn { background: #e8a100; }
     .status-dot.bad { background: #d53f3f; }
     .table-sm td, .table-sm th { vertical-align: middle; }
-    @media (max-width: 1199px) { .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 575px) { .dashboard-grid { grid-template-columns: 1fr; } .dash-card .value { font-size: 24px; } }
+    @media (max-width: 1199px) { .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .weekly-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 575px) { .dashboard-grid, .weekly-summary-grid { grid-template-columns: 1fr; } .dash-card .value { font-size: 24px; } }
 </style>
 
 <div class="container admin-dashboard">
@@ -458,6 +546,37 @@ $dashboardCronJobs = [
             <div class="value"><?= number_format((float) $todayVisitors) ?></div>
             <div class="hint"><?= number_format((float) $todayPageViews) ?> human page views, <?= number_format((float) $todayRawSessions) ?> raw sessions</div>
         </div>
+    </div>
+
+    <div class="weekly-summary-grid">
+        <div class="weekly-summary-card">
+            <h2>Weekly Visitors</h2>
+            <?php
+            $maxWeeklyVisitors = max(1, max(array_map(static function($item) { return (int) $item['count']; }, $weeklyVisitors)));
+            ?>
+            <div class="weekly-visitors-list">
+                <?php foreach ($weeklyVisitors as $day): 
+                    $width = max(4, min(100, round(((int) $day['count'] / $maxWeeklyVisitors) * 100)));
+                ?>
+                    <div class="weekly-visitors-row">
+                        <span><?= htmlspecialchars($day['label'], ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="weekly-visitors-bar"><span style="width:<?= (int) $width ?>%"></span></span>
+                        <strong><?= number_format((int) $day['count']) ?></strong>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php foreach ($weeklyMetricCards as $metric): 
+            $row = is_array($metric['row']) ? $metric['row'] : [];
+            $metricValue = cbAdminMetricLabel($row['label'] ?? '');
+            $metricCount = (int) ($row['total'] ?? 0);
+        ?>
+            <div class="weekly-summary-card">
+                <div class="weekly-metric-label"><?= htmlspecialchars($metric['label'], ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="weekly-metric-value"><?= htmlspecialchars($metricValue, ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="weekly-metric-count"><?= number_format($metricCount) ?> action<?= $metricCount === 1 ? '' : 's' ?> in 7 days</div>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <div class="row">
