@@ -110,6 +110,7 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
     function candybirdOzowBuildPaymentData($orderId, $amount, $customerEmail, $customerName, $sessionParam = '') {
         $config = candybirdOzowConfig();
         $orderId = (string) (int) $orderId;
+        $displayOrderId = str_pad($orderId, 7, '0', STR_PAD_LEFT);
         $amount = number_format((float) $amount, 2, '.', '');
         $returnBaseUrl = 'https://www.candybird.co.za/ozow_r?o=' . urlencode($orderId);
 
@@ -119,7 +120,7 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
             'CurrencyCode' => 'ZAR',
             'Amount' => $amount,
             'TransactionReference' => $orderId,
-            'BankReference' => substr($config['display_name'] . ' Order ' . str_pad($orderId, 7, '0', STR_PAD_LEFT), 0, 20),
+            'BankReference' => 'CB ' . $displayOrderId,
             'Optional1' => $config['display_name'],
             'Optional2' => $customerEmail,
             'Optional3' => '',
