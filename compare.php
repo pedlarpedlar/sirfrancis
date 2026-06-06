@@ -6,6 +6,52 @@ include 'header.php';
 // Fetch compare items based on user or guest
 $compareItems = getCompareItems($userId, $guestIdentifier);
 
+function cbCompareMoney($value) {
+    if (function_exists('candybirdParseSheetMoney')) {
+        return candybirdParseSheetMoney($value);
+    }
+    return (float) preg_replace('/[^0-9.\-]/', '', (string) $value);
+}
+
+function cbCompareIsClearance($item) {
+    return strtolower((string) ($item['is_clearance'] ?? '')) === 'yes' || stripos((string) ($item['id'] ?? ''), 'CLR:') === 0;
+}
+
+function cbComparePriceHtml($item) {
+    $originalPrice = cbCompareMoney($item['original_price'] ?? $item['price'] ?? 0);
+    $finalPrice = cbCompareMoney($item['final_price'] ?? $item['discounted_price'] ?? 0);
+    $discountAmount = cbCompareMoney($item['discount_amount'] ?? 0);
+    $discountRate = cbCompareMoney($item['discount_rate'] ?? 0);
+
+    if ($finalPrice <= 0) {
+        if ($discountAmount > 0 && $originalPrice > 0) {
+            $finalPrice = max(0, $originalPrice - $discountAmount);
+        } else {
+            $finalPrice = $originalPrice;
+        }
+    }
+
+    $hasDiscount = $originalPrice > 0 && $finalPrice > 0 && $finalPrice < $originalPrice;
+    $percentSaved = $hasDiscount ? round((($originalPrice - $finalPrice) / $originalPrice) * 100) : 0;
+
+    $html = '<span class="compare-price-display">';
+    if ($hasDiscount) {
+        $html .= '<del class="del">R' . number_format($originalPrice, 2) . '</del>';
+        $html .= '<span class="onsale">R' . number_format($finalPrice, 2) . '</span>';
+        if ($percentSaved > 0) {
+            $html .= '<span class="compare-save-badge">Save ' . (int) $percentSaved . '%</span>';
+        }
+    } else {
+        $html .= '<span>R' . number_format($originalPrice, 2) . '</span>';
+    }
+    if (cbCompareIsClearance($item)) {
+        $html .= '<span class="compare-clearance-badge">Clearance</span>';
+    }
+    $html .= '</span>';
+
+    return $html;
+}
+
 // Format compare items
 $compare_header = '<tr>
                     <th scope="col">product info</th>';
@@ -13,15 +59,21 @@ $compare_body = "";
 
 foreach ($compareItems as $item) {
     $image_url = isset($item['image_url']) ? $item['image_url'] : 'assets/img/product/1.png';
+    $isClearance = cbCompareIsClearance($item);
+    $clearanceId = trim((string) ($item['clearance_id'] ?? ''));
 
     $compare_header .= '<th scope="col" class="text-center">
-                          <img src="' . $image_url . '" alt="img" />
-                          <span class="sub-title d-block">' . $item['title'] . '</span>
+                          <div class="compare-product-image-wrap">
+                            <img src="' . htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($item['title'] ?? 'CandyBird product', ENT_QUOTES, 'UTF-8') . '" />
+                            ' . ($isClearance ? '<span class="compare-clearance-ribbon">Clearance</span>' : '') . '
+                          </div>
+                          <span class="sub-title d-block">' . htmlspecialchars($item['title'] ?? '', ENT_QUOTES, 'UTF-8') . '</span>
                           <a href="#" class="btn btn-dark btn--lg add-to-cart"
                               data-toggle="modal"
                               data-target="#add-to-cart"
                               data-quantity="1"
-                              data-product-id="' . $item['id'] . '">
+                              data-product-id="' . htmlspecialchars($item['id'] ?? '', ENT_QUOTES, 'UTF-8') . '"
+                              ' . ($clearanceId !== '' ? 'data-clearance-id="' . htmlspecialchars($clearanceId, ENT_QUOTES, 'UTF-8') . '"' : '') . '>
                               add to cart
                           </a>
                       </th>';
@@ -56,6 +108,70 @@ $page_url_og = "https://www.candybird.co.za/compare"
 include 'page_menues.php';
 ?>
 
+<style>
+  .compare-product-image-wrap {
+    background: #f7f2ea;
+    display: inline-block;
+    margin-bottom: 10px;
+    max-width: 145px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  .compare-product-image-wrap img {
+    aspect-ratio: 1 / 1;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+  .compare-clearance-ribbon {
+    background: #d5001f;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    left: 0;
+    letter-spacing: 0;
+    line-height: 1;
+    padding: 6px 9px;
+    position: absolute;
+    text-transform: uppercase;
+    top: 0;
+  }
+  .compare-price-display {
+    align-items: center;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .compare-price-display .del {
+    color: #8b8079;
+    font-size: .9rem;
+  }
+  .compare-price-display .onsale {
+    color: #b33818;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+  .compare-save-badge,
+  .compare-clearance-badge {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 6px 8px;
+    text-transform: uppercase;
+  }
+  .compare-save-badge {
+    background: #edf8ed;
+    color: #24713a;
+  }
+  .compare-clearance-badge {
+    background: #d5001f;
+    color: #fff;
+  }
+</style>
+
 <!-- product tab start -->
 <section class="compare-section theme1 pt-80 pb-80">
   <div class="container">
@@ -74,34 +190,8 @@ include 'page_menues.php';
               <tr>
         <th scope="row">Price</th>
         <?php foreach ($compareItems as $item): ?>
-
-          <?php
-
-          $price = $item['price'];
-          $discount_rate = $item['discount_rate'];
-          $discount = $item['discount_amount'];
-
-          if ($discount == 0 && $discount_rate > 0) {
-              $discount = ($price * $discount_rate) / 100;
-          }
-
-          $discounted_price = $price - $discount;
-
-          ?>
             <td class="text-center">
-                <?php
-                    echo "<span class='whish-list-price'>";
-
-                    if ($item['discount_rate'] > 0) {
-                        echo "<del class='del'>R".number_format($item['price'], 2)."</del>";
-                        echo "<span class='onsale'>R".number_format($discounted_price, 2)."</span>";
-                    } else {
-                        echo "R".number_format($item['price'], 2);
-                    }
-
-                    echo "</span>";
-                ?>
-
+                <?=cbComparePriceHtml($item)?>
             </td>
         <?php endforeach; ?>
     </tr>
@@ -147,7 +237,7 @@ include 'page_menues.php';
         <?php foreach ($compareItems as $item): ?>
             <td class="text-center">
             <a href="#" class="btn btn--lg remove-from-compare"
-                  data-product-id="<?= $item['id'] ?>">
+                  data-product-id="<?= htmlspecialchars($item['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                   Remove from Compare
               </a>
           </td>

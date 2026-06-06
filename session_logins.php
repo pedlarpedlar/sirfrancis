@@ -196,8 +196,15 @@ function getCompareItems($userId, $guestIdentifier) {
 
     $items = [];
     while ($row = $result->fetch_assoc()) {
+        $storedProductId = trim((string) ($row['product_id'] ?? ''));
+        $clearanceId = '';
+        if (stripos($storedProductId, 'CLR:') === 0) {
+            $clearanceId = substr($storedProductId, 4);
+        }
+
         $item = buildSheetCartItem([
-            'product_id' => $row['product_id'],
+            'product_id' => $storedProductId,
+            'clearance_id' => $clearanceId,
             'quantity' => 1,
             'coupon_code' => ''
         ]);
