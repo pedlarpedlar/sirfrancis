@@ -58,46 +58,13 @@ if (!($conn instanceof mysqli)) {
 }
 
 $orderId = (int) cbOzowPostedValue($data, ['TransactionReference', 'transactionReference', 'm_payment_id', 'order_id']);
-$paidAmount = (float) cbOzowPostedValue($data, ['Amount', 'amount', 'AmountPaid', 'amount_paid'], '0');
-$transactionId = cbOzowPostedValue($data, ['TransactionId', 'transactionId', 'OzowTransactionId', 'ozowTransactionId', 'PaymentId', 'payment_id']);
-$status = cbOzowPostedValue($data, ['Status', 'status', 'PaymentStatus', 'payment_status', 'TransactionStatus'], 'unknown');
 
 if ($orderId <= 0) {
     error_log('Ozow notify ignored: no order reference. Payload keys: ' . implode(',', array_keys($data)));
     exit;
 }
 
-$stmt = $conn->prepare("SELECT grand_total_amount FROM orders WHERE id = ? LIMIT 1");
-if (!$stmt) {
-    error_log('Ozow notify failed: could not prepare order lookup.');
-    exit;
-}
-$stmt->bind_param("i", $orderId);
-$stmt->execute();
-$order = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-if (!$order) {
-    error_log('Ozow notify ignored: order not found #' . $orderId);
-    exit;
-}
-
-$expectedAmount = (float) $order['grand_total_amount'];
-$amountValid = $paidAmount > 0 && abs($expectedAmount - $paidAmount) <= 0.01;
-$looksPaid = cbOzowLooksPaid($data);
-$hashValid = candybirdOzowResponseHashValid($data);
-
-if ($looksPaid && $amountValid && $hashValid) {
-    candybirdEnsureOzowOrderColumns($conn);
-    $stmt = $conn->prepare("UPDATE orders SET payment_status = 1, ozow_transaction_id = ?, ozow_payment_status = ?, order_status = CASE WHEN order_status IN ('Pending', 'Unpaid') THEN 'Processing' ELSE order_status END WHERE id = ?");
-    if ($stmt) {
-        $stmt->bind_param("ssi", $transactionId, $status, $orderId);
-        $stmt->execute();
-        $stmt->close();
-    }
-    cbOzowLogPaymentCheck($conn, $orderId, $expectedAmount, 'ozow complete', 'Ozow payment marked successful.', 1);
-} else {
-    $details = 'Status: ' . $status . '; amount received: ' . $paidAmount . '; expected: ' . $expectedAmount . '; hash valid: ' . ($hashValid ? 'yes' : 'no');
-    cbOzowLogPaymentCheck($conn, $orderId, $expectedAmount, 'ozow payment check', $details, 0);
-    error_log('Ozow notify not marked paid for order #' . $orderId . '. ' . $details);
+$result = candybirdProcessOzowResponse($conn, $data, $orderId);
+if (empty($result['success'])) {
+    error_log('Ozow notify not marked paid for order #' . $orderId . '. ' . ($result['message'] ?? 'Unknown error'));
 }

@@ -111,7 +111,7 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
         $config = candybirdOzowConfig();
         $orderId = (string) (int) $orderId;
         $amount = number_format((float) $amount, 2, '.', '');
-        $baseOrderUrl = 'https://www.candybird.co.za/order_details?order_id=' . urlencode($orderId) . $sessionParam;
+        $returnBaseUrl = 'https://www.candybird.co.za/ozow_r?o=' . urlencode($orderId);
 
         $data = [
             'SiteCode' => $config['site_code'],
@@ -126,9 +126,9 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
             'Optional4' => '',
             'Optional5' => '',
             'Customer' => trim((string) $customerName) !== '' ? trim((string) $customerName) : $customerEmail,
-            'CancelUrl' => $baseOrderUrl . '&payment-cancelled=1',
-            'ErrorUrl' => $baseOrderUrl . '&payment-error=1',
-            'SuccessUrl' => $baseOrderUrl . '&thankyou=1&ozow=success',
+            'CancelUrl' => $returnBaseUrl . '&s=c',
+            'ErrorUrl' => $returnBaseUrl . '&s=e',
+            'SuccessUrl' => $returnBaseUrl . '&s=s',
             'NotifyUrl' => 'https://www.candybird.co.za/ozow_notify',
             'IsTest' => $config['test_mode'] ? 'true' : 'false',
         ];
@@ -136,6 +136,77 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
         $data['HashCheck'] = candybirdOzowHash($data, $config['private_key']);
 
         return $data;
+    }
+}
+
+if (!function_exists('candybirdOzowLogPaymentCheck')) {
+    function candybirdOzowLogPaymentCheck($conn, $orderId, $amount, $name, $details, $result) {
+        if (!($conn instanceof mysqli)) {
+            return;
+        }
+        $tableCheck = $conn->query("SHOW TABLES LIKE 'payment_checks'");
+        if (!$tableCheck || $tableCheck->num_rows === 0) {
+            return;
+        }
+        $stmt = $conn->prepare("INSERT INTO payment_checks (order_id, payment_total, check_name, error_details, check_result) VALUES (?, ?, ?, ?, ?)");
+        if (!$stmt) {
+            return;
+        }
+        $stmt->bind_param("idssi", $orderId, $amount, $name, $details, $result);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
+if (!function_exists('candybirdProcessOzowResponse')) {
+    function candybirdProcessOzowResponse($conn, array $data, $fallbackOrderId = 0) {
+        if (!($conn instanceof mysqli)) {
+            return ['success' => false, 'message' => 'Database unavailable.'];
+        }
+
+        $orderId = (int) ($data['TransactionReference'] ?? $data['transactionReference'] ?? $fallbackOrderId);
+        if ($orderId <= 0) {
+            return ['success' => false, 'message' => 'Missing Ozow order reference.'];
+        }
+
+        $stmt = $conn->prepare("SELECT grand_total_amount FROM orders WHERE id = ? LIMIT 1");
+        if (!$stmt) {
+            return ['success' => false, 'message' => 'Could not read order.'];
+        }
+        $stmt->bind_param("i", $orderId);
+        $stmt->execute();
+        $order = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$order) {
+            return ['success' => false, 'message' => 'Order not found.'];
+        }
+
+        $expectedAmount = (float) $order['grand_total_amount'];
+        $paidAmount = (float) ($data['Amount'] ?? $data['amount'] ?? 0);
+        $amountValid = $paidAmount > 0 && abs($expectedAmount - $paidAmount) <= 0.01;
+        $hashValid = candybirdOzowResponseHashValid($data);
+        $looksPaid = candybirdOzowResponseLooksComplete($data);
+
+        if ($looksPaid && $amountValid && $hashValid) {
+            candybirdEnsureOzowOrderColumns($conn);
+            $ozowTransactionId = trim((string) ($data['TransactionId'] ?? $data['transactionId'] ?? ''));
+            $ozowStatus = trim((string) ($data['Status'] ?? $data['status'] ?? 'Complete'));
+            $stmt = $conn->prepare("UPDATE orders SET payment_status = 1, ozow_transaction_id = ?, ozow_payment_status = ?, order_status = CASE WHEN order_status IN ('Pending', 'Unpaid') THEN 'Processing' ELSE order_status END WHERE id = ?");
+            if ($stmt) {
+                $stmt->bind_param("ssi", $ozowTransactionId, $ozowStatus, $orderId);
+                $stmt->execute();
+                $stmt->close();
+            }
+            candybirdOzowLogPaymentCheck($conn, $orderId, $expectedAmount, 'ozow complete', 'Ozow payment marked successful.', 1);
+            return ['success' => true, 'order_id' => $orderId, 'message' => 'Ozow payment marked paid.'];
+        }
+
+        $status = trim((string) ($data['Status'] ?? $data['status'] ?? 'unknown'));
+        $details = 'Status: ' . $status . '; amount received: ' . $paidAmount . '; expected: ' . $expectedAmount . '; hash valid: ' . ($hashValid ? 'yes' : 'no');
+        candybirdOzowLogPaymentCheck($conn, $orderId, $expectedAmount, 'ozow payment check', $details, 0);
+
+        return ['success' => false, 'order_id' => $orderId, 'message' => $details];
     }
 }
 
