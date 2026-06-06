@@ -146,7 +146,15 @@ function cbAdminMenuActive($page, $currentPage) {
           <li><a href="manage_users">Customers</a></li>
           <li><a href="schedule_email">Newsletter Broadcaster / Email Scheduler</a></li>
           <li><a href="backups">Website Backups</a></li>
-          <li><a href="visitor_activity">Visitor Analytics</a></li>
+          <li>
+            <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
+              <summary>Visitor Analytics</summary>
+              <ul>
+                <li><a href="visitor_activity">Activity Stories</a></li>
+                <li><a href="visitor_breakdown">Visitor Breakdown</a></li>
+              </ul>
+            </details>
+          </li>
           <li><a href="recipe">Recipe Corner</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>
@@ -199,7 +207,15 @@ function cbAdminMenuActive($page, $currentPage) {
       <li><a href="manage_users"<?= cbAdminMenuActive('manage_users', $adminCurrentPage) ?>>Customers</a></li>
       <li><a href="schedule_email"<?= cbAdminMenuActive('schedule_email', $adminCurrentPage) ?>>Newsletter Broadcaster / Email Scheduler</a></li>
       <li><a href="backups"<?= cbAdminMenuActive('backups', $adminCurrentPage) ?>>Website Backups</a></li>
-      <li><a href="visitor_activity"<?= cbAdminMenuActive('visitor_activity', $adminCurrentPage) ?>>Visitor Analytics</a></li>
+      <li>
+        <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
+          <summary>Visitor Analytics</summary>
+          <ul>
+            <li><a href="visitor_activity"<?= cbAdminMenuActive('visitor_activity', $adminCurrentPage) ?>>Activity Stories</a></li>
+            <li><a href="visitor_breakdown"<?= cbAdminMenuActive('visitor_breakdown', $adminCurrentPage) ?>>Visitor Breakdown</a></li>
+          </ul>
+        </details>
+      </li>
       <li><a href="recipe"<?= cbAdminMenuActive('recipe', $adminCurrentPage) ?>>Recipe Corner</a></li>
       <li>
         <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha'], $adminCurrentPage) ?>>

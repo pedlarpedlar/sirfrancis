@@ -440,6 +440,8 @@ $dashboardCronJobs = [
     .dashboard-hero h1 { color: #fcb42f; margin-bottom: 6px; }
     .dashboard-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
     .dash-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; min-height: 132px; box-shadow: 0 10px 28px rgba(45, 23, 57, .06); }
+    a.dash-card { color: inherit; display: block; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+    a.dash-card:hover { box-shadow: 0 14px 34px rgba(45, 23, 57, .1); color: inherit; transform: translateY(-2px); }
     .dash-card .label { color: #6d6270; font-size: 13px; font-weight: 700; text-transform: uppercase; }
     .dash-card .value { color: #5b1178; font-size: 28px; font-weight: 800; line-height: 1.25; margin-top: 8px; }
     .dash-card .hint { color: #6d6270; font-size: 13px; margin-top: 8px; }
@@ -541,11 +543,11 @@ $dashboardCronJobs = [
             <div class="value"><?= number_format((float) $onlineVisitors) ?></div>
             <div class="hint">Active in the last 5 minutes</div>
         </div>
-        <div class="dash-card">
+        <a class="dash-card" href="visitor_breakdown?range=today" title="Open visitor breakdown">
             <div class="label">Real visitors today</div>
             <div class="value"><?= number_format((float) $todayVisitors) ?></div>
-            <div class="hint"><?= number_format((float) $todayPageViews) ?> human page views, <?= number_format((float) $todayRawSessions) ?> raw sessions</div>
-        </div>
+            <div class="hint"><?= number_format((float) $todayPageViews) ?> human page views, <?= number_format((float) $todayRawSessions) ?> raw sessions. Click to inspect.</div>
+        </a>
     </div>
 
     <div class="weekly-summary-grid">
