@@ -31,11 +31,39 @@ function cbCampaignEnsureTables($conn)
         sent TINYINT(1) DEFAULT 0
     )");
 
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'created_at', "DATETIME NULL");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'updated_at', "DATETIME NULL");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'sent_at', "DATETIME NULL");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'scheduled_recipient_count', "INT DEFAULT 0");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'sent_success_count', "INT DEFAULT 0");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'sent_failed_count', "INT DEFAULT 0");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'recipient_stats_json', "LONGTEXT NULL");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'recipient_snapshot_json', "LONGTEXT NULL");
+    cbCampaignEnsureColumn($conn, 'scheduled_emails', 'failure_summary', "LONGTEXT NULL");
+
     $conn->query("CREATE TABLE IF NOT EXISTS email_scheduler_images (
         id INT AUTO_INCREMENT PRIMARY KEY,
         image_url VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+}
+
+function cbCampaignEnsureColumn($conn, $table, $column, $definition)
+{
+    if (!($conn instanceof mysqli)) {
+        return;
+    }
+    $safeTable = preg_replace('/[^a-zA-Z0-9_]/', '', (string) $table);
+    $safeColumn = preg_replace('/[^a-zA-Z0-9_]/', '', (string) $column);
+    if ($safeTable === '' || $safeColumn === '') {
+        return;
+    }
+
+    $result = $conn->query("SHOW COLUMNS FROM `{$safeTable}` LIKE '{$safeColumn}'");
+    if ($result && $result->num_rows > 0) {
+        return;
+    }
+    $conn->query("ALTER TABLE `{$safeTable}` ADD COLUMN `{$safeColumn}` {$definition}");
 }
 
 function cbCampaignCleanHtml($html)
@@ -98,6 +126,46 @@ function cbCampaignPayloadFromScheduledEmail($row)
     $payload['manual_recipients'] = $payload['manual_recipients'] ?? '';
     $payload['exclude_unsubscribed_manual'] = array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1;
     return $payload;
+}
+
+function cbCampaignPostFromPayload($payload, $scheduledAt = '')
+{
+    $timestamp = $scheduledAt !== '' ? strtotime((string) $scheduledAt) : false;
+    return [
+        'email_heading' => $payload['email_heading'] ?? '',
+        'subject' => $payload['subject'] ?? '',
+        'coupon_code' => $payload['coupon_code'] ?? '',
+        'hero_image_url' => $payload['hero_image_url'] ?? '',
+        'body' => $payload['body_html'] ?? '',
+        'cta_label' => $payload['cta_label'] ?? 'Shop now',
+        'cta_url' => $payload['cta_url'] ?? 'https://www.candybird.co.za/products',
+        'manual_recipients' => $payload['manual_recipients'] ?? '',
+        'exclude_unsubscribed_manual' => array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1,
+        'scheduled_at' => $timestamp ? date('Y-m-d\TH:i', $timestamp) : '',
+        'scheduled_date' => $timestamp ? date('Y-m-d', $timestamp) : '',
+        'scheduled_time' => $timestamp ? date('H:i', $timestamp) : '',
+    ];
+}
+
+function cbCampaignFetchScheduledEmail($conn, $id)
+{
+    if (!($conn instanceof mysqli)) {
+        return null;
+    }
+    $id = (int) $id;
+    if ($id <= 0) {
+        return null;
+    }
+    $stmt = $conn->prepare("SELECT * FROM scheduled_emails WHERE id = ? LIMIT 1");
+    if (!$stmt) {
+        return null;
+    }
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result ? $result->fetch_assoc() : null;
+    $stmt->close();
+    return $row ?: null;
 }
 
 function cbCampaignParseManualRecipients($value)

@@ -32,18 +32,23 @@ $oldPost = $_POST;
 
 function cbCampaignReturnToForm($success, $message, $oldPost)
 {
+    $location = 'schedule_email';
+    if (!empty($oldPost['broadcast_id']) && empty($success)) {
+        $location .= '?edit=' . (int) $oldPost['broadcast_id'];
+    }
     $_SESSION['broadcast_flash'] = [
         'success' => (bool) $success,
         'message' => strip_tags((string) $message),
         'old' => $oldPost,
     ];
 
-    header('Location: schedule_email');
+    header('Location: ' . $location);
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'schedule';
+    $broadcastId = isset($_POST['broadcast_id']) ? (int) $_POST['broadcast_id'] : 0;
     $payload = cbCampaignPayloadFromPost();
     $errors = cbCampaignValidatePayload($payload);
 
@@ -88,26 +93,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = 'Test email sent to ' . htmlspecialchars($testEmail, ENT_QUOTES, 'UTF-8') . '.';
                 $success = true;
             } else {
-                $stmt = $conn->prepare("INSERT INTO scheduled_emails (email_heading, subject, body, scheduled_at, sent) VALUES (?, ?, ?, ?, 0)");
-                if (!$stmt) {
-                    throw new Exception($conn->error);
-                }
-
                 $bodyJson = json_encode($payload);
-                $stmt->bind_param('ssss', $payload['email_heading'], $payload['subject'], $bodyJson, $scheduledAt);
-                $stmt->execute();
-                $campaignId = $stmt->insert_id;
-                $stmt->close();
-                $payload['campaign_id'] = $campaignId;
-
                 $recipientBuild = cbCampaignRecipientStatsForSchedule($conn, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''), !empty($payload['exclude_unsubscribed_manual']));
                 $recipientStats = $recipientBuild['stats'];
+                $recipientStatsJson = json_encode($recipientStats);
+                $recipientSnapshotJson = json_encode(array_values($recipientBuild['recipients']));
+
+                if ($broadcastId > 0) {
+                    $existing = cbCampaignFetchScheduledEmail($conn, $broadcastId);
+                    if (!$existing) {
+                        throw new Exception('That pending broadcast could not be found.');
+                    }
+                    if ((int) ($existing['sent'] ?? 0) === 1) {
+                        throw new Exception('Sent broadcasts cannot be edited. Use copy instead.');
+                    }
+
+                    $stmt = $conn->prepare("UPDATE scheduled_emails SET email_heading = ?, subject = ?, body = ?, scheduled_at = ?, sent = 0, updated_at = NOW(), scheduled_recipient_count = ?, recipient_stats_json = ?, recipient_snapshot_json = ? WHERE id = ?");
+                    if (!$stmt) {
+                        throw new Exception($conn->error);
+                    }
+                    $uniqueCount = (int) $recipientStats['unique_count'];
+                    $stmt->bind_param('ssssissi', $payload['email_heading'], $payload['subject'], $bodyJson, $scheduledAt, $uniqueCount, $recipientStatsJson, $recipientSnapshotJson, $broadcastId);
+                    $stmt->execute();
+                    $campaignId = $broadcastId;
+                    $stmt->close();
+                } else {
+                    $stmt = $conn->prepare("INSERT INTO scheduled_emails (email_heading, subject, body, scheduled_at, sent, created_at, updated_at, scheduled_recipient_count, recipient_stats_json, recipient_snapshot_json) VALUES (?, ?, ?, ?, 0, NOW(), NOW(), ?, ?, ?)");
+                    if (!$stmt) {
+                        throw new Exception($conn->error);
+                    }
+                    $uniqueCount = (int) $recipientStats['unique_count'];
+                    $stmt->bind_param('ssssiss', $payload['email_heading'], $payload['subject'], $bodyJson, $scheduledAt, $uniqueCount, $recipientStatsJson, $recipientSnapshotJson);
+                    $stmt->execute();
+                    $campaignId = $stmt->insert_id;
+                    $stmt->close();
+                }
+                $payload['campaign_id'] = $campaignId;
 
                 $summaryMessage = 'A confirmation email was sent to the web admin.';
                 try {
                     cbCampaignSendAdminSummary(
-                        'CandyBird broadcast scheduled',
-                        'A subscriber broadcast has been scheduled and will be sent by the email sender when it is due.',
+                        $broadcastId > 0 ? 'CandyBird broadcast updated' : 'CandyBird broadcast scheduled',
+                        $broadcastId > 0 ? 'A pending subscriber broadcast has been updated.' : 'A subscriber broadcast has been scheduled and will be sent by the email sender when it is due.',
                         $payload,
                         array(
                             'Campaign ID' => $campaignId,
@@ -130,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!empty($recipientStats['duplicate_count']) || !empty($recipientStats['invalid_count']) || !empty($recipientStats['unsubscribed_count'])) {
                     $skippedNote = ' Skipped ' . (int) $recipientStats['duplicate_count'] . ' duplicate email(s), ' . (int) $recipientStats['invalid_count'] . ' invalid extra email(s), and ' . (int) $recipientStats['unsubscribed_count'] . ' unsubscribed extra email(s).';
                 }
-                $message = 'Broadcast scheduled successfully for ' . number_format((int) $recipientStats['unique_count']) . ' unique recipient(s).' . $skippedNote . ' ' . $summaryMessage;
+                $message = ($broadcastId > 0 ? 'Broadcast updated successfully for ' : 'Broadcast scheduled successfully for ') . number_format((int) $recipientStats['unique_count']) . ' unique recipient(s).' . $skippedNote . ' ' . $summaryMessage;
                 $success = true;
             }
         } catch (Exception $e) {

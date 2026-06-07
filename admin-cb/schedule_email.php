@@ -92,6 +92,28 @@ $broadcastFlash = $_SESSION['broadcast_flash'] ?? null;
 unset($_SESSION['broadcast_flash']);
 
 $oldForm = $broadcastFlash['old'] ?? [];
+$editingBroadcast = null;
+$copyingBroadcast = null;
+$formMode = 'new';
+if (!empty($oldForm['broadcast_id'])) {
+    $formMode = 'edit';
+}
+if (empty($oldForm) && isset($_GET['edit'])) {
+    $editingBroadcast = cbCampaignFetchScheduledEmail($conn, (int) $_GET['edit']);
+    if ($editingBroadcast && (int) ($editingBroadcast['sent'] ?? 0) === 0) {
+        $formMode = 'edit';
+        $oldForm = cbCampaignPostFromPayload(cbCampaignPayloadFromScheduledEmail($editingBroadcast), $editingBroadcast['scheduled_at'] ?? '');
+        $oldForm['broadcast_id'] = (int) $editingBroadcast['id'];
+    }
+}
+if (empty($oldForm) && isset($_GET['copy'])) {
+    $copyingBroadcast = cbCampaignFetchScheduledEmail($conn, (int) $_GET['copy']);
+    if ($copyingBroadcast) {
+        $formMode = 'copy';
+        $oldForm = cbCampaignPostFromPayload(cbCampaignPayloadFromScheduledEmail($copyingBroadcast), '');
+        $oldForm['subject'] = trim((string) ($oldForm['subject'] ?? '')) . ' (copy)';
+    }
+}
 $formValue = function ($name, $default = '') use ($oldForm) {
     return htmlspecialchars((string) ($oldForm[$name] ?? $default), ENT_QUOTES, 'UTF-8');
 };
@@ -145,8 +167,16 @@ include 'header.php';
     <div class="row">
         <div class="col-lg-6 mb-4">
             <div class="broadcast-panel">
-                <h2>Subscriber Broadcast</h2>
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                    <h2 class="mb-2">Subscriber Broadcast</h2>
+                    <a href="broadcasts" class="btn btn-outline-primary btn-sm mb-2">Broadcast history</a>
+                </div>
                 <p class="lead py-2">Create a coupon email, send yourself a test, then schedule it for all subscribed customers. Staff only see this campaign form and the subscriber count.</p>
+                <?php if ($formMode === 'edit'): ?>
+                    <div class="alert alert-info">Editing pending broadcast #<?= (int) ($oldForm['broadcast_id'] ?? 0) ?>. Sent broadcasts cannot be edited, but they can be copied.</div>
+                <?php elseif ($formMode === 'copy'): ?>
+                    <div class="alert alert-info">Copied from a previous broadcast. Choose a new send date and schedule it when ready.</div>
+                <?php endif; ?>
                 <p><span class="status-pill"><?= number_format($subscriberCount) ?> active subscribers</span></p>
 
                 <?php if ($broadcastFlash): ?>
@@ -156,6 +186,7 @@ include 'header.php';
                 <?php endif; ?>
 
                 <form action="send_email.php" method="post" id="email-form">
+                    <input type="hidden" name="broadcast_id" value="<?= (int) ($oldForm['broadcast_id'] ?? 0) ?>">
                     <div class="form-group">
                         <label for="email_heading">Email heading</label>
                         <input type="text" class="form-control" id="email_heading" name="email_heading" value="<?= $formValue('email_heading') ?>" required>
@@ -242,7 +273,10 @@ include 'header.php';
                     </div>
                     <div class="button-row">
                         <button type="submit" name="action" value="test" class="btn btn-outline-primary">Send test email</button>
-                        <button type="submit" name="action" value="schedule" class="btn btn-primary">Schedule broadcast</button>
+                        <button type="submit" name="action" value="schedule" class="btn btn-primary"><?= $formMode === 'edit' ? 'Update pending broadcast' : 'Schedule broadcast' ?></button>
+                        <?php if ($formMode === 'edit'): ?>
+                            <a href="schedule_email" class="btn btn-link">Start new</a>
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>

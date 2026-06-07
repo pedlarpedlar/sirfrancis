@@ -26,6 +26,7 @@ $linkGroups = [
         ['Customers', 'manage_users', 'Customer and account management'],
         ['Visitor Activity', 'visitor_activity', 'Human activity, carts, sessions and searches'],
         ['Email Broadcasts', 'schedule_email', 'Schedule and test campaign emails'],
+        ['Broadcast History', 'broadcasts', 'Past and pending broadcasts, results, edit, copy and delete'],
     ],
     'Sheets & Products' => [
         ['Products', 'products', 'Product sheet links, health, template and force sync'],

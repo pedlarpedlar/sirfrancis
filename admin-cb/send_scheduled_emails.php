@@ -78,9 +78,13 @@ while ($email = $emails->fetch_assoc()) {
         }
     }
 
-    $stmt = $conn->prepare("UPDATE scheduled_emails SET sent = 1 WHERE id = ?");
+    $recipientStatsJson = json_encode($recipientStats);
+    $recipientSnapshotJson = json_encode(array_values($recipientEmails));
+    $failureSummary = implode(' | ', array_slice($failures, 0, 50));
+    $stmt = $conn->prepare("UPDATE scheduled_emails SET sent = 1, sent_at = NOW(), sent_success_count = ?, sent_failed_count = ?, scheduled_recipient_count = ?, recipient_stats_json = ?, recipient_snapshot_json = ?, failure_summary = ? WHERE id = ?");
     if ($stmt) {
-        $stmt->bind_param('i', $emailId);
+        $totalRecipients = count($recipientEmails);
+        $stmt->bind_param('iiisssi', $sentCount, $failedCount, $totalRecipients, $recipientStatsJson, $recipientSnapshotJson, $failureSummary, $emailId);
         $stmt->execute();
         $stmt->close();
     }

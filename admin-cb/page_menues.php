@@ -144,7 +144,8 @@ function cbAdminMenuActive($page, $currentPage) {
             </details>
           </li>
           <li><a href="manage_users">Customers</a></li>
-          <li><a href="schedule_email">Newsletter Broadcaster / Email Scheduler</a></li>
+          <li><a href="schedule_email">Create Broadcast</a></li>
+          <li><a href="broadcasts">Broadcast History</a></li>
           <li><a href="backups">Website Backups</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
@@ -206,7 +207,15 @@ function cbAdminMenuActive($page, $currentPage) {
         </details>
       </li>
       <li><a href="manage_users"<?= cbAdminMenuActive('manage_users', $adminCurrentPage) ?>>Customers</a></li>
-      <li><a href="schedule_email"<?= cbAdminMenuActive('schedule_email', $adminCurrentPage) ?>>Newsletter Broadcaster / Email Scheduler</a></li>
+      <li>
+        <details<?= cbAdminMenuOpen(['schedule_email', 'broadcasts'], $adminCurrentPage) ?>>
+          <summary>Newsletter Broadcaster / Email Scheduler</summary>
+          <ul>
+            <li><a href="schedule_email"<?= cbAdminMenuActive('schedule_email', $adminCurrentPage) ?>>Create Broadcast</a></li>
+            <li><a href="broadcasts"<?= cbAdminMenuActive('broadcasts', $adminCurrentPage) ?>>Broadcast History</a></li>
+          </ul>
+        </details>
+      </li>
       <li><a href="backups"<?= cbAdminMenuActive('backups', $adminCurrentPage) ?>>Website Backups</a></li>
       <li>
         <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
