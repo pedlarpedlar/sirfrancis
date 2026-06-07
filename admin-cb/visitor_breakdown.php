@@ -148,6 +148,13 @@ if ($hasSessions) {
     ");
 }
 
+$locationRowCount = 0;
+foreach ($visitorRows as $visitorRow) {
+    if (trim((string) ($visitorRow['suburb'] ?? '')) !== '' || trim((string) ($visitorRow['city'] ?? '')) !== '') {
+        $locationRowCount++;
+    }
+}
+
 ?>
 
 <title>Visitor Breakdown - CandyBird Admin</title>
@@ -161,6 +168,9 @@ if ($hasSessions) {
     .visitor-breakdown-hero p { color: #f7e9ff; margin: 0; }
     .visitor-toolbar { align-items: center; background: #fff; border: 1px solid #eadfd2; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 16px; padding: 14px; }
     .visitor-toolbar .btn { border-radius: 6px; }
+    .visitor-location-filter { align-items: center; display: inline-flex; gap: 8px; margin: 0 0 0 8px; vertical-align: middle; }
+    .visitor-location-filter input { margin: 0; }
+    .visitor-count-pill { background: #f7f1e8; border: 1px solid #eadfd2; border-radius: 999px; color: #4b3528; display: inline-flex; font-size: 12px; font-weight: 800; padding: 6px 10px; }
     .visitor-table-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; }
     .visitor-status { border-radius: 999px; display: inline-flex; font-size: 11px; font-weight: 800; padding: 5px 8px; white-space: nowrap; }
     .visitor-status.human { background: #edf8ed; color: #24713a; }
@@ -181,8 +191,15 @@ if ($hasSessions) {
             <a class="btn btn<?= $range === 'today' ? '' : '-outline' ?>-primary btn-sm" href="visitor_breakdown?range=today">Today</a>
             <a class="btn btn<?= $range === '24h' ? '' : '-outline' ?>-primary btn-sm" href="visitor_breakdown?range=24h">24 hours</a>
             <a class="btn btn<?= $range === '7d' ? '' : '-outline' ?>-primary btn-sm" href="visitor_breakdown?range=7d">7 days</a>
+            <label class="visitor-location-filter">
+                <input type="checkbox" id="visitor-location-only">
+                <span>Only with suburb/city</span>
+            </label>
         </div>
-        <div class="text-muted small"><?= number_format(count($visitorRows)) ?> grouped visitor row<?= count($visitorRows) === 1 ? '' : 's' ?></div>
+        <div class="d-flex flex-wrap align-items-center" style="gap:8px;">
+            <span class="visitor-count-pill" id="visitor-visible-count"><?= number_format(count($visitorRows)) ?> shown</span>
+            <span class="text-muted small"><?= number_format($locationRowCount) ?> with suburb/city · <?= number_format(count($visitorRows)) ?> total grouped row<?= count($visitorRows) === 1 ? '' : 's' ?></span>
+        </div>
     </div>
 
     <div class="visitor-table-card">
@@ -221,7 +238,7 @@ if ($hasSessions) {
                         if ($userLabel === '') $userLabel = ((int) ($row['user_id'] ?? 0) > 0 ? 'User #' . (int) $row['user_id'] : 'Guest');
                         if ($email !== '') $userLabel .= '<br><small>' . cbVbText($email) . '</small>';
                     ?>
-                        <tr>
+                        <tr data-has-location="<?= (trim((string) ($row['suburb'] ?? '')) !== '' || trim((string) ($row['city'] ?? '')) !== '') ? '1' : '0' ?>">
                             <td><span class="visitor-status <?= cbVbText($statusClass) ?>"><?= cbVbText($statusText) ?></span></td>
                             <td><?= cbVbText($row['ip_address'] ?? '') ?></td>
                             <td><?= cbVbText($row['suburb'] ?? '') ?></td>
@@ -253,12 +270,38 @@ if ($hasSessions) {
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
 <script>
 $(function () {
-    $('#visitor-breakdown-table').DataTable({
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (settings.nTable.id !== 'visitor-breakdown-table') {
+            return true;
+        }
+        if (!$('#visitor-location-only').is(':checked')) {
+            return true;
+        }
+        var rowNode = settings.aoData[dataIndex] ? settings.aoData[dataIndex].nTr : null;
+        return rowNode && $(rowNode).attr('data-has-location') === '1';
+    });
+
+    var table = $('#visitor-breakdown-table').DataTable({
         responsive: true,
         pageLength: 25,
         order: [[15, 'desc']],
+        columnDefs: [
+            { targets: '_all', orderable: true }
+        ],
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']]
     });
+
+    function updateVisibleCount() {
+        $('#visitor-visible-count').text(table.rows({ filter: 'applied' }).count().toLocaleString() + ' shown');
+    }
+
+    $('#visitor-location-only').on('change', function () {
+        table.draw();
+        updateVisibleCount();
+    });
+
+    table.on('draw', updateVisibleCount);
+    updateVisibleCount();
 });
 </script>
 
