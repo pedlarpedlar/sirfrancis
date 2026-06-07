@@ -146,6 +146,7 @@ include 'page_menues.php';
                                     <?php if (!empty($payload['coupon_code'])): ?>
                                         <div class="small-muted">Coupon: <strong><?= cbBroadcastText($payload['coupon_code']) ?></strong></div>
                                     <?php endif; ?>
+                                    <div class="small-muted">Audience: <strong><?= ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'Custom only' : 'Subscribers + custom' ?></strong></div>
                                 </td>
                                 <td>
                                     <?= cbBroadcastText($row['scheduled_at'] ?? '') ?>

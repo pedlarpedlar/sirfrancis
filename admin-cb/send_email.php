@@ -94,7 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $success = true;
             } else {
                 $bodyJson = json_encode($payload);
-                $recipientBuild = cbCampaignRecipientStatsForSchedule($conn, cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''), !empty($payload['exclude_unsubscribed_manual']));
+                $recipientBuild = cbCampaignRecipientStatsForSchedule(
+                    $conn,
+                    cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''),
+                    !empty($payload['exclude_unsubscribed_manual']),
+                    $payload['recipient_mode'] ?? 'subscribers_plus_custom'
+                );
                 $recipientStats = $recipientBuild['stats'];
                 $recipientStatsJson = json_encode($recipientStats);
                 $recipientSnapshotJson = json_encode(array_values($recipientBuild['recipients']));
@@ -139,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         array(
                             'Campaign ID' => $campaignId,
                             'Scheduled for' => $scheduledAt,
+                            'Audience' => ($payload['recipient_mode'] ?? '') === 'custom_only' ? 'Custom emails only' : 'Subscribers plus custom emails',
                             'Active subscribers' => $recipientStats['subscriber_count'],
                             'Extra recipients entered' => $recipientStats['manual_count'],
                             'Unique recipients queued' => $recipientStats['unique_count'],

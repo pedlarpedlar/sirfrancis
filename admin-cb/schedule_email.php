@@ -144,6 +144,7 @@ $scheduleParts = function () use ($oldForm) {
 [$scheduledDateValue, $scheduledTimeValue] = $scheduleParts();
 $bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? ''), ENT_QUOTES, 'UTF-8');
 $excludeUnsubscribedChecked = !array_key_exists('exclude_unsubscribed_manual', $oldForm) || !empty($oldForm['exclude_unsubscribed_manual']);
+$recipientMode = ($oldForm['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom';
 
 include 'header.php';
 ?>
@@ -171,7 +172,7 @@ include 'header.php';
                     <h2 class="mb-2">Subscriber Broadcast</h2>
                     <a href="broadcasts" class="btn btn-outline-primary btn-sm mb-2">Broadcast history</a>
                 </div>
-                <p class="lead py-2">Create a coupon email, send yourself a test, then schedule it for all subscribed customers. Staff only see this campaign form and the subscriber count.</p>
+                <p class="lead py-2">Create a coupon email, send yourself a test, then schedule it for subscribers or a targeted custom list.</p>
                 <?php if ($formMode === 'edit'): ?>
                     <div class="alert alert-info">Editing pending broadcast #<?= (int) ($oldForm['broadcast_id'] ?? 0) ?>. Sent broadcasts cannot be edited, but they can be copied.</div>
                 <?php elseif ($formMode === 'copy'): ?>
@@ -244,9 +245,22 @@ include 'header.php';
                     </div>
 
                     <div class="form-group">
+                        <label>Audience</label>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="recipient_mode_all" name="recipient_mode" value="subscribers_plus_custom" <?= $recipientMode === 'subscribers_plus_custom' ? 'checked' : '' ?>>
+                            <label class="custom-control-label" for="recipient_mode_all">Active subscribers plus any custom emails below</label>
+                        </div>
+                        <div class="custom-control custom-radio mt-1">
+                            <input type="radio" class="custom-control-input" id="recipient_mode_custom" name="recipient_mode" value="custom_only" <?= $recipientMode === 'custom_only' ? 'checked' : '' ?>>
+                            <label class="custom-control-label" for="recipient_mode_custom">Only the custom emails below</label>
+                        </div>
+                        <div class="field-help">Use custom-only for targeted emails, for example a small wholesale list or a private client group.</div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="manual_recipients">Extra recipient emails</label>
                         <textarea class="form-control" id="manual_recipients" name="manual_recipients" rows="4"><?= htmlspecialchars((string) ($oldForm['manual_recipients'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
-                        <div class="field-help">Optional. Add internal client-base emails here, one per line or separated by commas. They will be included with scheduled broadcasts but will not be added to the subscriber database.</div>
+                        <div class="field-help">Add emails one per line or separated by commas. These emails are not added to the subscriber database.</div>
                     </div>
 
                     <div class="form-group">

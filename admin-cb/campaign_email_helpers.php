@@ -95,6 +95,7 @@ function cbCampaignPayloadFromPost()
         'subject' => cbCampaignCleanHeaderText($_POST['subject'] ?? ''),
         'coupon_code' => strtoupper(cbCampaignCleanHeaderText($_POST['coupon_code'] ?? '')),
         'hero_image_url' => trim($_POST['hero_image_url'] ?? ''),
+        'recipient_mode' => ($_POST['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom',
         'manual_recipients' => trim($_POST['manual_recipients'] ?? ''),
         'exclude_unsubscribed_manual' => !empty($_POST['exclude_unsubscribed_manual']) ? 1 : 0,
         'body_html' => cbCampaignCleanHtml($_POST['body'] ?? ''),
@@ -124,6 +125,7 @@ function cbCampaignPayloadFromScheduledEmail($row)
     $payload['email_heading'] = $payload['email_heading'] ?? ($row['email_heading'] ?? '');
     $payload['subject'] = $payload['subject'] ?? ($row['subject'] ?? '');
     $payload['manual_recipients'] = $payload['manual_recipients'] ?? '';
+    $payload['recipient_mode'] = ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom';
     $payload['exclude_unsubscribed_manual'] = array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1;
     return $payload;
 }
@@ -136,6 +138,7 @@ function cbCampaignPostFromPayload($payload, $scheduledAt = '')
         'subject' => $payload['subject'] ?? '',
         'coupon_code' => $payload['coupon_code'] ?? '',
         'hero_image_url' => $payload['hero_image_url'] ?? '',
+        'recipient_mode' => ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom',
         'body' => $payload['body_html'] ?? '',
         'cta_label' => $payload['cta_label'] ?? 'Shop now',
         'cta_url' => $payload['cta_url'] ?? 'https://www.candybird.co.za/products',
@@ -275,10 +278,10 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients, $unsub
     ];
 }
 
-function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients, $excludeUnsubscribedManual = true)
+function cbCampaignRecipientStatsForSchedule($conn, $manualRecipients, $excludeUnsubscribedManual = true, $recipientMode = 'subscribers_plus_custom')
 {
     $subscriberRows = [];
-    if ($conn instanceof mysqli) {
+    if ($recipientMode !== 'custom_only' && $conn instanceof mysqli) {
         $result = $conn->query("SELECT email FROM subscribers WHERE is_subscribed = 1 AND email <> '' ORDER BY id ASC");
         if ($result) {
             while ($row = $result->fetch_assoc()) {
@@ -314,6 +317,9 @@ function cbCampaignValidatePayload($payload)
     }
     if (strlen((string) ($payload['body_html'] ?? '')) > 250000) {
         $errors[] = 'The email body is too large. Use image links or uploaded pictures instead of embedded image data.';
+    }
+    if (($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' && empty(cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''))) {
+        $errors[] = 'Add at least one custom email address, or switch the audience back to subscribers plus custom emails.';
     }
     foreach (cbCampaignParseManualRecipients($payload['manual_recipients'] ?? '') as $email) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

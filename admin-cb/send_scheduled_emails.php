@@ -45,14 +45,16 @@ while ($email = $emails->fetch_assoc()) {
     $failures = array();
 
     $subscriberRows = [];
-    $recipients = $conn->query("SELECT id, email FROM subscribers WHERE is_subscribed = 1 AND email <> '' ORDER BY id ASC");
-    if (!$recipients) {
-        cbCampaignLog("Campaign {$emailId} could not fetch subscribers: " . $conn->error);
-        continue;
-    }
+    if (($payload['recipient_mode'] ?? 'subscribers_plus_custom') !== 'custom_only') {
+        $recipients = $conn->query("SELECT id, email FROM subscribers WHERE is_subscribed = 1 AND email <> '' ORDER BY id ASC");
+        if (!$recipients) {
+            cbCampaignLog("Campaign {$emailId} could not fetch subscribers: " . $conn->error);
+            continue;
+        }
 
-    while ($recipient = $recipients->fetch_assoc()) {
-        $subscriberRows[] = $recipient;
+        while ($recipient = $recipients->fetch_assoc()) {
+            $subscriberRows[] = $recipient;
+        }
     }
 
     $unsubscribedKeys = !empty($payload['exclude_unsubscribed_manual']) ? cbCampaignGetUnsubscribedEmailKeys($conn) : [];
@@ -96,6 +98,7 @@ while ($email = $emails->fetch_assoc()) {
             $payload,
             array(
                 'Campaign ID' => $emailId,
+                'Audience' => ($payload['recipient_mode'] ?? '') === 'custom_only' ? 'Custom emails only' : 'Subscribers plus custom emails',
                 'Sent' => $sentCount,
                 'Failed' => $failedCount,
                 'Total recipients' => count($recipientEmails),
