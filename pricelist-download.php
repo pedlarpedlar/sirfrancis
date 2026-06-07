@@ -24,7 +24,7 @@ if ($format === 'tsv') {
             fputcsv($out, [
                 $product['id'] ?? '',
                 $product['name'] ?? '',
-                $categoryName,
+                cbPricelistDisplayCategoryPath($categoryName),
                 getSheetProductDisplaySize($product),
                 number_format((float) $pricing['normal_price'], 2, '.', ''),
                 number_format((float) $pricing['sale_price'], 2, '.', ''),
@@ -46,27 +46,29 @@ if ($format === 'tsv') {
   <title><?= cbPricelistText($downloadTitle) ?></title>
   <style>
     * { box-sizing: border-box; }
-    body { color: #111; font-family: Arial, sans-serif; margin: 18px; }
-    .topbar { align-items: flex-start; border-bottom: 2px solid #111; display: flex; justify-content: space-between; gap: 16px; padding-bottom: 8px; margin-bottom: 10px; }
-    h1 { font-size: 22px; margin: 0 0 4px; }
-    .meta { color: #444; font-size: 11px; line-height: 1.4; }
+    body { background: #f7f4ef; color: #2c2926; font-family: Arial, sans-serif; margin: 18px; }
+    .topbar { align-items: flex-start; background: #2d1739; border-bottom: 4px solid #fcb42f; color: #fff; display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; margin-bottom: 10px; }
+    h1 { color: #fcb42f; font-size: 22px; margin: 0 0 4px; }
+    .meta { color: #f8ecff; font-size: 11px; line-height: 1.4; }
     .actions { display: flex; gap: 8px; }
-    button, a.button { background: #111; border: 0; color: #fff; cursor: pointer; display: inline-block; font-size: 12px; padding: 8px 10px; text-decoration: none; }
-    .note { border: 1px solid #bbb; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 7px; font-size: 10px; margin-bottom: 10px; }
+    button, a.button { background: #fcb42f; border: 0; color: #2d1739; cursor: pointer; display: inline-block; font-size: 12px; font-weight: bold; padding: 8px 10px; text-decoration: none; }
+    a.button.secondary { background: #fff; color: #5b1178; }
+    .note { background: #fff; border: 1px solid #eadfd2; border-left: 5px solid #fcb42f; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 10px; font-size: 10px; margin-bottom: 10px; }
     table { border-collapse: collapse; font-size: 9px; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 2px 4px; text-align: left; vertical-align: top; }
-    th { background: #eee; font-size: 8px; text-transform: uppercase; }
-    .category td { background: #222; color: #fff; font-weight: bold; padding: 3px 4px; }
+    th, td { border: 1px solid #e6dccf; padding: 2px 4px; text-align: left; vertical-align: top; }
+    th { background: #f0e8f4; color: #4b185f; font-size: 8px; text-transform: uppercase; }
+    tbody tr:nth-child(even):not(.category) td { background: #fffdf8; }
+    .category td { background: #5b1178; color: #fcb42f; font-weight: bold; padding: 4px 5px; }
     .id { width: 42px; color: #555; }
     .size { width: 60px; color: #333; }
     .price { width: 92px; font-weight: bold; white-space: nowrap; }
     .price del { color: #666; display: block; font-size: 8px; font-weight: normal; }
-    .sale { color: #111; font-weight: bold; }
-    .saving { border: 1px solid #111; display: inline-block; font-size: 7px; margin-left: 3px; padding: 0 2px; }
+    .sale { color: #1d7d38; font-weight: bold; }
+    .saving { background: #e5361f; color: #fff; display: inline-block; font-size: 7px; margin-left: 3px; padding: 1px 3px; }
     .valid { width: 70px; color: #333; font-size: 8px; white-space: nowrap; }
     .footer-note { color: #333; font-size: 9px; line-height: 1.4; margin-top: 10px; }
     @media print {
-      body { margin: 8mm; }
+      body { background: #fff; margin: 8mm; }
       .actions { display: none; }
       table { font-size: 8px; }
       th, td { padding: 1.6px 3px; }
@@ -83,8 +85,8 @@ if ($format === 'tsv') {
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>
-      <a class="button" href="pricelist-download?format=tsv">TSV export</a>
-      <a class="button" href="pricelist">Back</a>
+      <a class="button secondary" href="pricelist-download?format=tsv">TSV export</a>
+      <a class="button secondary" href="pricelist">Back</a>
     </div>
   </div>
 
@@ -107,7 +109,7 @@ if ($format === 'tsv') {
     </thead>
     <tbody>
       <?php foreach ($productsByCategory as $categoryName => $products): ?>
-        <tr class="category"><td colspan="5"><?= cbPricelistText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($categoryName) : $categoryName) ?></td></tr>
+        <tr class="category"><td colspan="5"><?= cbPricelistText(cbPricelistDisplayCategoryPath($categoryName)) ?></td></tr>
         <?php foreach ($products as $product): ?>
           <?php
             $id = (string) ($product['id'] ?? '');

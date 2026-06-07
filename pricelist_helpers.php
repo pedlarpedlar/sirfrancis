@@ -8,6 +8,40 @@ if (!function_exists('cbPricelistCategoryName')) {
     }
 }
 
+if (!function_exists('cbPricelistCategoryParts')) {
+    function cbPricelistCategoryParts($product) {
+        $parts = [];
+        foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
+            $value = trim((string) ($product[$field] ?? ''));
+            if ($value !== '' && !in_array($value, $parts, true)) {
+                $parts[] = $value;
+            }
+        }
+        return !empty($parts) ? $parts : ['Other Products'];
+    }
+}
+
+if (!function_exists('cbPricelistCategoryPath')) {
+    function cbPricelistCategoryPath($product) {
+        return implode(' > ', cbPricelistCategoryParts($product));
+    }
+}
+
+if (!function_exists('cbPricelistDisplayCategoryPath')) {
+    function cbPricelistDisplayCategoryPath($categoryPath) {
+        $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
+        if (empty($parts)) {
+            $parts = ['Other Products'];
+        }
+
+        $labels = [];
+        foreach ($parts as $part) {
+            $labels[] = function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($part) : $part;
+        }
+        return implode(' / ', $labels);
+    }
+}
+
 if (!function_exists('cbPricelistSortValue')) {
     function cbPricelistSortValue($value) {
         if (preg_match('/(\d+(?:\.\d+)?)\s*(kg|g|ml|l)/i', (string) $value, $match)) {
@@ -163,14 +197,18 @@ if (!function_exists('cbPricelistProductsByCategory')) {
 
         $productsByCategory = [];
         foreach ($products as $product) {
-            $productsByCategory[cbPricelistCategoryName($product)][] = $product;
+            $productsByCategory[cbPricelistCategoryPath($product)][] = $product;
         }
 
         uksort($productsByCategory, function($a, $b) use ($customCategoryOrder) {
-            $keyA = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($a) : $a;
-            $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($b) : $b;
-            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : ($customCategoryOrder[$a] ?? ($customCategoryOrder[$keyA] ?? PHP_INT_MAX));
-            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : ($customCategoryOrder[$b] ?? ($customCategoryOrder[$keyB] ?? PHP_INT_MAX));
+            $partsA = array_filter(array_map('trim', explode('>', (string) $a)));
+            $partsB = array_filter(array_map('trim', explode('>', (string) $b)));
+            $rootA = $partsA[0] ?? $a;
+            $rootB = $partsB[0] ?? $b;
+            $keyA = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($rootA) : $rootA;
+            $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($rootB) : $rootB;
+            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootA) : ($customCategoryOrder[$rootA] ?? ($customCategoryOrder[$keyA] ?? PHP_INT_MAX));
+            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootB) : ($customCategoryOrder[$rootB] ?? ($customCategoryOrder[$keyB] ?? PHP_INT_MAX));
             return $posA === $posB ? strnatcasecmp($a, $b) : $posA <=> $posB;
         });
 

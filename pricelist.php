@@ -264,7 +264,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
               <tr class="pricelist-category">
                 <td colspan="6">
                   <div class="pricelist-category-bar">
-                    <span><?= cbPricelistText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($categoryName) : $categoryName) ?></span>
+                    <span><?= cbPricelistText(cbPricelistDisplayCategoryPath($categoryName)) ?></span>
                     <?= cbPricelistCategorySortControls($sort, $direction) ?>
                   </div>
                 </td>
