@@ -18,6 +18,76 @@ if ($countResult && $row = $countResult->fetch_assoc()) {
     $subscriberCount = (int) $row['total'];
 }
 
+function cbScheduleTableExists($conn, $table) {
+    if (!($conn instanceof mysqli)) {
+        return false;
+    }
+    $safeTable = $conn->real_escape_string($table);
+    $result = $conn->query("SHOW TABLES LIKE '$safeTable'");
+    return $result && $result->num_rows > 0;
+}
+
+function cbScheduleRows($conn, $sql) {
+    if (!($conn instanceof mysqli)) {
+        return [];
+    }
+    $result = $conn->query($sql);
+    if (!$result) {
+        return [];
+    }
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
+$pastOrderEmails = [];
+$hasOrders = cbScheduleTableExists($conn, 'orders');
+$hasUsers = cbScheduleTableExists($conn, 'users');
+$hasAddresses = cbScheduleTableExists($conn, 'user_addresses');
+if ($hasOrders && ($hasUsers || $hasAddresses)) {
+    $emailQueries = [];
+    if ($hasUsers) {
+        $emailQueries[] = "
+            SELECT DISTINCT LOWER(TRIM(u.email)) AS email
+            FROM orders o
+            INNER JOIN users u ON o.user_id = u.id
+            WHERE COALESCE(u.email, '') <> ''
+        ";
+    }
+    if ($hasAddresses) {
+        $emailQueries[] = "
+            SELECT DISTINCT LOWER(TRIM(ua.billing_email_address)) AS email
+            FROM orders o
+            INNER JOIN user_addresses ua ON (
+                (o.user_id IS NOT NULL AND o.user_id = ua.user_id)
+                OR (COALESCE(o.guest_identifier, '') <> '' AND o.guest_identifier = ua.guest_identifier)
+            )
+            WHERE COALESCE(ua.billing_email_address, '') <> ''
+        ";
+        $emailQueries[] = "
+            SELECT DISTINCT LOWER(TRIM(ua.shipping_email_address)) AS email
+            FROM orders o
+            INNER JOIN user_addresses ua ON (
+                (o.user_id IS NOT NULL AND o.user_id = ua.user_id)
+                OR (COALESCE(o.guest_identifier, '') <> '' AND o.guest_identifier = ua.guest_identifier)
+            )
+            WHERE COALESCE(ua.shipping_email_address, '') <> ''
+        ";
+    }
+
+    if (!empty($emailQueries)) {
+        foreach (cbScheduleRows($conn, "SELECT DISTINCT email FROM (" . implode(" UNION ", $emailQueries) . ") order_emails WHERE email <> '' ORDER BY email ASC") as $emailRow) {
+            $email = trim((string) ($emailRow['email'] ?? ''));
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $pastOrderEmails[$email] = $email;
+            }
+        }
+    }
+}
+$pastOrderEmailList = array_values($pastOrderEmails);
+
 $broadcastFlash = $_SESSION['broadcast_flash'] ?? null;
 unset($_SESSION['broadcast_flash']);
 
@@ -149,6 +219,14 @@ include 'header.php';
                     </div>
 
                     <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="add_past_order_emails">
+                            <label class="custom-control-label" for="add_past_order_emails">Add all past-order customer emails to the extra recipients box</label>
+                        </div>
+                        <div class="field-help"><?= number_format(count($pastOrderEmailList)) ?> unique email<?= count($pastOrderEmailList) === 1 ? '' : 's' ?> found from registered and guest customers who ordered before. Duplicates already in the box will be skipped.</div>
+                    </div>
+
+                    <div class="form-group">
                         <input type="hidden" name="exclude_unsubscribed_manual" value="0">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="exclude_unsubscribed_manual" name="exclude_unsubscribed_manual" value="1" <?= $excludeUnsubscribedChecked ? 'checked' : '' ?>>
@@ -182,6 +260,8 @@ include 'header.php';
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.tiny.cloud/1/krc3t31hewwxmxp9ymcfecueza73p98zly4l51k8zm5ngjy8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+    var pastOrderEmails = <?= json_encode($pastOrderEmailList, JSON_UNESCAPED_SLASHES) ?>;
+
     function escapeHtml(value) {
         return String(value || '').replace(/[&<>"']/g, function(match) {
             return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[match];
@@ -251,6 +331,30 @@ include 'header.php';
 
     $('#email_heading, #subject, #coupon_code, #hero_image_url, #cta_label, #cta_url').on('input', updatePreview);
     $('#scheduled_date, #scheduled_time').on('input change blur', syncScheduledAt);
+    $('#add_past_order_emails').on('change', function() {
+        if (!this.checked) {
+            return;
+        }
+
+        var current = $('#manual_recipients').val() || '';
+        var pieces = current.split(/[\s,;]+/).map(function(email) {
+            return email.trim().toLowerCase();
+        }).filter(Boolean);
+        var seen = {};
+        pieces.forEach(function(email) {
+            seen[email] = true;
+        });
+
+        pastOrderEmails.forEach(function(email) {
+            email = String(email || '').trim().toLowerCase();
+            if (email && !seen[email]) {
+                pieces.push(email);
+                seen[email] = true;
+            }
+        });
+
+        $('#manual_recipients').val(pieces.join("\n"));
+    });
     $('#email-form').on('submit', function() {
         syncScheduledAt();
         if (tinymce.get('body')) {
