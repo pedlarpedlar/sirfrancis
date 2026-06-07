@@ -83,12 +83,95 @@ function cbAdminMetricLabel($value) {
     if ($value === '') {
         return 'No data yet';
     }
-    $value = preg_replace('/\s*\|\s*From page.*$/i', '', $value);
-    $value = preg_replace('/^Query:\s*/i', '', $value);
-    $value = preg_replace('/^To:\s*/i', '', $value);
-    $value = preg_replace('/^Clicked on add-to-cart \(product id:\s*/i', 'Product ', $value);
-    $value = preg_replace('/\)$/', '', $value);
     return trim($value) !== '' ? trim($value) : 'No data yet';
+}
+
+function cbAdminTrackingParts($value) {
+    $parts = [];
+    foreach (explode('|', (string) $value) as $piece) {
+        $piece = trim($piece);
+        if (strpos($piece, ':') === false) {
+            continue;
+        }
+        [$key, $detail] = array_map('trim', explode(':', $piece, 2));
+        $parts[strtolower($key)] = $detail;
+    }
+    return $parts;
+}
+
+function cbAdminCleanTrackingPath($value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+    $path = parse_url($value, PHP_URL_PATH);
+    if (is_string($path) && $path !== '') {
+        $value = $path;
+    }
+    $value = trim($value, '/');
+    if ($value === '') {
+        return 'Homepage';
+    }
+    $value = preg_replace('/[-_]+/', ' ', $value);
+    return ucwords($value);
+}
+
+function cbAdminWeeklyReportValue($kind, $value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return 'No data yet';
+    }
+
+    if ($kind === 'search') {
+        return '"' . preg_replace('/^Query:\s*/i', '', $value) . '"';
+    }
+
+    $parts = cbAdminTrackingParts($value);
+    if ($kind === 'product_click' || $kind === 'category_click') {
+        $text = trim((string) ($parts['text'] ?? ''));
+        $to = cbAdminCleanTrackingPath($parts['to'] ?? '');
+        if ($text !== '') {
+            $text = preg_replace('/\s*\(\d+\s*$/', '', $text);
+            return $to !== '' && strcasecmp($text, $to) !== 0 ? $text . ' -> ' . $to : $text;
+        }
+        return $to !== '' ? $to : cbAdminMetricLabel($value);
+    }
+
+    if ($kind === 'add_to_cart') {
+        if (preg_match('/product id:\s*([^)]+)/i', $value, $match)) {
+            $productId = trim($match[1]);
+            if (function_exists('getSheetProductById') && ctype_digit($productId)) {
+                $product = getSheetProductById($productId);
+                if ($product && function_exists('getSheetProductDisplayTitle')) {
+                    return getSheetProductDisplayTitle($product);
+                }
+            }
+            return 'Product #' . $productId;
+        }
+        if (!empty($parts['from page'])) {
+            return cbAdminCleanTrackingPath($parts['from page']) . ' add-to-cart';
+        }
+        if (preg_match('/From page\s+(.+)$/i', $value, $match)) {
+            return cbAdminCleanTrackingPath($match[1]) . ' add-to-cart';
+        }
+    }
+
+    return cbAdminMetricLabel($value);
+}
+
+function cbAdminWeeklyReportCaption($kind, $count) {
+    $count = (int) $count;
+    $noun = 'qualified action';
+    if ($kind === 'search') {
+        $noun = 'qualified search';
+    } elseif ($kind === 'product_click') {
+        $noun = 'qualified product click';
+    } elseif ($kind === 'category_click') {
+        $noun = 'qualified category click';
+    } elseif ($kind === 'add_to_cart') {
+        $noun = 'qualified add-to-cart click';
+    }
+    return number_format($count) . ' ' . $noun . ($count === 1 ? '' : 's') . ' in 7 days';
 }
 
 function cbAdminReconcilePayfastPayments($conn) {
@@ -378,21 +461,24 @@ $weeklyTopCategoryClick = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS
     GROUP BY details
     ORDER BY total DESC, MAX(created_at) DESC
     LIMIT 1") : [];
-$weeklyTopAddToCart = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
+$weeklyTopAddToCart = $hasActionLogs ? cbAdminRows($conn, "SELECT CASE
+        WHEN action LIKE 'Clicked on add-to-cart%' THEN action
+        ELSE details
+    END AS label, COUNT(*) AS total
     FROM action_logs al
     $actionGeoJoin
     WHERE $humanActionFilter
       AND $actionGeoWhere
       AND (action LIKE '%add-to-cart%' OR action LIKE 'Added item%')
       AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    GROUP BY details
+    GROUP BY label
     ORDER BY total DESC, MAX(created_at) DESC
     LIMIT 1") : [];
 $weeklyMetricCards = [
-    ['label' => 'Most searched', 'row' => $weeklyTopSearch[0] ?? null],
-    ['label' => 'Most clicked product', 'row' => $weeklyTopProductClick[0] ?? null],
-    ['label' => 'Most clicked category', 'row' => $weeklyTopCategoryClick[0] ?? null],
-    ['label' => 'Most clicked add-to-cart', 'row' => $weeklyTopAddToCart[0] ?? null],
+    ['label' => 'Top search term', 'kind' => 'search', 'row' => $weeklyTopSearch[0] ?? null],
+    ['label' => 'Top product link', 'kind' => 'product_click', 'row' => $weeklyTopProductClick[0] ?? null],
+    ['label' => 'Top category link', 'kind' => 'category_click', 'row' => $weeklyTopCategoryClick[0] ?? null],
+    ['label' => 'Top add-to-cart source', 'kind' => 'add_to_cart', 'row' => $weeklyTopAddToCart[0] ?? null],
 ];
 $recentActivity = $hasActionLogs ? cbAdminRows($conn, "SELECT al.action, al.details, al.created_at, al.user_id, al.guest_identifier, COALESCE(u.username, 'Guest') AS visitor_name
     FROM action_logs al
@@ -636,13 +722,14 @@ $dashboardCronJobs = [
         </div>
         <?php foreach ($weeklyMetricCards as $metric): 
             $row = is_array($metric['row']) ? $metric['row'] : [];
-            $metricValue = cbAdminMetricLabel($row['label'] ?? '');
+            $metricKind = $metric['kind'] ?? '';
+            $metricValue = cbAdminWeeklyReportValue($metricKind, $row['label'] ?? '');
             $metricCount = (int) ($row['total'] ?? 0);
         ?>
             <div class="weekly-summary-card">
                 <div class="weekly-metric-label"><?= htmlspecialchars($metric['label'], ENT_QUOTES, 'UTF-8') ?></div>
                 <div class="weekly-metric-value"><?= htmlspecialchars($metricValue, ENT_QUOTES, 'UTF-8') ?></div>
-                <div class="weekly-metric-count"><?= number_format($metricCount) ?> action<?= $metricCount === 1 ? '' : 's' ?> in 7 days</div>
+                <div class="weekly-metric-count"><?= htmlspecialchars(cbAdminWeeklyReportCaption($metricKind, $metricCount), ENT_QUOTES, 'UTF-8') ?></div>
             </div>
         <?php endforeach; ?>
     </div>
