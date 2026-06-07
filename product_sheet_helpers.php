@@ -1007,6 +1007,173 @@ if (!function_exists('validateSheetCoupon')) {
     }
 }
 
+if (!function_exists('candybirdCouponListValues')) {
+    function candybirdCouponListValues($value) {
+        if (is_array($value)) {
+            $pieces = $value;
+        } else {
+            $pieces = preg_split('/[,;\n|]+/', (string) $value);
+        }
+        $values = [];
+        foreach ($pieces as $piece) {
+            $piece = trim((string) $piece);
+            if ($piece !== '') {
+                $values[] = $piece;
+            }
+        }
+        return $values;
+    }
+}
+
+if (!function_exists('candybirdCouponNormalizedToken')) {
+    function candybirdCouponNormalizedToken($value) {
+        if (function_exists('normalizeCandybirdProductSlug')) {
+            return normalizeCandybirdProductSlug($value);
+        }
+        $value = strtolower(trim((string) $value));
+        $value = preg_replace('/[^a-z0-9]+/', '-', $value);
+        return trim((string) $value, '-');
+    }
+}
+
+if (!function_exists('candybirdCouponFieldValue')) {
+    function candybirdCouponFieldValue($coupon, $fields) {
+        foreach ($fields as $field) {
+            if (isset($coupon[$field]) && trim((string) $coupon[$field]) !== '') {
+                return (string) $coupon[$field];
+            }
+        }
+        return '';
+    }
+}
+
+if (!function_exists('candybirdCouponItemMatchesCategoryRestriction')) {
+    function candybirdCouponItemMatchesCategoryRestriction($coupon, $item) {
+        $restrictionValue = candybirdCouponFieldValue($coupon, [
+            'category_restriction',
+            'category_restrictions',
+            'valid_categories',
+            'eligible_categories',
+            'applies_to_categories',
+            'category',
+        ]);
+        $restrictions = candybirdCouponListValues($restrictionValue);
+        if (empty($restrictions)) {
+            return true;
+        }
+
+        $itemCategories = [];
+        foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
+            $category = trim((string) ($item[$field] ?? ''));
+            if ($category !== '') {
+                $itemCategories[] = candybirdCouponNormalizedToken($category);
+                if (function_exists('getCandybirdCategoryDisplayLabel')) {
+                    $itemCategories[] = candybirdCouponNormalizedToken(getCandybirdCategoryDisplayLabel($category));
+                }
+            }
+        }
+        $itemCategories = array_unique(array_filter($itemCategories));
+
+        foreach ($restrictions as $restriction) {
+            $restrictionToken = candybirdCouponNormalizedToken($restriction);
+            if ($restrictionToken !== '' && in_array($restrictionToken, $itemCategories, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('candybirdCouponItemMatchesProductTypeRestriction')) {
+    function candybirdCouponItemMatchesProductTypeRestriction($coupon, $item) {
+        $type = candybirdCouponNormalizedToken($item['product_type'] ?? $item['type'] ?? '');
+
+        $excludedTypes = candybirdCouponListValues(candybirdCouponFieldValue($coupon, [
+            'product_type_exclusion',
+            'product_type_exclusions',
+            'excluded_product_types',
+            'exclude_product_type',
+            'exclude_product_types',
+        ]));
+        foreach ($excludedTypes as $excludedType) {
+            if ($type !== '' && $type === candybirdCouponNormalizedToken($excludedType)) {
+                return false;
+            }
+        }
+
+        $allowedTypes = candybirdCouponListValues(candybirdCouponFieldValue($coupon, [
+            'product_type_restriction',
+            'product_type_restrictions',
+            'valid_product_types',
+            'eligible_product_types',
+            'applies_to_product_types',
+        ]));
+        if (empty($allowedTypes)) {
+            return true;
+        }
+        foreach ($allowedTypes as $allowedType) {
+            if ($type !== '' && $type === candybirdCouponNormalizedToken($allowedType)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('candybirdCouponItemMatchesProductIdRestriction')) {
+    function candybirdCouponItemMatchesProductIdRestriction($coupon, $item) {
+        $restrictionValue = candybirdCouponFieldValue($coupon, [
+            'product_id_restriction',
+            'product_id_restrictions',
+            'valid_product_ids',
+            'eligible_product_ids',
+            'applies_to_product_ids',
+        ]);
+        $allowedIds = candybirdCouponListValues($restrictionValue);
+        if (empty($allowedIds)) {
+            return true;
+        }
+
+        $itemIds = array_filter([
+            trim((string) ($item['id'] ?? '')),
+            trim((string) ($item['product_id'] ?? '')),
+            trim((string) ($item['source_product_id'] ?? '')),
+        ]);
+        foreach ($allowedIds as $allowedId) {
+            if (in_array(trim((string) $allowedId), $itemIds, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('candybirdCouponItemIsEligible')) {
+    function candybirdCouponItemIsEligible($coupon, $item) {
+        return candybirdCouponItemMatchesCategoryRestriction($coupon, $item)
+            && candybirdCouponItemMatchesProductTypeRestriction($coupon, $item)
+            && candybirdCouponItemMatchesProductIdRestriction($coupon, $item);
+    }
+}
+
+if (!function_exists('candybirdCouponRestrictionMessage')) {
+    function candybirdCouponRestrictionMessage($coupon) {
+        $categoryValue = candybirdCouponFieldValue($coupon, ['category_restriction', 'category_restrictions', 'valid_categories', 'eligible_categories', 'applies_to_categories', 'category']);
+        $typeExclusion = candybirdCouponFieldValue($coupon, ['product_type_exclusion', 'product_type_exclusions', 'excluded_product_types', 'exclude_product_type', 'exclude_product_types']);
+        $parts = [];
+        if (trim($categoryValue) !== '') {
+            $parts[] = 'selected ' . trim($categoryValue) . ' products';
+        }
+        if (trim($typeExclusion) !== '') {
+            $parts[] = 'excluding ' . trim($typeExclusion) . ' items';
+        }
+        return $parts ? 'This coupon is valid on ' . implode(', ', $parts) . '.' : 'This coupon is not valid on the products currently in your cart.';
+    }
+}
+
 if (!function_exists('calculateSheetCouponDiscount')) {
     function calculateSheetCouponDiscount($coupon, $cartItems) {
         $eligibleAmount = 0;
@@ -1023,7 +1190,20 @@ if (!function_exists('calculateSheetCouponDiscount')) {
                 continue;
             }
 
+            if (!candybirdCouponItemIsEligible($coupon, $item)) {
+                continue;
+            }
+
             $eligibleAmount += $price * $quantity;
+        }
+
+        if ($eligibleAmount <= 0) {
+            return [
+                'coupon_savings' => 0,
+                'eligible_amount' => 0,
+                'total_after_coupon' => 0,
+                'message' => candybirdCouponRestrictionMessage($coupon)
+            ];
         }
 
         if ($eligibleAmount < $minOrderValue) {
@@ -1498,6 +1678,10 @@ if (!function_exists('buildSheetCartItem')) {
             'is_clearance' => $clearanceRow ? 'yes' : 'no',
             'clearance_reason' => $product['clearance_reason'] ?? '',
             'clearance_notes' => $product['clearance_notes'] ?? '',
+            'parent_category' => $product['parent_category'] ?? '',
+            'child_category_1' => $product['child_category_1'] ?? '',
+            'child_category_2' => $product['child_category_2'] ?? '',
+            'product_type' => $product['product_type'] ?? '',
             'title' => getSheetProductDisplayTitle($product),
             'product_weight' => getSheetProductDisplaySize($product),
             'weight' => getSheetProductDisplaySize($product),
