@@ -161,6 +161,19 @@ $scheduleParts = function () use ($oldForm) {
 $bodyValue = htmlspecialchars((string) ($oldForm['body'] ?? ''), ENT_QUOTES, 'UTF-8');
 $excludeUnsubscribedChecked = !array_key_exists('exclude_unsubscribed_manual', $oldForm) || !empty($oldForm['exclude_unsubscribed_manual']);
 $recipientMode = ($oldForm['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom';
+$currentAttachments = [];
+if (!empty($oldForm['attachments']) && is_array($oldForm['attachments'])) {
+    $currentAttachments = cbCampaignNormalizeAttachments($oldForm['attachments']);
+} elseif (!empty($oldForm['existing_attachments_json'])) {
+    $decodedAttachments = json_decode((string) $oldForm['existing_attachments_json'], true);
+    $currentAttachments = cbCampaignNormalizeAttachments(is_array($decodedAttachments) ? $decodedAttachments : []);
+}
+$attachmentKeepValues = (array) ($oldForm['keep_attachment'] ?? []);
+if (empty($attachmentKeepValues)) {
+    foreach ($currentAttachments as $attachment) {
+        $attachmentKeepValues[] = sha1($attachment['path'] . '|' . $attachment['name']);
+    }
+}
 
 include 'header.php';
 ?>
@@ -205,8 +218,9 @@ include 'header.php';
                     </div>
                 <?php endif; ?>
 
-                <form action="send_email.php" method="post" id="email-form">
+                <form action="send_email.php" method="post" id="email-form" enctype="multipart/form-data">
                     <input type="hidden" name="broadcast_id" value="<?= (int) ($oldForm['broadcast_id'] ?? 0) ?>">
+                    <input type="hidden" name="existing_attachments_json" value="<?= htmlspecialchars(json_encode($currentAttachments), ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
                         <label for="email_heading">Email heading</label>
                         <input type="text" class="form-control" id="email_heading" name="email_heading" value="<?= $formValue('email_heading') ?>" required>
@@ -229,6 +243,29 @@ include 'header.php';
                         <label for="hero_image_url">Picture URL</label>
                         <input type="url" class="form-control" id="hero_image_url" name="hero_image_url" value="<?= $formValue('hero_image_url') ?>">
                         <div class="field-help">Use the image button in the editor to upload, then paste the uploaded image URL here if you want it as the main picture.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attachments">File attachments</label>
+                        <input type="file" class="form-control-file" id="attachments" name="attachments[]" multiple accept=".pdf,.xls,.xlsx,.csv,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
+                        <div class="field-help">Optional. Attach PDF or Excel files only. Each file must be 10MB or smaller, with a 20MB total attachment limit.</div>
+                        <?php if (!empty($currentAttachments)): ?>
+                            <div class="mt-2">
+                                <strong>Current attachment<?= count($currentAttachments) === 1 ? '' : 's' ?></strong>
+                                <?php foreach ($currentAttachments as $attachment): ?>
+                                    <?php $attachmentKey = sha1($attachment['path'] . '|' . $attachment['name']); ?>
+                                    <div class="custom-control custom-checkbox mt-1">
+                                        <input type="checkbox" class="custom-control-input" id="keep_attachment_<?= htmlspecialchars($attachmentKey, ENT_QUOTES, 'UTF-8') ?>" name="keep_attachment[]" value="<?= htmlspecialchars($attachmentKey, ENT_QUOTES, 'UTF-8') ?>" <?= in_array($attachmentKey, $attachmentKeepValues, true) ? 'checked' : '' ?>>
+                                        <label class="custom-control-label" for="keep_attachment_<?= htmlspecialchars($attachmentKey, ENT_QUOTES, 'UTF-8') ?>">
+                                            Keep <?= htmlspecialchars($attachment['name'], ENT_QUOTES, 'UTF-8') ?>
+                                            <?php if (!empty($attachment['size'])): ?>
+                                                <span class="text-muted">(<?= number_format(((int) $attachment['size']) / 1024, 1) ?> KB)</span>
+                                            <?php endif; ?>
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-group">

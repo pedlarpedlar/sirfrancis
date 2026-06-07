@@ -99,6 +99,7 @@ while ($email = $emails->fetch_assoc()) {
             array(
                 'Campaign ID' => $emailId,
                 'Audience' => ($payload['recipient_mode'] ?? '') === 'custom_only' ? 'Custom emails only' : 'Subscribers plus custom emails',
+                'Attachments' => count(cbCampaignNormalizeAttachments($payload['attachments'] ?? [])),
                 'Sent' => $sentCount,
                 'Failed' => $failedCount,
                 'Total recipients' => count($recipientEmails),

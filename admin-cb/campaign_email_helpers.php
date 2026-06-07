@@ -109,11 +109,14 @@ function cbCampaignPayloadFromPost()
         $ctaUrl = 'https://www.candybird.co.za/products';
     }
 
+    $attachments = cbCampaignExistingAttachmentsFromPost();
+
     return array(
         'email_heading' => cbCampaignCleanHeaderText($_POST['email_heading'] ?? ''),
         'subject' => cbCampaignCleanHeaderText($_POST['subject'] ?? ''),
         'coupon_code' => strtoupper(cbCampaignCleanHeaderText($_POST['coupon_code'] ?? '')),
         'hero_image_url' => trim($_POST['hero_image_url'] ?? ''),
+        'attachments' => $attachments,
         'recipient_mode' => ($_POST['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom',
         'manual_recipients' => trim($_POST['manual_recipients'] ?? ''),
         'exclude_unsubscribed_manual' => !empty($_POST['exclude_unsubscribed_manual']) ? 1 : 0,
@@ -144,6 +147,7 @@ function cbCampaignPayloadFromScheduledEmail($row)
     $payload['email_heading'] = $payload['email_heading'] ?? ($row['email_heading'] ?? '');
     $payload['subject'] = $payload['subject'] ?? ($row['subject'] ?? '');
     $payload['manual_recipients'] = $payload['manual_recipients'] ?? '';
+    $payload['attachments'] = cbCampaignNormalizeAttachments($payload['attachments'] ?? []);
     $payload['recipient_mode'] = ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom';
     $payload['exclude_unsubscribed_manual'] = array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1;
     return $payload;
@@ -157,6 +161,7 @@ function cbCampaignPostFromPayload($payload, $scheduledAt = '')
         'subject' => $payload['subject'] ?? '',
         'coupon_code' => $payload['coupon_code'] ?? '',
         'hero_image_url' => $payload['hero_image_url'] ?? '',
+        'attachments' => cbCampaignNormalizeAttachments($payload['attachments'] ?? []),
         'recipient_mode' => ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom',
         'body' => $payload['body_html'] ?? '',
         'cta_label' => $payload['cta_label'] ?? 'Shop now',
@@ -167,6 +172,127 @@ function cbCampaignPostFromPayload($payload, $scheduledAt = '')
         'scheduled_date' => $timestamp ? date('Y-m-d', $timestamp) : '',
         'scheduled_time' => $timestamp ? date('H:i', $timestamp) : '',
     ];
+}
+
+function cbCampaignAttachmentDirectory()
+{
+    return __DIR__ . '/uploads/broadcast_attachments';
+}
+
+function cbCampaignNormalizeAttachments($attachments)
+{
+    $clean = [];
+    foreach ((array) $attachments as $attachment) {
+        if (!is_array($attachment)) {
+            continue;
+        }
+        $path = trim((string) ($attachment['path'] ?? ''));
+        $name = cbCampaignCleanHeaderText($attachment['name'] ?? basename($path));
+        if ($path === '' || $name === '') {
+            continue;
+        }
+        $clean[] = [
+            'path' => $path,
+            'name' => $name,
+            'size' => isset($attachment['size']) ? (int) $attachment['size'] : 0,
+            'type' => cbCampaignCleanHeaderText($attachment['type'] ?? ''),
+        ];
+    }
+    return $clean;
+}
+
+function cbCampaignExistingAttachmentsFromPost()
+{
+    $attachments = json_decode((string) ($_POST['existing_attachments_json'] ?? '[]'), true);
+    $attachments = cbCampaignNormalizeAttachments(is_array($attachments) ? $attachments : []);
+    $keep = array_flip((array) ($_POST['keep_attachment'] ?? []));
+    if (empty($attachments)) {
+        return [];
+    }
+
+    $kept = [];
+    foreach ($attachments as $attachment) {
+        $key = sha1($attachment['path'] . '|' . $attachment['name']);
+        if (isset($keep[$key])) {
+            $kept[] = $attachment;
+        }
+    }
+    return $kept;
+}
+
+function cbCampaignHandleAttachmentUploads($attachments = [])
+{
+    $attachments = cbCampaignNormalizeAttachments($attachments);
+    if (empty($_FILES['attachments']) || empty($_FILES['attachments']['name'])) {
+        return $attachments;
+    }
+
+    $allowedExtensions = ['pdf', 'xls', 'xlsx', 'csv'];
+    $maxFileSize = 10 * 1024 * 1024;
+    $maxTotalSize = 20 * 1024 * 1024;
+    $dir = cbCampaignAttachmentDirectory();
+    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+        throw new Exception('Could not create the broadcast attachment folder.');
+    }
+
+    $totalSize = 0;
+    foreach ($attachments as $attachment) {
+        $totalSize += (int) ($attachment['size'] ?? 0);
+    }
+
+    $names = (array) ($_FILES['attachments']['name'] ?? []);
+    $tmpNames = (array) ($_FILES['attachments']['tmp_name'] ?? []);
+    $errors = (array) ($_FILES['attachments']['error'] ?? []);
+    $sizes = (array) ($_FILES['attachments']['size'] ?? []);
+    $types = (array) ($_FILES['attachments']['type'] ?? []);
+
+    foreach ($names as $index => $originalName) {
+        $originalName = (string) $originalName;
+        if ($originalName === '') {
+            continue;
+        }
+        $error = (int) ($errors[$index] ?? UPLOAD_ERR_NO_FILE);
+        if ($error === UPLOAD_ERR_NO_FILE) {
+            continue;
+        }
+        if ($error !== UPLOAD_ERR_OK) {
+            throw new Exception('Attachment upload failed for ' . cbCampaignCleanHeaderText($originalName) . '.');
+        }
+
+        $size = (int) ($sizes[$index] ?? 0);
+        if ($size <= 0 || $size > $maxFileSize) {
+            throw new Exception('Each attachment must be 10MB or smaller.');
+        }
+        $totalSize += $size;
+        if ($totalSize > $maxTotalSize) {
+            throw new Exception('All broadcast attachments together must be 20MB or smaller.');
+        }
+
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowedExtensions, true)) {
+            throw new Exception('Only PDF, XLS, XLSX and CSV attachments are allowed.');
+        }
+
+        $safeBase = preg_replace('/[^a-zA-Z0-9._-]+/', '-', pathinfo($originalName, PATHINFO_FILENAME));
+        $safeBase = trim((string) $safeBase, '-._');
+        if ($safeBase === '') {
+            $safeBase = 'broadcast-file';
+        }
+        $fileName = date('YmdHis') . '-' . bin2hex(random_bytes(4)) . '-' . $safeBase . '.' . $extension;
+        $target = $dir . '/' . $fileName;
+        if (!move_uploaded_file((string) ($tmpNames[$index] ?? ''), $target)) {
+            throw new Exception('Could not save attachment ' . cbCampaignCleanHeaderText($originalName) . '.');
+        }
+
+        $attachments[] = [
+            'path' => $target,
+            'name' => cbCampaignCleanHeaderText($originalName),
+            'size' => $size,
+            'type' => cbCampaignCleanHeaderText($types[$index] ?? ''),
+        ];
+    }
+
+    return cbCampaignNormalizeAttachments($attachments);
 }
 
 function cbCampaignFetchScheduledEmail($conn, $id)
@@ -355,6 +481,12 @@ function cbCampaignValidatePayload($payload)
     if (strlen((string) ($payload['body_html'] ?? '')) > 250000) {
         $errors[] = 'The email body is too large. Use image links or uploaded pictures instead of embedded image data.';
     }
+    foreach (cbCampaignNormalizeAttachments($payload['attachments'] ?? []) as $attachment) {
+        if (!is_file($attachment['path'])) {
+            $errors[] = 'One of the selected attachments is missing. Please re-upload it.';
+            break;
+        }
+    }
     if (($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' && empty(cbCampaignParseManualRecipients($payload['manual_recipients'] ?? ''))) {
         $errors[] = 'Add at least one custom email address, or switch the audience back to subscribers plus custom emails.';
     }
@@ -458,6 +590,7 @@ function cbCampaignSendEmail($recipientEmail, $recipientName, $payload)
             'reply_to_name' => 'CandyBird',
             'bcc' => $bcc,
             'alt_body' => $alt,
+            'attachments' => cbCampaignNormalizeAttachments($payload['attachments'] ?? []),
         ]
     );
 

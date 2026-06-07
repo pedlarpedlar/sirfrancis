@@ -59,6 +59,15 @@ if (!function_exists('cbCandybirdSendMail')) {
             }
         }
         $mailFallbackFrom = $GLOBALS['smtp_username1'] ?? ($accounts[0]['email'] ?? '');
+        $attachments = [];
+        foreach ((array) ($options['attachments'] ?? []) as $attachment) {
+            $path = is_array($attachment) ? ($attachment['path'] ?? '') : (string) $attachment;
+            $name = is_array($attachment) ? ($attachment['name'] ?? basename((string) $path)) : basename((string) $path);
+            $path = (string) $path;
+            if ($path !== '' && is_file($path) && is_readable($path)) {
+                $attachments[] = ['path' => $path, 'name' => $name ?: basename($path)];
+            }
+        }
 
         if (!empty($options['prefer_mail_transport']) && filter_var((string) $mailFallbackFrom, FILTER_VALIDATE_EMAIL)) {
             try {
@@ -84,6 +93,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->Subject = $subject;
                 $mail->Body = $htmlBody;
                 $mail->AltBody = $altBody;
+                foreach ($attachments as $attachment) {
+                    $mail->addAttachment($attachment['path'], $attachment['name']);
+                }
                 $mail->send();
                 return ['success' => true, 'sender' => $mailFallbackFrom, 'transport' => 'mail'];
             } catch (Throwable $e) {
@@ -124,6 +136,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->Subject = $subject;
                 $mail->Body = $htmlBody;
                 $mail->AltBody = $altBody;
+                foreach ($attachments as $attachment) {
+                    $mail->addAttachment($attachment['path'], $attachment['name']);
+                }
                 $mail->send();
                 return ['success' => true, 'sender' => $account['email']];
             } catch (Throwable $e) {
@@ -156,6 +171,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->Subject = $subject;
                 $mail->Body = $htmlBody;
                 $mail->AltBody = $altBody;
+                foreach ($attachments as $attachment) {
+                    $mail->addAttachment($attachment['path'], $attachment['name']);
+                }
                 $mail->send();
                 return ['success' => true, 'sender' => $mailFallbackFrom, 'transport' => 'mail'];
             } catch (Throwable $e) {

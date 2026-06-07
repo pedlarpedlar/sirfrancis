@@ -50,7 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'schedule';
     $broadcastId = isset($_POST['broadcast_id']) ? (int) $_POST['broadcast_id'] : 0;
     $payload = cbCampaignPayloadFromPost();
-    $errors = cbCampaignValidatePayload($payload);
+    $uploadErrors = [];
+    try {
+        $payload['attachments'] = cbCampaignHandleAttachmentUploads($payload['attachments'] ?? []);
+    } catch (Exception $uploadError) {
+        $payload['attachments'] = cbCampaignNormalizeAttachments($payload['attachments'] ?? []);
+        $uploadErrors[] = $uploadError->getMessage();
+    }
+    $oldPost['existing_attachments_json'] = json_encode($payload['attachments'] ?? []);
+    $oldPost['keep_attachment'] = [];
+    foreach (cbCampaignNormalizeAttachments($payload['attachments'] ?? []) as $attachment) {
+        $oldPost['keep_attachment'][] = sha1($attachment['path'] . '|' . $attachment['name']);
+    }
+    $errors = array_merge($uploadErrors, cbCampaignValidatePayload($payload));
 
     $scheduledAtInput = trim($_POST['scheduled_at'] ?? '');
     if ($scheduledAtInput === '') {
@@ -145,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'Campaign ID' => $campaignId,
                             'Scheduled for' => $scheduledAt,
                             'Audience' => ($payload['recipient_mode'] ?? '') === 'custom_only' ? 'Custom emails only' : 'Subscribers plus custom emails',
+                            'Attachments' => count(cbCampaignNormalizeAttachments($payload['attachments'] ?? [])),
                             'Active subscribers' => $recipientStats['subscriber_count'],
                             'Extra recipients entered' => $recipientStats['manual_count'],
                             'Unique recipients queued' => $recipientStats['unique_count'],

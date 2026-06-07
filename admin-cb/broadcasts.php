@@ -134,6 +134,7 @@ include 'page_menues.php';
                                 $invalidCount = (int) ($stats['invalid_count'] ?? 0);
                                 $unsubscribedCount = (int) ($stats['unsubscribed_count'] ?? 0);
                                 $recipientList = cbBroadcastRecipients($row);
+                                $attachments = cbCampaignNormalizeAttachments($payload['attachments'] ?? []);
                             ?>
                             <tr>
                                 <td>
@@ -178,6 +179,12 @@ include 'page_menues.php';
                                     <div class="details-box">
                                         <div><strong>Button:</strong> <?= cbBroadcastText($payload['cta_label'] ?? '') ?></div>
                                         <div><strong>Link:</strong> <?= cbBroadcastText($payload['cta_url'] ?? '') ?></div>
+                                        <?php if (!empty($attachments)): ?>
+                                            <div><strong>Attachment<?= count($attachments) === 1 ? '' : 's' ?>:</strong> <?= number_format(count($attachments)) ?></div>
+                                            <?php foreach ($attachments as $attachment): ?>
+                                                <div class="small-muted"><?= cbBroadcastText($attachment['name'] ?? '') ?></div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                         <?php if (!empty($payload['manual_recipients'])): ?>
                                             <div><strong>Extra emails:</strong> <?= number_format(count(cbCampaignParseManualRecipients($payload['manual_recipients']))) ?></div>
                                         <?php endif; ?>
