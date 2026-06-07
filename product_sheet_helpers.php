@@ -1054,6 +1054,94 @@ if (!function_exists('candybirdCouponFieldValue')) {
     }
 }
 
+if (!function_exists('candybirdCouponCategoryTokens')) {
+    function candybirdCouponCategoryTokens($category) {
+        $category = trim((string) $category);
+        if ($category === '') {
+            return [];
+        }
+
+        $tokens = [candybirdCouponNormalizedToken($category)];
+        if (function_exists('getCandybirdCategoryDisplayLabel')) {
+            $tokens[] = candybirdCouponNormalizedToken(getCandybirdCategoryDisplayLabel($category));
+        }
+        if (function_exists('getCandybirdCategorySlug')) {
+            $tokens[] = candybirdCouponNormalizedToken(getCandybirdCategorySlug($category));
+        }
+
+        return array_values(array_unique(array_filter($tokens)));
+    }
+}
+
+if (!function_exists('candybirdCouponCategoryParentMap')) {
+    function candybirdCouponCategoryParentMap() {
+        static $map = null;
+        if ($map !== null) {
+            return $map;
+        }
+
+        $map = [];
+        $products = function_exists('getSheetProducts') ? getSheetProducts(false) : [];
+        if (!is_array($products)) {
+            return $map;
+        }
+
+        $addParent = static function($child, $parent) use (&$map) {
+            $child = trim((string) $child);
+            $parent = trim((string) $parent);
+            if ($child === '' || $parent === '') {
+                return;
+            }
+
+            foreach (candybirdCouponCategoryTokens($child) as $childToken) {
+                foreach (candybirdCouponCategoryTokens($parent) as $parentToken) {
+                    if ($childToken !== '' && $parentToken !== '' && $childToken !== $parentToken) {
+                        $map[$childToken][$parentToken] = true;
+                    }
+                }
+            }
+        };
+
+        foreach ($products as $product) {
+            if (!is_array($product)) {
+                continue;
+            }
+            $parent = trim((string) ($product['parent_category'] ?? ''));
+            $child1 = trim((string) ($product['child_category_1'] ?? ''));
+            $child2 = trim((string) ($product['child_category_2'] ?? ''));
+
+            $addParent($child1, $parent);
+            $addParent($child2, $child1 !== '' ? $child1 : $parent);
+            if ($child1 !== '' && $parent !== '') {
+                $addParent($child2, $parent);
+            }
+        }
+
+        return $map;
+    }
+}
+
+if (!function_exists('candybirdCouponCategoryAncestorTokens')) {
+    function candybirdCouponCategoryAncestorTokens($category) {
+        $map = candybirdCouponCategoryParentMap();
+        $tokens = candybirdCouponCategoryTokens($category);
+        $seen = array_fill_keys($tokens, true);
+        $queue = $tokens;
+
+        while (!empty($queue)) {
+            $token = array_shift($queue);
+            foreach (array_keys($map[$token] ?? []) as $parentToken) {
+                if ($parentToken !== '' && empty($seen[$parentToken])) {
+                    $seen[$parentToken] = true;
+                    $queue[] = $parentToken;
+                }
+            }
+        }
+
+        return array_keys($seen);
+    }
+}
+
 if (!function_exists('candybirdCouponItemMatchesCategoryRestriction')) {
     function candybirdCouponItemMatchesCategoryRestriction($coupon, $item) {
         $restrictionValue = candybirdCouponFieldValue($coupon, [
@@ -1073,10 +1161,7 @@ if (!function_exists('candybirdCouponItemMatchesCategoryRestriction')) {
         foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
             $category = trim((string) ($item[$field] ?? ''));
             if ($category !== '') {
-                $itemCategories[] = candybirdCouponNormalizedToken($category);
-                if (function_exists('getCandybirdCategoryDisplayLabel')) {
-                    $itemCategories[] = candybirdCouponNormalizedToken(getCandybirdCategoryDisplayLabel($category));
-                }
+                $itemCategories = array_merge($itemCategories, candybirdCouponCategoryAncestorTokens($category));
             }
         }
         $itemCategories = array_unique(array_filter($itemCategories));
