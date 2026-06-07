@@ -209,11 +209,25 @@ $hasActions = cbVaTableExists($conn, 'action_logs');
 $hasCart = cbVaTableExists($conn, 'cart');
 $hasOrders = cbVaTableExists($conn, 'orders');
 $hasGeo = cbVaTableExists($conn, 'ip_geolocation');
+$hasGeoHistory = cbVaTableExists($conn, 'ip_geolocation_history');
 
 $sessionRows = [];
 if ($hasSessions) {
-    $geoSelect = $hasGeo ? "COALESCE(g.city, '') AS city, COALESCE(g.country, '') AS country" : "'' AS city, '' AS country";
-    $geoJoin = $hasGeo ? "LEFT JOIN ip_geolocation g ON s.ip_address = g.ip_address" : "";
+    $geoSourceSql = '';
+    if ($hasGeoHistory) {
+        $geoSourceSql = "(SELECT ip_address,
+            MAX(city) AS city,
+            MAX(country) AS country,
+            MAX(state_prov) AS province,
+            MAX(district) AS suburb
+            FROM ip_geolocation_history
+            GROUP BY ip_address)";
+    } elseif ($hasGeo) {
+        $geoSourceSql = "(SELECT ip_address, city, country, '' AS province, '' AS suburb FROM ip_geolocation)";
+    }
+    $geoSelect = $geoSourceSql !== '' ? "COALESCE(g.suburb, '') AS suburb, COALESCE(g.city, '') AS city, COALESCE(g.country, '') AS country" : "'' AS suburb, '' AS city, '' AS country";
+    $geoJoin = $geoSourceSql !== '' ? "LEFT JOIN $geoSourceSql g ON s.ip_address = g.ip_address" : "";
+    $geoWhere = $geoSourceSql !== '' ? "AND (COALESCE(g.suburb, '') <> '' OR COALESCE(g.city, '') <> '')" : "AND 0 = 1";
     $sessionRows = cbVaRows($conn, "
         SELECT s.id, s.user_id, s.session_id, s.ip_address, s.user_agent, s.start_time, s.end_time,
                COALESCE(s.end_time, s.start_time) AS last_seen,
@@ -226,6 +240,7 @@ if ($hasSessions) {
         $geoJoin
         WHERE COALESCE(s.end_time, s.start_time) BETWEEN '$fromSql' AND '$toSql'
           AND s.user_agent NOT REGEXP 'bot|crawl|spider|preview|facebookexternalhit|whatsapp|telegrambot|curl|wget|monitor|uptime|headless|python|httpclient'
+          $geoWhere
         ORDER BY is_online DESC, last_seen DESC
         LIMIT 120
     ");
@@ -255,7 +270,7 @@ foreach ($sessionRows as $row) {
     $groups[$hash]['is_private_ip'] = $groups[$hash]['is_private_ip'] || cbVaIsPrivateIp($row['ip_address'] ?? '');
     $groups[$hash]['bot_suspected'] = $groups[$hash]['bot_suspected'] || cbVaLooksLikeBot($row['user_agent'] ?? '');
     if (strtotime((string) $row['last_seen']) > strtotime((string) $groups[$hash]['last_seen'])) {
-        foreach (['display_name', 'email', 'city', 'country', 'last_seen', 'ip_address', 'user_agent'] as $field) {
+        foreach (['display_name', 'email', 'suburb', 'city', 'country', 'last_seen', 'ip_address', 'user_agent'] as $field) {
             $groups[$hash][$field] = $row[$field] ?? $groups[$hash][$field];
         }
     }
@@ -392,7 +407,7 @@ $topAbandonHour = $abandonHourStats ? key($abandonHourStats) : 'No data';
 <div class="container visitor-wrap">
     <div class="visitor-hero">
         <h1>Visitor Activity</h1>
-        <p>Last 10 active human-looking guests/users, written as simple shopping journeys instead of raw tracking noise.</p>
+        <p>Last 10 active guests/users with usable suburb or city data, written as simple shopping journeys instead of raw tracking noise.</p>
     </div>
 
     <form class="visitor-filters" method="get" action="visitor_activity">
@@ -423,13 +438,14 @@ $topAbandonHour = $abandonHourStats ? key($abandonHourStats) : 'No data';
 
     <div class="visitor-list">
         <?php if (empty($visitors)): ?>
-            <div class="visitor-card">No human-looking visitor activity found for this period.</div>
+            <div class="visitor-card">No geo-qualified visitor activity found for this period.</div>
         <?php else: foreach ($visitors as $visitor):
             $name = trim((string) ($visitor['display_name'] ?? ''));
             $email = trim((string) ($visitor['email'] ?? ''));
             $ip = implode(', ', array_slice($visitor['ip_addresses'] ?? [], 0, 2));
             $label = $name ?: ($email ?: ($ip ?: 'Guest visitor'));
-            $area = trim((string) (($visitor['city'] ?? '') . (($visitor['country'] ?? '') ? ', ' . $visitor['country'] : '')));
+            $areaParts = array_filter([trim((string) ($visitor['suburb'] ?? '')), trim((string) ($visitor['city'] ?? '')), trim((string) ($visitor['country'] ?? ''))]);
+            $area = implode(', ', array_unique($areaParts));
             $realStatus = !empty($visitor['bot_suspected']) ? 'Suspicious' : (!empty($visitor['is_private_ip']) ? 'Local/test' : 'Likely human');
             $realClass = !empty($visitor['bot_suspected']) || !empty($visitor['is_private_ip']) ? 'warning' : 'human';
         ?>

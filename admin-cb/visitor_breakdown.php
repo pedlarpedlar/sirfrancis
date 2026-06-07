@@ -192,7 +192,7 @@ foreach ($visitorRows as $visitorRow) {
             <a class="btn btn<?= $range === '24h' ? '' : '-outline' ?>-primary btn-sm" href="visitor_breakdown?range=24h">24 hours</a>
             <a class="btn btn<?= $range === '7d' ? '' : '-outline' ?>-primary btn-sm" href="visitor_breakdown?range=7d">7 days</a>
             <label class="visitor-location-filter">
-                <input type="checkbox" id="visitor-location-only">
+                <input type="checkbox" id="visitor-location-only" checked>
                 <span>Only with suburb/city</span>
             </label>
         </div>

@@ -136,6 +136,7 @@ $hasSearchTerms = cbAdminTableExists($conn, 'search_terms');
 $hasCart = cbAdminTableExists($conn, 'cart');
 $hasUserAddresses = cbAdminTableExists($conn, 'user_addresses');
 $hasIpGeolocation = cbAdminTableExists($conn, 'ip_geolocation');
+$hasIpGeolocationHistory = cbAdminTableExists($conn, 'ip_geolocation_history');
 
 cbAdminReconcilePayfastPayments($conn);
 
@@ -165,18 +166,46 @@ $siteErrors = $hasActionLogs ? cbAdminScalar($conn, "SELECT COUNT(*) FROM action
 $humanSessionFilter = "s.user_agent NOT REGEXP 'bot|crawl|spider|preview|facebookexternalhit|whatsapp|telegrambot|curl|wget|monitor|uptime'";
 $humanPageFilter = "pv.url NOT LIKE '%/admin-cb/%' AND pv.url NOT LIKE '%log_action.php%' AND pv.url NOT LIKE '%update_end_time.php%'";
 $humanActionFilter = "al.user_agent NOT REGEXP 'bot|crawl|spider|preview|facebookexternalhit|whatsapp|telegrambot|curl|wget|monitor|uptime'";
+$geoSourceSql = '';
+if ($hasIpGeolocationHistory) {
+    $geoSourceSql = "(SELECT ip_address,
+        MAX(city) AS city,
+        MAX(country) AS country,
+        MAX(state_prov) AS province,
+        MAX(district) AS suburb,
+        MAX(COALESCE(NULLIF(organization, ''), NULLIF(isp, ''))) AS provider
+        FROM ip_geolocation_history
+        GROUP BY ip_address)";
+} elseif ($hasIpGeolocation) {
+    $geoSourceSql = "(SELECT ip_address, city, country, '' AS province, '' AS suburb, '' AS provider FROM ip_geolocation)";
+}
+$sessionGeoJoin = $geoSourceSql !== '' ? "LEFT JOIN $geoSourceSql qgeo ON qgeo.ip_address = s.ip_address" : "";
+$actionGeoJoin = $geoSourceSql !== '' ? "LEFT JOIN $geoSourceSql qgeo ON qgeo.ip_address = al.ip_address" : "";
+$sessionGeoWhere = $geoSourceSql !== '' ? "(COALESCE(qgeo.suburb, '') <> '' OR COALESCE(qgeo.city, '') <> '')" : "0 = 1";
+$actionGeoWhere = $geoSourceSql !== '' ? "(COALESCE(qgeo.suburb, '') <> '' OR COALESCE(qgeo.city, '') <> '')" : "0 = 1";
+$sessionGeoSelect = $geoSourceSql !== ''
+    ? "COALESCE(qgeo.suburb, '') AS suburb, COALESCE(qgeo.city, '') AS city, COALESCE(qgeo.country, '') AS country"
+    : "'' AS suburb, '' AS city, '' AS country";
 $onlineVisitors = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, '')))
     FROM sessions s
+    $sessionGeoJoin
     WHERE $humanSessionFilter
+      AND $sessionGeoWhere
       AND COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)") : 0;
 $todayVisitors = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, '')))
     FROM sessions s
+    $sessionGeoJoin
     WHERE $humanSessionFilter
+      AND $sessionGeoWhere
       AND s.start_time >= CURDATE()") : 0;
 $todayRawSessions = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(*) FROM sessions WHERE DATE(start_time) = CURDATE()") : 0;
-$todayPageViews = $hasPageViews ? cbAdminScalar($conn, "SELECT COUNT(*)
+$todayPageViews = ($hasPageViews && $hasSessions) ? cbAdminScalar($conn, "SELECT COUNT(*)
     FROM page_views pv
+    LEFT JOIN sessions s ON pv.session_id = s.id
+    $sessionGeoJoin
     WHERE $humanPageFilter
+      AND $humanSessionFilter
+      AND $sessionGeoWhere
       AND pv.timestamp >= CURDATE()") : 0;
 
 $recentOrders = $hasOrders ? cbAdminRows($conn, "SELECT id, order_status, payment_status, grand_total_amount, payment_method, order_date FROM orders ORDER BY order_date DESC LIMIT 8") : [];
@@ -188,46 +217,63 @@ $emailLinkedVisitors = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SEL
     FROM page_views pv
     LEFT JOIN sessions s ON pv.session_id = s.id
     LEFT JOIN users u ON s.user_id = u.id
+    $sessionGeoJoin
     WHERE $humanSessionFilter
+      AND $sessionGeoWhere
       AND $humanPageFilter
       AND (pv.url LIKE '%utm_source=email%' OR pv.url LIKE '%cb_campaign=%' OR pv.referrer_url LIKE '%utm_source=email%' OR pv.referrer_url LIKE '%cb_campaign=%')
       AND pv.timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     ORDER BY pv.timestamp DESC
     LIMIT 10") : [];
-$topViewedPages = $hasPageViews ? cbAdminRows($conn, "SELECT SUBSTRING_INDEX(REPLACE(REPLACE(pv.url, 'https://www.candybird.co.za', ''), 'http://www.candybird.co.za', ''), '#', 1) AS page_url, COUNT(*) AS views, MAX(pv.timestamp) AS last_seen
+$topViewedPages = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SELECT SUBSTRING_INDEX(REPLACE(REPLACE(pv.url, 'https://www.candybird.co.za', ''), 'http://www.candybird.co.za', ''), '#', 1) AS page_url, COUNT(*) AS views, MAX(pv.timestamp) AS last_seen
     FROM page_views pv
+    LEFT JOIN sessions s ON pv.session_id = s.id
+    $sessionGeoJoin
     WHERE $humanPageFilter
+      AND $humanSessionFilter
+      AND $sessionGeoWhere
       AND pv.timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY page_url
     ORDER BY views DESC
     LIMIT 10") : [];
-$topReferrers = $hasPageViews ? cbAdminRows($conn, "SELECT COALESCE(NULLIF(pv.referrer_url, ''), pv.referrer) AS source, COUNT(*) AS visits, MAX(pv.timestamp) AS last_seen
+$topReferrers = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SELECT COALESCE(NULLIF(pv.referrer_url, ''), pv.referrer) AS source, COUNT(*) AS visits, MAX(pv.timestamp) AS last_seen
     FROM page_views pv
+    LEFT JOIN sessions s ON pv.session_id = s.id
+    $sessionGeoJoin
     WHERE $humanPageFilter
+      AND $humanSessionFilter
+      AND $sessionGeoWhere
       AND pv.timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY source
     ORDER BY visits DESC
     LIMIT 8") : [];
 $topProductClicks = $hasActionLogs ? cbAdminRows($conn, "SELECT details, COUNT(*) AS clicks, MAX(created_at) AS last_seen
-    FROM action_logs
-    WHERE $humanActionFilter AND action = 'UX product click' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    FROM action_logs al
+    $actionGeoJoin
+    WHERE $humanActionFilter AND $actionGeoWhere AND action = 'UX product click' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY details
     ORDER BY clicks DESC
     LIMIT 10") : [];
 $topCategoryClicks = $hasActionLogs ? cbAdminRows($conn, "SELECT details, COUNT(*) AS clicks, MAX(created_at) AS last_seen
-    FROM action_logs
-    WHERE $humanActionFilter AND action = 'UX category click' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    FROM action_logs al
+    $actionGeoJoin
+    WHERE $humanActionFilter AND $actionGeoWhere AND action = 'UX category click' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY details
     ORDER BY clicks DESC
     LIMIT 10") : [];
 $scrollDepths = $hasActionLogs ? cbAdminRows($conn, "SELECT action, COUNT(*) AS sessions
-    FROM action_logs
-    WHERE $humanActionFilter AND action LIKE 'UX scroll depth %' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    FROM action_logs al
+    $actionGeoJoin
+    WHERE $humanActionFilter AND $actionGeoWhere AND action LIKE 'UX scroll depth %' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY action
     ORDER BY FIELD(action, 'UX scroll depth 25%', 'UX scroll depth 50%', 'UX scroll depth 75%', 'UX scroll depth 100%')") : [];
-$zeroResultSearches = $hasSearchTerms ? cbAdminRows($conn, "SELECT term, COUNT(*) AS misses, MAX(timestamp) AS last_seen
-    FROM search_terms
-    WHERE results_count = 0
+$zeroResultSearches = ($hasSearchTerms && $hasSessions) ? cbAdminRows($conn, "SELECT st.term, COUNT(*) AS misses, MAX(st.timestamp) AS last_seen
+    FROM search_terms st
+    LEFT JOIN sessions s ON st.session_id = s.id
+    $sessionGeoJoin
+    WHERE st.results_count = 0
+      AND $humanSessionFilter
+      AND $sessionGeoWhere
     GROUP BY term
     ORDER BY misses DESC, last_seen DESC
     LIMIT 10") : [];
@@ -250,8 +296,9 @@ $orderMonthParts = $hasOrders ? cbAdminRows($conn, "SELECT
 $cartMonthParts = $hasActionLogs ? cbAdminRows($conn, "SELECT
         CASE WHEN DAY(created_at) <= 10 THEN '1st-10th' WHEN DAY(created_at) <= 20 THEN '11th-20th' ELSE '21st-month end' END AS month_part,
         COUNT(*) AS cart_actions
-    FROM action_logs
-    WHERE action LIKE '%cart%' AND created_at >= DATE_SUB(NOW(), INTERVAL 90 DAY)
+    FROM action_logs al
+    $actionGeoJoin
+    WHERE $humanActionFilter AND $actionGeoWhere AND action LIKE '%cart%' AND created_at >= DATE_SUB(NOW(), INTERVAL 90 DAY)
     GROUP BY month_part
     ORDER BY FIELD(month_part, '1st-10th', '11th-20th', '21st-month end')") : [];
 $orderCities = ($hasOrders && $hasUserAddresses) ? cbAdminRows($conn, "SELECT COALESCE(NULLIF(ua.billing_city, ''), 'Unknown') AS city, COALESCE(NULLIF(ua.billing_province, ''), 'Unknown') AS province, COUNT(DISTINCT o.id) AS orders, COALESCE(SUM(o.grand_total_amount), 0) AS revenue
@@ -261,16 +308,18 @@ $orderCities = ($hasOrders && $hasUserAddresses) ? cbAdminRows($conn, "SELECT CO
     GROUP BY city, province
     ORDER BY orders DESC, revenue DESC
     LIMIT 10") : [];
-$visitorCities = ($hasActionLogs && $hasIpGeolocation) ? cbAdminRows($conn, "SELECT COALESCE(NULLIF(g.city, ''), 'Unknown') AS city, COALESCE(NULLIF(g.country, ''), 'Unknown') AS country, COUNT(*) AS actions
+$visitorCities = ($hasActionLogs && $geoSourceSql !== '') ? cbAdminRows($conn, "SELECT COALESCE(NULLIF(qgeo.city, ''), NULLIF(qgeo.suburb, ''), 'Unknown') AS city, COALESCE(NULLIF(qgeo.country, ''), 'Unknown') AS country, COUNT(*) AS actions
     FROM action_logs al
-    LEFT JOIN ip_geolocation g ON al.ip_address = g.ip_address
-    WHERE al.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+    $actionGeoJoin
+    WHERE $actionGeoWhere AND al.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
     GROUP BY city, country
     ORDER BY actions DESC
     LIMIT 10") : [];
 $weeklyVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT DATE(s.start_time) AS visit_day, COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, ''))) AS visitors
     FROM sessions s
+    $sessionGeoJoin
     WHERE $humanSessionFilter
+      AND $sessionGeoWhere
       AND s.start_time >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
     GROUP BY DATE(s.start_time)
     ORDER BY visit_day ASC") : [];
@@ -286,17 +335,23 @@ for ($i = 6; $i >= 0; $i--) {
         'count' => $weeklyVisitorsByDay[$dayKey] ?? 0,
     ];
 }
-$weeklyTopSearch = $hasSearchTerms ? cbAdminRows($conn, "SELECT term AS label, COUNT(*) AS total
-    FROM search_terms
-    WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-      AND COALESCE(term, '') <> ''
-    GROUP BY term
-    ORDER BY total DESC, MAX(timestamp) DESC
+$weeklyTopSearch = ($hasSearchTerms && $hasSessions) ? cbAdminRows($conn, "SELECT st.term AS label, COUNT(*) AS total
+    FROM search_terms st
+    LEFT JOIN sessions s ON st.session_id = s.id
+    $sessionGeoJoin
+    WHERE st.timestamp >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+      AND COALESCE(st.term, '') <> ''
+      AND $humanSessionFilter
+      AND $sessionGeoWhere
+    GROUP BY st.term
+    ORDER BY total DESC, MAX(st.timestamp) DESC
     LIMIT 1") : [];
 if (empty($weeklyTopSearch) && $hasActionLogs) {
     $weeklyTopSearch = cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
-        FROM action_logs
+        FROM action_logs al
+        $actionGeoJoin
         WHERE $humanActionFilter
+          AND $actionGeoWhere
           AND action = 'UX search submitted'
           AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
         GROUP BY details
@@ -304,24 +359,30 @@ if (empty($weeklyTopSearch) && $hasActionLogs) {
         LIMIT 1");
 }
 $weeklyTopProductClick = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
-    FROM action_logs
+    FROM action_logs al
+    $actionGeoJoin
     WHERE $humanActionFilter
+      AND $actionGeoWhere
       AND action = 'UX product click'
       AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY details
     ORDER BY total DESC, MAX(created_at) DESC
     LIMIT 1") : [];
 $weeklyTopCategoryClick = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
-    FROM action_logs
+    FROM action_logs al
+    $actionGeoJoin
     WHERE $humanActionFilter
+      AND $actionGeoWhere
       AND action = 'UX category click'
       AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY details
     ORDER BY total DESC, MAX(created_at) DESC
     LIMIT 1") : [];
 $weeklyTopAddToCart = $hasActionLogs ? cbAdminRows($conn, "SELECT details AS label, COUNT(*) AS total
-    FROM action_logs
+    FROM action_logs al
+    $actionGeoJoin
     WHERE $humanActionFilter
+      AND $actionGeoWhere
       AND (action LIKE '%add-to-cart%' OR action LIKE 'Added item%')
       AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
     GROUP BY details
@@ -336,7 +397,9 @@ $weeklyMetricCards = [
 $recentActivity = $hasActionLogs ? cbAdminRows($conn, "SELECT al.action, al.details, al.created_at, al.user_id, al.guest_identifier, COALESCE(u.username, 'Guest') AS visitor_name
     FROM action_logs al
     LEFT JOIN users u ON al.user_id = u.id
+    $actionGeoJoin
     WHERE $humanActionFilter
+      AND $actionGeoWhere
     ORDER BY al.created_at DESC
     LIMIT 12") : [];
 $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
@@ -344,6 +407,7 @@ $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
         s.user_id,
         s.session_id,
         s.ip_address,
+        $sessionGeoSelect,
         COALESCE(u.username, 'Guest visitor') AS visitor_name,
         u.email,
         COALESCE(s.end_time, s.start_time) AS last_seen,
@@ -353,7 +417,9 @@ $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
         0 AS cart_items
     FROM sessions s
     LEFT JOIN users u ON s.user_id = u.id
+    $sessionGeoJoin
     WHERE $humanSessionFilter
+      AND $sessionGeoWhere
       AND COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
     ORDER BY (COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)) DESC, last_seen DESC
     LIMIT 10") : [];
@@ -541,12 +607,12 @@ $dashboardCronJobs = [
         <div class="dash-card">
             <div class="label">Online now</div>
             <div class="value"><?= number_format((float) $onlineVisitors) ?></div>
-            <div class="hint">Active in the last 5 minutes</div>
+            <div class="hint">Geo-qualified, active in the last 5 minutes</div>
         </div>
         <a class="dash-card" href="visitor_breakdown?range=today" title="Open visitor breakdown">
-            <div class="label">Real visitors today</div>
+            <div class="label">Qualified visitors today</div>
             <div class="value"><?= number_format((float) $todayVisitors) ?></div>
-            <div class="hint"><?= number_format((float) $todayPageViews) ?> human page views, <?= number_format((float) $todayRawSessions) ?> raw sessions. Click to inspect.</div>
+            <div class="hint"><?= number_format((float) $todayPageViews) ?> geo-qualified page views, <?= number_format((float) $todayRawSessions) ?> raw sessions. Click to inspect.</div>
         </a>
     </div>
 
@@ -754,21 +820,21 @@ $dashboardCronJobs = [
         <div class="col-12 mb-4">
             <div class="dash-panel">
                 <h2>Customer UX Intelligence</h2>
-                <p class="text-muted">This section now uses real-human signals: non-admin page views or meaningful actions, with bots/previews filtered and repeat sessions grouped by device.</p>
+                <p class="text-muted">This section now uses qualified visitor signals: bots/previews filtered, repeat sessions grouped by device, and only visitors with suburb or city data included.</p>
                 <div class="row">
                     <div class="col-lg-6 mb-4">
-                        <h3 class="h5">Live / Recent Human Visitors</h3>
+                        <h3 class="h5">Live / Recent Qualified Visitors</h3>
                         <div class="table-responsive">
                             <table class="table table-sm">
                                 <thead><tr><th>Visitor</th><th>Signal</th><th>Last seen</th></tr></thead>
                                 <tbody>
                                 <?php if (empty($liveVisitorRows)): ?>
-                                    <tr><td colspan="3">No real visitor activity recorded yet. Open <a href="visitor_activity">Visitor Activity</a> after browsing the public site to inspect the trail.</td></tr>
+                                    <tr><td colspan="3">No geo-qualified visitor activity recorded yet. Open <a href="visitor_activity">Visitor Activity</a> after browsing the public site to inspect the trail.</td></tr>
                                 <?php else: foreach ($liveVisitorRows as $visitor): ?>
                                     <tr>
                                         <td>
                                             <a href="visitor_activity?session_id=<?= (int)$visitor['id'] ?>"><?= htmlspecialchars($visitor['visitor_name'] ?: 'Guest visitor') ?></a>
-                                            <br><small><?= htmlspecialchars($visitor['email'] ?: $visitor['session_id']) ?></small>
+                                            <br><small><?= htmlspecialchars(trim(($visitor['suburb'] ? $visitor['suburb'] . ', ' : '') . ($visitor['city'] ?: $visitor['country'])) ?: ($visitor['email'] ?: $visitor['session_id'])) ?></small>
                                         </td>
                                         <td><?= htmlspecialchars($visitor['status_label']) ?><br><small>Open visitor activity for the detailed timeline.</small></td>
                                         <td><?= htmlspecialchars($visitor['last_seen']) ?></td>
