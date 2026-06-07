@@ -88,6 +88,22 @@ if ($hasOrders && ($hasUsers || $hasAddresses)) {
 }
 $pastOrderEmailList = array_values($pastOrderEmails);
 
+$savedEmailLists = [];
+$listResult = $conn->query("SELECT id, title, purpose, source_note, emails, email_count FROM email_recipient_lists ORDER BY title ASC");
+if ($listResult) {
+    while ($listRow = $listResult->fetch_assoc()) {
+        $emails = cbCampaignParseManualRecipients($listRow['emails'] ?? '');
+        $savedEmailLists[] = [
+            'id' => (int) ($listRow['id'] ?? 0),
+            'title' => (string) ($listRow['title'] ?? ''),
+            'purpose' => (string) ($listRow['purpose'] ?? ''),
+            'source_note' => (string) ($listRow['source_note'] ?? ''),
+            'email_count' => (int) ($listRow['email_count'] ?? count($emails)),
+            'emails' => $emails,
+        ];
+    }
+}
+
 $broadcastFlash = $_SESSION['broadcast_flash'] ?? null;
 unset($_SESSION['broadcast_flash']);
 
@@ -160,6 +176,9 @@ include 'header.php';
     .status-pill { display: inline-block; background: #f5f2ea; border: 1px solid #e0d7cc; color: #5b1178; padding: 6px 10px; font-size: 13px; font-weight: 700; }
     .button-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .broadcast-alert { border-radius: 6px; margin: 14px 0 18px; }
+    .saved-email-lists { border: 1px solid #e9e2d8; border-radius: 6px; max-height: 180px; overflow: auto; padding: 10px; background: #fbfaf7; }
+    .saved-email-list-row { border-bottom: 1px solid #eee4d6; padding: 7px 0; }
+    .saved-email-list-row:last-child { border-bottom: 0; }
 </style>
 
 <?php include 'page_menues.php'; ?>
@@ -264,6 +283,40 @@ include 'header.php';
                     </div>
 
                     <div class="form-group">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                            <label class="mb-0">Saved email lists</label>
+                            <a href="email_lists" class="btn btn-sm btn-outline-primary">Manage lists</a>
+                        </div>
+                        <?php if (empty($savedEmailLists)): ?>
+                            <div class="field-help">No saved lists yet. Create reusable groups from the Email Lists page.</div>
+                        <?php else: ?>
+                            <div class="saved-email-lists">
+                                <?php foreach ($savedEmailLists as $list): ?>
+                                    <div class="saved-email-list-row">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input saved-email-list-check" id="email_list_<?= (int) $list['id'] ?>" value="<?= (int) $list['id'] ?>">
+                                            <label class="custom-control-label" for="email_list_<?= (int) $list['id'] ?>">
+                                                <strong><?= htmlspecialchars($list['title'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                                <span class="text-muted">(<?= number_format((int) $list['email_count']) ?>)</span>
+                                            </label>
+                                        </div>
+                                        <?php if ($list['purpose'] !== '' || $list['source_note'] !== ''): ?>
+                                            <div class="field-help pl-4">
+                                                <?= htmlspecialchars(trim($list['purpose'] . ($list['purpose'] && $list['source_note'] ? ' | ' : '') . $list['source_note']), ENT_QUOTES, 'UTF-8') ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="button-row mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="add_saved_email_lists">Add selected lists</button>
+                                <button type="button" class="btn btn-sm btn-link" id="clear_saved_email_list_selection">Clear selection</button>
+                            </div>
+                            <div class="field-help" id="saved_email_list_status">Selected lists will be merged into the extra recipients box and duplicates will be skipped.</div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="add_past_order_emails">
                             <label class="custom-control-label" for="add_past_order_emails">Add all past-order customer emails to the extra recipients box</label>
@@ -309,6 +362,7 @@ include 'header.php';
 <script src="https://cdn.tiny.cloud/1/krc3t31hewwxmxp9ymcfecueza73p98zly4l51k8zm5ngjy8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     var pastOrderEmails = <?= json_encode($pastOrderEmailList, JSON_UNESCAPED_SLASHES) ?>;
+    var savedEmailLists = <?= json_encode($savedEmailLists, JSON_UNESCAPED_SLASHES) ?>;
 
     function escapeHtml(value) {
         return String(value || '').replace(/[&<>"']/g, function(match) {
@@ -402,6 +456,43 @@ include 'header.php';
         });
 
         $('#manual_recipients').val(pieces.join("\n"));
+    });
+    $('#add_saved_email_lists').on('click', function() {
+        var selected = {};
+        $('.saved-email-list-check:checked').each(function() {
+            selected[String($(this).val())] = true;
+        });
+
+        var current = $('#manual_recipients').val() || '';
+        var pieces = current.split(/[\s,;]+/).map(function(email) {
+            return email.trim().toLowerCase();
+        }).filter(Boolean);
+        var seen = {};
+        pieces.forEach(function(email) {
+            seen[email] = true;
+        });
+
+        var added = 0;
+        savedEmailLists.forEach(function(list) {
+            if (!selected[String(list.id)]) {
+                return;
+            }
+            (list.emails || []).forEach(function(email) {
+                email = String(email || '').trim().toLowerCase();
+                if (email && !seen[email]) {
+                    pieces.push(email);
+                    seen[email] = true;
+                    added++;
+                }
+            });
+        });
+
+        $('#manual_recipients').val(pieces.join("\n"));
+        $('#saved_email_list_status').text(added ? 'Added ' + added + ' email address' + (added === 1 ? '' : 'es') + '. Duplicates were skipped.' : 'No new emails were added. They may already be in the box.');
+    });
+    $('#clear_saved_email_list_selection').on('click', function() {
+        $('.saved-email-list-check').prop('checked', false);
+        $('#saved_email_list_status').text('Selection cleared.');
     });
     $('#email-form').on('submit', function() {
         syncScheduledAt();

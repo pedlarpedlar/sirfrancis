@@ -46,6 +46,25 @@ function cbCampaignEnsureTables($conn)
         image_url VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+
+    $conn->query("CREATE TABLE IF NOT EXISTS email_recipient_lists (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(180) NOT NULL,
+        purpose VARCHAR(255) DEFAULT '',
+        source_note VARCHAR(255) DEFAULT '',
+        emails LONGTEXT NOT NULL,
+        email_count INT DEFAULT 0,
+        created_by_admin_id INT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'purpose', "VARCHAR(255) DEFAULT ''");
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'source_note', "VARCHAR(255) DEFAULT ''");
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'email_count', "INT DEFAULT 0");
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'created_by_admin_id', "INT NULL");
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'created_at', "DATETIME DEFAULT CURRENT_TIMESTAMP");
+    cbCampaignEnsureColumn($conn, 'email_recipient_lists', 'updated_at', "DATETIME DEFAULT CURRENT_TIMESTAMP");
 }
 
 function cbCampaignEnsureColumn($conn, $table, $column, $definition)
@@ -185,6 +204,24 @@ function cbCampaignParseManualRecipients($value)
     }
 
     return array_values(array_unique($emails));
+}
+
+function cbCampaignValidEmailList($value)
+{
+    $valid = [];
+    $invalid = [];
+    foreach (cbCampaignParseManualRecipients($value) as $email) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $valid[$email] = $email;
+        } else {
+            $invalid[$email] = $email;
+        }
+    }
+
+    return [
+        'valid' => array_values($valid),
+        'invalid' => array_values($invalid),
+    ];
 }
 
 function cbCampaignNormalizeEmailKey($email)
