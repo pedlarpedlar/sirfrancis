@@ -124,6 +124,11 @@ include 'page_menues.php';
                                 $scheduledCount = (int) ($row['scheduled_recipient_count'] ?? 0);
                                 $sentCount = (int) ($row['sent_success_count'] ?? 0);
                                 $failedCount = (int) ($row['sent_failed_count'] ?? 0);
+                                $hasTrackedHistory = !empty($row['sent_at'])
+                                    || $sentCount > 0
+                                    || $failedCount > 0
+                                    || !empty($row['recipient_stats_json'])
+                                    || !empty($row['recipient_snapshot_json']);
                                 $manualCount = (int) ($stats['manual_count'] ?? 0);
                                 $duplicateCount = (int) ($stats['duplicate_count'] ?? 0);
                                 $invalidCount = (int) ($stats['invalid_count'] ?? 0);
@@ -157,8 +162,13 @@ include 'page_menues.php';
                                 </td>
                                 <td>
                                     <?php if ($isSent): ?>
-                                        <strong><?= number_format($sentCount) ?></strong> sent
-                                        <div class="small-muted"><?= number_format($failedCount) ?> failed</div>
+                                        <?php if ($hasTrackedHistory): ?>
+                                            <strong><?= number_format($sentCount) ?></strong> sent
+                                            <div class="small-muted"><?= number_format($failedCount) ?> failed</div>
+                                        <?php else: ?>
+                                            <strong>History unknown</strong>
+                                            <div class="small-muted">Sent before detailed tracking was added</div>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span class="small-muted">Waiting for sender cron</span>
                                     <?php endif; ?>
