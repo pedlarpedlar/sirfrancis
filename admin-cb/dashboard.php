@@ -535,6 +535,12 @@ $importantLinks = [
         'button' => 'Open subscribers'
     ],
     [
+        'label' => 'Coupon Tester',
+        'description' => 'Test coupon dates, restrictions and basket calculations before customers use a code.',
+        'url' => 'coupon_tester',
+        'button' => 'Test coupon'
+    ],
+    [
         'label' => 'Mega Sync All Sheets',
         'description' => 'Force refresh products, coupons, clearance and wholesale caches after sheet edits.',
         'url' => 'sheets',

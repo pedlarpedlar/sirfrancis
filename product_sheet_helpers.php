@@ -177,6 +177,13 @@ if (!function_exists('isCandybirdClearanceRowActive')) {
         $from = parseCandybirdClearanceDate($row['valid_from'] ?? '', false);
         $until = parseCandybirdClearanceDate($row['valid_until'] ?? '', true);
         $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+        if (is_array($context) && !empty($context['now'])) {
+            try {
+                $now = new DateTime((string) $context['now'], new DateTimeZone('Africa/Johannesburg'));
+            } catch (Exception $exception) {
+                $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+            }
+        }
         if ($from instanceof DateTime && $now < $from) {
             return false;
         }
