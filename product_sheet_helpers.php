@@ -177,13 +177,6 @@ if (!function_exists('isCandybirdClearanceRowActive')) {
         $from = parseCandybirdClearanceDate($row['valid_from'] ?? '', false);
         $until = parseCandybirdClearanceDate($row['valid_until'] ?? '', true);
         $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
-        if (is_array($context) && !empty($context['now'])) {
-            try {
-                $now = new DateTime((string) $context['now'], new DateTimeZone('Africa/Johannesburg'));
-            } catch (Exception $exception) {
-                $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
-            }
-        }
         if ($from instanceof DateTime && $now < $from) {
             return false;
         }
@@ -947,6 +940,13 @@ if (!function_exists('validateSheetCoupon')) {
         $excludeOrderId = is_array($context) && isset($context['exclude_order_id']) ? (int) $context['exclude_order_id'] : null;
 
         $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+        if (is_array($context) && !empty($context['now'])) {
+            try {
+                $now = new DateTime((string) $context['now'], new DateTimeZone('Africa/Johannesburg'));
+            } catch (Exception $exception) {
+                $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+            }
+        }
         $validFrom = parseCandybirdCouponDate($coupon['valid_from'] ?? '');
         $validUntil = parseCandybirdCouponDate($coupon['valid_until'] ?? '');
 
