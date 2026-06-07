@@ -8,7 +8,13 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
-require_once('/home/candybirdco/configs_candybird/candybird_config.php');
+
+$liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+if (file_exists($liveConfigPath)) {
+    require_once($liveConfigPath);
+} elseif (file_exists(__DIR__ . '/configs/email_config.php')) {
+    require_once(__DIR__ . '/configs/email_config.php');
+}
 
 ?>
 
@@ -24,15 +30,24 @@ include 'page_menues.php';
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["email"]) && filter_var($_GET["email"], FILTER_VALIDATE_EMAIL)) {
             // Sanitize the email parameter to prevent SQL injection
-            $user_email = $conn->real_escape_string($_GET["email"]);
+            $user_email = strtolower(trim((string) $_GET["email"]));
 
-            // Prepare the statement
-            $stmt = $conn->prepare("UPDATE subscribers SET is_subscribed = 0 WHERE email = ?");
+            $conn->query("CREATE TABLE IF NOT EXISTS subscribers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                email VARCHAR(255) NOT NULL,
+                is_subscribed TINYINT(1) DEFAULT 1,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_subscriber_email (email)
+            )");
 
-            // Bind the email parameter to the prepared statement
+            $stmt = $conn->prepare("INSERT INTO subscribers (email, is_subscribed) VALUES (?, 0) ON DUPLICATE KEY UPDATE is_subscribed = 0");
+            if (!$stmt) {
+                echo "<p class='text-center'>Failed to unsubscribe. Please try again later or contact us.</p>";
+                include "footer.php";
+                exit();
+            }
+
             $stmt->bind_param("s", $user_email);
-
-            // Execute the prepared statement
             if ($stmt->execute()) {
                echo '<h1 class="text-center">Sad to see you go!</h1><p class="text-center text-success">&#10003; You have been successfully unsubscribed from CandyBird newsletter emails.<br>
                 It can take up to 5 business days for this to go into effect. Thanks for being patient.</p>
