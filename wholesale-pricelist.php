@@ -102,6 +102,7 @@ include 'page_menues.php';
       <div class="wholesale-note">
         <div class="wholesale-note-card"><strong>Bulk use:</strong> suited to resellers, food service, gifting, offices and larger repeat buyers.</div>
         <div class="wholesale-note-card"><strong>Pack-down:</strong> when shown, fees apply to the requested packing work/pack units, not only the bulk case size.</div>
+        <div class="wholesale-note-card"><strong>Delivery:</strong> wholesale orders are quoted with stock, packing, lead time and delivery confirmed before invoicing. Standard retail free-shipping rules may not apply to bulk lines.</div>
       </div>
 
       <div class="wholesale-calculator">
@@ -158,7 +159,7 @@ include 'page_menues.php';
               <tr><td colspan="5">Wholesale prices are being updated. Please request the current list on WhatsApp.</td></tr>
             <?php endif; ?>
             <?php foreach ($rowsByCategory as $category => $rows): ?>
-              <tr class="wholesale-category"><td colspan="5"><?= cbWholesaleText(function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($category) : $category) ?></td></tr>
+              <tr class="wholesale-category"><td colspan="5"><?= cbWholesaleText(cbWholesaleDisplayCategoryPath($category)) ?></td></tr>
               <?php foreach ($rows as $row): ?>
                 <?php
                   $bulkKg = cbWholesaleSizeToKg($row['size'] ?? '');
@@ -181,8 +182,6 @@ include 'page_menues.php';
                   <td>
                     <strong class="wholesale-price"><?= $pricePerKg > 0 ? cbWholesaleText(cbWholesaleFormatMoney($pricePerKg) . ' / kg') : 'By quote' ?></strong>
                     <?php if ($casePrice > 0): ?><span class="wholesale-mini">Works out to <?= cbWholesaleText(cbWholesaleFormatMoney($casePrice)) ?> per <?= cbWholesaleText($row['size']) ?></span><?php endif; ?>
-                    <?php $retailComparison = cbWholesaleRetailComparison($row); ?>
-                    <?php if ($retailComparison !== ''): ?><span class="wholesale-mini"><?= cbWholesaleText($retailComparison) ?></span><?php endif; ?>
                   </td>
                   <td class="wholesale-muted">
                     <?= $packDownFee > 0 ? cbWholesaleText(cbWholesaleFormatMoney($packDownFee) . ' per unit') : 'No listed fee' ?>

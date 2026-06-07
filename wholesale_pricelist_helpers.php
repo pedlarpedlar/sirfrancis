@@ -95,6 +95,44 @@ if (!function_exists('cbWholesaleProductCategory')) {
     }
 }
 
+if (!function_exists('cbWholesaleProductCategoryParts')) {
+    function cbWholesaleProductCategoryParts($product) {
+        if (!is_array($product)) {
+            return ['Wholesale'];
+        }
+
+        $parts = [];
+        foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
+            $value = trim((string) ($product[$field] ?? ''));
+            if ($value !== '' && !in_array($value, $parts, true)) {
+                $parts[] = $value;
+            }
+        }
+        return !empty($parts) ? $parts : ['Wholesale'];
+    }
+}
+
+if (!function_exists('cbWholesaleProductCategoryPath')) {
+    function cbWholesaleProductCategoryPath($product) {
+        return implode(' > ', cbWholesaleProductCategoryParts($product));
+    }
+}
+
+if (!function_exists('cbWholesaleDisplayCategoryPath')) {
+    function cbWholesaleDisplayCategoryPath($categoryPath) {
+        $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
+        if (empty($parts)) {
+            $parts = ['Wholesale'];
+        }
+
+        $labels = [];
+        foreach ($parts as $part) {
+            $labels[] = function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($part) : $part;
+        }
+        return implode(' / ', $labels);
+    }
+}
+
 if (!function_exists('cbWholesaleRowEnabled')) {
     function cbWholesaleRowEnabled($row) {
         $enabled = strtolower(trim((string) ($row['enabled'] ?? $row['available'] ?? $row['active'] ?? 'yes')));
@@ -140,7 +178,7 @@ if (!function_exists('getCandybirdWholesaleRows')) {
             $rows[] = [
                 'product_id' => $productId,
                 'title' => cbWholesaleProductTitle($row, $product),
-                'category' => cbWholesaleProductCategory($product),
+                'category' => cbWholesaleProductCategoryPath($product),
                 'size' => $size,
                 'price' => $price,
                 'price_label' => cbWholesaleFirstValue($row, ['price_label'], ''),
@@ -181,8 +219,12 @@ if (!function_exists('getCandybirdWholesaleRowsByCategory')) {
             $grouped[$row['category']][] = $row;
         }
         uksort($grouped, static function($a, $b) {
-            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($a) : PHP_INT_MAX;
-            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($b) : PHP_INT_MAX;
+            $partsA = array_filter(array_map('trim', explode('>', (string) $a)));
+            $partsB = array_filter(array_map('trim', explode('>', (string) $b)));
+            $rootA = $partsA[0] ?? $a;
+            $rootB = $partsB[0] ?? $b;
+            $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootA) : PHP_INT_MAX;
+            $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootB) : PHP_INT_MAX;
             return $posA === $posB ? strnatcasecmp($a, $b) : $posA <=> $posB;
         });
         return $grouped;
