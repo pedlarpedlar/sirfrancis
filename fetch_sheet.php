@@ -284,6 +284,20 @@ include 'page_menues.php';
       grid-template-columns: 1fr;
     }
 
+    .gifting-category-intro--gifting {
+      padding: 12px 0 8px;
+    }
+
+    .gifting-category-panel--gifting {
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    .gifting-category-panel--gifting .gifting-category-copy {
+      display: none;
+    }
+
     .gifting-category-highlights {
       grid-template-columns: 1fr;
     }
@@ -367,10 +381,10 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <?php endif; ?>
 
 <?php if (isset($_GET['gifting_intro']) || strcasecmp((string) $selectedCategory, 'Gifting') === 0): ?>
-<section class="gifting-category-intro">
+<section class="gifting-category-intro gifting-category-intro--gifting">
   <div class="container">
-    <div class="gifting-category-panel">
-      <div>
+    <div class="gifting-category-panel gifting-category-panel--gifting">
+      <div class="gifting-category-copy">
         <h1>Gifting</h1>
         <p>Beautiful edible gifts for Eid, Ramadan, weddings, staff appreciation, client drops and thoughtful family occasions. Choose from ready-to-shop gift trays, snack boxes and premium treats, or contact us for a curated gift plan when you need something more specific.</p>
         <div class="gifting-category-highlights">
