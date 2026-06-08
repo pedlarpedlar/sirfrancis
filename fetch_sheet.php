@@ -269,7 +269,7 @@ include 'page_menues.php';
   .products-filter-grid {
     display: grid;
     gap: 14px;
-    grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr);
+    grid-template-columns: 1fr;
   }
 
   .products-size-filter {
@@ -364,6 +364,10 @@ include 'page_menues.php';
       display: block;
     }
 
+    .mobile-category-sidebar:not(.is-open) + #products-filter-mobile {
+      display: none;
+    }
+
     .mobile-category-toggle {
       display: flex;
     }
@@ -393,9 +397,6 @@ include 'page_menues.php';
       grid-template-columns: 1fr;
     }
 
-    .products-filter-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
 
@@ -536,6 +537,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <div class="sidbar-widget pt-0">
           </div>
           <div id="category-sidebar"></div>
+          <div id="products-filter-sidebar"></div>
           <!-- You can add additional filters like Price/Size/Properties here if needed -->
         </aside>
       </div>
@@ -546,31 +548,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <i class="fa fa-filter"></i> Browse categories
         </button>
         <div id="mobile-category-sidebar" class="mobile-category-sidebar d-lg-none"></div>
-
-        <div class="products-filter-panel" id="products-filter-panel" hidden>
-          <div class="products-filter-heading">
-            <h3>Refine products</h3>
-            <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-product-filters">Clear filters</button>
-          </div>
-          <div class="products-filter-grid">
-            <div>
-              <span class="products-filter-label">Size</span>
-              <div class="products-size-filter" id="products-size-filter"></div>
-            </div>
-            <div class="products-price-filter">
-              <span class="products-filter-label">Price range</span>
-              <div class="products-price-values">
-                <span id="price-filter-min-label">R0</span>
-                <span id="price-filter-max-label">R0</span>
-              </div>
-              <div class="products-price-sliders">
-                <input type="range" id="price-filter-min" min="0" max="0" value="0" step="1" aria-label="Minimum price">
-                <input type="range" id="price-filter-max" min="0" max="0" value="0" step="1" aria-label="Maximum price">
-              </div>
-              <div class="products-filter-summary" id="products-filter-summary">Showing all available prices.</div>
-            </div>
-          </div>
-        </div>
+        <div id="products-filter-mobile" class="d-lg-none"></div>
         
         <div class="grid-nav-wraper bg-lighten2 mb-30">
           <div class="row align-items-center">
@@ -1278,8 +1256,46 @@ function getActiveFilteredProducts() {
 }
 
 function updatePriceLabels() {
-  $('#price-filter-min-label').text('R' + Math.round(priceFilterMin));
-  $('#price-filter-max-label').text('R' + Math.round(priceFilterMax));
+  $('.price-filter-min-label').text('R' + Math.round(priceFilterMin));
+  $('.price-filter-max-label').text('R' + Math.round(priceFilterMax));
+}
+
+function productFilterMarkup() {
+  return `
+    <div class="products-filter-panel" hidden>
+      <div class="products-filter-heading">
+        <h3>Refine products</h3>
+        <button type="button" class="btn btn-sm btn-outline-secondary clear-product-filters">Clear filters</button>
+      </div>
+      <div class="products-filter-grid">
+        <div>
+          <span class="products-filter-label">Size</span>
+          <div class="products-size-filter"></div>
+        </div>
+        <div class="products-price-filter">
+          <span class="products-filter-label">Price range</span>
+          <div class="products-price-values">
+            <span class="price-filter-min-label">R0</span>
+            <span class="price-filter-max-label">R0</span>
+          </div>
+          <div class="products-price-sliders">
+            <input type="range" class="price-filter-min" min="0" max="0" value="0" step="1" aria-label="Minimum price">
+            <input type="range" class="price-filter-max" min="0" max="0" value="0" step="1" aria-label="Maximum price">
+          </div>
+          <div class="products-filter-summary">Showing all available prices.</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function ensureProductFilterPanels() {
+  if (!$('#products-filter-sidebar .products-filter-panel').length) {
+    $('#products-filter-sidebar').html(productFilterMarkup());
+  }
+  if (!$('#products-filter-mobile .products-filter-panel').length) {
+    $('#products-filter-mobile').html(productFilterMarkup());
+  }
 }
 
 function renderProductFilters(products) {
@@ -1291,7 +1307,7 @@ function renderProductFilters(products) {
   });
 
   if (!visibleProducts.length || !prices.length) {
-    $('#products-filter-panel').attr('hidden', true);
+    $('.products-filter-panel').attr('hidden', true);
     productFiltersReady = false;
     return;
   }
@@ -1303,12 +1319,12 @@ function renderProductFilters(products) {
   priceFilterMax = defaultPriceMax;
   productFiltersReady = true;
 
-  $('#price-filter-min, #price-filter-max')
+  $('.price-filter-min, .price-filter-max')
     .attr('min', defaultPriceMin)
     .attr('max', defaultPriceMax)
     .attr('step', Math.max(1, Math.round((defaultPriceMax - defaultPriceMin) / 100) || 1));
-  $('#price-filter-min').val(defaultPriceMin);
-  $('#price-filter-max').val(defaultPriceMax);
+  $('.price-filter-min').val(defaultPriceMin);
+  $('.price-filter-max').val(defaultPriceMax);
   updatePriceLabels();
 
   const sizeMap = {};
@@ -1328,18 +1344,18 @@ function renderProductFilters(products) {
     return a.sort === b.sort ? a.label.localeCompare(b.label) : a.sort - b.sort;
   });
 
-  $('#products-size-filter').html(sizeOptions.map(function(size) {
+  $('.products-size-filter').html(sizeOptions.map(function(size) {
     return `<button type="button" class="products-size-chip" data-size="${size.key}">${size.label} <span class="text-muted">(${size.count})</span></button>`;
   }).join('') || '<span class="products-filter-summary">No size filters available.</span>');
 
-  $('#products-filter-panel').attr('hidden', false);
+  $('.products-filter-panel').attr('hidden', false);
   updateProductFilterSummary();
 }
 
 function updateProductFilterSummary() {
   const count = getActiveFilteredProducts().length;
   const sizeText = selectedSizeFilters.size ? selectedSizeFilters.size + ' size filter' + (selectedSizeFilters.size === 1 ? '' : 's') : 'all sizes';
-  $('#products-filter-summary').text(`${count} product${count === 1 ? '' : 's'} | ${sizeText} | R${Math.round(priceFilterMin)} to R${Math.round(priceFilterMax)}`);
+  $('.products-filter-summary').text(`${count} product${count === 1 ? '' : 's'} | ${sizeText} | R${Math.round(priceFilterMin)} to R${Math.round(priceFilterMax)}`);
 }
 
 function resetProductFilters() {
@@ -1347,8 +1363,8 @@ function resetProductFilters() {
   priceFilterMin = defaultPriceMin;
   priceFilterMax = defaultPriceMax;
   $('.products-size-chip').removeClass('is-active');
-  $('#price-filter-min').val(defaultPriceMin);
-  $('#price-filter-max').val(defaultPriceMax);
+  $('.price-filter-min').val(defaultPriceMin);
+  $('.price-filter-max').val(defaultPriceMax);
   updatePriceLabels();
   updateProductFilterSummary();
 }
@@ -1364,6 +1380,7 @@ $.getJSON("fetch_sheet_data.php", function (data) {
 
   console.log(data);
   renderCategoriesSidebar(ALL_PRODUCTS);
+  ensureProductFilterPanels();
 
   currentSort = new URLSearchParams(window.location.search).get('sort') || 'relevance';
   $('#selectedSort').text({
@@ -1484,26 +1501,27 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     applySort();
   });
 
-  $('#price-filter-min, #price-filter-max').on('input change', function () {
-    let minValue = parseFloat($('#price-filter-min').val()) || defaultPriceMin;
-    let maxValue = parseFloat($('#price-filter-max').val()) || defaultPriceMax;
+  $(document).on('input change', '.price-filter-min, .price-filter-max', function () {
+    const isMin = $(this).hasClass('price-filter-min');
+    let minValue = parseFloat(isMin ? $(this).val() : $('.price-filter-min').first().val()) || defaultPriceMin;
+    let maxValue = parseFloat(!isMin ? $(this).val() : $('.price-filter-max').first().val()) || defaultPriceMax;
     if (minValue > maxValue) {
-      if (this.id === 'price-filter-min') {
+      if (isMin) {
         maxValue = minValue;
-        $('#price-filter-max').val(maxValue);
       } else {
         minValue = maxValue;
-        $('#price-filter-min').val(minValue);
       }
     }
     priceFilterMin = minValue;
     priceFilterMax = maxValue;
+    $('.price-filter-min').val(priceFilterMin);
+    $('.price-filter-max').val(priceFilterMax);
     updatePriceLabels();
     updateProductFilterSummary();
     applySort();
   });
 
-  $('#clear-product-filters').on('click', function () {
+  $(document).on('click', '.clear-product-filters', function () {
     resetProductFilters();
     applySort();
   });
