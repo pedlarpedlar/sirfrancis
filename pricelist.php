@@ -85,6 +85,36 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     border-radius: 8px;
     overflow: hidden;
   }
+  .pricelist-search {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eadfd2;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+  }
+  .pricelist-search label {
+    color: #4b185f;
+    font-size: 12px;
+    font-weight: 800;
+    margin: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .pricelist-search input {
+    border: 1px solid #decbe7;
+    border-radius: 6px;
+    flex: 1;
+    min-width: 0;
+    padding: 9px 10px;
+  }
+  .pricelist-search-count {
+    color: #6d6270;
+    font-size: 12px;
+    white-space: nowrap;
+  }
   .pricelist-table { margin: 0; color: #2c2926; font-size: 13px; }
   .pricelist-table thead th {
     background: #f0e8f4;
@@ -199,6 +229,8 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     .pricelist-hero-media { max-width: 100%; width: 100%; }
     .pricelist-actions { justify-content: flex-start; }
     .pricelist-note { grid-template-columns: 1fr; }
+    .pricelist-search { align-items: stretch; flex-direction: column; }
+    .pricelist-search-count { white-space: normal; }
     .pricelist-table { font-size: 12px; }
     .pricelist-table td, .pricelist-table thead th { padding: 6px 7px; }
     .pricelist-group-toggle { grid-template-columns: 24px minmax(0, 1fr); }
@@ -242,6 +274,12 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       <div><strong>Latest prices:</strong> the live website pricelist is always the final reference.</div>
     </div>
 
+    <div class="pricelist-search no-print">
+      <label for="pricelist-search-input">Find item</label>
+      <input type="search" id="pricelist-search-input" placeholder="Try: 100g pecan plain, plain pecans 100g, pistachio 1kg">
+      <span class="pricelist-search-count" id="pricelist-search-count"><?= number_format($productCount) ?> options</span>
+    </div>
+
     <div class="pricelist-shell">
       <div class="table-responsive">
         <table class="table pricelist-table">
@@ -270,7 +308,16 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
                 </td>
               </tr>
               <?php foreach (cbPricelistProductGroups($products, $sort, $direction) as $group): ?>
-                <tr class="pricelist-group-row">
+                <?php
+                  $groupSearchParts = [$categoryName, $group['title']];
+                  foreach ($group['products'] as $groupSearchProduct) {
+                      $groupSearchParts[] = $groupSearchProduct['id'] ?? '';
+                      $groupSearchParts[] = $groupSearchProduct['name'] ?? '';
+                      $groupSearchParts[] = getSheetProductDisplaySize($groupSearchProduct);
+                  }
+                  $groupSearchText = implode(' ', array_filter($groupSearchParts));
+                ?>
+                <tr class="pricelist-group-row" data-group-search="<?= cbPricelistText($groupSearchText) ?>">
                   <td colspan="6">
                     <button type="button" class="pricelist-group-toggle" data-group="<?= cbPricelistText($group['id']) ?>" aria-expanded="false">
                       <span class="pricelist-group-icon">+</span>
@@ -288,7 +335,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
                   $pricing = cbPricelistPricing($product);
                   $productLink = getSheetProductUrl($product);
                 ?>
-                <tr class="pricelist-size-row" data-group-row="<?= cbPricelistText($group['id']) ?>" hidden>
+                <tr class="pricelist-size-row" data-group-row="<?= cbPricelistText($group['id']) ?>" data-row-search="<?= cbPricelistText(implode(' ', [$categoryName, $id, $name, $size])) ?>" hidden>
                   <td class="id-cell"><?= cbPricelistText($id) ?></td>
                   <td><a class="product-link" href="<?= cbPricelistText($productLink) ?>"><?= cbPricelistText($name) ?></a></td>
                   <td class="size-cell"><?= cbPricelistText($size) ?></td>
@@ -343,6 +390,98 @@ document.addEventListener('click', function(event) {
     row.hidden = !open;
   });
 });
+
+(function() {
+  var searchInput = document.getElementById('pricelist-search-input');
+  var countEl = document.getElementById('pricelist-search-count');
+  if (!searchInput) return;
+
+  function normalize(value) {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/&amp;/g, '&')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function tokens(value) {
+    var expanded = [];
+    normalize(value).split(' ').filter(Boolean).forEach(function(token) {
+      expanded.push(token);
+      if (token.length > 3 && token.slice(-1) === 's') {
+        expanded.push(token.slice(0, -1));
+      }
+    });
+    return Array.from(new Set(expanded));
+  }
+
+  function tokenMatch(haystack, queryTokens) {
+    if (!queryTokens.length) return true;
+    return queryTokens.every(function(token) {
+      return haystack.indexOf(token) !== -1;
+    });
+  }
+
+  function updatePricelistSearch() {
+    var queryTokens = tokens(searchInput.value);
+    var searching = queryTokens.length > 0;
+    var visibleOptions = 0;
+    var visibleGroups = 0;
+
+    document.querySelectorAll('.pricelist-category').forEach(function(categoryRow) {
+      var categoryHasVisible = false;
+      var row = categoryRow.nextElementSibling;
+
+      while (row && !row.classList.contains('pricelist-category')) {
+        if (row.classList.contains('pricelist-group-row')) {
+          var groupId = row.querySelector('.pricelist-group-toggle') ? row.querySelector('.pricelist-group-toggle').getAttribute('data-group') : '';
+          var groupHasVisible = false;
+
+          document.querySelectorAll('[data-group-row="' + groupId + '"]').forEach(function(sizeRow) {
+            var rowText = normalize(sizeRow.getAttribute('data-row-search') || '');
+            var rowMatches = tokenMatch(rowText, queryTokens);
+            if (searching) {
+              sizeRow.hidden = !rowMatches;
+            } else {
+              var button = row.querySelector('.pricelist-group-toggle');
+              sizeRow.hidden = !(button && button.getAttribute('aria-expanded') === 'true');
+            }
+            if (rowMatches) {
+              groupHasVisible = true;
+              visibleOptions++;
+            }
+          });
+
+          row.style.display = (!searching || groupHasVisible) ? '' : 'none';
+          var button = row.querySelector('.pricelist-group-toggle');
+          var icon = row.querySelector('.pricelist-group-icon');
+          if (searching && button && groupHasVisible) {
+            button.setAttribute('aria-expanded', 'true');
+            if (icon) icon.textContent = '-';
+          } else if (!searching && button && button.getAttribute('aria-expanded') !== 'true' && icon) {
+            icon.textContent = '+';
+          }
+          if (!searching || groupHasVisible) {
+            categoryHasVisible = true;
+            if (groupHasVisible) visibleGroups++;
+          }
+        }
+        row = row.nextElementSibling;
+      }
+
+      categoryRow.style.display = (!searching || categoryHasVisible) ? '' : 'none';
+    });
+
+    if (countEl) {
+      countEl.textContent = searching
+        ? visibleOptions + ' matching option' + (visibleOptions === 1 ? '' : 's')
+        : '<?= number_format($productCount) ?> options';
+    }
+  }
+
+  searchInput.addEventListener('input', updatePricelistSearch);
+})();
 </script>
 
 <?php include 'footer.php'; ?>

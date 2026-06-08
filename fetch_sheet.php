@@ -242,6 +242,97 @@ include 'page_menues.php';
     margin: 0;
   }
 
+  .products-filter-panel {
+    background: #fff;
+    border: 1px solid #eadfd2;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    padding: 14px;
+  }
+
+  .products-filter-heading {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .products-filter-heading h3 {
+    color: #4b185f;
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .products-filter-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr);
+  }
+
+  .products-size-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .products-size-chip {
+    background: #fbfaf7;
+    border: 1px solid #decbe7;
+    border-radius: 999px;
+    color: #4b185f;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    padding: 8px 10px;
+  }
+
+  .products-size-chip.is-active {
+    background: #5b1178;
+    border-color: #5b1178;
+    color: #fff;
+  }
+
+  .products-filter-label {
+    color: #6d6270;
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .products-price-filter {
+    display: grid;
+    gap: 8px;
+  }
+
+  .products-price-sliders {
+    display: grid;
+    gap: 6px;
+  }
+
+  .products-price-sliders input[type="range"] {
+    accent-color: #5b1178;
+    width: 100%;
+  }
+
+  .products-price-values {
+    color: #4b185f;
+    display: flex;
+    font-size: 13px;
+    font-weight: 800;
+    justify-content: space-between;
+  }
+
+  .products-filter-summary {
+    color: #6d6270;
+    font-size: 12px;
+  }
+
   .gifting-category-highlights {
     display: grid;
     gap: 10px;
@@ -299,6 +390,10 @@ include 'page_menues.php';
     }
 
     .gifting-category-highlights {
+      grid-template-columns: 1fr;
+    }
+
+    .products-filter-grid {
       grid-template-columns: 1fr;
     }
   }
@@ -451,6 +546,31 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <i class="fa fa-filter"></i> Browse categories
         </button>
         <div id="mobile-category-sidebar" class="mobile-category-sidebar d-lg-none"></div>
+
+        <div class="products-filter-panel" id="products-filter-panel" hidden>
+          <div class="products-filter-heading">
+            <h3>Refine products</h3>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-product-filters">Clear filters</button>
+          </div>
+          <div class="products-filter-grid">
+            <div>
+              <span class="products-filter-label">Size</span>
+              <div class="products-size-filter" id="products-size-filter"></div>
+            </div>
+            <div class="products-price-filter">
+              <span class="products-filter-label">Price range</span>
+              <div class="products-price-values">
+                <span id="price-filter-min-label">R0</span>
+                <span id="price-filter-max-label">R0</span>
+              </div>
+              <div class="products-price-sliders">
+                <input type="range" id="price-filter-min" min="0" max="0" value="0" step="1" aria-label="Minimum price">
+                <input type="range" id="price-filter-max" min="0" max="0" value="0" step="1" aria-label="Maximum price">
+              </div>
+              <div class="products-filter-summary" id="products-filter-summary">Showing all available prices.</div>
+            </div>
+          </div>
+        </div>
         
         <div class="grid-nav-wraper bg-lighten2 mb-30">
           <div class="row align-items-center">
@@ -934,7 +1054,7 @@ document.addEventListener('click', function(event) {
     $('#filtered_products_grid_view, #filtered_products_list_view').empty();
     $('#products-empty').addClass('d-none');
 
-    productsToShow = [...categoryFiltered].sort((a, b) => {
+    productsToShow = [...getActiveFilteredProducts()].sort((a, b) => {
       const aSoldOut = isProductSoldOut(a);
       const bSoldOut = isProductSoldOut(b);
       if (aSoldOut !== bSoldOut) {
@@ -1111,11 +1231,127 @@ document.addEventListener('click', function(event) {
 let ALL_PRODUCTS = [];
 let currentSort = '';
 let categoryFiltered = [];
+let baseCategoryFiltered = [];
 let activeSearchTerm = '';
+let selectedSizeFilters = new Set();
+let priceFilterMin = 0;
+let priceFilterMax = 0;
+let defaultPriceMin = 0;
+let defaultPriceMax = 0;
+let productFiltersReady = false;
 
 let PRODUCTS_PER_LOAD = 10;
 let renderedCount = 0;
 let productsToShow = [];
+
+function normalizeSizeFilter(value) {
+  return String(value || '').trim().toLowerCase().replace(/\s+/g, '');
+}
+
+function sizeSortValue(value) {
+  const match = String(value || '').toLowerCase().match(/(\d+(?:[.,]\d+)?)\s*(kg|g|ml|l|lt|pc|pcs)/);
+  if (!match) return Number.MAX_SAFE_INTEGER;
+  const amount = parseFloat(match[1].replace(',', '.')) || 0;
+  const unit = match[2];
+  if (unit === 'kg' || unit === 'l' || unit === 'lt') return amount * 1000;
+  if (unit === 'pc' || unit === 'pcs') return amount * 1000000;
+  return amount;
+}
+
+function getProductSizeFilter(product) {
+  return displayProductSize(product);
+}
+
+function getActiveFilteredProducts() {
+  return categoryFiltered.filter(function(product) {
+    const price = getPrice(product);
+    if (productFiltersReady && price < priceFilterMin - 0.001) return false;
+    if (productFiltersReady && price > priceFilterMax + 0.001) return false;
+
+    if (selectedSizeFilters.size) {
+      const sizeKey = normalizeSizeFilter(getProductSizeFilter(product));
+      if (!selectedSizeFilters.has(sizeKey)) return false;
+    }
+
+    return true;
+  });
+}
+
+function updatePriceLabels() {
+  $('#price-filter-min-label').text('R' + Math.round(priceFilterMin));
+  $('#price-filter-max-label').text('R' + Math.round(priceFilterMax));
+}
+
+function renderProductFilters(products) {
+  const visibleProducts = (products || []).filter(function(product) {
+    return !isProductSoldOut(product);
+  });
+  const prices = visibleProducts.map(getPrice).filter(function(price) {
+    return isFinite(price) && price > 0;
+  });
+
+  if (!visibleProducts.length || !prices.length) {
+    $('#products-filter-panel').attr('hidden', true);
+    productFiltersReady = false;
+    return;
+  }
+
+  defaultPriceMin = Math.floor(Math.min.apply(null, prices));
+  defaultPriceMax = Math.ceil(Math.max.apply(null, prices));
+  if (defaultPriceMax < defaultPriceMin) defaultPriceMax = defaultPriceMin;
+  priceFilterMin = defaultPriceMin;
+  priceFilterMax = defaultPriceMax;
+  productFiltersReady = true;
+
+  $('#price-filter-min, #price-filter-max')
+    .attr('min', defaultPriceMin)
+    .attr('max', defaultPriceMax)
+    .attr('step', Math.max(1, Math.round((defaultPriceMax - defaultPriceMin) / 100) || 1));
+  $('#price-filter-min').val(defaultPriceMin);
+  $('#price-filter-max').val(defaultPriceMax);
+  updatePriceLabels();
+
+  const sizeMap = {};
+  visibleProducts.forEach(function(product) {
+    const size = getProductSizeFilter(product);
+    const key = normalizeSizeFilter(size);
+    if (!size || !key) return;
+    if (!sizeMap[key]) {
+      sizeMap[key] = { label: size, count: 0, sort: sizeSortValue(size) };
+    }
+    sizeMap[key].count++;
+  });
+
+  const sizeOptions = Object.keys(sizeMap).map(function(key) {
+    return Object.assign({ key: key }, sizeMap[key]);
+  }).sort(function(a, b) {
+    return a.sort === b.sort ? a.label.localeCompare(b.label) : a.sort - b.sort;
+  });
+
+  $('#products-size-filter').html(sizeOptions.map(function(size) {
+    return `<button type="button" class="products-size-chip" data-size="${size.key}">${size.label} <span class="text-muted">(${size.count})</span></button>`;
+  }).join('') || '<span class="products-filter-summary">No size filters available.</span>');
+
+  $('#products-filter-panel').attr('hidden', false);
+  updateProductFilterSummary();
+}
+
+function updateProductFilterSummary() {
+  const count = getActiveFilteredProducts().length;
+  const sizeText = selectedSizeFilters.size ? selectedSizeFilters.size + ' size filter' + (selectedSizeFilters.size === 1 ? '' : 's') : 'all sizes';
+  $('#products-filter-summary').text(`${count} product${count === 1 ? '' : 's'} | ${sizeText} | R${Math.round(priceFilterMin)} to R${Math.round(priceFilterMax)}`);
+}
+
+function resetProductFilters() {
+  selectedSizeFilters.clear();
+  priceFilterMin = defaultPriceMin;
+  priceFilterMax = defaultPriceMax;
+  $('.products-size-chip').removeClass('is-active');
+  $('#price-filter-min').val(defaultPriceMin);
+  $('#price-filter-max').val(defaultPriceMax);
+  updatePriceLabels();
+  updateProductFilterSummary();
+}
 
 $.getJSON("fetch_sheet_data.php", function (data) {
 
@@ -1207,6 +1443,9 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     $('#products-empty p').text('No products found for "' + activeSearchTerm + '". Try a simpler word like pistachio, almond, chocolate, raw, salted, 500g, or 1kg.');
   }
 
+  baseCategoryFiltered = [...categoryFiltered];
+  renderProductFilters(baseCategoryFiltered);
+
   /* --------------------------------
      INFINITE SCROLL
   -------------------------------- */
@@ -1227,6 +1466,45 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     e.preventDefault();
     currentSort = $(this).data('sort');
     $('#selectedSort').text($(this).text());
+    applySort();
+  });
+
+  $(document).on('click', '.products-size-chip', function () {
+    const size = String($(this).data('size') || '');
+    if (!size) return;
+
+    if (selectedSizeFilters.has(size)) {
+      selectedSizeFilters.delete(size);
+      $(this).removeClass('is-active');
+    } else {
+      selectedSizeFilters.add(size);
+      $(this).addClass('is-active');
+    }
+    updateProductFilterSummary();
+    applySort();
+  });
+
+  $('#price-filter-min, #price-filter-max').on('input change', function () {
+    let minValue = parseFloat($('#price-filter-min').val()) || defaultPriceMin;
+    let maxValue = parseFloat($('#price-filter-max').val()) || defaultPriceMax;
+    if (minValue > maxValue) {
+      if (this.id === 'price-filter-min') {
+        maxValue = minValue;
+        $('#price-filter-max').val(maxValue);
+      } else {
+        minValue = maxValue;
+        $('#price-filter-min').val(minValue);
+      }
+    }
+    priceFilterMin = minValue;
+    priceFilterMax = maxValue;
+    updatePriceLabels();
+    updateProductFilterSummary();
+    applySort();
+  });
+
+  $('#clear-product-filters').on('click', function () {
+    resetProductFilters();
     applySort();
   });
 
