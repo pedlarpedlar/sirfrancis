@@ -128,7 +128,7 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/plugins.css" />
     <!-- <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/aos.css" /> -->
-    <link rel="stylesheet" href="<?=$home_directory?>assets/css/style.perf.min.css?v=<?=filemtime(__DIR__ . '/assets/css/style.perf.min.css')?>" />
+    <link rel="stylesheet" href="<?=$home_directory?>assets/css/style.css?v=<?=filemtime(__DIR__ . '/assets/css/style.css')?>" />
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
 
