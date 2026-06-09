@@ -1810,19 +1810,34 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
         logAction('Clicked on slider next/prev button, slider ID: ' + sliderId, 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
     });
 </script>
-<script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
 <script>
   (function() {
-    var merchantWidgetScript = document.getElementById('merchantWidgetScript');
-    if (!merchantWidgetScript) return;
+    function loadMerchantWidget() {
+      if (document.getElementById('merchantWidgetScript')) return;
 
-    merchantWidgetScript.addEventListener('load', function() {
-      if (!window.merchantwidget || typeof window.merchantwidget.start !== 'function') return;
-      window.merchantwidget.start({
-        merchant_id: 5312147848,
-        position: 'BOTTOM_RIGHT',
-        region: 'ZA'
+      var merchantWidgetScript = document.createElement('script');
+      merchantWidgetScript.id = 'merchantWidgetScript';
+      merchantWidgetScript.src = 'https://www.gstatic.com/shopping/merchant/merchantwidget.js';
+      merchantWidgetScript.defer = true;
+
+      merchantWidgetScript.addEventListener('load', function() {
+        if (!window.merchantwidget || typeof window.merchantwidget.start !== 'function') return;
+        window.merchantwidget.start({
+          merchant_id: 5312147848,
+          position: 'BOTTOM_RIGHT',
+          region: 'ZA'
+        });
       });
+
+      document.body.appendChild(merchantWidgetScript);
+    }
+
+    window.addEventListener('load', function() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadMerchantWidget, { timeout: 5000 });
+      } else {
+        setTimeout(loadMerchantWidget, 2500);
+      }
     });
   })();
 </script>

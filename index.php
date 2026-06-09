@@ -450,8 +450,27 @@ foreach ($slides as $slide) {
   }
 </script>
 
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initHomepageReviews&loading=async">
+<script>
+  window.addEventListener('load', function() {
+    var loadReviews = function() {
+      if (window.google && google.maps && google.maps.places) {
+        initHomepageReviews();
+        return;
+      }
+
+      var script = document.createElement('script');
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initHomepageReviews&loading=async';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    };
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadReviews, { timeout: 3500 });
+    } else {
+      setTimeout(loadReviews, 1800);
+    }
+  });
 </script>
 <!-- customer reviews end -->
 
