@@ -163,7 +163,11 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       position: absolute;
       bottom: -90px;
       right: 60px;
-      display: none;
+      background-image: url('assets/img/walnut-home.png');
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      background-size: contain;
+      pointer-events: none;
     }
 
     @media (max-width: 768px) {
