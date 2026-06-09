@@ -9,37 +9,10 @@ $image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']);
 ?>
-<!-- Canonical URL to Avoid Duplicate Content Issues -->
-<link rel="canonical" href="<?=$page_url_canonical?>">
-
-<!-- Meta Description Tag -->
-<meta name="description" content="<?=$description_meta?>">
-
-<!-- Open Graph Meta Tags for Facebook, Twitter, etc. -->
-<meta property="og:title" content="<?=$title_og?>">
-<meta property="og:description" content="<?=$description_og?>">
-<meta property="og:image" content="<?=$image_url_og?>">
-<meta property="og:url" content="<?=$page_url_og?>">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?=$title_og?>">
-<meta name="twitter:description" content="<?=$description_og?>">
-<meta name="twitter:image" content="<?=$image_url_og?>">
 
 <title>Premium Nut Packs, Dried Fruit & Unique Gifts South Africa | CandyBird</title>
-
-<?php
-include 'page_menues.php';
-?>
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Dancing+Script:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Dancing+Script:wght@400..700&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="<?=$home_directory?>assets/img/slider/1.optimized.jpg" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Dancing+Script:wght@400..700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -237,6 +210,10 @@ include 'page_menues.php';
     }
 
   </style>
+
+<?php
+include 'page_menues.php';
+?>
 
 <!-- main slider start -->
 <!-- <div id="logo-main"></div> -->

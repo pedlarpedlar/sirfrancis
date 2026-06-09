@@ -50,10 +50,10 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   <div class="social-network">
     <ul class="d-flex justify-content-center"> <!-- Added justify-content-center class -->
       <li>
-        <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" target="_blank"><span class="icon-social-facebook"></span></a>
+        <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" target="_blank" aria-label="CandyBird on Facebook"><span class="icon-social-facebook"></span></a>
       </li>
       <li class="mr-0">
-        <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" target="_blank"><span class="icon-social-instagram"></span></a>
+        <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" target="_blank" aria-label="CandyBird on Instagram"><span class="icon-social-instagram"></span></a>
       </li>
     </ul>
   </div>
@@ -1415,6 +1415,8 @@ function initializeSlick() {
 </script>
 
 
+<?php $isAdminFooter = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-cb/') !== false; ?>
+<?php if ($isAdminFooter): ?>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 
@@ -1569,9 +1571,46 @@ $(document).ready(function() {
       });
   });
 </script>
+<?php endif; ?>
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    function tuneImage(img) {
+        if (!img || img.dataset.cbPerfTuned === '1') return;
+        img.dataset.cbPerfTuned = '1';
+        if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+        }
+        if (!img.hasAttribute('decoding')) {
+            img.setAttribute('decoding', 'async');
+        }
+    }
+
+    document.querySelectorAll('img').forEach(function(img, index) {
+        if (index === 0 && !img.hasAttribute('fetchpriority')) {
+            img.setAttribute('fetchpriority', 'high');
+            return;
+        }
+        tuneImage(img);
+    });
+
+    if ('MutationObserver' in window) {
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType !== 1) return;
+                    if (node.tagName === 'IMG') {
+                        tuneImage(node);
+                    } else if (node.querySelectorAll) {
+                        node.querySelectorAll('img').forEach(tuneImage);
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+});
 
 // document.addEventListener('DOMContentLoaded', function() {
 //     var guestIdentifier = '<?= $guestIdentifier ?>'; // Replace this with actual guest identifier logic

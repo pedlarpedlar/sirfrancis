@@ -10,7 +10,7 @@
 <div id="offcanvas-mobile-menu" class="offcanvas theme1 offcanvas-mobile-menu no-print">
   <div class="inner">
     <div class="border-bottom mb-4 pb-4 text-right">
-      <button class="offcanvas-close">×</button>
+      <button class="offcanvas-close" type="button" aria-label="Close menu">×</button>
     </div>
     <div class="offcanvas-head mb-4">
       <nav class="offcanvas-top-nav">
@@ -32,7 +32,7 @@
             </a>
           </li>
           <li class="my-2 mx-2">
-            <a class="search search-toggle" href="javascript:void(0)">
+            <a class="search search-toggle" href="javascript:void(0)" aria-label="Open search">
               <i class="icon-magnifier"></i> Search</a
             >
           </li>
@@ -223,10 +223,10 @@ $categories = buildSheetMenuCategories();
     <div class="offcanvas-social py-30">
       <ul>
         <li>
-          <a class="social-link-click" href="https://www.facebook.com/candybirdnuts"><i class="icon-social-facebook"></i></a>
+          <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" aria-label="CandyBird on Facebook"><i class="icon-social-facebook"></i></a>
         </li>
         <li>
-          <a class="social-link-click" href="https://www.instagram.com/candybirdnuts"><i class="icon-social-instagram"></i></a>
+          <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" aria-label="CandyBird on Instagram"><i class="icon-social-instagram"></i></a>
         </li>
       </ul>
     </div>
@@ -267,7 +267,7 @@ foreach ($offCanvasWishlistItems as $item) {
   <div class="inner">
     <div class="head d-flex flex-wrap justify-content-between">
       <span class="title">Wishlist</span>
-      <button class="offcanvas-close">×</button>
+      <button class="offcanvas-close" type="button" aria-label="Close wishlist">×</button>
     </div>
     <ul class="minicart-product-list">
       <?=$offcanvas_wishlist;?>
@@ -355,7 +355,7 @@ foreach ($offCanvasCartItems as $item) {
   <div class="inner">
     <div class="head d-flex flex-wrap justify-content-between">
       <span class="title">Cart</span>
-      <button class="offcanvas-close">×</button>
+      <button class="offcanvas-close" type="button" aria-label="Close cart">×</button>
     </div>
     <ul class="minicart-product-list">
       <?=$offcanvas_cart;?>
@@ -392,12 +392,12 @@ foreach ($offCanvasCartItems as $item) {
             <div class="social-network2">
               <ul class="d-flex">
                 <li>
-                  <a href="https://www.facebook.com/candybirdnuts" target="_blank"
+                  <a href="https://www.facebook.com/candybirdnuts" target="_blank" aria-label="CandyBird on Facebook"
                     ><span class="icon-social-facebook"></span
                   ></a>
                 </li>
                 <li class="mr-0">
-                  <a href="https://www.instagram.com/candybirdnuts" target="_blank"
+                  <a href="https://www.instagram.com/candybirdnuts" target="_blank" aria-label="CandyBird on Instagram"
                     ><span class="icon-social-instagram"></span
                   ></a>
                 </li>
@@ -519,12 +519,12 @@ foreach ($offCanvasCartItems as $item) {
             <div class="cart-block-links theme1 d-none d-sm-block">
               <ul class="d-flex">
                 <li>
-                  <a href="javascript:void(0)" class="search search-toggle">
+                  <a href="javascript:void(0)" class="search search-toggle" aria-label="Open search">
                     <i class="icon-magnifier"></i>
                   </a>
                 </li>
                 <li>
-                  <a href="compare">
+                  <a href="compare" aria-label="Compare products">
                     <span class="position-relative" id="compareBadge">
                       <i class="icon-shuffle"></i>
                       <?= $compareCount > 0 ? '<span class="badge cbdg1">' . $compareCount . '</span>' : '' ?>
@@ -532,7 +532,7 @@ foreach ($offCanvasCartItems as $item) {
                   </a>
                 </li>
                 <li>
-                  <a class="offcanvas-toggle" href="#offcanvas-wishlist">
+                  <a class="offcanvas-toggle" href="#offcanvas-wishlist" aria-label="Open wishlist">
                     <span class="position-relative" id="wishlistBadge">
                       <i class="icon-heart"></i>
                       <?= $wishlistCount > 0 ? '<span class="badge cbdg1">' . $wishlistCount . '</span>' : '' ?>
@@ -540,7 +540,7 @@ foreach ($offCanvasCartItems as $item) {
                   </a>
                 </li>
                 <li class="mr-xl-0 cart-block position-relative">
-                  <a class="offcanvas-toggle" href="#offcanvas-cart">
+                  <a class="offcanvas-toggle" href="#offcanvas-cart" aria-label="Open cart">
                     <span class="position-relative" id="cartBadge">
                       <i class="icon-bag"></i>
                       <?= $cartCount > 0 ? '<span class="badge cbdg1">' . $cartCount . '</span>' : '' ?>

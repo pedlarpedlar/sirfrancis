@@ -616,35 +616,35 @@ button.close:hover {
 }
 
 .bg-img1 {
-  background-image: url("../img/slider/1.png");
+  background-image: url("../img/slider/1.optimized.jpg");
 }
 
 .bg-img2 {
-  background-image: url("../img/slider/2.png");
+  background-image: url("../img/slider/2.optimized.jpg");
 }
 
 .bg-img3 {
-  background-image: url("../img/slider/3.png");
+  background-image: url("../img/slider/3.optimized.jpg");
 }
 
 .bg-img4 {
-  background-image: url("../img/slider/4.png");
+  background-image: url("../img/slider/4.optimized.jpg");
 }
 
 .bg-img5 {
-  background-image: url("../img/slider/5.png");
+  background-image: url("../img/slider/5.optimized.jpg");
 }
 
 .bg-img6 {
-  background-image: url("../img/slider/6.png");
+  background-image: url("../img/slider/6.optimized.jpg");
 }
 
 .bg-img7 {
-  background-image: url("../img/slider/7.png");
+  background-image: url("../img/slider/7.optimized.jpg");
 }
 
 .bg-img8 {
-  background-image: url("../img/slider/8.png");
+  background-image: url("../img/slider/8.optimized.jpg");
 }
 
 @media (max-width: 991px) {
