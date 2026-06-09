@@ -243,20 +243,21 @@ $offcanvas_wishlist = "";
 
 foreach ($offCanvasWishlistItems as $item) {
     $image_url = isset($item['image_url']) ? $item['image_url'] : 'assets/img/product/1.png';
-
-    $offcanvas_wishlist .= '<li>';
-    $offcanvas_wishlist .= '<a href="single-product.html" class="image">';
-    $offcanvas_wishlist .= '<img src="' . $image_url . '" alt="Cart product Image"/>';
-    $offcanvas_wishlist .= '</a>';
-    $offcanvas_wishlist .= '<div class="content">';
     $wishlistTitle = trim($item['title'] . ' ' . ($item['weight'] ?? ''));
     $wishlistSheetProduct = getSheetProductById($item['id']);
     if ($wishlistSheetProduct) {
         $wishlistTitle = getSheetProductDisplayTitle($wishlistSheetProduct);
     }
-    $offcanvas_wishlist .= '<a href="product?id=' . $item['id'] . '" class="title">' . htmlspecialchars($wishlistTitle, ENT_QUOTES, 'UTF-8') .'</a>';
+
+    $offcanvas_wishlist .= '<li>';
+    $wishlistItemLink = 'product?id=' . urlencode((string) $item['id']);
+    $offcanvas_wishlist .= '<a href="' . htmlspecialchars($wishlistItemLink, ENT_QUOTES, 'UTF-8') . '" class="image">';
+    $offcanvas_wishlist .= '<img src="' . $image_url . '" alt="' . htmlspecialchars($wishlistTitle, ENT_QUOTES, 'UTF-8') . '" width="80" height="80" loading="lazy" decoding="async"/>';
+    $offcanvas_wishlist .= '</a>';
+    $offcanvas_wishlist .= '<div class="content">';
+    $offcanvas_wishlist .= '<a href="' . htmlspecialchars($wishlistItemLink, ENT_QUOTES, 'UTF-8') . '" class="title">' . htmlspecialchars($wishlistTitle, ENT_QUOTES, 'UTF-8') .'</a>';
     $offcanvas_wishlist .= '<span class="quantity-price">1 x <span class="amount">R' . $item['price'] . '</span>';
-    $offcanvas_wishlist .= '<span><a href="#" class="remove removeFromWishlist" data-product-id="' . $item['id'] . '">×</a></span>';
+    $offcanvas_wishlist .= '<span><a href="#" class="remove removeFromWishlist" data-product-id="' . $item['id'] . '" aria-label="Remove ' . htmlspecialchars($wishlistTitle, ENT_QUOTES, 'UTF-8') . ' from wishlist">×</a></span>';
     $offcanvas_wishlist .= '</div>';
     $offcanvas_wishlist .= '</li>';
 }
@@ -325,25 +326,25 @@ foreach ($offCanvasCartItems as $item) {
     $cart_subtotal += ($quantity * $discounted_price);
 
     $image_url = isset($item['image_url']) ? $item['image_url'] : 'assets/img/product/1.png';
-
-    $offcanvas_cart .= '<li>';
-    $cartItemLink = $item['product_url'] ?? ('product?id=' . urlencode((string) $item['id']));
-    $offcanvas_cart .= '<a href="' . htmlspecialchars($cartItemLink, ENT_QUOTES, 'UTF-8') . '" class="image">';
-    $offcanvas_cart .= '<img src="' . $image_url . '" alt="Cart product Image"/>';
-    $offcanvas_cart .= '</a>';
-    $offcanvas_cart .= '<div class="content">';
     $cartItemTitle = trim($item['title'] . ' ' . ($item['product_weight'] ?? ''));
     $isCartClearance = !empty($item['is_clearance']) && $item['is_clearance'] === 'yes';
     $cartSheetProduct = $isCartClearance ? getSheetProductById($item['source_product_id'] ?? $item['product_id'] ?? '') : getSheetProductById($item['id']);
     if ($cartSheetProduct) {
         $cartItemTitle = $isCartClearance ? trim((string) $item['title']) : getSheetProductDisplayTitle($cartSheetProduct);
     }
+
+    $offcanvas_cart .= '<li>';
+    $cartItemLink = $item['product_url'] ?? ('product?id=' . urlencode((string) $item['id']));
+    $offcanvas_cart .= '<a href="' . htmlspecialchars($cartItemLink, ENT_QUOTES, 'UTF-8') . '" class="image">';
+    $offcanvas_cart .= '<img src="' . $image_url . '" alt="' . htmlspecialchars($cartItemTitle, ENT_QUOTES, 'UTF-8') . '" width="80" height="80" loading="lazy" decoding="async"/>';
+    $offcanvas_cart .= '</a>';
+    $offcanvas_cart .= '<div class="content">';
     $offcanvas_cart .= '<a href="' . htmlspecialchars($cartItemLink, ENT_QUOTES, 'UTF-8') . '" class="title">' . htmlspecialchars($cartItemTitle, ENT_QUOTES, 'UTF-8') .'</a>';
     if ((!empty($item['free_delivery_excluded']) && $item['free_delivery_excluded'] === 'yes') || isCandybirdFreeDeliveryExcluded($cartSheetProduct)) {
         $offcanvas_cart .= '<small style="display:block;color:#8a8178;font-size:11px;line-height:1.35;margin-top:3px;">Free shipping does not apply to this item.</small>';
     }
     $offcanvas_cart .= '<span class="quantity-price">' . $item['quantity'] . ' x <span class="amount">R' . number_format($discounted_price, 2) . '</span>';
-    $offcanvas_cart .= '<span><a href="#" class="remove removeFromCart" data-product-id="' . $item['id'] . '">×</a></span>';
+    $offcanvas_cart .= '<span><a href="#" class="remove removeFromCart" data-product-id="' . $item['id'] . '" aria-label="Remove ' . htmlspecialchars($cartItemTitle, ENT_QUOTES, 'UTF-8') . ' from cart">×</a></span>';
     $offcanvas_cart .= '</div>';
     $offcanvas_cart .= '</li>';
 }

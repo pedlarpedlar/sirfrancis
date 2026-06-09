@@ -12,7 +12,6 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 
 <title>Premium Nut Packs, Dried Fruit & Unique Gifts South Africa | CandyBird</title>
 <link rel="preload" as="image" href="<?=$home_directory?>assets/img/slider/1.optimized.jpg" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Dancing+Script:wght@400..700&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -236,7 +235,7 @@ foreach ($slides as $slide) {
     echo '            ' . $slide['title'];
     echo '          </p>';
     echo '          <h2 class="title animated pb-3 align-items-center">';
-    echo '            <span class="animated d-block" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="0.900"><img src="assets/img/break.svg" alt="wave" style="margin: 10px auto;"></span>';
+    echo '            <span class="animated d-block" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="0.900"><img src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async" style="margin: 10px auto;"></span>';
     echo '          </h2>';
     echo '          <p class="text text-secondary animated dancing-script" data-animation-in="' . $slide['animation']['description'] . '" data-delay-in="' . $slide['delay_in_description'] . '">';
     echo '            ' . $slide['subtitle'];
@@ -273,7 +272,7 @@ foreach ($slides as $slide) {
             href="gifting"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/gifting.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" />
+            <img src="assets/img/gifting.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" width="570" height="330" loading="eager" decoding="async" />
           </a>
         </div>
       </div>
@@ -283,7 +282,7 @@ foreach ($slides as $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/box_3.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" />
+            <img src="assets/img/box_3.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" width="270" height="330" loading="lazy" decoding="async" />
           </a>
         </div>
       </div>
@@ -293,7 +292,7 @@ foreach ($slides as $slide) {
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird reseller packs" />
+            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird reseller packs" width="270" height="330" loading="lazy" decoding="async" />
           </a>
         </div>
       </div>
@@ -330,7 +329,7 @@ foreach ($slides as $slide) {
   <div class="container">
     <div class="section-title text-center mb-4">
       <h2 class="title mb-3">What Our Customers Say</h2>
-      <img class="pb-3" src="assets/img/break.svg" alt="wave">
+      <img class="pb-3" src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async">
       <p class="text">
         Real feedback from customers who have experienced CandyBird quality.
       </p>
@@ -571,7 +570,11 @@ foreach ($slides as $slide) {
             <img
               class="align-self-center mb-2 mb-sm-0 mr-auto mr-sm-3"
               src="assets/img/icon/<?php echo $item['img']; ?>"
-              alt="icon"
+              alt=""
+              width="64"
+              height="64"
+              loading="lazy"
+              decoding="async"
             />
             <div class="media-body">
               <h4 class="title"><?php echo $item['title']; ?></h4>
@@ -595,7 +598,7 @@ foreach ($slides as $slide) {
           <a
             class="zoom-in d-block overflow-hidden position-relative"
             href="product?id=101"
-            ><img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner"
+            ><img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner" width="370" height="270" loading="lazy" decoding="async"
           /></a>
         </div>
       </div>
@@ -605,7 +608,7 @@ foreach ($slides as $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="return_policy"
           >
-            <img src="assets/img/banner/6.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner"
+            <img src="assets/img/banner/6.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner" width="370" height="270" loading="lazy" decoding="async"
           /></a>
         </div>
       </div>
@@ -615,7 +618,7 @@ foreach ($slides as $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="recipes"
           >
-            <img src="assets/img/banner/4.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner"
+            <img src="assets/img/banner/4.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"
           /></a>
         </div>
       </div>
@@ -630,7 +633,7 @@ foreach ($slides as $slide) {
       <div class="col-12">
           <div class="section-title text-center">
             <h2 class="title mb-3">From our latest recipes</h2>
-            <img class="pb-3" src="assets/img/break.svg" alt="wave">
+            <img class="pb-3" src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async">
             <p class="text">
               Check out these scrumptious, delicious recipes!
             </p>
@@ -650,7 +653,7 @@ foreach ($slides as $slide) {
                 class="blog-thumb mb-20 zoom-in d-block overflow-hidden"
                 href="recipe?id=<?php echo $post['id']; ?>"
               >
-                <img src="assets/img/blog-post/<?php echo $post['img']; ?>" alt="blog-thumb-naile" />
+                <img src="assets/img/blog-post/<?php echo $post['img']; ?>" alt="<?php echo htmlspecialchars(strip_tags($post['title']), ENT_QUOTES, 'UTF-8'); ?>" width="370" height="260" loading="lazy" decoding="async" />
               </a>
               <div class="blog-post-content">
                 <a
@@ -666,12 +669,9 @@ foreach ($slides as $slide) {
                 </h3>
                 <p class="sub-title">
                   Posted by
-                  <a
-                    class="theme-color d-inline-block mx-1"
-                    href="./"
-                  >
+                  <span class="theme-color d-inline-block mx-1">
                     <?php echo $post['author']; ?>
-                  </a>
+                  </span>
                   <?php echo $post['date']; ?>
                 </p>
               </div>
@@ -696,7 +696,7 @@ foreach ($slides as $slide) {
           <div class="slider-item">
             <div class="single-brand">
               <a href="<?php echo htmlspecialchars($brand['link'] ?? './', ENT_QUOTES, 'UTF-8'); ?>" class="brand-thumb" aria-label="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-                <img src="assets/img/brand/<?php echo $brand['img']; ?>" alt="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>" />
+                <img src="assets/img/brand/<?php echo $brand['img']; ?>" alt="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>" width="170" height="100" loading="lazy" decoding="async" />
               </a>
             </div>
           </div>
@@ -709,11 +709,6 @@ foreach ($slides as $slide) {
 </div>
 <!-- brand slider end -->
 
-
-<!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  
 
 <script>
 
@@ -839,6 +834,17 @@ function displayProducts(products) {
     var category = picked.child_category_1 || picked.parent_category || picked.category || '';
     return 'products' + (category ? '?category=' + encodeURIComponent(category) : '');
   }
+  function escapeAttr(value) {
+    return String(value || '').replace(/[&<>"']/g, function(match) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[match];
+    });
+  }
 
   var pool = products.filter(isFeatured);
   if (!pool.length) {
@@ -872,6 +878,7 @@ function displayProducts(products) {
     var salePercent = getSalePercent(product);
     var price = parseFloat(product.price || 0) || 0;
     var productPrice = getProductPrice(product);
+    var productTitle = escapeAttr([product.title, product.weight].filter(Boolean).join(' ') || 'CandyBird product');
 
     html += `
       <div class="slider-item">
@@ -888,13 +895,17 @@ function displayProducts(products) {
                     class="first-img"
                     src="${product.image_url || defaultImageUrl}"
                     onerror="this.onerror=null;this.src='${defaultImageUrl}';"
-                    alt="thumbnail"
+                    alt="${productTitle}"
+                    width="450"
+                    height="450"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </a>
                 <!-- product links -->
                 <ul class="actions d-flex justify-content-center">
                   <li>
-                    <a class="action add-to-wishlist" href="#" data-product-id="${product.id}">
+                    <a class="action add-to-wishlist" href="#" data-product-id="${product.id}" aria-label="Add ${productTitle} to wishlist">
                       <span
                         data-toggle="tooltip"
                         data-placement="bottom"
@@ -908,6 +919,7 @@ function displayProducts(products) {
                     <a
                       class="action add-to-compare" data-product-id="${product.id}"
                       href="#"
+                      aria-label="Compare ${productTitle}"
                     >
                       <span
                         data-toggle="tooltip"
@@ -924,6 +936,7 @@ function displayProducts(products) {
                       href="#"
                       data-toggle="modal"
                       data-target="#quick-view"
+                      aria-label="Quick view ${productTitle}"
                     >
                       <span
                         data-toggle="tooltip"
@@ -957,6 +970,7 @@ function displayProducts(products) {
                       data-target="#add-to-cart"
                       data-quantity="1"
                       data-product-id="${product.id}"
+                      aria-label="Add ${productTitle} to cart"
                     >
                       <i class="icon-basket"></i>
                     </button>

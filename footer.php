@@ -111,7 +111,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
             
             <div class="mb-100">
                 <h2 class="">Contact Us</h2>
-                <img src="<?=$home_directory?>assets/img/break.svg" alt="wave" class="mt-2 mb-5">
+                <img src="<?=$home_directory?>assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async" class="mt-2 mb-5">
               
                 <ul class="mt-2 custom">
                   <li><a href="contact"><i class="fas fa-envelope mr-2"></i> <?=$website_email?></a></li>
@@ -142,6 +142,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
                     id="subscribe_email"
                     name="subscribe_email"
                     placeholder="Your email"
+                    aria-label="Email address for newsletter subscription"
                   />
                   <button class="btn news-letter-btn text-capitalize" type="submit">Subscribe</button>
                 </form>
@@ -361,11 +362,11 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 
 <!-- add to cart modal -->
 
-<div class="modal fade style3" id="add-to-cart" tabindex="-1" aria-hidden="true">
+<div class="modal fade style3" id="add-to-cart" tabindex="-1" role="dialog" aria-labelledby="add-to-cart-title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header justify-content-center bg-dark">
-        <h5 class="modal-title">Product successfully added to your shopping cart</h5>
+        <h5 class="modal-title" id="add-to-cart-title">Product successfully added to your shopping cart</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -408,7 +409,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #5b1178; border-radius: 8px; padding: 16px; margin-top: 16px; display: none; }
   .subscribe-offer-modal .coupon-code { color: #5b1178; font-size: 25px; font-weight: 900; letter-spacing: .04em; }
 </style>
-<div class="modal fade subscribe-offer-modal" id="subscribe-offer-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade subscribe-offer-modal" id="subscribe-offer-modal" tabindex="-1" role="dialog" aria-labelledby="subscribe-offer-title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="offer-head">
@@ -416,7 +417,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
           <span aria-hidden="true">&times;</span>
         </button>
         <span class="offer-badge">R100 off</span>
-        <h3>Save R100 on your first subscribed order</h3>
+        <h3 id="subscribe-offer-title">Save R100 on your first subscribed order</h3>
         <p class="mb-0">Join the CandyBird mailing list and get R100 off your order over R500.</p>
       </div>
       <div class="offer-body">
@@ -447,14 +448,14 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 <!-- search-box and overlay start -->
 <div class="overlay">
   <div class="scale"></div>
-  <form class="search-box" action="products" method="get">
-    <input type="text" name="search" id="search-input" placeholder="Search pistachios, almonds, 1kg, chocolate..." autocomplete="off" />
-    <button id="close" type="submit">
+  <form class="search-box" action="products" method="get" role="search" aria-label="Search products">
+    <input type="text" name="search" id="search-input" placeholder="Search pistachios, almonds, 1kg, chocolate..." autocomplete="off" aria-label="Search products" />
+    <button id="close" type="submit" aria-label="Submit product search">
       <i class="ion-ios-search-strong"></i>
     </button>
     <div id="global-search-results" class="global-search-results" aria-live="polite"></div>
   </form>
-  <button class="close"><i class="ion-android-close"></i></button>
+  <button class="close" type="button" aria-label="Close search"><i class="ion-android-close"></i></button>
 </div>
 
 <!-- search-box and overlay end -->
@@ -1240,7 +1241,7 @@ $(document).ready(function () {
         var metaHtml = '<small>' + escapeHtml(item.category || '') + '</small>' +
           (isClearance ? '<span class="global-search-clearance-label">Clearance</span>' : '');
         return '<a class="global-search-item" href="' + escapeHtml(item.url) + '">' +
-          '<img src="' + escapeHtml(item.image_url || 'assets/img/product/1.png') + '" onerror="this.onerror=null;this.src=\'assets/img/product/1.png\';" alt="">' +
+          '<img src="' + escapeHtml(item.image_url || 'assets/img/product/1.png') + '" width="64" height="64" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'assets/img/product/1.png\';" alt="' + escapeHtml(title) + '">' +
           '<span><strong>' + escapeHtml(title) + '</strong>' + metaHtml + '</span>' +
           '<span class="global-search-price">' + priceHtml + '</span>' +
         '</a>';

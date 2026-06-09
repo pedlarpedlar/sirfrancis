@@ -128,7 +128,7 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/plugins.css" />
     <!-- <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/aos.css" /> -->
-    <link rel="stylesheet" href="<?=$home_directory?>assets/css/style.css?v=<?=filemtime(__DIR__ . '/assets/css/style.css')?>" />
+    <link rel="stylesheet" href="<?=$home_directory?>assets/css/style.perf.min.css?v=<?=filemtime(__DIR__ . '/assets/css/style.perf.min.css')?>" />
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
 
@@ -148,7 +148,7 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Hanken+Grotesk:wght@400;600;700;800&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Hanken+Grotesk:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-770312537">
