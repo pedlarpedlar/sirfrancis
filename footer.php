@@ -587,7 +587,7 @@ function toggleBadge(id, count) {
 // Function to update badge counts
 function updateBadgeCounts() {
   $.ajax({
-      url: "<?=$home_directory?>session_logins.php",
+      url: "<?=$home_directory?>session_logins",
       type: "GET",
       data: {
           getBadgeCounts: true
@@ -598,7 +598,6 @@ function updateBadgeCounts() {
           toggleBadge("compareBadge", data.compareCount);
           toggleBadge("wishlistBadge", data.wishlistCount);
           toggleBadge("cartBadge", data.cartCount);
-          console.log(data);
       },
       error: function (error) {
           console.log("Error fetching badge counts: ", error);
@@ -743,7 +742,11 @@ function getAddToCartQuantity($button) {
 
 $(document).ready(function () {
 
-  updateBadgeCounts();
+  if ('requestIdleCallback' in window) {
+      requestIdleCallback(updateBadgeCounts, { timeout: 2500 });
+  } else {
+      setTimeout(updateBadgeCounts, 1200);
+  }
 
   // Handle click on "Add to Wishlist" icon
   $('body').on('click', '.add-to-cart', function (e) {

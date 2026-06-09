@@ -109,14 +109,6 @@ body {
   line-height: 1.75;
   color: #6b0099;
   background-color: #F1F0E8;
-  background-image: url(../img/bg-html.svg);
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-attachment: scroll;
-  -webkit-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -o-background-size: 100% 100%;
-  background-size: 100% 100%;
   min-height: 100vh;
 
 }
@@ -126,14 +118,7 @@ body {
 }
 
 .thingy { 
-  background-image: url(../img/bg-html.svg);
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-attachment: scroll;
-  -webkit-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -o-background-size: 100% 100%;
-  background-size: 100% 100%;
+  background: #F1F0E8;
 }
 
 .table {

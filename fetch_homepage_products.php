@@ -6,7 +6,7 @@ $requestedIds = isset($_POST['productIds']) && is_array($_POST['productIds']) ? 
 $canUseHomepageCache = empty($requestedIds);
 $homepageCacheDir = __DIR__ . '/sheet_cache';
 $homepageCacheFile = $homepageCacheDir . '/homepage_products_v2.json';
-if ($canUseHomepageCache && is_file($homepageCacheFile) && (time() - filemtime($homepageCacheFile)) < 300) {
+if ($canUseHomepageCache && is_file($homepageCacheFile) && (time() - filemtime($homepageCacheFile)) < 3600) {
     header('Content-Type: application/json');
     readfile($homepageCacheFile);
     exit;

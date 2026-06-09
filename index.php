@@ -163,11 +163,7 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       position: absolute;
       bottom: -90px;
       right: 60px;
-/*      background-color: blue;*/
-      background-image: url('assets/img/walnut.svg'); /* Set the background image */
-      background-repeat: no-repeat; /* Do not repeat horizontally or vertically */
-      background-position: bottom right; /* Align at the bottom-right corner */
-      background-size: cover; /* Cover the entire width of the div */
+      display: none;
     }
 
     @media (max-width: 768px) {
