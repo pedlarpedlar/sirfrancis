@@ -1680,7 +1680,28 @@ if (!function_exists('getSheetProductImage')) {
     function getSheetProductImage($product) {
         $imageValue = $product['img_url'] ?? $product['image_url'] ?? $product['image_urls'] ?? $product['image'] ?? '';
         $images = array_filter(array_map('trim', explode(',', (string) $imageValue)));
-        return !empty($images) ? reset($images) : 'assets/img/product/1.png';
+        foreach ($images as $image) {
+            if ($image === '' || $image === '#') {
+                continue;
+            }
+
+            $path = parse_url($image, PHP_URL_PATH);
+            if ($path && preg_match('#^/assets/#', $path)) {
+                $localPath = __DIR__ . '/' . ltrim(urldecode($path), '/');
+                if (!is_file($localPath)) {
+                    continue;
+                }
+            } elseif (!preg_match('#^https?://#i', $image) && strpos($image, '//') !== 0) {
+                $localPath = __DIR__ . '/' . ltrim(urldecode($image), '/');
+                if (!is_file($localPath)) {
+                    continue;
+                }
+            }
+
+            return $image;
+        }
+
+        return 'assets/img/product/1.png';
     }
 }
 

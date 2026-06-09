@@ -58,9 +58,31 @@ function displayProducts(products) {
   // Accumulate the HTML for each section
   var homeHtml = "";
 
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function(match) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[match];
+    });
+  }
+
+  function getProductImage(product) {
+    var imageValue = product.img_url || product.image_url || product.image_urls || product.image || '';
+    var images = String(imageValue).split(',').map(function(image) {
+      return image.trim();
+    }).filter(Boolean);
+    return images.length ? images[0] : 'assets/img/product/1.png';
+  }
+
   // Loop through each product and create HTML elements
   $.each(products, function (index, product) {
     var defaultImageUrl = 'assets/img/product/1.png';
+    var imageUrl = getProductImage(product);
+    var productTitle = escapeHtml([product.title || product.name || 'CandyBird product', product.weight || product.size || ''].filter(Boolean).join(' '));
 
     var productHtml = `
       <div class="slider-item">
@@ -75,9 +97,13 @@ function displayProducts(products) {
                 <a href="product?id=${product.id}">
                   <img
                     class="first-img"
-                    src="${product.image_url || defaultImageUrl}"
+                    src="${escapeHtml(imageUrl)}"
                     onerror="this.onerror=null;this.src='${defaultImageUrl}';"
-                    alt="thumbnail"
+                    alt="${productTitle}"
+                    width="450"
+                    height="450"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </a>
                 <!-- product links -->
