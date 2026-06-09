@@ -147,6 +147,15 @@ function cbAdminMenuActive($page, $currentPage) {
           <li><a href="schedule_email">Create Broadcast</a></li>
           <li><a href="email_lists">Email Lists</a></li>
           <li><a href="broadcasts">Broadcast History</a></li>
+          <li>
+            <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents'], $adminCurrentPage) ?>>
+              <summary>Business Ops</summary>
+              <ul>
+                <li><a href="social_accounts">Social Accounts</a></li>
+                <li><a href="business_documents">Business Documents</a></li>
+              </ul>
+            </details>
+          </li>
           <li><a href="backups">Website Backups</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
@@ -219,6 +228,15 @@ function cbAdminMenuActive($page, $currentPage) {
         </details>
       </li>
       <li><a href="backups"<?= cbAdminMenuActive('backups', $adminCurrentPage) ?>>Website Backups</a></li>
+      <li>
+        <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents'], $adminCurrentPage) ?>>
+          <summary>Business Ops</summary>
+          <ul>
+            <li><a href="social_accounts"<?= cbAdminMenuActive('social_accounts', $adminCurrentPage) ?>>Social Accounts</a></li>
+            <li><a href="business_documents"<?= cbAdminMenuActive('business_documents', $adminCurrentPage) ?>>Business Documents</a></li>
+          </ul>
+        </details>
+      </li>
       <li>
         <details<?= cbAdminMenuOpen(['visitor_activity', 'visitor_breakdown'], $adminCurrentPage) ?>>
           <summary>Visitor Analytics</summary>

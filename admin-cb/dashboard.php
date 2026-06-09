@@ -552,6 +552,18 @@ $importantLinks = [
         'url' => '../products',
         'button' => 'View shop'
     ],
+    [
+        'label' => 'Social Accounts',
+        'description' => 'Keep social handles, login details and posting reminders in one place.',
+        'url' => 'social_accounts',
+        'button' => 'Open socials'
+    ],
+    [
+        'label' => 'Business Documents',
+        'description' => 'Open the admin-only document vault for CIPC, SARS, contracts and records.',
+        'url' => 'business_documents',
+        'button' => 'Open documents'
+    ],
 ];
 
 $sheetSample = [];
@@ -585,6 +597,12 @@ $dashboardCronJobs = [
         'file' => 'db_backup_and_email.php',
         'label' => 'Full Website Backup',
         'description' => 'Creates a restorable zip with website files and database SQL.',
+        'result_url' => '',
+    ],
+    [
+        'file' => 'social_posting_reminder.php',
+        'label' => 'Social Posting Reminder',
+        'description' => 'Emails the weekly/daily posting nudge when due.',
         'result_url' => '',
     ],
 ];

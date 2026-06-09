@@ -28,6 +28,10 @@ $allowedJobs = [
         'label' => 'Full Website Backup',
         'description' => 'Creates a restorable zip containing website files and a database SQL export.'
     ],
+    'social_posting_reminder.php' => [
+        'label' => 'Social Posting Reminder',
+        'description' => 'Sends the admin reminder to post weekly on all platforms and daily on the most active platforms.'
+    ],
 ];
 
 function cbCronRunnerText($value) {

@@ -28,6 +28,8 @@ $linkGroups = [
         ['Email Broadcasts', 'schedule_email', 'Schedule and test campaign emails'],
         ['Email Lists', 'email_lists', 'Saved custom recipient groups for targeted broadcasts'],
         ['Broadcast History', 'broadcasts', 'Past and pending broadcasts, results, edit, copy and delete'],
+        ['Social Accounts', 'social_accounts', 'Social handles, login notes and posting reminder settings'],
+        ['Business Documents', 'business_documents', 'Admin-only CIPC, SARS, contracts, tax and business document vault'],
     ],
     'Sheets & Products' => [
         ['Products', 'products', 'Product sheet links, health, template and force sync'],
@@ -74,6 +76,7 @@ $linkGroups = [
         ['Google Shopping Feed Cron', '../crons/generate_google_shopping_items.php', 'Generate product feed'],
         ['Daily Backup Cron', '../crons/db_backup_and_email.php?mode=daily', 'Daily important data backup'],
         ['Full Backup Cron', '../crons/db_backup_and_email.php?mode=full', 'Monthly full backup'],
+        ['Social Posting Reminder Cron', '../crons/social_posting_reminder.php', 'Sends the social posting accountability reminder when due'],
         ['Send Scheduled Emails', 'send_scheduled_emails', 'Process due broadcast emails'],
     ],
 ];
