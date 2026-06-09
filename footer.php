@@ -555,7 +555,9 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
         jquery,modernizr ,poppe,bootstrap,plugins and main js
      ******************************************************-->
 
+    <?php if (empty($jquery_loaded_early)): ?>
     <script src="<?=$home_directory?>assets/js/vendor/jquery-3.5.1.min.js"></script>
+    <?php endif; ?>
     <script src="<?=$home_directory?>assets/js/vendor/modernizr-3.7.1.min.js"></script>
     <script src="<?=$home_directory?>assets/js/popper.min.js"></script>
     <script src="<?=$home_directory?>assets/js/plugins/jquery-ui.min.js"></script>

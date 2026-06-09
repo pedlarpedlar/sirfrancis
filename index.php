@@ -11,8 +11,6 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 ?>
 
 <title>Premium Nut Packs, Dried Fruit & Unique Gifts South Africa | CandyBird</title>
-<link rel="preload" as="image" href="<?=$home_directory?>assets/img/slider/1.optimized.jpg" fetchpriority="high">
-
 <style>
 
 .cinzel {
@@ -453,7 +451,7 @@ foreach ($slides as $slide) {
 </script>
 
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initHomepageReviews">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initHomepageReviews&loading=async">
 </script>
 <!-- customer reviews end -->
 
@@ -710,6 +708,8 @@ foreach ($slides as $slide) {
 <!-- brand slider end -->
 
 
+<?php $jquery_loaded_early = true; ?>
+<script src="<?=$home_directory?>assets/js/vendor/jquery-3.5.1.min.js"></script>
 <script>
 
 
