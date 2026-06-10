@@ -10,8 +10,8 @@ $validMonth = date('F Y');
 $limitedDescription = 'CandyBird wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
 $page_url_canonical = 'https://www.candybird.co.za/wholesale-pricelist';
 $title_og = 'Wholesale Pricelist - CandyBird';
-$image_url_og = 'https://www.candybird.co.za/assets/img/wholesale.png';
-$image_type_og = 'image/png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/wholesale.jpg';
+$image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';
 $page_url_og = $page_url_canonical;
@@ -90,7 +90,7 @@ include 'page_menues.php';
         <h1>CandyBird Wholesale Pricelist</h1>
         <p><?= number_format($rowCount) ?> bulk line<?= $rowCount === 1 ? '' : 's' ?> | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?>. Wholesale prices are for bulk planning and confirmed by quote before invoicing.</p>
       </div>
-      <img class="wholesale-hero-media" src="https://www.candybird.co.za/assets/img/wholesale.png" alt="CandyBird wholesale and bulk pricelist" loading="lazy">
+      <img class="wholesale-hero-media" src="https://www.candybird.co.za/assets/img/wholesale.jpg" alt="CandyBird wholesale and bulk pricelist" loading="lazy">
       <div class="wholesale-actions">
         <a href="wholesale-pricelist-download" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="wholesale-pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>

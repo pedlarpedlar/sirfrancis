@@ -5,7 +5,8 @@ $title_og = 'CandyBird Policies | Terms, Delivery, Privacy and Buyer Protection'
 $page_url_og = $page_url_canonical;
 $description_meta = 'Find CandyBird policies in one place, including terms and conditions, delivery, privacy, cookies, buyer protection and returns.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_type_og = 'image/jpeg';
 include 'header.php';
 ?>
 <title>CandyBird Policies - <?=$website_company_name?></title>

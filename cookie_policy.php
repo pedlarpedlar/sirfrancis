@@ -5,7 +5,8 @@ $title_og = 'Cookie Policy | CandyBird';
 $page_url_og = $page_url_canonical;
 $description_meta = 'CandyBird cookie policy explaining how cookies support carts, checkout, login sessions, analytics, security and customer experience.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_type_og = 'image/jpeg';
 include 'header.php';
 ?>
 <title>Cookie Policy - <?=$website_company_name?></title>

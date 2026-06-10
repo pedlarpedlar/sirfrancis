@@ -270,7 +270,7 @@ foreach ($slides as $slide) {
             href="gifting"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/gifting.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" width="570" height="330" loading="eager" decoding="async" />
+            <img src="assets/img/gifting.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" width="570" height="330" loading="eager" decoding="async" />
           </a>
         </div>
       </div>

@@ -21,14 +21,16 @@ $title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
 $page_url_og = "https://www.candybird.co.za/products";
 $description_meta = 'Shop CandyBird for quality nuts, nut packs, dried fruit, sweets, health mixes and unique gifting online. Port Elizabeth based with secure checkout, collection and delivery across South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_type_og = 'image/jpeg';
 if ($isGiftingCategoryPage) {
     $page_url_canonical = "https://www.candybird.co.za/gifting";
     $title_og = 'Gifting, Hampers & Treat Packs Online | CandyBird';
     $page_url_og = "https://www.candybird.co.za/gifting";
     $description_meta = 'Shop CandyBird gifting packs, hampers and treat boxes for family, clients, staff and special occasions. Order online for collection or delivery across South Africa.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/gifting.png';
+    $image_url_og = 'https://www.candybird.co.za/assets/img/gifting.jpg';
+    $image_type_og = 'image/jpeg';
 } elseif ($isResellerCategoryPage) {
     $page_url_canonical = 'https://www.candybird.co.za/resellers';
     $title_og = 'Reseller & Wholesale Packs Online | CandyBird';
@@ -43,14 +45,16 @@ if ($isGiftingCategoryPage) {
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop current CandyBird specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.png';
+    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.jpg';
+    $image_type_og = 'image/jpeg';
 } elseif ($isClearanceCategoryPage) {
     $page_url_canonical = 'https://www.candybird.co.za/clearance-basket';
     $title_og = 'Clearance Basket Deals | CandyBird';
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop CandyBird Clearance Basket for heavily reduced clearance stock, dated items and overstocked products. Separate from normal specials and promotions.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.png';
+    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.jpg';
+    $image_type_og = 'image/jpeg';
 }
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
@@ -471,7 +475,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
 <section class="specials-clearance-banner">
   <div class="container">
-    <img src="https://www.candybird.co.za/assets/img/specials_banner.png" alt="CandyBird specials and clearance basket explained" loading="eager">
+    <img src="https://www.candybird.co.za/assets/img/specials_banner.jpg" alt="CandyBird specials and clearance basket explained" loading="eager">
   </div>
 </section>
 <?php endif; ?>
@@ -489,7 +493,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <span>Corporate, event and family gifting support</span>
         </div>
       </div>
-      <img class="category-social-image" src="https://www.candybird.co.za/assets/img/gifting.png" alt="CandyBird gifting packs and hampers" loading="lazy">
+      <img class="category-social-image" src="https://www.candybird.co.za/assets/img/gifting.jpg" alt="CandyBird gifting packs and hampers" loading="lazy">
     </div>
   </div>
 </section>
@@ -519,7 +523,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
         <p>Browse CandyBird nuts, dried fruit, sweets, gifting, specials and pantry favourites. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
       </div>
       <a class="products-page-visual-link" href="pricelist" aria-label="View CandyBird pricelist">
-        <img src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird online product range" loading="lazy">
+        <img src="https://www.candybird.co.za/assets/img/pricelist.jpg" alt="CandyBird online product range" loading="lazy">
       </a>
     </div>
   </div>

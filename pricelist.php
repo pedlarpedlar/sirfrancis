@@ -17,8 +17,8 @@ $title_og = 'Pricelist - CandyBird';
 $page_url_og = "https://www.candybird.co.za/pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.png';
-$image_type_og = 'image/png';
+$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';
 
@@ -259,7 +259,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
         <h1>CandyBird Pricelist</h1>
         <p><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?></p>
       </div>
-      <img class="pricelist-hero-media no-print" src="https://www.candybird.co.za/assets/img/pricelist.png" alt="CandyBird pricelist product range" loading="lazy">
+      <img class="pricelist-hero-media no-print" src="https://www.candybird.co.za/assets/img/pricelist.jpg" alt="CandyBird pricelist product range" loading="lazy">
       <div class="pricelist-actions no-print">
         <a href="pricelist-download?sort=<?= cbPricelistText($sort) ?>&dir=<?= cbPricelistText($direction) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
