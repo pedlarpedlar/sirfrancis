@@ -666,5 +666,28 @@ if (empty($_SESSION['tracking_bot'])) {
 
 // echo $current_session_id; exit();
 
-// regardless of whether there is a coupon set or not, set the session variables so that the checkout process is smooth
-calculateCouponDiscount($conn, $userId, $guestIdentifier);
+// Keep coupon totals fresh only where totals are shown or changed. Running this on every
+// normal page view slows first-byte time because it reads cart items and coupon sheets.
+$couponCalculationPath = strtolower(trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '', '/'));
+$couponCalculationPages = [
+    'cart',
+    'checkout',
+    'checkout_pay',
+    'checkout-pay',
+    'order_details',
+    'order-details',
+    'thankyou',
+    'apply_coupon',
+    'apply-coupon',
+    'remove_coupon',
+    'remove-coupon',
+    'update_cart',
+    'update-cart',
+    'add_to_cart',
+    'add-to-cart',
+    'remove_from_cart',
+    'remove-from-cart',
+];
+if (isset($_SESSION['coupon']) || in_array($couponCalculationPath, $couponCalculationPages, true)) {
+    calculateCouponDiscount($conn, $userId, $guestIdentifier);
+}

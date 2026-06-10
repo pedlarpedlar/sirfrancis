@@ -52,6 +52,15 @@ function sheetMenuCleanCategory($value) {
 }
 
 function buildSheetMenuCategories() {
+    $cacheDir = __DIR__ . '/sheet_cache';
+    $cacheFile = $cacheDir . '/menu_categories_v1.json';
+    if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < 1800) {
+        $cached = json_decode((string) file_get_contents($cacheFile), true);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
     $tree = [];
     $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : (function_exists('getSheetProducts') ? getSheetProducts() : []);
     $specialCount = 0;
@@ -154,7 +163,15 @@ function buildSheetMenuCategories() {
         return array_values($nodes);
     };
 
-    return $sortNodes($tree);
+    $builtTree = $sortNodes($tree);
+    if (!is_dir($cacheDir)) {
+        @mkdir($cacheDir, 0755, true);
+    }
+    if (is_dir($cacheDir) && is_writable($cacheDir)) {
+        @file_put_contents($cacheFile, json_encode($builtTree), LOCK_EX);
+    }
+
+    return $builtTree;
 }
 
 function generateMenu($categories) {
