@@ -613,14 +613,9 @@ $page_url_canonical = $page_url_canonical ?? "https://www.candybird.co.za";
 
 /* FOR ANALYTICAL TRACKING start*/
 
-// Check if session_id is already set in $_SESSION
 if (!isset($_SESSION['session_id'])) {
-    $user_id = $userId ?? NULL;
-    $ip_address = $_SERVER['REMOTE_ADDR'];
     $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown';
-    $start_time = date('Y-m-d H:i:s');
 
-    // Simple bot detection: filter out known bot user agents
     $bot_agents = ['Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot', 'Baiduspider', 'YandexBot', 'Sogou', 'facebookexternalhit', 'WhatsApp', 'TelegramBot', 'curl', 'wget'];
     foreach ($bot_agents as $bot_agent) {
         if (stripos($user_agent, $bot_agent) !== false) {
@@ -629,36 +624,14 @@ if (!isset($_SESSION['session_id'])) {
         }
     }
 
-    // Simple bot detection: filter out known bot IPs (this list should be regularly updated)
-    $bot_ips = ['123.45.67.89', '98.76.54.32']; // Replace with actual bot IPs you wish to block
-    $skipTrackingSession = !empty($_SESSION['tracking_bot']) || in_array($ip_address, $bot_ips, true);
-
-    // Continue to insert session only if the above checks pass
-    $session_id = session_id();
-
-    if (!$skipTrackingSession) {
-        // Insert a new session record
-        $stmt = $conn->prepare("INSERT INTO sessions (user_id, session_id, ip_address, user_agent, start_time) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt) {
-            $stmt->bind_param("issss", $user_id, $session_id, $ip_address, $user_agent, $start_time);
-            $stmt->execute();
-            $current_session_id = $stmt->insert_id;
-            $stmt->close();
-        }
-    }
-
-    // Optionally store session_id in $_SESSION if needed for further tracking
-    $_SESSION['session_id'] = $session_id;
-    $_SESSION['guest_identifier'] = $session_id;
-    $_SESSION['current_session_id'] = $current_session_id;
+    $_SESSION['session_id'] = session_id();
 }
 
-
-
-// Track Page Views
-if (empty($_SESSION['tracking_bot'])) {
-    include __DIR__ . '/track_page_view.php';
+if (!isset($_SESSION['guest_identifier']) || $_SESSION['guest_identifier'] === '') {
+    $_SESSION['guest_identifier'] = $_SESSION['session_id'];
 }
+$guestIdentifier = $_SESSION['guest_identifier'];
+$current_session_id = isset($_SESSION['current_session_id']) ? $_SESSION['current_session_id'] : null;
 /* FOR ANALYTICAL TRACKING end */
 
 // Main page views are recorded in page_views. Keep action_logs for meaningful clicks,

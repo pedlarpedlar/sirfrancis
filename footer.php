@@ -1682,6 +1682,47 @@ function logAction(action, details = '', userId = null, guestIdentifier = '') {
     var maxScrollLogged = 0;
     var scrollMilestones = [50, 100];
     var lastUxLogAt = 0;
+    var trackingEndpoint = '<?=$home_directory?>track_page_view_async.php';
+
+    function sendPageView() {
+        if (navigator.webdriver || document.visibilityState === 'prerender') return;
+
+        var payload = new FormData();
+        payload.append('url', pageUrl);
+        payload.append('referrer_url', document.referrer || '');
+        payload.append('page_title', document.title || '');
+
+        if (window.fetch) {
+            fetch(trackingEndpoint, {
+                method: 'POST',
+                body: payload,
+                credentials: 'same-origin',
+                keepalive: true
+            }).then(function(response) {
+                return response.ok ? response.json() : null;
+            }).then(function(response) {
+                if (response && response.session_id) {
+                    currentSessionId = response.session_id;
+                }
+            }).catch(function() {});
+            return;
+        }
+
+        $.ajax({
+            url: trackingEndpoint,
+            method: 'POST',
+            data: {
+                url: pageUrl,
+                referrer_url: document.referrer || '',
+                page_title: document.title || ''
+            },
+            success: function(response) {
+                if (response && response.session_id) {
+                    currentSessionId = response.session_id;
+                }
+            }
+        });
+    }
 
     function logUx(action, details) {
         var now = Date.now();
@@ -1706,6 +1747,12 @@ function logAction(action, details = '', userId = null, guestIdentifier = '') {
             method: 'POST',
             data: { session_id: currentSessionId }
         });
+    }
+
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(sendPageView, { timeout: 2500 });
+    } else {
+        setTimeout(sendPageView, 1000);
     }
 
     setTimeout(sendHeartbeat, 8000);
