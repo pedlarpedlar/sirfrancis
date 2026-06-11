@@ -162,8 +162,11 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  window.addEventListener('load', function() {
-    window.setTimeout(function() {
+  (function() {
+    var loaded = false;
+    function loadGtag() {
+      if (loaded) return;
+      loaded = true;
       var gtagScript = document.createElement('script');
       gtagScript.async = true;
       gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-770312537';
@@ -171,8 +174,14 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
       gtag('js', new Date());
       gtag('config', 'AW-770312537');
       gtag('config', 'AW-17232752521');
-    }, 1200);
-  }, { once: true });
+    }
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
+      window.addEventListener(eventName, loadGtag, { once: true, passive: true });
+    });
+    window.addEventListener('load', function() {
+      window.setTimeout(loadGtag, 12000);
+    }, { once: true });
+  })();
 </script>
 <?php else: ?>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-770312537">

@@ -550,7 +550,7 @@ foreach ($offCanvasCartItems as $item) {
                   </a>
                 </li>
                 <li>
-                  <a class="offcanvas-toggle" href="#offcanvas-wishlist" aria-label="Open wishlist">
+                  <a class="<?= !empty($load_shopping_nav) ? 'offcanvas-toggle' : '' ?>" href="<?= !empty($load_shopping_nav) ? '#offcanvas-wishlist' : 'wishlist' ?>" aria-label="Open wishlist">
                     <span class="position-relative" id="wishlistBadge">
                       <i class="icon-heart"></i>
                       <?= $wishlistCount > 0 ? '<span class="badge cbdg1">' . $wishlistCount . '</span>' : '' ?>
@@ -558,7 +558,7 @@ foreach ($offCanvasCartItems as $item) {
                   </a>
                 </li>
                 <li class="mr-xl-0 cart-block position-relative">
-                  <a class="offcanvas-toggle" href="#offcanvas-cart" aria-label="Open cart">
+                  <a class="<?= !empty($load_shopping_nav) ? 'offcanvas-toggle' : '' ?>" href="<?= !empty($load_shopping_nav) ? '#offcanvas-cart' : 'cart' ?>" aria-label="Open cart">
                     <span class="position-relative" id="cartBadge">
                       <i class="icon-bag"></i>
                       <?= $cartCount > 0 ? '<span class="badge cbdg1">' . $cartCount . '</span>' : '' ?>

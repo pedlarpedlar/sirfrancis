@@ -22,6 +22,7 @@ $userId = null;
 $guestIdentifier = null;
 $current_session_id = null;
 $dbAvailable = isset($conn) && $conn instanceof mysqli && !$conn->connect_error;
+$load_shopping_nav = $load_shopping_nav ?? true;
 
 include __DIR__ . '/log_action_function.php';
 
@@ -180,6 +181,10 @@ $currentUrl = $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'
 // Function to fetch compare items for a user or guest
 function getCompareItems($userId, $guestIdentifier) {
     global $conn; // Assuming $conn is your database connection
+    global $load_shopping_nav;
+    if (empty($load_shopping_nav)) {
+        return [];
+    }
     if (!($conn instanceof mysqli)) {
         return [];
     }
@@ -220,6 +225,10 @@ function getCompareItems($userId, $guestIdentifier) {
 // Function to fetch wishlist items for a user or guest
 function getWishlistItems($userId, $guestIdentifier) {
     global $conn; // Assuming $conn is your database connection
+    global $load_shopping_nav;
+    if (empty($load_shopping_nav)) {
+        return [];
+    }
     if (!($conn instanceof mysqli)) {
         return [];
     }
@@ -255,6 +264,10 @@ function getWishlistItems($userId, $guestIdentifier) {
 
 function getCartItems($userId, $guestIdentifier) {
     global $conn; // Assuming $conn is your database connection
+    global $load_shopping_nav;
+    if (empty($load_shopping_nav)) {
+        return [];
+    }
     if (!($conn instanceof mysqli)) {
         return [];
     }
@@ -536,13 +549,11 @@ function getListItemCount($listTable, $userId, $guestIdentifier)
     return $itemCount;
 }
 
-// Get the count of items in the wishlist, cart, and compare lists
-$wishlistCount = getListItemCount("wishlist", $userId, $guestIdentifier);
-$cartCount = getListItemCount("cart", $userId, $guestIdentifier);
-$compareCount = getListItemCount("compare", $userId, $guestIdentifier);
-
 // Check if the "getBadgeCounts" parameter is set in the POST or GET request
 if (isset($_REQUEST['getBadgeCounts'])) {
+    $wishlistCount = getListItemCount("wishlist", $userId, $guestIdentifier);
+    $cartCount = getListItemCount("cart", $userId, $guestIdentifier);
+    $compareCount = getListItemCount("compare", $userId, $guestIdentifier);
 
     // Create an associative array with the counts
     $responseArray = [
@@ -560,6 +571,18 @@ if (isset($_REQUEST['getBadgeCounts'])) {
 
     // Stop further execution to avoid unwanted output
     exit();
+}
+
+// Get the count of items in the wishlist, cart, and compare lists only for pages
+// that need shopping state in the first response.
+if (!empty($load_shopping_nav)) {
+    $wishlistCount = getListItemCount("wishlist", $userId, $guestIdentifier);
+    $cartCount = getListItemCount("cart", $userId, $guestIdentifier);
+    $compareCount = getListItemCount("compare", $userId, $guestIdentifier);
+} else {
+    $wishlistCount = 0;
+    $cartCount = 0;
+    $compareCount = 0;
 }
 
 // Fetch website configurations from the database

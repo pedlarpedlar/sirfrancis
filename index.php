@@ -1,9 +1,11 @@
 <?php
-include 'session_logins.php';
 $is_homepage = true;
 $skip_google_fonts = true;
 $defer_gtag = true;
+$defer_homepage_personalization = true;
+$load_shopping_nav = false;
 $page_preload_images = ['assets/img/slider/1.optimized.jpg'];
+include 'session_logins.php';
 $page_url_canonical = 'https://www.candybird.co.za/';
 $page_url_og = 'https://www.candybird.co.za/';
 $title_og = 'Premium Nut Packs, Dried Fruit & Unique Gifts in South Africa | CandyBird';
@@ -460,8 +462,11 @@ foreach ($slides as $slide) {
 </script>
 
 <script>
-  window.addEventListener('load', function() {
+  (function() {
+    var reviewsLoaded = false;
     var loadReviews = function() {
+      if (reviewsLoaded) return;
+      reviewsLoaded = true;
       if (window.google && google.maps && google.maps.places) {
         initHomepageReviews();
         return;
@@ -474,12 +479,22 @@ foreach ($slides as $slide) {
       document.head.appendChild(script);
     };
 
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadReviews, { timeout: 3500 });
+    var reviewsSection = document.querySelector('.customer-reviews-section');
+    if ('IntersectionObserver' in window && reviewsSection) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          observer.disconnect();
+          loadReviews();
+        });
+      }, { rootMargin: '250px 0px' });
+      observer.observe(reviewsSection);
     } else {
-      setTimeout(loadReviews, 1800);
+      window.addEventListener('load', function() {
+        window.setTimeout(loadReviews, 10000);
+      }, { once: true });
     }
-  });
+  })();
 </script>
 <!-- customer reviews end -->
 

@@ -1879,13 +1879,12 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
       document.body.appendChild(merchantWidgetScript);
     }
 
-    window.addEventListener('load', function() {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadMerchantWidget, { timeout: 5000 });
-      } else {
-        setTimeout(loadMerchantWidget, 2500);
-      }
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
+      window.addEventListener(eventName, loadMerchantWidget, { once: true, passive: true });
     });
+    window.addEventListener('load', function() {
+      setTimeout(loadMerchantWidget, 14000);
+    }, { once: true });
   })();
 </script>
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
