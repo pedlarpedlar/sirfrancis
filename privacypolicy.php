@@ -51,6 +51,7 @@ include 'header.php';
                 <a href="#delivery">Delivery partners</a>
                 <a href="#marketing">Marketing</a>
                 <a href="#analytics">Website analytics</a>
+                <a href="#cctv">CCTV</a>
                 <a href="#rights">Your choices</a>
                 <a href="#contact">Contact</a>
             </nav>
@@ -93,13 +94,18 @@ include 'header.php';
                     <p>We use cookies and website activity information to keep carts working, remember sessions, understand which pages and products are useful, improve search, identify abandoned carts and reduce bot noise. Some parts of the website may not work correctly if cookies are disabled.</p>
                 </section>
 
+                <section class="cb-policy-section" id="cctv">
+                    <h2>7. CCTV at stores and collection points</h2>
+                    <p>CandyBird may use CCTV at stores, collection points, packing areas and customer-facing premises for safety, security, parcel protection and incident review. CCTV footage may include a person's image, movement, vehicle or collection activity. For more detail, please read our <a href="cctv-policy">CCTV Policy</a>.</p>
+                </section>
+
                 <section class="cb-policy-section" id="rights">
-                    <h2>7. Your choices</h2>
+                    <h2>8. Your choices</h2>
                     <p>You may ask us to update, correct or review personal information linked to your customer account or order. We may need to keep certain order, tax, accounting, fraud-prevention or legal records where required for normal business operations.</p>
                 </section>
 
                 <section class="cb-policy-section" id="contact">
-                    <h2>8. Contact us</h2>
+                    <h2>9. Contact us</h2>
                     <p>For privacy questions, account questions or data requests, contact us at <a href="mailto:<?=$support_email?>"><?=$support_email?></a>.</p>
                     <div class="cb-policy-links">
                         <a href="terms">Terms</a>

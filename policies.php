@@ -1,9 +1,9 @@
 <?php
 include 'session_logins.php';
 $page_url_canonical = 'https://www.candybird.co.za/policies';
-$title_og = 'CandyBird Policies | Terms, Delivery, Privacy and Buyer Protection';
+$title_og = 'CandyBird Policies | Terms, Delivery, Privacy, CCTV and Buyer Protection';
 $page_url_og = $page_url_canonical;
-$description_meta = 'Find CandyBird policies in one place, including terms and conditions, delivery, privacy, cookies, buyer protection and returns.';
+$description_meta = 'Find CandyBird policies in one place, including terms and conditions, delivery, privacy, CCTV, cookies, buyer protection and returns.';
 $description_og = $description_meta;
 $image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
@@ -73,6 +73,11 @@ include 'header.php';
           <span><i class="fas fa-cookie-bite"></i></span>
           <h2>Cookie Policy</h2>
           <p>How cookies support carts, login sessions, analytics, customer experience and bot protection.</p>
+        </a>
+        <a class="cb-policy-tile" href="cctv-policy">
+          <span><i class="fas fa-video"></i></span>
+          <h2>CCTV Policy</h2>
+          <p>How CCTV may be used at stores, collection points, packing areas and customer-facing premises.</p>
         </a>
         <a class="cb-policy-tile" href="contact">
           <span><i class="fas fa-headset"></i></span>

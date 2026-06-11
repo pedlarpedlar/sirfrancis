@@ -94,6 +94,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <a href="<?=$home_directory?>terms">Terms and Conditions</a>
       <a href="<?=$home_directory?>privacypolicy">Privacy Policy</a>
       <a href="<?=$home_directory?>cookie_policy">Cookie Policy</a>
+      <a href="<?=$home_directory?>cctv-policy">CCTV Policy</a>
       <a href="<?=$home_directory?>policies">All Policies</a>
     </div>
   </div>
