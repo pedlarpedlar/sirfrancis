@@ -60,6 +60,11 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
     <meta name="twitter:description" content="<?= htmlspecialchars($description_og, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="twitter:image" content="<?= htmlspecialchars($image_url_og, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="twitter:image:alt" content="<?= htmlspecialchars($title_og, ENT_QUOTES, 'UTF-8') ?>">
+    <?php if (!empty($page_preload_images) && is_array($page_preload_images)): ?>
+        <?php foreach ($page_preload_images as $preloadImage): ?>
+            <link rel="preload" as="image" href="<?= htmlspecialchars($home_directory . ltrim((string) $preloadImage, '/'), ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high">
+        <?php endforeach; ?>
+    <?php endif; ?>
     <?php
     $siteSchema = [
         '@context' => 'https://schema.org',
@@ -146,11 +151,30 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
 
     <!-- <link href="https://db.onlinewebfonts.com/c/e8e8b5680c6dcf4c67b4cdc488d9696f?family=ltx-holamed" rel="stylesheet"> -->
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Hanken+Grotesk:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+    <?php if (empty($skip_google_fonts)): ?>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Hanken+Grotesk:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+    <?php endif; ?>
 
 <!-- Google tag (gtag.js) -->
+<?php if (!empty($defer_gtag)): ?>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  window.addEventListener('load', function() {
+    window.setTimeout(function() {
+      var gtagScript = document.createElement('script');
+      gtagScript.async = true;
+      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-770312537';
+      document.head.appendChild(gtagScript);
+      gtag('js', new Date());
+      gtag('config', 'AW-770312537');
+      gtag('config', 'AW-17232752521');
+    }, 1200);
+  }, { once: true });
+</script>
+<?php else: ?>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-770312537">
 </script>
 <script>
@@ -161,3 +185,4 @@ $description_meta = $description_meta ?? "Shop CandyBird in Port Elizabeth for p
   gtag('config', 'AW-770312537');
   gtag('config', 'AW-17232752521');
 </script>
+<?php endif; ?>

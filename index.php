@@ -1,5 +1,9 @@
 <?php
 include 'session_logins.php';
+$is_homepage = true;
+$skip_google_fonts = true;
+$defer_gtag = true;
+$page_preload_images = ['assets/img/slider/1.optimized.jpg'];
 $page_url_canonical = 'https://www.candybird.co.za/';
 $page_url_og = 'https://www.candybird.co.za/';
 $title_og = 'Premium Nut Packs, Dried Fruit & Unique Gifts in South Africa | CandyBird';
@@ -163,11 +167,16 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       position: absolute;
       bottom: -90px;
       right: 60px;
-      background-image: url('assets/img/walnut-home.png');
       background-repeat: no-repeat;
       background-position: bottom right;
       background-size: contain;
       pointer-events: none;
+    }
+
+    @media (min-width: 769px) {
+      .walnut {
+        background-image: url('assets/img/walnut-home.png');
+      }
     }
 
     @media (max-width: 768px) {
