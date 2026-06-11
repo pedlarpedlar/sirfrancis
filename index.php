@@ -234,8 +234,10 @@ include 'page_menues.php';
 include 'slides.php';
 include 'recipe_posts.php';
 
-foreach ($slides as $slide) {
-    echo '<div class="slider-item bg-img ' . $slide['bg_img'] . '">';
+foreach ($slides as $index => $slide) {
+    $slideBgClass = $index === 0 ? $slide['bg_img'] : '';
+    $deferredBgAttribute = $index === 0 ? '' : ' data-bg-img-class="' . htmlspecialchars($slide['bg_img'], ENT_QUOTES, 'UTF-8') . '"';
+    echo '<div class="slider-item bg-img ' . $slideBgClass . '"' . $deferredBgAttribute . '>';
     echo '  <div class="container container1">';
     echo '    <div class="row align-items-center slider-height">';
     echo '      <div class="col-12 text-center">';
@@ -266,6 +268,18 @@ foreach ($slides as $slide) {
   </div>
 
 </section>
+<script>
+  window.addEventListener('load', function() {
+    window.setTimeout(function() {
+      document.querySelectorAll('[data-bg-img-class]').forEach(function(slide) {
+        var bgClass = slide.getAttribute('data-bg-img-class');
+        if (!bgClass) return;
+        slide.classList.add(bgClass);
+        slide.removeAttribute('data-bg-img-class');
+      });
+    }, 2500);
+  }, { once: true });
+</script>
 <div class="nut-border">
   <div class="walnut"></div>
 </div>
@@ -291,7 +305,7 @@ foreach ($slides as $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/box_3.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" width="270" height="330" loading="lazy" decoding="async" />
           </a>
         </div>
       </div>
@@ -759,7 +773,7 @@ foreach ($slides as $slide) {
 
 // Function to initialize Slick Slider
 function initSlickSlider1() {
-  $(".allowed-products-on-homepage").slick({
+  $(".allowed-products-on-homepage:not(.slick-initialized)").slick({
     autoplay: false,
     autoplaySpeed: 10000,
     dots: false,
@@ -896,22 +910,22 @@ function displayProducts(products) {
 
   var newProducts = shuffle(pool.filter(function(product) {
     return productMatchesTag(product, 'new');
-  })).slice(0, 10);
+  })).slice(0, 4);
   if (!newProducts.length) {
-    newProducts = shuffle(pool).slice(0, 10);
+    newProducts = shuffle(pool).slice(0, 4);
   }
 
   var saleProducts = shuffle(pool.filter(function(product) {
     return parseFloat(product.discount_amount || 0) > 0 || parseFloat(product.discount_rate || 0) > 0 || parseFloat(product.discounted_price || product.price || 0) < parseFloat(product.price || 0) || productMatchesTag(product, 'sale');
-  })).slice(0, 10);
+  })).slice(0, 4);
 
   var hotProducts = pool.slice().sort(function(a, b) {
     return (parseInt(b.monthly_sales || 0, 10) || 0) - (parseInt(a.monthly_sales || 0, 10) || 0);
   }).filter(function(product) {
     return (parseInt(product.monthly_sales || 0, 10) || 0) > 0 || productMatchesTag(product, 'hot');
-  }).slice(0, 10);
+  }).slice(0, 4);
   if (!hotProducts.length) {
-    hotProducts = shuffle(pool.filter(function(product) { return productMatchesTag(product, 'hot'); })).slice(0, 10);
+    hotProducts = shuffle(pool.filter(function(product) { return productMatchesTag(product, 'hot'); })).slice(0, 4);
   }
 
   function productsHtml(items, category) {
@@ -1030,12 +1044,27 @@ function displayProducts(products) {
     return html;
   }
 
-  // Replace the existing HTML inside each container
-  homeContainer.html(`<div class="product-slider-init theme1 slick-nav allowed-products-on-homepage">${productsHtml(newProducts, getCategoryLink(newProducts))}</div>`);
-  profileContainer.html(`<div class="product-slider-init theme1 slick-nav allowed-products-on-homepage">${productsHtml(saleProducts, getCategoryLink(saleProducts))}</div>`);
-  contactContainer.html(`<div class="product-slider-init theme1 slick-nav allowed-products-on-homepage">${productsHtml(hotProducts, getCategoryLink(hotProducts))}</div>`);
+  var tabSets = {
+    home: { container: homeContainer, items: newProducts, rendered: false },
+    profile: { container: profileContainer, items: saleProducts, rendered: false },
+    contact: { container: contactContainer, items: hotProducts, rendered: false }
+  };
 
-  initSlickSlider1();
+  function renderProductSet(key) {
+    var set = tabSets[key];
+    if (!set || set.rendered) return;
+    set.container.html(`<div class="product-slider-init theme1 slick-nav allowed-products-on-homepage">${productsHtml(set.items, getCategoryLink(set.items))}</div>`);
+    set.rendered = true;
+    initSlickSlider1();
+  }
+
+  renderProductSet('home');
+  $('#pills-profile-tab').one('shown.bs.tab', function() {
+    renderProductSet('profile');
+  });
+  $('#pills-contact-tab').one('shown.bs.tab', function() {
+    renderProductSet('contact');
+  });
 }
 
 
