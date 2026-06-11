@@ -1620,14 +1620,15 @@ if (!function_exists('searchSheetProducts')) {
         }
 
         $rawTokens = array_filter(explode(' ', $query));
-        $tokens = [];
+        $tokenGroups = [];
         foreach ($rawTokens as $token) {
-            $tokens[] = $token;
+            $variants = [$token];
             if (strlen($token) > 3 && substr($token, -1) === 's') {
-                $tokens[] = substr($token, 0, -1);
+                $variants[] = substr($token, 0, -1);
             }
+            $tokenGroups[] = array_values(array_unique($variants));
         }
-        $tokens = array_values(array_unique($tokens));
+        $tokens = array_values(array_unique(array_merge(...$tokenGroups)));
 
         $matches = [];
         $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
@@ -1639,29 +1640,68 @@ if (!function_exists('searchSheetProducts')) {
 
             $haystack = getSheetProductSearchText($product);
             $name = normalizeCandybirdSearchText($product['name'] ?? $product['title'] ?? '');
+            $displayTitle = normalizeCandybirdSearchText(getSheetProductDisplayTitle($product));
             $score = 0;
+            $coverage = 0;
+
+            if ($displayTitle === $query) {
+                $score += 800;
+            } elseif ($name === $query) {
+                $score += 700;
+            } elseif (strpos($displayTitle, $query) !== false) {
+                $score += 520;
+            } elseif (strpos($name, $query) !== false) {
+                $score += 420;
+            } elseif (strpos($haystack, $query) !== false) {
+                $score += 260;
+            }
+
+            foreach ($tokenGroups as $variants) {
+                $matchedThisToken = false;
+                foreach ($variants as $variant) {
+                    if ($variant !== '' && strpos($haystack, $variant) !== false) {
+                        $matchedThisToken = true;
+                        break;
+                    }
+                }
+                if ($matchedThisToken) {
+                    $coverage++;
+                }
+            }
+
+            if ($coverage === count($tokenGroups) && count($tokenGroups) > 1) {
+                $score += 220;
+            }
 
             foreach ($tokens as $token) {
                 if ($token === '') {
                     continue;
                 }
 
-                if ($name === $token) {
-                    $score += 80;
+                if ($displayTitle === $token || $name === $token) {
+                    $score += 100;
+                } elseif (preg_match('/\b' . preg_quote($token, '/') . '\b/', $displayTitle)) {
+                    $score += 75;
+                } elseif (preg_match('/\b' . preg_quote($token, '/') . '\b/', $name)) {
+                    $score += 65;
                 } elseif (strpos($name, $token) !== false) {
-                    $score += 45;
+                    $score += 35;
                 } elseif (strpos($haystack, $token) !== false) {
-                    $score += 20;
+                    $score += 18;
                 }
             }
 
             if ($score > 0) {
                 $product['_search_score'] = $score;
+                $product['_search_coverage'] = $coverage;
                 $matches[] = $product;
             }
         }
 
         usort($matches, function ($a, $b) {
+            if (($b['_search_coverage'] ?? 0) !== ($a['_search_coverage'] ?? 0)) {
+                return ($b['_search_coverage'] ?? 0) <=> ($a['_search_coverage'] ?? 0);
+            }
             if (($b['_search_score'] ?? 0) === ($a['_search_score'] ?? 0)) {
                 return strcasecmp($a['name'] ?? '', $b['name'] ?? '');
             }

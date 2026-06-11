@@ -823,6 +823,20 @@ function getSearchTokens(query) {
   return [...new Set(expanded)];
 }
 
+function getSearchTokenGroups(query) {
+  return normalizeSearchText(query).split(' ').filter(Boolean).map(token => {
+    const variants = [token];
+    if (token.length > 3 && token.endsWith('s')) {
+      variants.push(token.slice(0, -1));
+    }
+    return [...new Set(variants)];
+  });
+}
+
+function containsSearchWord(value, token) {
+  return new RegExp('(^|\\s)' + token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(\\s|$)').test(value);
+}
+
 function productSearchText(product) {
   return normalizeSearchText([
     product.id,
@@ -846,19 +860,41 @@ function productSearchText(product) {
 
 function getProductSearchScore(product, query) {
   const tokens = getSearchTokens(query);
-  if (!tokens.length) return 1;
+  const tokenGroups = getSearchTokenGroups(query);
+  const normalizedQuery = normalizeSearchText(query);
+  if (!tokens.length) return { score: 1, coverage: 0 };
 
   const haystack = productSearchText(product);
   const name = normalizeSearchText(product.name || product.title || '');
+  const displayTitle = normalizeSearchText(displayProductTitle(product));
   let score = 0;
+  let coverage = 0;
 
-  tokens.forEach(token => {
-    if (name === token) score += 80;
-    else if (name.includes(token)) score += 45;
-    else if (haystack.includes(token)) score += 20;
+  if (displayTitle === normalizedQuery) score += 800;
+  else if (name === normalizedQuery) score += 700;
+  else if (displayTitle.includes(normalizedQuery)) score += 520;
+  else if (name.includes(normalizedQuery)) score += 420;
+  else if (haystack.includes(normalizedQuery)) score += 260;
+
+  tokenGroups.forEach(variants => {
+    if (variants.some(variant => variant && haystack.includes(variant))) {
+      coverage += 1;
+    }
   });
 
-  return score;
+  if (coverage === tokenGroups.length && tokenGroups.length > 1) {
+    score += 220;
+  }
+
+  tokens.forEach(token => {
+    if (displayTitle === token || name === token) score += 100;
+    else if (containsSearchWord(displayTitle, token)) score += 75;
+    else if (containsSearchWord(name, token)) score += 65;
+    else if (name.includes(token)) score += 35;
+    else if (haystack.includes(token)) score += 18;
+  });
+
+  return { score, coverage };
 }
 
 function isDigitalProduct(product) {
@@ -1455,9 +1491,12 @@ $.getJSON("fetch_sheet_data.php", function (data) {
 
   if (activeSearchTerm) {
     const searched = categoryFiltered
-      .map(product => ({ product, score: getProductSearchScore(product, activeSearchTerm) }))
+      .map(product => {
+        const ranking = getProductSearchScore(product, activeSearchTerm);
+        return { product, score: ranking.score, coverage: ranking.coverage };
+      })
       .filter(item => item.score > 0 && !isProductSoldOut(item.product))
-      .sort((a, b) => b.score - a.score || String(a.product.name || '').localeCompare(String(b.product.name || '')))
+      .sort((a, b) => b.coverage - a.coverage || b.score - a.score || String(a.product.name || '').localeCompare(String(b.product.name || '')))
       .map(item => item.product);
 
     categoryFiltered = searched;
