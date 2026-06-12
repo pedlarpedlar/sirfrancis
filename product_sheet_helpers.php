@@ -1821,7 +1821,23 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
 
 if (!function_exists('renderCandybirdSiteFlags')) {
     function renderCandybirdSiteFlags($placement = 'all') {
+        static $renderedFlagIds = [];
         $flags = getCandybirdActiveSiteFlags($placement);
+        if (empty($flags)) {
+            return '';
+        }
+
+        $flags = array_values(array_filter($flags, static function($flag) use (&$renderedFlagIds) {
+            $id = (int) ($flag['id'] ?? 0);
+            if ($id > 0 && isset($renderedFlagIds[$id])) {
+                return false;
+            }
+            if ($id > 0) {
+                $renderedFlagIds[$id] = true;
+            }
+            return true;
+        }));
+
         if (empty($flags)) {
             return '';
         }

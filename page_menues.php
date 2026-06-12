@@ -594,5 +594,19 @@ foreach ($offCanvasCartItems as $item) {
 <!-- header end -->
 
 <?php
+if (function_exists('renderCandybirdSiteFlags')) {
+  $cbNoticePage = strtolower(basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php'));
+  $cbNoticePlacement = 'all';
+  if (in_array($cbNoticePage, ['products', 'fetch_sheet', 'search'], true)) {
+    $cbNoticePlacement = 'products';
+  } elseif ($cbNoticePage === 'product') {
+    $cbNoticePlacement = 'product';
+  } elseif ($cbNoticePage === 'checkout') {
+    $cbNoticePlacement = 'checkout';
+  } elseif ($cbNoticePage === 'cart') {
+    $cbNoticePlacement = 'cart';
+  }
+  echo renderCandybirdSiteFlags($cbNoticePlacement);
+}
 include 'breadcrumbs.php';
 ?>

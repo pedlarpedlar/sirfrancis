@@ -5,7 +5,7 @@ include_once __DIR__ . '/dbh.inc.php';
 $requestedIds = isset($_POST['productIds']) && is_array($_POST['productIds']) ? array_map('strval', $_POST['productIds']) : [];
 $canUseHomepageCache = empty($requestedIds);
 $homepageCacheDir = __DIR__ . '/sheet_cache';
-$homepageCacheFile = $homepageCacheDir . '/homepage_products_v2.json';
+$homepageCacheFile = $homepageCacheDir . '/homepage_products_v3.json';
 if ($canUseHomepageCache && is_file($homepageCacheFile) && (time() - filemtime($homepageCacheFile)) < 3600) {
     header('Content-Type: application/json');
     readfile($homepageCacheFile);
@@ -59,6 +59,8 @@ foreach ($products as $product) {
         'discounted_price' => $discountedPrice,
         'img_url' => getSheetProductImage($product),
         'image_url' => getSheetProductImage($product),
+        'product_url' => getSheetProductUrl($product),
+        'slug' => getSheetProductSlug($product),
         'avg_rating' => isset($product['rating']) ? (float) $product['rating'] : 0,
         'parent_category' => $product['parent_category'] ?? '',
         'child_category_1' => $product['child_category_1'] ?? '',

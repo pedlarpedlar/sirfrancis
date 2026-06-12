@@ -73,15 +73,34 @@ function displayProducts(products) {
   function getProductImage(product) {
     var imageValue = product.img_url || product.image_url || product.image_urls || product.image || '';
     var images = String(imageValue).split(',').map(function(image) {
-      return image.trim();
+      return image.trim().replace(/ /g, '%20');
     }).filter(Boolean);
     return images.length ? images[0] : 'assets/img/product/1.png';
+  }
+
+  function getProductUrl(product) {
+    if (product.product_url) {
+      return product.product_url;
+    }
+    if (product.slug) {
+      return '/' + encodeURIComponent(product.slug);
+    }
+    return 'product?id=' + encodeURIComponent(product.id || '');
+  }
+
+  function formatMoney(value) {
+    var number = Number(value || 0);
+    return number.toFixed(2);
   }
 
   // Loop through each product and create HTML elements
   $.each(products, function (index, product) {
     var defaultImageUrl = 'assets/img/product/1.png';
     var imageUrl = getProductImage(product);
+    var productUrl = getProductUrl(product);
+    var originalPrice = Number(product.original_price || product.price || 0);
+    var finalPrice = Number(product.final_price || product.discounted_price || (originalPrice - Number(product.discount_amount || 0)) || originalPrice);
+    var hasDiscount = originalPrice > 0 && finalPrice > 0 && finalPrice < originalPrice;
     var productTitle = escapeHtml([product.title || product.name || 'CandyBird product', product.weight || product.size || ''].filter(Boolean).join(' '));
 
     var productHtml = `
@@ -94,7 +113,7 @@ function displayProducts(products) {
                     ${product.label ? `<span class="badge badge-danger top-right">${product.label}</span>` : ''}
                     ${product.discount_rate > 0 ? `<span class="badge badge-success top-left">-${Math.floor(product.discount_rate)}%</span>` : ''}
                 </div>
-                <a href="product?id=${product.id}">
+                <a href="${escapeHtml(productUrl)}">
                   <img
                     class="first-img"
                     src="${escapeHtml(imageUrl)}"
@@ -154,7 +173,7 @@ function displayProducts(products) {
               <div class="media-body">
                 <div class="product-desc">
                   <h3 class="title">
-                    <a style="width:210px;display:block;" href="product?id=${product.id}">${product.title} ${product.weight}</a>
+                    <a style="width:210px;display:block;" href="${escapeHtml(productUrl)}">${escapeHtml(product.title || product.name || 'CandyBird product')} ${escapeHtml(product.weight || product.size || '')}</a>
                   </h3>
                   <div class="star-rating">
                     ${generateStarRating(product.avg_rating)}
@@ -163,8 +182,8 @@ function displayProducts(products) {
                     class="d-flex align-items-center justify-content-between"
                   >
                     <span class="product-price">
-                      ${product.discount_rate > 0 ? `<del class="del">R${product.price}</del>` : ''}
-                      <span class="onsale">R${(product.price - product.discount_amount).toFixed(2)}</span>
+                      ${hasDiscount ? `<del class="del">R${formatMoney(originalPrice)}</del>` : ''}
+                      <span class="onsale">R${formatMoney(finalPrice)}</span>
                     </span>
                     <button
                       class="pro-bt add-to-cart"
