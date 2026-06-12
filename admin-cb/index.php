@@ -38,6 +38,7 @@ $linkGroups = [
         ['Wholesale Pricelist', 'wholesale_pricelist', 'Wholesale sheet links, template, printable list and force sync'],
         ['Categories', 'category_order', 'Edit category labels, visibility and display order'],
         ['Mega Sync All Sheets', 'sheets', 'Force refresh products, coupons, clearance and wholesale sheets'],
+        ['TSV How-to', 'tsv_how_to', 'Screenshots and steps for publishing Google Sheets as TSV'],
         ['Product Sheet', 'https://docs.google.com/spreadsheets/d/17L-lvBdS0W2Fvf9tzjQj55CweIKpKAdqlcP4aAPLZT8/edit?gid=380423212#gid=380423212', 'Open Google product sheet'],
         ['Coupon Sheet', 'https://docs.google.com/spreadsheets/d/1aofJluANxsJ-jtEIh9w1DDRzVuArtJVG32nFndX6bqw/edit?gid=0#gid=0', 'Open Google coupon sheet'],
         ['Product Gallery', 'manage_gallery', 'Upload and manage product images'],

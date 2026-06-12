@@ -127,27 +127,38 @@ include 'page_menues.php';
   .ops-wrap { padding: 28px 0 70px; }
   .ops-hero { background:#2d1739; color:#fff; border-radius:8px; padding:22px; margin-bottom:16px; }
   .ops-hero h1 { color:#fcb42f; font-size:28px; margin:0 0 6px; }
-  .ops-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:18px; height:100%; }
+  .ops-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:18px; height:auto !important; min-height:0; overflow:visible; }
   .ops-panel h2, .ops-panel h3 { color:#5b1178; }
   .field-help { color:#6d6270; font-size:12px; margin-top:4px; }
   .ops-table th { background:#f0e8f4; color:#4b185f; font-size:12px; text-transform:uppercase; white-space:nowrap; }
   .ops-table td { vertical-align:top; }
   .password-chip { background:#fbfaf7; border:1px solid #eadfd2; border-radius:6px; display:inline-block; font-family:monospace; padding:4px 7px; }
   .button-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .social-admin-grid { align-items:start; display:grid; gap:18px; grid-template-columns:minmax(320px, 460px) minmax(0, 1fr); }
+  .social-admin-side { align-content:start; display:grid; gap:18px; min-width:0; }
+  .social-accounts-list { min-width:0; }
+  .social-quick-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  @media (max-width: 991px) {
+    .social-admin-grid { grid-template-columns:1fr; }
+  }
 </style>
 
 <div class="container ops-wrap">
   <div class="ops-hero">
     <h1>Social Accounts & Posting Reminder</h1>
     <p class="mb-0">Keep handles, login details and posting reminders in one admin-only place. Most active platforms can be marked for daily posting reminders.</p>
+    <div class="social-quick-actions">
+      <a class="btn btn-warning btn-sm" href="#social-account-form">Add social account</a>
+      <a class="btn btn-outline-light btn-sm" href="#saved-social-accounts">View saved accounts</a>
+    </div>
   </div>
 
   <?php if ($flash): ?>
     <div class="alert <?= !empty($flash['success']) ? 'alert-success' : 'alert-danger' ?>"><?= cbOpsText($flash['message']) ?></div>
   <?php endif; ?>
 
-  <div class="row">
-    <div class="col-lg-5 mb-4">
+  <div class="social-admin-grid">
+    <div class="social-admin-side">
       <div class="ops-panel mb-4">
         <h2>Reminder Email</h2>
         <form method="post">
@@ -182,7 +193,7 @@ include 'page_menues.php';
         </form>
       </div>
 
-      <div class="ops-panel">
+      <div class="ops-panel" id="social-account-form">
         <h2><?= $editing ? 'Edit Social Account' : 'Add Social Account' ?></h2>
         <form method="post">
           <input type="hidden" name="action" value="save_account">
@@ -247,8 +258,8 @@ include 'page_menues.php';
       </div>
     </div>
 
-    <div class="col-lg-7 mb-4">
-      <div class="ops-panel">
+    <div class="social-accounts-list">
+      <div class="ops-panel" id="saved-social-accounts">
         <h3>Saved Social Accounts</h3>
         <div class="table-responsive">
           <table class="table table-hover ops-table">

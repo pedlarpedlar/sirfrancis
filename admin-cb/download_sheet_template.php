@@ -7,13 +7,38 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 require __DIR__ . '/sheet_page_helpers.php';
+@include_once __DIR__ . '/db_connect.php';
+
+function cbDownloadTemplateBusinessSlug($conn) {
+    $businessName = '';
+    if ($conn instanceof mysqli) {
+        $result = $conn->query("SELECT * FROM admin_website_settings LIMIT 1");
+        if ($result && ($row = $result->fetch_assoc())) {
+            foreach (['website_company_name', 'company_name', 'business_name', 'site_name', 'name'] as $field) {
+                $value = trim((string) ($row[$field] ?? ''));
+                if ($value !== '') {
+                    $businessName = $value;
+                    break;
+                }
+            }
+        }
+    }
+
+    if ($businessName === '') {
+        $businessName = 'mywebsite';
+    }
+
+    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $businessName));
+    $slug = trim($slug, '-');
+    return $slug !== '' ? $slug : 'mywebsite';
+}
 
 $type = strtolower(trim((string) ($_GET['type'] ?? 'products')));
 if (!in_array($type, ['products', 'coupons', 'clearance', 'wholesale'], true)) {
     $type = 'products';
 }
 
-$filename = 'candybird-' . $type . '-template.tsv';
+$filename = cbDownloadTemplateBusinessSlug($conn ?? null) . '-' . $type . '-template.tsv';
 header('Content-Type: text/tab-separated-values; charset=utf-8');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Pragma: no-cache');

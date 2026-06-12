@@ -8,14 +8,14 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhtg-QlUDokG6Tcsj29r1RMRWp9y9Fl2rcjh17s5F3xc5Re6tfaU54imMepBWNbA1xJKoVvNCUOX2d/pub?gid=380423212&single=true&output=tsv',
                 'edit_url' => 'https://docs.google.com/spreadsheets/d/17L-lvBdS0W2Fvf9tzjQj55CweIKpKAdqlcP4aAPLZT8/edit?gid=380423212#gid=380423212',
                 'required_headers' => ['id', 'name', 'size', 'price', 'parent_category', 'child_category_1', 'child_category_2', 'html_description', 'img_url'],
-                'optional_headers' => ['discount', 'discounted_price', 'discount_valid_from', 'discount_valid_until', 'product_type', 'qty_in_stock', 'lead_time', 'slug', 'homepage_featured', 'shipping_weight', 'free_delivery_excluded'],
+                'optional_headers' => ['discount', 'discounted_price', 'discount_valid_from', 'discount_valid_until', 'product_type', 'qty_in_stock', 'lead_time', 'slug', 'homepage_featured', 'shipping_weight', 'free_delivery_excluded', 'disclaimers'],
             ],
             'coupons' => [
                 'label' => 'Coupons',
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS6OtaChjDDrYCGBfpSaK8nnixhqpoZpJwPKRnA0MmuTCHrIIYSoksqoFkB8syrlxfOjn27rOY0wvll/pub?gid=0&single=true&output=tsv',
                 'edit_url' => 'https://docs.google.com/spreadsheets/d/1aofJluANxsJ-jtEIh9w1DDRzVuArtJVG32nFndX6bqw/edit?gid=0#gid=0',
                 'required_headers' => ['id', 'coupon_code', 'valid_from', 'valid_until', 'valid_on_sale_items', 'min_order_value', 'discount_type', 'discount_value'],
-                'optional_headers' => ['valid_count', 'multi_user', 'email_restriction', 'phone_restriction'],
+                'optional_headers' => ['valid_count', 'multi_user', 'email_restriction', 'phone_restriction', 'category_restriction', 'product_type_exclusion', 'product_id_restriction'],
             ],
             'clearance' => [
                 'label' => 'Clearance Basket',

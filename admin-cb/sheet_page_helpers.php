@@ -92,6 +92,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'homepage_featured' => 'yes/no. yes gives this product priority on homepage sections.',
             'shipping_weight' => 'Optional actual shipping weight, e.g. 750g or 0.75kg.',
             'free_delivery_excluded' => 'yes/no. Blank means no. yes shows that free shipping does not apply to this item.',
+            'disclaimers' => 'Optional product disclaimer shown in product details, e.g. images for illustration only.',
             'coupon_code' => 'Coupon code customers type at checkout.',
             'valid_from' => 'Coupon/clearance start date.',
             'valid_until' => 'Coupon/clearance end date.',
@@ -103,6 +104,9 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'multi_user' => 'yes/no. no means restricted to one customer identity.',
             'email_restriction' => 'Optional allowed email address.',
             'phone_restriction' => 'Optional allowed phone number.',
+            'category_restriction' => 'Optional eligible categories, comma separated. Parent categories include their children.',
+            'product_type_exclusion' => 'Optional excluded product types, e.g. digital or voucher.',
+            'product_id_restriction' => 'Optional eligible product IDs, comma separated.',
             'clearance_id' => 'Unique clearance item ID, e.g. CLR-001.',
             'product_id' => 'Original product sheet ID used for image/details fallback.',
             'clearance_price' => 'Clearance selling price.',
@@ -150,6 +154,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'homepage_featured' => 'yes',
                     'shipping_weight' => '',
                     'free_delivery_excluded' => '',
+                    'disclaimers' => 'Images are for illustration purposes only.',
                 ];
             } elseif ($key === 'coupons') {
                 $examples = [
@@ -165,6 +170,9 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'multi_user' => 'yes',
                     'email_restriction' => '',
                     'phone_restriction' => '',
+                    'category_restriction' => 'Gifting',
+                    'product_type_exclusion' => 'digital,voucher',
+                    'product_id_restriction' => '',
                 ];
             } elseif ($key === 'clearance') {
                 $examples = [
@@ -265,11 +273,13 @@ if (!function_exists('cbAdminSheetPage')) {
             .header-list { display:flex; flex-wrap:wrap; gap:6px; padding:0; margin:8px 0 0; list-style:none; }
             .header-list li { background:#f6f1ea; border:1px solid #eadfd2; border-radius:999px; padding:4px 8px; font-size:12px; }
             .sheet-actions { display:flex; flex-wrap:wrap; gap:10px; }
+            .sheet-help-link { color:#fcb42f; font-weight:900; text-decoration:underline; }
         </style>
         <div class="container sheet-page">
             <div class="sheet-hero">
                 <h1><?= cbAdminSheetText($title) ?></h1>
                 <?= $introHtml ?>
+                <p class="mb-0 mt-2"><a class="sheet-help-link" href="tsv_how_to">Need help publishing the Google Sheet as TSV?</a></p>
                 <div class="sheet-actions mt-3">
                     <a class="btn btn-light" href="download_sheet_template?type=<?= cbAdminSheetText($key) ?>">Download template</a>
                     <form method="post" class="m-0"><input type="hidden" name="sheet_action" value="refresh_source"><button class="btn btn-warning" type="submit"><?= cbAdminSheetText($syncLabel) ?></button></form>

@@ -179,7 +179,7 @@ function cbAdminMenuActive($page, $currentPage) {
             </details>
           </li>
           <li>
-            <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+            <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'tsv_how_to', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
               <summary>Products & Sheets</summary>
               <ul>
                 <li><a href="products">Products</a></li>
@@ -188,6 +188,7 @@ function cbAdminMenuActive($page, $currentPage) {
                 <li><a href="clearance">Clearance Basket</a></li>
                 <li><a href="wholesale_pricelist">Wholesale Pricelist</a></li>
                 <li><a href="sheets">Mega Sync All Sheets</a></li>
+                <li><a href="tsv_how_to">TSV How-to</a></li>
               </ul>
             </details>
           </li>
@@ -260,7 +261,7 @@ function cbAdminMenuActive($page, $currentPage) {
         </details>
       </li>
       <li>
-        <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
+        <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'tsv_how_to', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
           <summary>Products & Sheets</summary>
           <ul>
             <li><a href="products"<?= cbAdminMenuActive('products', $adminCurrentPage) ?>>Products</a></li>
@@ -269,6 +270,7 @@ function cbAdminMenuActive($page, $currentPage) {
             <li><a href="clearance"<?= cbAdminMenuActive('clearance', $adminCurrentPage) ?>>Clearance Basket</a></li>
             <li><a href="wholesale_pricelist"<?= cbAdminMenuActive('wholesale_pricelist', $adminCurrentPage) ?>>Wholesale Pricelist</a></li>
             <li><a href="sheets">Mega Sync All Sheets</a></li>
+            <li><a href="tsv_how_to"<?= cbAdminMenuActive('tsv_how_to', $adminCurrentPage) ?>>TSV How-to</a></li>
           </ul>
         </details>
       </li>
@@ -282,6 +284,7 @@ function cbAdminMenuActive($page, $currentPage) {
     </ul>
   </div>
 </aside>
+<?php include __DIR__ . '/admin_help.php'; ?>
 <!-- OffCanvas Wishlist Start -->
 <div id="offcanvas-wishlist" class="offcanvas offcanvas-wishlist theme1">
   <div class="inner">
