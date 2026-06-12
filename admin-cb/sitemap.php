@@ -46,6 +46,7 @@ $linkGroups = [
         ['Contact Info', 'manage_website_information', 'Company, contact, address and banking settings'],
         ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices, free shipping and Maps API'],
         ['Google reCAPTCHA', 'google_recaptcha', 'Contact form spam protection settings'],
+        ['Site Notices', 'site_flags', 'Shop closure, delayed-processing and maintenance flags'],
         ['Run Cron Jobs', 'run_cron', 'Manually trigger available cron jobs'],
         ['Backups', 'backups', 'Backup downloads and backup cron status'],
         ['Legacy Shipping Zones', 'shipping', 'Old province/country shipping zone page'],

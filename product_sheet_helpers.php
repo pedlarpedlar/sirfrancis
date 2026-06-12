@@ -1716,6 +1716,154 @@ if (!function_exists('searchSheetProducts')) {
     }
 }
 
+if (!function_exists('ensureCandybirdSiteFlagsTable')) {
+    function ensureCandybirdSiteFlagsTable($conn) {
+        static $checked = false;
+        if ($checked) {
+            return true;
+        }
+        if (!($conn instanceof mysqli)) {
+            return false;
+        }
+
+        $sql = "CREATE TABLE IF NOT EXISTS candybird_site_flags (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            flag_type VARCHAR(40) NOT NULL DEFAULT 'notice',
+            title VARCHAR(160) NOT NULL DEFAULT '',
+            label_text TEXT NOT NULL,
+            placements VARCHAR(255) NOT NULL DEFAULT 'all',
+            starts_at DATETIME NULL,
+            ends_at DATETIME NULL,
+            status VARCHAR(20) NOT NULL DEFAULT 'active',
+            created_by_admin_id INT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_site_flags_status_dates (status, starts_at, ends_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+
+        $checked = (bool) mysqli_query($conn, $sql);
+        return $checked;
+    }
+}
+
+if (!function_exists('getCandybirdSiteFlagTypes')) {
+    function getCandybirdSiteFlagTypes() {
+        return [
+            'shop_closed' => 'Close shop / delayed processing',
+            'maintenance' => 'Maintenance notice',
+            'notice' => 'General notice',
+        ];
+    }
+}
+
+if (!function_exists('getCandybirdSiteFlagPlacements')) {
+    function getCandybirdSiteFlagPlacements() {
+        return [
+            'all' => 'All shop pages',
+            'products' => 'Products listing',
+            'product' => 'Product details',
+            'checkout' => 'Checkout',
+            'cart' => 'Cart',
+        ];
+    }
+}
+
+if (!function_exists('normalizeCandybirdSiteFlagPlacements')) {
+    function normalizeCandybirdSiteFlagPlacements($placements) {
+        $allowed = array_keys(getCandybirdSiteFlagPlacements());
+        $values = is_array($placements) ? $placements : preg_split('/\s*,\s*/', (string) $placements);
+        $clean = [];
+        foreach ($values as $placement) {
+            $placement = strtolower(trim((string) $placement));
+            if ($placement !== '' && in_array($placement, $allowed, true)) {
+                $clean[] = $placement;
+            }
+        }
+        $clean = array_values(array_unique($clean));
+        return empty($clean) ? ['all'] : $clean;
+    }
+}
+
+if (!function_exists('getCandybirdActiveSiteFlags')) {
+    function getCandybirdActiveSiteFlags($placement = 'all') {
+        global $conn;
+        if (!($conn instanceof mysqli) || !ensureCandybirdSiteFlagsTable($conn)) {
+            return [];
+        }
+
+        $placement = strtolower(trim((string) $placement));
+        if ($placement === '') {
+            $placement = 'all';
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $sql = "SELECT * FROM candybird_site_flags
+                WHERE status = 'active'
+                  AND (starts_at IS NULL OR starts_at = '0000-00-00 00:00:00' OR starts_at <= ?)
+                  AND (ends_at IS NULL OR ends_at = '0000-00-00 00:00:00' OR ends_at >= ?)
+                  AND (FIND_IN_SET('all', placements) OR FIND_IN_SET(?, placements))
+                ORDER BY FIELD(flag_type, 'shop_closed', 'maintenance', 'notice'), COALESCE(starts_at, created_at) DESC, id DESC";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return [];
+        }
+        $stmt->bind_param('sss', $now, $now, $placement);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = [];
+        while ($result && ($row = $result->fetch_assoc())) {
+            $rows[] = $row;
+        }
+        $stmt->close();
+        return $rows;
+    }
+}
+
+if (!function_exists('renderCandybirdSiteFlags')) {
+    function renderCandybirdSiteFlags($placement = 'all') {
+        $flags = getCandybirdActiveSiteFlags($placement);
+        if (empty($flags)) {
+            return '';
+        }
+
+        $style = '<style>
+            .cb-site-flag-wrap{margin:18px auto 10px;}
+            .cb-site-flag{align-items:flex-start;background:#fff7ed;border:1px solid #f0c795;border-left:6px solid #d36b20;border-radius:8px;box-shadow:0 12px 28px rgba(76,43,20,.08);color:#3b2518;display:flex;gap:12px;margin-bottom:10px;padding:14px 16px;}
+            .cb-site-flag.maintenance{background:#f1f7ff;border-color:#b9d2f1;border-left-color:#3267b7;color:#172a43;}
+            .cb-site-flag.notice{background:#f8f4ff;border-color:#d8c7ec;border-left-color:#7a42aa;color:#2d193f;}
+            .cb-site-flag-icon{align-items:center;border-radius:50%;display:inline-flex;flex:0 0 34px;font-size:16px;height:34px;justify-content:center;background:rgba(255,255,255,.72);}
+            .cb-site-flag-body strong{display:block;font-size:15px;line-height:1.25;margin-bottom:4px;}
+            .cb-site-flag-body p{font-size:14px;line-height:1.55;margin:0;}
+            .cb-site-flag-body small{color:inherit;display:block;font-size:12px;margin-top:5px;opacity:.76;}
+            @media(max-width:575px){.cb-site-flag{padding:12px}.cb-site-flag-icon{display:none}}
+        </style>';
+
+        $html = $style . '<div class="container cb-site-flag-wrap" role="status" aria-live="polite">';
+        foreach ($flags as $flag) {
+            $type = (string) ($flag['flag_type'] ?? 'notice');
+            $class = $type === 'maintenance' ? 'maintenance' : ($type === 'notice' ? 'notice' : 'shop-closed');
+            $icon = $type === 'maintenance' ? 'fa-tools' : ($type === 'notice' ? 'fa-info-circle' : 'fa-store-slash');
+            $fallbackTitle = $type === 'maintenance' ? 'Website maintenance notice' : ($type === 'shop_closed' ? 'Shop processing notice' : 'Notice');
+            $title = trim((string) ($flag['title'] ?? ''));
+            $message = trim((string) ($flag['label_text'] ?? ''));
+            $endsAt = trim((string) ($flag['ends_at'] ?? ''));
+
+            $html .= '<div class="cb-site-flag ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
+            $html .= '<span class="cb-site-flag-icon"><i class="fas ' . htmlspecialchars($icon, ENT_QUOTES, 'UTF-8') . '"></i></span>';
+            $html .= '<div class="cb-site-flag-body">';
+            $html .= '<strong>' . htmlspecialchars($title !== '' ? $title : $fallbackTitle, ENT_QUOTES, 'UTF-8') . '</strong>';
+            $html .= '<p>' . nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8')) . '</p>';
+            if ($type === 'shop_closed' && $endsAt !== '' && $endsAt !== '0000-00-00 00:00:00') {
+                $html .= '<small>Expected processing resumes after ' . htmlspecialchars(date('d M Y H:i', strtotime($endsAt)), ENT_QUOTES, 'UTF-8') . '.</small>';
+            }
+            $html .= '</div></div>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+}
+
 if (!function_exists('getSheetProductImage')) {
     function getSheetProductImage($product) {
         $imageValue = $product['img_url'] ?? $product['image_url'] ?? $product['image_urls'] ?? $product['image'] ?? '';

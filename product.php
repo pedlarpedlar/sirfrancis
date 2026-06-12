@@ -631,6 +631,8 @@ include 'header.php';
 
 <?php include 'page_menues.php'; ?>
 
+<?= renderCandybirdSiteFlags('product') ?>
+
 <div id="breadcrumb-container"></div>
 
 <div id="product-page-state" class="product-page-state">

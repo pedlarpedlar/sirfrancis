@@ -25,6 +25,8 @@ $page_url_og = "https://www.candybird.co.za/checkout"
 <?php
 include 'page_menues.php';
 
+echo renderCandybirdSiteFlags('checkout');
+
 // Fetch cart items based on user or guest
 $checkoutItems = getcartItems($userId, $guestIdentifier);
 

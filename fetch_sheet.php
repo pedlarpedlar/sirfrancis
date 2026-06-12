@@ -472,6 +472,8 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 
 ?>
 
+<?= renderCandybirdSiteFlags('products') ?>
+
 <?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
 <section class="specials-clearance-banner">
   <div class="container">

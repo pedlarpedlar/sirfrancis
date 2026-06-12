@@ -25,6 +25,7 @@ $page_url_og = "https://www.candybird.co.za/cart"
 
 <?php
 include 'page_menues.php';
+echo renderCandybirdSiteFlags('cart');
 ?>
 
 <style>
