@@ -2,6 +2,12 @@
 </head>
 
 <body>
+<?php
+if (function_exists('renderCandybirdSiteFlags')) {
+  $cbNoticePlacement = function_exists('getCandybirdCurrentSiteFlagPlacement') ? getCandybirdCurrentSiteFlagPlacement() : 'all';
+  echo renderCandybirdSiteFlags($cbNoticePlacement);
+}
+?>
     
 <!-- offcanvas-overlay start -->
 <div class="offcanvas-overlay no-print"></div>
@@ -593,29 +599,5 @@ foreach ($offCanvasCartItems as $item) {
 </header>
 <!-- header end -->
 
-<?php
-if (function_exists('renderCandybirdSiteFlags')) {
-  $cbNoticePage = strtolower(basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php'));
-  $cbNoticePath = strtolower(trim(parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH) ?: '', '/'));
-  $cbNoticePlacement = 'site';
-  if (in_array($cbNoticePage, ['products', 'fetch_sheet', 'search'], true)) {
-    $cbNoticePlacement = 'products';
-  } elseif (in_array($cbNoticePath, ['products', 'search', 'specials', 'clearance-basket'], true)) {
-    $cbNoticePlacement = 'products';
-  } elseif ($cbNoticePage === 'product') {
-    $cbNoticePlacement = 'product';
-  } elseif ($cbNoticePath !== '' && !in_array($cbNoticePath, ['cart', 'checkout'], true) && preg_match('/^[a-z0-9][a-z0-9-]{2,120}$/', $cbNoticePath)) {
-    $cbNoticePlacement = (function_exists('getCandybirdCategoryBySlug') && getCandybirdCategoryBySlug($cbNoticePath) !== '') ? 'products' : 'product';
-  } elseif ($cbNoticePage === 'checkout') {
-    $cbNoticePlacement = 'checkout';
-  } elseif ($cbNoticePath === 'checkout') {
-    $cbNoticePlacement = 'checkout';
-  } elseif ($cbNoticePage === 'cart') {
-    $cbNoticePlacement = 'cart';
-  } elseif ($cbNoticePath === 'cart') {
-    $cbNoticePlacement = 'cart';
-  }
-  echo renderCandybirdSiteFlags($cbNoticePlacement);
-}
 include 'breadcrumbs.php';
 ?>

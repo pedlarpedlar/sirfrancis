@@ -1820,6 +1820,29 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
 }
 
 if (!function_exists('renderCandybirdSiteFlags')) {
+    function getCandybirdCurrentSiteFlagPlacement() {
+        $page = strtolower(basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php'));
+        $path = strtolower(trim(parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH) ?: '', '/'));
+
+        if (in_array($page, ['products', 'fetch_sheet', 'search'], true) || in_array($path, ['products', 'search', 'specials', 'clearance-basket'], true)) {
+            return 'products';
+        }
+        if ($page === 'checkout' || $path === 'checkout') {
+            return 'checkout';
+        }
+        if ($page === 'cart' || $path === 'cart') {
+            return 'cart';
+        }
+        if ($page === 'product') {
+            return 'product';
+        }
+        if ($path !== '' && preg_match('/^[a-z0-9][a-z0-9-]{2,120}$/', $path)) {
+            return (function_exists('getCandybirdCategoryBySlug') && getCandybirdCategoryBySlug($path) !== '') ? 'products' : 'product';
+        }
+
+        return 'site';
+    }
+
     function renderCandybirdSiteFlags($placement = 'all') {
         static $renderedFlagIds = [];
         $flags = getCandybirdActiveSiteFlags($placement);
@@ -1843,18 +1866,19 @@ if (!function_exists('renderCandybirdSiteFlags')) {
         }
 
         $style = '<style>
-            .cb-site-flag-wrap{margin:18px auto 10px;}
-            .cb-site-flag{align-items:flex-start;background:#fff7ed;border:1px solid #f0c795;border-left:6px solid #d36b20;border-radius:8px;box-shadow:0 12px 28px rgba(76,43,20,.08);color:#3b2518;display:flex;gap:12px;margin-bottom:10px;padding:14px 16px;}
+            .cb-site-flag-wrap{background:#fff7ed;border-bottom:2px solid #f0c795;margin:0;padding:10px 14px;position:relative;z-index:1001;}
+            .cb-site-flag{align-items:flex-start;background:#fff;border:1px solid #f0c795;border-left:6px solid #d36b20;border-radius:8px;box-shadow:0 8px 22px rgba(76,43,20,.12);color:#3b2518;display:flex;gap:12px;margin:0 auto 8px;max-width:1180px;padding:14px 16px;}
+            .cb-site-flag:last-child{margin-bottom:0;}
             .cb-site-flag.maintenance{background:#f1f7ff;border-color:#b9d2f1;border-left-color:#3267b7;color:#172a43;}
             .cb-site-flag.notice{background:#f8f4ff;border-color:#d8c7ec;border-left-color:#7a42aa;color:#2d193f;}
             .cb-site-flag-icon{align-items:center;border-radius:50%;display:inline-flex;flex:0 0 34px;font-size:16px;height:34px;justify-content:center;background:rgba(255,255,255,.72);}
-            .cb-site-flag-body strong{display:block;font-size:15px;line-height:1.25;margin-bottom:4px;}
-            .cb-site-flag-body p{font-size:14px;line-height:1.55;margin:0;}
+            .cb-site-flag-body strong{display:block;font-size:16px;line-height:1.25;margin-bottom:4px;}
+            .cb-site-flag-body p{font-size:15px;line-height:1.55;margin:0;}
             .cb-site-flag-body small{color:inherit;display:block;font-size:12px;margin-top:5px;opacity:.76;}
             @media(max-width:575px){.cb-site-flag{padding:12px}.cb-site-flag-icon{display:none}}
         </style>';
 
-        $html = $style . '<div class="container cb-site-flag-wrap" role="status" aria-live="polite">';
+        $html = $style . '<div class="cb-site-flag-wrap" role="status" aria-live="polite">';
         foreach ($flags as $flag) {
             $type = (string) ($flag['flag_type'] ?? 'notice');
             $class = $type === 'maintenance' ? 'maintenance' : ($type === 'notice' ? 'notice' : 'shop-closed');
