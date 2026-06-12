@@ -132,6 +132,9 @@ $result = $conn->query("SELECT * FROM candybird_site_flags ORDER BY FIELD(status
 while ($result && ($row = $result->fetch_assoc())) {
     $flags[] = $row;
 }
+if (function_exists('publishCandybirdSiteFlagsPublicCache')) {
+    publishCandybirdSiteFlagsPublicCache($flags);
+}
 
 include __DIR__ . '/page_menues.php';
 ?>

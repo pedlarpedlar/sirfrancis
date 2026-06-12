@@ -1820,6 +1820,51 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
 }
 
 if (!function_exists('getCandybirdShowingSiteFlags')) {
+    function getCandybirdSiteFlagsPublicFile() {
+        return __DIR__ . '/sheet_cache/site_flags_public.json';
+    }
+
+    function candybirdFilterShowingSiteFlags($flags) {
+        $now = time();
+        $showing = [];
+        foreach ((array) $flags as $flag) {
+            if (strtolower(trim((string) ($flag['status'] ?? ''))) !== 'active') {
+                continue;
+            }
+            $startsAt = trim((string) ($flag['starts_at'] ?? ''));
+            $endsAt = trim((string) ($flag['ends_at'] ?? ''));
+            if ($startsAt !== '' && $startsAt !== '0000-00-00 00:00:00' && strtotime($startsAt) > $now) {
+                continue;
+            }
+            if ($endsAt !== '' && $endsAt !== '0000-00-00 00:00:00' && strtotime($endsAt) < $now) {
+                continue;
+            }
+            $showing[] = $flag;
+        }
+        return $showing;
+    }
+
+    function publishCandybirdSiteFlagsPublicCache($flags) {
+        $cacheFile = getCandybirdSiteFlagsPublicFile();
+        $dir = dirname($cacheFile);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        return (bool) @file_put_contents($cacheFile, json_encode(array_values((array) $flags), JSON_PRETTY_PRINT), LOCK_EX);
+    }
+
+    function candybirdFetchShowingSiteFlagsFromPublicCache() {
+        $cacheFile = getCandybirdSiteFlagsPublicFile();
+        if (!is_file($cacheFile)) {
+            return [];
+        }
+        $decoded = json_decode((string) @file_get_contents($cacheFile), true);
+        if (!is_array($decoded)) {
+            return [];
+        }
+        return candybirdFilterShowingSiteFlags($decoded);
+    }
+
     function candybirdFetchShowingSiteFlagsFromConnection($siteFlagConn) {
         if (!($siteFlagConn instanceof mysqli) || !ensureCandybirdSiteFlagsTable($siteFlagConn)) {
             return [];
@@ -1848,7 +1893,11 @@ if (!function_exists('getCandybirdShowingSiteFlags')) {
 
     function getCandybirdShowingSiteFlags() {
         global $conn;
-        return candybirdFetchShowingSiteFlagsFromConnection($conn ?? null);
+        $rows = candybirdFetchShowingSiteFlagsFromConnection($conn ?? null);
+        if (!empty($rows)) {
+            return $rows;
+        }
+        return candybirdFetchShowingSiteFlagsFromPublicCache();
     }
 }
 
