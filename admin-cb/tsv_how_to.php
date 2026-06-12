@@ -52,9 +52,11 @@ $steps = [
     .tsv-help-hero p { color:#f8ecff; line-height:1.65; margin:0; max-width:920px; }
     .tsv-help-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
     .tsv-help-grid { display:grid; gap:16px; grid-template-columns:repeat(2, minmax(0, 1fr)); }
-    .tsv-help-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; box-shadow:0 12px 30px rgba(45,23,57,.07); overflow:hidden; }
-    .tsv-help-card img { background:#f7f1e8; display:block; height:auto; width:100%; }
-    .tsv-help-card-body { padding:18px; }
+    .tsv-help-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; box-shadow:0 12px 30px rgba(45,23,57,.07); overflow:hidden; padding:14px; }
+    .tsv-help-shot { background:#f7f1e8; border:1px solid #eadfd2; border-radius:7px; margin-bottom:16px; overflow:hidden; padding:10px; }
+    .tsv-help-card img { background:#fff; border-radius:5px; display:block; height:auto; width:100%; }
+    .tsv-help-shot-placeholder { background:#f7f1e8; border:1px dashed #d8c7b7; border-radius:7px; color:#6d6270; padding:40px 18px; text-align:center; }
+    .tsv-help-card-body { border-top:1px solid #f0e7de; padding:16px 4px 2px; }
     .tsv-help-card-body span { background:#fcb42f; border-radius:999px; color:#2d1739; display:inline-flex; font-size:12px; font-weight:900; margin-bottom:10px; padding:5px 9px; }
     .tsv-help-card-body h2 { color:#5b1178; font-size:20px; margin:0 0 8px; }
     .tsv-help-card-body p { color:#5d514b; line-height:1.6; margin:0; }
@@ -87,9 +89,9 @@ $steps = [
                 $imagePath = __DIR__ . '/' . $step['image'];
                 if (is_file($imagePath)):
                 ?>
-                    <img src="<?= cbTsvHelpText($step['image']) ?>" alt="<?= cbTsvHelpText($step['alt']) ?>" loading="lazy">
+                    <div class="tsv-help-shot"><img src="<?= cbTsvHelpText($step['image']) ?>" alt="<?= cbTsvHelpText($step['alt']) ?>" loading="lazy"></div>
                 <?php else: ?>
-                    <div style="background:#f7f1e8;padding:40px 18px;text-align:center;color:#6d6270;">Screenshot <?= (int) ($index + 1) ?> will show here once uploaded to <code>assets/img/screenshot_helpers</code>.</div>
+                    <div class="tsv-help-shot-placeholder">Screenshot <?= (int) ($index + 1) ?> will show here once uploaded to <code>assets/img/screenshot_helpers</code>.</div>
                 <?php endif; ?>
                 <div class="tsv-help-card-body">
                     <span>Step <?= (int) ($index + 1) ?></span>

@@ -268,6 +268,23 @@ include 'header.php';
     text-transform: uppercase;
   }
 
+  .clearance-price-note {
+    background: #fff6f4;
+    border: 1px solid #f0b4ac;
+    border-left: 5px solid #d5001f;
+    border-radius: 8px;
+    color: #552017;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.45;
+    margin: -14px 0 18px;
+    padding: 12px 14px;
+  }
+
+  .clearance-price-note span {
+    color: #d5001f;
+  }
+
   .product-image-lightbox {
     align-items: center;
     background: rgba(0, 0, 0, 0.84);
@@ -1200,9 +1217,12 @@ $(function() {
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     const specialActive = isProductSpecialActive(product.raw || product);
     const salePercent = getSalePercent(product);
-    const saveText = (!isClearance && salePercent > 0) ? '<span class="badge position-static bg-dark rounded-0">Save ' + salePercent + '%</span>' : '';
+    const saveText = (salePercent > 0) ? '<span class="badge position-static ' + (isClearance ? 'badge-danger' : 'bg-dark') + ' rounded-0">' + (isClearance ? salePercent + '% off' : 'Save ' + salePercent + '%') + '</span>' : '';
     const discountUntil = product.raw.discount_valid_until || product.raw.special_valid_until || product.raw.sale_valid_until || '';
     const endsText = (!isClearance && hasDiscount && specialActive && discountUntil) ? '<div class="product-special-window"><span>Special ends ' + escapeHtml(formatSpecialDate(discountUntil)) + '</span><span class="product-special-countdown" id="product-special-countdown"></span></div>' : '';
+    const clearanceNote = (isClearance && hasDiscount)
+      ? '<div class="clearance-price-note">Clearance price: <span>R' + product.discountedPrice.toFixed(2) + '</span>. Original product price R' + product.price.toFixed(2) + '.</div>'
+      : '';
 
     $('#price-section').html(
       '<div class="d-flex align-items-center mb-30">' +
@@ -1213,6 +1233,7 @@ $(function() {
         '</span>' +
         saveText +
       '</div>' +
+      clearanceNote +
       endsText
     );
 
@@ -1492,7 +1513,7 @@ $(function() {
     renderPairProducts(product);
 
     $('#product-title').text(title);
-    $('#product-short-description').text(shortDescription);
+    $('#product-short-description').text(isClearance ? '' : shortDescription);
     $('#product-full-description').html(product.description || escapeHtml(shortDescription));
     const salePercent = getSalePercent(product);
     const labels = [];
