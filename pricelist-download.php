@@ -2,8 +2,8 @@
 include 'session_logins.php';
 require_once __DIR__ . '/pricelist_helpers.php';
 
-$sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'name';
-$sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+$sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
+$sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
 $direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
 $productsByCategory = cbPricelistProductsByCategory($sort, $direction);
 $productCount = cbPricelistProductCount($productsByCategory);

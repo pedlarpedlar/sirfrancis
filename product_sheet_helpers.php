@@ -1801,7 +1801,7 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
                 WHERE status = 'active'
                   AND (starts_at IS NULL OR starts_at = '0000-00-00 00:00:00' OR starts_at <= ?)
                   AND (ends_at IS NULL OR ends_at = '0000-00-00 00:00:00' OR ends_at >= ?)
-                  AND (FIND_IN_SET('all', placements) OR FIND_IN_SET(?, placements))
+                  AND (placements = '' OR FIND_IN_SET('all', REPLACE(placements, ' ', '')) OR FIND_IN_SET(?, REPLACE(placements, ' ', '')))
                 ORDER BY FIELD(flag_type, 'shop_closed', 'maintenance', 'notice'), COALESCE(starts_at, created_at) DESC, id DESC";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -2445,6 +2445,75 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
             return strnatcasecmp($a['label'] ?? '', $b['label'] ?? '');
         });
         return $map;
+    }
+
+    function getCandybirdCategoryPathDisplayMap() {
+        $map = [];
+        foreach (getCandybirdCategoryDisplayConfig()['paths'] ?? [] as $item) {
+            $path = trim((string) ($item['path'] ?? ''));
+            if ($path === '') {
+                continue;
+            }
+            $map[$path] = [
+                'label' => trim((string) ($item['label'] ?? $path)) ?: $path,
+                'visible' => !array_key_exists('visible', $item) || filter_var($item['visible'], FILTER_VALIDATE_BOOLEAN),
+                'position' => isset($item['position']) ? (int) $item['position'] : 9999,
+            ];
+        }
+        uasort($map, static function($a, $b) {
+            $posCompare = ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+            if ($posCompare !== 0) {
+                return $posCompare;
+            }
+            return strnatcasecmp($a['label'] ?? '', $b['label'] ?? '');
+        });
+        return $map;
+    }
+
+    function getCandybirdCategoryPathDisplayPosition($categoryPath) {
+        $categoryPath = trim((string) $categoryPath);
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryPath) : strtolower($categoryPath);
+        foreach (getCandybirdCategoryPathDisplayMap() as $sourcePath => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourcePath) : strtolower($sourcePath);
+            $labelSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($item['label'] ?? $sourcePath) : strtolower((string) ($item['label'] ?? $sourcePath));
+            if ($categoryPath === $sourcePath || $categorySlug === $sourceSlug || $categorySlug === $labelSlug) {
+                return (int) ($item['position'] ?? 9999);
+            }
+        }
+        return PHP_INT_MAX;
+    }
+
+    function getCandybirdCategoryPathDisplayLabel($categoryPath) {
+        $categoryPath = trim((string) $categoryPath);
+        $map = getCandybirdCategoryPathDisplayMap();
+        if (isset($map[$categoryPath])) {
+            return $map[$categoryPath]['label'] ?? $categoryPath;
+        }
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryPath) : strtolower($categoryPath);
+        foreach ($map as $sourcePath => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourcePath) : strtolower($sourcePath);
+            if ($categorySlug === $sourceSlug) {
+                return $item['label'] ?? $categoryPath;
+            }
+        }
+        return $categoryPath;
+    }
+
+    function isCandybirdCategoryPathVisible($categoryPath) {
+        $categoryPath = trim((string) $categoryPath);
+        $map = getCandybirdCategoryPathDisplayMap();
+        if (isset($map[$categoryPath])) {
+            return !empty($map[$categoryPath]['visible']);
+        }
+        $categorySlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($categoryPath) : strtolower($categoryPath);
+        foreach ($map as $sourcePath => $item) {
+            $sourceSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($sourcePath) : strtolower($sourcePath);
+            $labelSlug = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($item['label'] ?? $sourcePath) : strtolower((string) ($item['label'] ?? $sourcePath));
+            if ($categorySlug === $sourceSlug || $categorySlug === $labelSlug) {
+                return !empty($item['visible']);
+            }
+        }
+        return true;
     }
 
     function getCandybirdCategoryDisplayPosition($categoryName) {

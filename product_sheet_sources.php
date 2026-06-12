@@ -8,7 +8,7 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhtg-QlUDokG6Tcsj29r1RMRWp9y9Fl2rcjh17s5F3xc5Re6tfaU54imMepBWNbA1xJKoVvNCUOX2d/pub?gid=380423212&single=true&output=tsv',
                 'edit_url' => 'https://docs.google.com/spreadsheets/d/17L-lvBdS0W2Fvf9tzjQj55CweIKpKAdqlcP4aAPLZT8/edit?gid=380423212#gid=380423212',
                 'required_headers' => ['id', 'name', 'size', 'price', 'parent_category', 'child_category_1', 'child_category_2', 'html_description', 'img_url'],
-                'optional_headers' => ['discount', 'discounted_price', 'discount_valid_from', 'discount_valid_until', 'product_type', 'qty_in_stock', 'lead_time', 'slug', 'homepage_featured', 'shipping_weight', 'free_delivery_excluded', 'disclaimers'],
+                'optional_headers' => ['discount', 'discounted_price', 'discount_valid_from', 'discount_valid_until', 'product_type', 'qty_in_stock', 'lead_time', 'slug', 'homepage_featured', 'shipping_weight', 'free_delivery_excluded', 'disclaimers', 'pricelist_sort'],
             ],
             'coupons' => [
                 'label' => 'Coupons',

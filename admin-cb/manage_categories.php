@@ -43,11 +43,17 @@ function cbManageCategoryEnsureDisplayColumns($conn) {
     return true;
 }
 
-function cbManageCategorySaveDisplay($conn, $items) {
+function cbManageCategorySaveDisplay($conn, $items, $paths = null) {
     if (!cbManageCategoryEnsureDisplayColumns($conn)) {
         return false;
     }
-    $payload = json_encode(['items' => array_values($items)]);
+    $existingConfig = function_exists('getCandybirdCategoryDisplayConfig') ? getCandybirdCategoryDisplayConfig() : ['items' => []];
+    $payloadData = is_array($existingConfig) ? $existingConfig : ['items' => []];
+    $payloadData['items'] = array_values($items);
+    if (is_array($paths)) {
+        $payloadData['paths'] = array_values($paths);
+    }
+    $payload = json_encode($payloadData);
     if ($payload === false) {
         return false;
     }
@@ -102,7 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['category_action'] ?? '') =
     $labels = $_POST['category_label'] ?? [];
     $positions = $_POST['category_position'] ?? [];
     $visible = $_POST['category_visible'] ?? [];
+    $pathKeys = $_POST['category_path'] ?? [];
+    $pathLabels = $_POST['category_path_label'] ?? [];
+    $pathPositions = $_POST['category_path_position'] ?? [];
+    $pathVisible = $_POST['category_path_visible'] ?? [];
     $items = [];
+    $paths = [];
 
     foreach ($names as $index => $name) {
         $name = trim((string) $name);
@@ -125,7 +136,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['category_action'] ?? '') =
         $items[$itemIndex]['position'] = $itemIndex + 1;
     }
 
-    $categorySuccess = cbManageCategorySaveDisplay($conn ?? null, $items);
+    $submittedPaths = is_array($pathKeys) && count($pathKeys) > 0;
+    if ($submittedPaths) {
+        foreach ($pathKeys as $index => $path) {
+            $path = trim((string) $path);
+            if ($path === '') {
+                continue;
+            }
+            $paths[] = [
+                'path' => $path,
+                'label' => trim((string) ($pathLabels[$index] ?? $path)) ?: $path,
+                'position' => is_numeric($pathPositions[$index] ?? null) ? (int) $pathPositions[$index] : ($index + 1),
+                'visible' => isset($pathVisible[$index]),
+            ];
+        }
+
+        usort($paths, static function($a, $b) {
+            $posCompare = ($a['position'] ?? 9999) <=> ($b['position'] ?? 9999);
+            return $posCompare !== 0 ? $posCompare : strnatcasecmp($a['path'] ?? '', $b['path'] ?? '');
+        });
+        foreach ($paths as $pathIndex => $path) {
+            $paths[$pathIndex]['position'] = $pathIndex + 1;
+        }
+    }
+
+    $categorySuccess = cbManageCategorySaveDisplay($conn ?? null, $items, $submittedPaths ? $paths : null);
     $categoryMessage = $categorySuccess ? 'Category display settings saved.' : 'Category display settings could not be saved.';
     if ($categorySuccess) {
         $publicProductCache = dirname(__DIR__) . '/sheet_cache/products_json_with_reviews.json';
@@ -139,13 +174,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['category_action'] ?? '') =
 
 $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
 $sourceCategories = [];
+$sourceCategoryPaths = [];
 foreach ($products as $product) {
     $parent = trim((string) ($product['parent_category'] ?? ''));
     if ($parent !== '') {
         $sourceCategories[$parent] = true;
     }
+    $parts = [];
+    foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
+        $value = trim((string) ($product[$field] ?? ''));
+        if ($value !== '' && !in_array($value, $parts, true)) {
+            $parts[] = $value;
+        }
+    }
+    if (!empty($parts)) {
+        $sourceCategoryPaths[implode(' > ', $parts)] = true;
+    }
 }
 
+$displayConfig = getCandybirdCategoryDisplayConfig();
 $displayMap = getCandybirdCategoryDisplayMap();
 $displayRows = [];
 foreach ($displayMap as $name => $item) {
@@ -180,6 +227,43 @@ foreach ($displayRows as $name => $row) {
     $displayRows[$name]['display_position'] = $rowPosition++;
 }
 
+$savedPathRows = [];
+foreach (($displayConfig['paths'] ?? []) as $pathItem) {
+    $path = trim((string) ($pathItem['path'] ?? ''));
+    if ($path === '') {
+        continue;
+    }
+    $savedPathRows[$path] = [
+        'path' => $path,
+        'label' => trim((string) ($pathItem['label'] ?? $path)) ?: $path,
+        'position' => isset($pathItem['position']) ? (int) $pathItem['position'] : 9999,
+        'visible' => !array_key_exists('visible', $pathItem) || filter_var($pathItem['visible'], FILTER_VALIDATE_BOOLEAN),
+        'missing_from_sheet' => !isset($sourceCategoryPaths[$path]),
+    ];
+}
+foreach (array_keys($sourceCategoryPaths) as $path) {
+    if (!isset($savedPathRows[$path])) {
+        $savedPathRows[$path] = [
+            'path' => $path,
+            'label' => $path,
+            'position' => 9999,
+            'visible' => true,
+        ];
+    }
+}
+uasort($savedPathRows, static function($a, $b) {
+    $posA = $a['position'] ?? 9999;
+    $posB = $b['position'] ?? 9999;
+    if ($posA === $posB) {
+        return strnatcasecmp($a['path'], $b['path']);
+    }
+    return $posA <=> $posB;
+});
+$pathPosition = 1;
+foreach ($savedPathRows as $path => $row) {
+    $savedPathRows[$path]['display_position'] = $pathPosition++;
+}
+
 include 'header.php';
 ?>
 
@@ -199,6 +283,7 @@ include 'header.php';
 .category-display-table th { color: #5b1178; font-size: 13px; text-transform: uppercase; }
 .category-display-table input[type="number"] { max-width: 90px; }
 .category-muted { color: #75675d; font-size: 13px; }
+.category-admin-panel h3 { color:#5b1178; font-size:19px; margin:20px 0 8px; }
 @media (max-width: 767px) {
     .category-display-table, .category-display-table tbody, .category-display-table tr, .category-display-table td { display: block; width: 100%; }
     .category-display-table thead { display: none; }
@@ -256,6 +341,49 @@ include 'page_menues.php';
                     </table>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Save category display</button>
+            </form>
+        </div>
+
+        <div class="category-admin-panel">
+            <h2>Pricelist Category Order</h2>
+            <p class="category-muted">This controls how grouped pricelist sections appear, including child categories. Example: put plain/raw nuts first, then salted/roasted, then caramelized/coated, then dried fruit, sweets, gifting and other sections. Sheet syncs can add new category paths; new ones appear at the bottom until you order them here.</p>
+            <form method="post" action="<?= cbManageCategoryText($categoryPageSlug) ?>">
+                <input type="hidden" name="category_action" value="save_display_categories">
+                <?php $i = 0; foreach ($displayRows as $row): ?>
+                    <input type="hidden" name="category_name[<?= $i ?>]" value="<?= cbManageCategoryText($row['name']) ?>">
+                    <input type="hidden" name="category_label[<?= $i ?>]" value="<?= cbManageCategoryText($row['label']) ?>">
+                    <input type="hidden" name="category_position[<?= $i ?>]" value="<?= cbManageCategoryText($row['display_position'] ?? ($i + 1)) ?>">
+                    <?php if (!empty($row['visible'])): ?><input type="hidden" name="category_visible[<?= $i ?>]" value="1"><?php endif; ?>
+                <?php $i++; endforeach; ?>
+                <div class="table-responsive">
+                    <table class="category-display-table">
+                        <thead>
+                            <tr>
+                                <th>Show</th>
+                                <th>Sheet category path</th>
+                                <th>Pricelist label</th>
+                                <th>Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $p = 0; foreach ($savedPathRows as $row): ?>
+                                <tr>
+                                    <td><input type="checkbox" name="category_path_visible[<?= $p ?>]" <?= !empty($row['visible']) ? 'checked' : '' ?>></td>
+                                    <td>
+                                        <strong><?= cbManageCategoryText($row['path']) ?></strong>
+                                        <?php if (!empty($row['missing_from_sheet'])): ?>
+                                            <div class="category-muted">Not found in current sheet.</div>
+                                        <?php endif; ?>
+                                        <input type="hidden" name="category_path[<?= $p ?>]" value="<?= cbManageCategoryText($row['path']) ?>">
+                                    </td>
+                                    <td><input type="text" class="form-control" name="category_path_label[<?= $p ?>]" value="<?= cbManageCategoryText($row['label']) ?>"></td>
+                                    <td><input type="number" class="form-control" name="category_path_position[<?= $p ?>]" value="<?= cbManageCategoryText($row['display_position'] ?? ($p + 1)) ?>"></td>
+                                </tr>
+                            <?php $p++; endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Save pricelist order</button>
             </form>
         </div>
     </div>

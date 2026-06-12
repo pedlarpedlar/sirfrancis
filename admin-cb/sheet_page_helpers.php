@@ -88,6 +88,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                 'qty_in_stock',
                 'lead_time',
                 'slug',
+                'pricelist_sort',
             ],
         ];
         $headers = $templateHeaders[$key] ?? array_values(array_unique(array_merge(
@@ -116,6 +117,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'qty_in_stock' => 'Available quantity customers may order. Leave blank if unlimited/not tracked.',
             'lead_time' => 'Shows lead-time required instead of in-stock, e.g. "2-5 days".',
             'slug' => 'Clean URL text, e.g. plain-cashews-1kg. Must be unique. Optional. Use a sheet formula if desired, such as =LOWER(REGEXREPLACE(REGEXREPLACE(TRIM(E3&" "&H3),"[^A-Za-z0-9]+","-"),"(^-|-$)",""))',
+            'pricelist_sort' => 'Optional number for fine ordering inside a pricelist section. Lower numbers show first. Leave blank to sort normally.',
             'homepage_featured' => 'yes/no. yes gives this product priority on homepage sections.',
             'coupon_code' => 'Coupon code customers type at checkout.',
             'valid_from' => 'Coupon/clearance start date.',
@@ -175,6 +177,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'qty_in_stock' => '20',
                     'lead_time' => '',
                     'slug' => 'plain-cashews-100g',
+                    'pricelist_sort' => '10',
                     'homepage_featured' => 'yes',
                     'shipping_weight' => '',
                     'free_delivery_excluded' => '',

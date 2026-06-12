@@ -29,6 +29,13 @@ if (!function_exists('cbPricelistCategoryPath')) {
 
 if (!function_exists('cbPricelistDisplayCategoryPath')) {
     function cbPricelistDisplayCategoryPath($categoryPath) {
+        if (function_exists('getCandybirdCategoryPathDisplayLabel')) {
+            $customLabel = trim((string) getCandybirdCategoryPathDisplayLabel($categoryPath));
+            if ($customLabel !== '' && $customLabel !== $categoryPath) {
+                return $customLabel;
+            }
+        }
+
         $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
         if (empty($parts)) {
             $parts = ['Other Products'];
@@ -101,9 +108,19 @@ if (!function_exists('cbPricelistProductGroupTitle')) {
     }
 }
 
+if (!function_exists('cbPricelistManualSortValue')) {
+    function cbPricelistManualSortValue($product) {
+        $value = trim((string) ($product['pricelist_sort'] ?? $product['price_list_sort'] ?? $product['sort_order'] ?? ''));
+        if ($value === '') {
+            return PHP_INT_MAX;
+        }
+        return is_numeric($value) ? (float) $value : PHP_INT_MAX;
+    }
+}
+
 if (!function_exists('cbPricelistProductGroups')) {
     function cbPricelistProductGroups($products, $sort = 'name', $direction = 'asc') {
-        $sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
         $direction = strtolower((string) $direction) === 'desc' ? 'desc' : 'asc';
         $groups = [];
 
@@ -123,6 +140,7 @@ if (!function_exists('cbPricelistProductGroups')) {
                     'max_price' => null,
                     'first_id' => (string) ($product['id'] ?? ''),
                     'min_size_sort' => cbPricelistSortValue($product['size'] ?? ''),
+                    'manual_sort' => cbPricelistManualSortValue($product),
                 ];
             }
 
@@ -133,11 +151,15 @@ if (!function_exists('cbPricelistProductGroups')) {
             $groups[$key]['max_price'] = $groups[$key]['max_price'] === null ? $price : max($groups[$key]['max_price'], $price);
             $groups[$key]['first_id'] = strnatcasecmp((string) ($product['id'] ?? ''), (string) $groups[$key]['first_id']) < 0 ? (string) ($product['id'] ?? '') : $groups[$key]['first_id'];
             $groups[$key]['min_size_sort'] = min((float) $groups[$key]['min_size_sort'], (float) cbPricelistSortValue($product['size'] ?? ''));
+            $groups[$key]['manual_sort'] = min((float) $groups[$key]['manual_sort'], (float) cbPricelistManualSortValue($product));
         }
 
         $groups = array_values($groups);
         usort($groups, static function($a, $b) use ($sort, $direction) {
             switch ($sort) {
+                case 'custom':
+                    $compare = ((float) ($a['manual_sort'] ?? PHP_INT_MAX)) <=> ((float) ($b['manual_sort'] ?? PHP_INT_MAX));
+                    break;
                 case 'id':
                     $compare = strnatcasecmp((string) ($a['first_id'] ?? ''), (string) ($b['first_id'] ?? ''));
                     break;
@@ -175,7 +197,7 @@ if (!function_exists('cbPricelistPriceRange')) {
 
 if (!function_exists('cbPricelistProductsByCategory')) {
     function cbPricelistProductsByCategory($sort = 'name', $direction = 'asc') {
-        $sort = in_array($sort, ['id', 'name', 'size', 'price'], true) ? $sort : 'name';
+        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
         $direction = strtolower((string) $direction) === 'desc' ? 'desc' : 'asc';
         $categoryOrder = function_exists('getCandybirdCategoryDisplayOrder') ? getCandybirdCategoryDisplayOrder() : [];
         $customCategoryOrder = [];
@@ -191,8 +213,10 @@ if (!function_exists('cbPricelistProductsByCategory')) {
             $name = trim((string) ($product['name'] ?? ''));
             $enabled = strtolower(trim((string) ($product['enabled'] ?? '1')));
             $category = cbPricelistCategoryName($product);
+            $categoryPath = cbPricelistCategoryPath($product);
             return $id !== '' && $name !== '' && !in_array($enabled, ['0', 'false', 'no', 'disabled'], true)
-                && (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category));
+                && (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category))
+                && (!function_exists('isCandybirdCategoryPathVisible') || isCandybirdCategoryPathVisible($categoryPath));
         });
 
         $productsByCategory = [];
@@ -209,12 +233,20 @@ if (!function_exists('cbPricelistProductsByCategory')) {
             $keyB = function_exists('getCandybirdCategorySlug') ? getCandybirdCategorySlug($rootB) : $rootB;
             $posA = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootA) : ($customCategoryOrder[$rootA] ?? ($customCategoryOrder[$keyA] ?? PHP_INT_MAX));
             $posB = function_exists('getCandybirdCategoryDisplayPosition') ? getCandybirdCategoryDisplayPosition($rootB) : ($customCategoryOrder[$rootB] ?? ($customCategoryOrder[$keyB] ?? PHP_INT_MAX));
+            $pathPosA = function_exists('getCandybirdCategoryPathDisplayPosition') ? getCandybirdCategoryPathDisplayPosition($a) : PHP_INT_MAX;
+            $pathPosB = function_exists('getCandybirdCategoryPathDisplayPosition') ? getCandybirdCategoryPathDisplayPosition($b) : PHP_INT_MAX;
+            if ($pathPosA !== $pathPosB) {
+                return $pathPosA <=> $pathPosB;
+            }
             return $posA === $posB ? strnatcasecmp($a, $b) : $posA <=> $posB;
         });
 
         foreach ($productsByCategory as &$categoryProducts) {
             usort($categoryProducts, function($a, $b) use ($sort, $direction) {
                 switch ($sort) {
+                    case 'custom':
+                        $compare = cbPricelistManualSortValue($a) <=> cbPricelistManualSortValue($b);
+                        break;
                     case 'id':
                         $compare = strnatcasecmp((string) ($a['id'] ?? ''), (string) ($b['id'] ?? ''));
                         break;

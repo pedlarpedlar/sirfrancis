@@ -35,6 +35,25 @@ function cbSiteFlagAdminDateForDb($value) {
     return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
 }
 
+function cbSiteFlagAdminLiveState($flag) {
+    $status = strtolower(trim((string) ($flag['status'] ?? '')));
+    if ($status !== 'active') {
+        return ['label' => 'Paused', 'class' => 'paused'];
+    }
+
+    $now = time();
+    $startsAt = trim((string) ($flag['starts_at'] ?? ''));
+    $endsAt = trim((string) ($flag['ends_at'] ?? ''));
+    if ($startsAt !== '' && $startsAt !== '0000-00-00 00:00:00' && strtotime($startsAt) > $now) {
+        return ['label' => 'Scheduled', 'class' => 'paused'];
+    }
+    if ($endsAt !== '' && $endsAt !== '0000-00-00 00:00:00' && strtotime($endsAt) < $now) {
+        return ['label' => 'Ended', 'class' => 'paused'];
+    }
+
+    return ['label' => 'Showing now', 'class' => 'active'];
+}
+
 $notice = '';
 $noticeClass = 'info';
 $editingFlag = null;
@@ -235,6 +254,8 @@ include __DIR__ . '/page_menues.php';
                             <td><span class="site-flag-status <?= cbSiteFlagAdminText($flag['status']) ?>"><?= cbSiteFlagAdminText(ucfirst($flag['status'])) ?></span></td>
                             <td>
                                 <strong><?= cbSiteFlagAdminText($flag['title'] ?: (getCandybirdSiteFlagTypes()[$flag['flag_type']] ?? 'Notice')) ?></strong>
+                                <?php $liveState = cbSiteFlagAdminLiveState($flag); ?>
+                                <div><span class="site-flag-status <?= cbSiteFlagAdminText($liveState['class']) ?>"><?= cbSiteFlagAdminText($liveState['label']) ?></span></div>
                                 <div class="site-flag-message"><?= cbSiteFlagAdminText($flag['label_text']) ?></div>
                             </td>
                             <td>
