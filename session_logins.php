@@ -303,9 +303,18 @@ function getCartItems($userId, $guestIdentifier) {
     while ($row = $result->fetch_assoc()) {
         $item = buildSheetCartItem($row);
 
-        if ($item) {
-            $items[] = $item;
+        if (!$item || isCandybirdCartItemUnavailable($item)) {
+            deleteCandybirdCartRow(
+                $conn,
+                $userId,
+                $guestIdentifier,
+                $row['product_id'] ?? '',
+                $row['clearance_id'] ?? ''
+            );
+            continue;
         }
+
+        $items[] = $item;
     }
 
     return $items;

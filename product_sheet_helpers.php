@@ -2086,6 +2086,9 @@ if (!function_exists('buildSheetCartItem')) {
             $clearanceId = substr($clearanceId, 4);
         }
         $clearanceRow = $clearanceId !== '' ? getSheetClearanceRowById($clearanceId) : null;
+        if ($clearanceId !== '' && !$clearanceRow) {
+            return null;
+        }
         $product = $clearanceRow ? buildCandybirdClearanceProduct($clearanceRow) : getSheetProductById($cartRow['product_id']);
 
         if (!$product) {
@@ -2127,6 +2130,53 @@ if (!function_exists('buildSheetCartItem')) {
             'image_url' => getSheetProductImage($product),
             'product_url' => getSheetProductUrl($product)
         ];
+    }
+}
+
+if (!function_exists('isCandybirdCartItemUnavailable')) {
+    function isCandybirdCartItemUnavailable($item) {
+        if (!is_array($item)) {
+            return true;
+        }
+
+        if (!array_key_exists('stock_qty', $item) || $item['stock_qty'] === null || $item['stock_qty'] === '') {
+            return false;
+        }
+
+        return (int) $item['stock_qty'] <= 0;
+    }
+}
+
+if (!function_exists('deleteCandybirdCartRow')) {
+    function deleteCandybirdCartRow($conn, $userId, $guestIdentifier, $productId, $clearanceId = '') {
+        if (!($conn instanceof mysqli)) {
+            return false;
+        }
+
+        ensureCandybirdCartClearanceColumns($conn);
+
+        $productId = trim((string) $productId);
+        $clearanceId = strtoupper(trim((string) $clearanceId));
+        if (strpos($clearanceId, 'CLR:') === 0) {
+            $clearanceId = substr($clearanceId, 4);
+        }
+
+        if ($productId === '') {
+            return false;
+        }
+
+        $stmt = $conn->prepare("DELETE FROM cart WHERE product_id = ? AND COALESCE(clearance_id, '') = ? AND (user_id = ? OR guest_identifier = ?)");
+        if (!$stmt) {
+            return false;
+        }
+
+        $userId = $userId !== null ? (int) $userId : 0;
+        $guestIdentifier = trim((string) $guestIdentifier);
+        $stmt->bind_param('ssis', $productId, $clearanceId, $userId, $guestIdentifier);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
     }
 }
 
