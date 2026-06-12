@@ -599,5 +599,6 @@ foreach ($offCanvasCartItems as $item) {
 </header>
 <!-- header end -->
 
+<?php
 include 'breadcrumbs.php';
 ?>

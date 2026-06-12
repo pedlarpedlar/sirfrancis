@@ -285,6 +285,18 @@ include 'header.php';
     color: #d5001f;
   }
 
+  .product-badge-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .product-badge-row .badge {
+    margin: 0;
+    position: static !important;
+  }
+
   .product-image-lightbox {
     align-items: center;
     background: rgba(0, 0, 0, 0.84);
@@ -679,7 +691,7 @@ include 'header.php';
           <div class="product-body mb-40">
             <div id="price-section"></div>
             <div id="product-short-description"></div>
-            <a href="#pills-home" class="read-more-link d-none" id="read-more-link">(...Read more)</a>
+            <a href="#pills-home" class="read-more-link d-none" id="read-more-link">See product details</a>
           </div>
 
           <div class="d-flex mt-30">
@@ -1518,11 +1530,11 @@ $(function() {
     const salePercent = getSalePercent(product);
     const labels = [];
     if (!isClearance && product.label) labels.push('<span class="badge badge-danger top-left">' + escapeHtml(product.label) + '</span>');
-    if (salePercent > 0) labels.push('<span class="badge badge-success top-right">' + salePercent + '% off</span>');
+    if (!isClearance && salePercent > 0) labels.push('<span class="badge badge-success top-right">' + salePercent + '% off</span>');
     else if (!isClearance && productMatchesTag(product, 'hot')) labels.push('<span class="badge badge-warning top-right">Hot</span>');
     $('#product-label-container').html(labels.join(''));
     if (isClearance) {
-      $('#product-stars').html('<span class="badge badge-danger">Clearance / dated stock</span>');
+      $('#product-stars').html('<span class="product-badge-row"><span class="badge badge-danger">Clearance / dated stock</span>' + (salePercent > 0 ? '<span class="badge badge-success">' + salePercent + '% off</span>' : '') + '</span>');
       $('#pills-contact-tab').closest('li').hide();
       $('.addto-whish-list').addClass('d-none');
       $('#review-login-message, #review-form-wrapper').addClass('d-none');
