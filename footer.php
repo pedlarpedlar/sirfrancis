@@ -1858,6 +1858,10 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
         logAction('Clicked on slider next/prev button, slider ID: ' + sliderId, 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
     });
 </script>
+<?php
+$cbIsAdminArea = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-cb/') !== false;
+?>
+<?php if (!$cbIsAdminArea): ?>
 <script>
   (function() {
     function loadMerchantWidget() {
@@ -1888,6 +1892,7 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
     }, { once: true });
   })();
 </script>
+<?php endif; ?>
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
 
     <!--*************************** 
