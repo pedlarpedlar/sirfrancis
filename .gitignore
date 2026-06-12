@@ -35,6 +35,12 @@ Website CSV Product Lists/
 node_modules/
 vendor/
 
+# Public frontend vendor assets used by the live theme
+!assets/css/vendor/
+!assets/css/vendor/**
+!assets/js/vendor/
+!assets/js/vendor/**
+
 # OS
 .DS_Store
 Thumbs.db
