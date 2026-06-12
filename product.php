@@ -1449,11 +1449,11 @@ $(function() {
       ['Subcategory', product.childCategory2],
       ['Dimensions', product.dimensions],
       ['Other Info', product.otherInfo],
-      ['Disclaimer', product.disclaimers]
+      ['Disclaimer', product.disclaimers, true]
     ].filter(function(row) {
       return row[1];
     }).map(function(row) {
-      return '<li><span>' + escapeHtml(row[0]) + '</span> ' + escapeHtml(row[1]) + '</li>';
+      return '<li><span>' + escapeHtml(row[0]) + '</span> ' + (row[2] ? safeSheetHtml(row[1]) : escapeHtml(row[1])) + '</li>';
     }).join('');
 
     $('#product-details-list').html(details || '<li><span>Product ID</span> ' + escapeHtml(product.id) + '</li>');
