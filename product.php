@@ -1229,12 +1229,9 @@ $(function() {
     const isClearance = String(product.is_clearance || product.raw?.is_clearance || '').toLowerCase() === 'yes';
     const specialActive = isProductSpecialActive(product.raw || product);
     const salePercent = getSalePercent(product);
-    const saveText = (salePercent > 0) ? '<span class="badge position-static ' + (isClearance ? 'badge-danger' : 'bg-dark') + ' rounded-0">' + (isClearance ? salePercent + '% off' : 'Save ' + salePercent + '%') + '</span>' : '';
+    const saveText = (!isClearance && salePercent > 0) ? '<span class="badge position-static bg-dark rounded-0">Save ' + salePercent + '%</span>' : '';
     const discountUntil = product.raw.discount_valid_until || product.raw.special_valid_until || product.raw.sale_valid_until || '';
     const endsText = (!isClearance && hasDiscount && specialActive && discountUntil) ? '<div class="product-special-window"><span>Special ends ' + escapeHtml(formatSpecialDate(discountUntil)) + '</span><span class="product-special-countdown" id="product-special-countdown"></span></div>' : '';
-    const clearanceNote = (isClearance && hasDiscount)
-      ? '<div class="clearance-price-note">Clearance price: <span>R' + product.discountedPrice.toFixed(2) + '</span>. Original product price R' + product.price.toFixed(2) + '.</div>'
-      : '';
 
     $('#price-section').html(
       '<div class="d-flex align-items-center mb-30">' +
@@ -1245,7 +1242,6 @@ $(function() {
         '</span>' +
         saveText +
       '</div>' +
-      clearanceNote +
       endsText
     );
 

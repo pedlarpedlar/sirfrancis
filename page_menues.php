@@ -5,7 +5,7 @@
 <?php
 if (function_exists('renderCandybirdSiteFlags')) {
   $cbNoticePlacement = function_exists('getCandybirdCurrentSiteFlagPlacement') ? getCandybirdCurrentSiteFlagPlacement() : 'all';
-  echo renderCandybirdSiteFlags($cbNoticePlacement);
+  echo renderCandybirdSiteFlags($cbNoticePlacement, true);
 }
 ?>
     

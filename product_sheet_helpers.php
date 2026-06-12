@@ -1819,6 +1819,35 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
     }
 }
 
+if (!function_exists('getCandybirdShowingSiteFlags')) {
+    function getCandybirdShowingSiteFlags() {
+        global $conn;
+        if (!($conn instanceof mysqli) || !ensureCandybirdSiteFlagsTable($conn)) {
+            return [];
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $sql = "SELECT * FROM candybird_site_flags
+                WHERE status = 'active'
+                  AND (starts_at IS NULL OR starts_at = '0000-00-00 00:00:00' OR starts_at <= ?)
+                  AND (ends_at IS NULL OR ends_at = '0000-00-00 00:00:00' OR ends_at >= ?)
+                ORDER BY FIELD(flag_type, 'shop_closed', 'maintenance', 'notice'), COALESCE(starts_at, created_at) DESC, id DESC";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            return [];
+        }
+        $stmt->bind_param('ss', $now, $now);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rows = [];
+        while ($result && ($row = $result->fetch_assoc())) {
+            $rows[] = $row;
+        }
+        $stmt->close();
+        return $rows;
+    }
+}
+
 if (!function_exists('renderCandybirdSiteFlags')) {
     function getCandybirdCurrentSiteFlagPlacement() {
         $page = strtolower(basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php'));
@@ -1843,9 +1872,9 @@ if (!function_exists('renderCandybirdSiteFlags')) {
         return 'site';
     }
 
-    function renderCandybirdSiteFlags($placement = 'all') {
+    function renderCandybirdSiteFlags($placement = 'all', $ignorePlacement = false) {
         static $renderedFlagIds = [];
-        $flags = getCandybirdActiveSiteFlags($placement);
+        $flags = $ignorePlacement ? getCandybirdShowingSiteFlags() : getCandybirdActiveSiteFlags($placement);
         if (empty($flags)) {
             return '';
         }
