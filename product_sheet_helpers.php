@@ -1820,9 +1820,8 @@ if (!function_exists('getCandybirdActiveSiteFlags')) {
 }
 
 if (!function_exists('getCandybirdShowingSiteFlags')) {
-    function getCandybirdShowingSiteFlags() {
-        global $conn;
-        if (!($conn instanceof mysqli) || !ensureCandybirdSiteFlagsTable($conn)) {
+    function candybirdFetchShowingSiteFlagsFromConnection($siteFlagConn) {
+        if (!($siteFlagConn instanceof mysqli) || !ensureCandybirdSiteFlagsTable($siteFlagConn)) {
             return [];
         }
 
@@ -1832,7 +1831,7 @@ if (!function_exists('getCandybirdShowingSiteFlags')) {
                   AND (starts_at IS NULL OR starts_at = '0000-00-00 00:00:00' OR starts_at <= ?)
                   AND (ends_at IS NULL OR ends_at = '0000-00-00 00:00:00' OR ends_at >= ?)
                 ORDER BY FIELD(flag_type, 'shop_closed', 'maintenance', 'notice'), COALESCE(starts_at, created_at) DESC, id DESC";
-        $stmt = $conn->prepare($sql);
+        $stmt = $siteFlagConn->prepare($sql);
         if (!$stmt) {
             return [];
         }
@@ -1845,6 +1844,36 @@ if (!function_exists('getCandybirdShowingSiteFlags')) {
         }
         $stmt->close();
         return $rows;
+    }
+
+    function candybirdSiteFlagConnectionFromFile($path) {
+        if (!is_file($path)) {
+            return null;
+        }
+        $conn = null;
+        include $path;
+        return ($conn instanceof mysqli && !$conn->connect_error) ? $conn : null;
+    }
+
+    function getCandybirdShowingSiteFlags() {
+        global $conn;
+        $rows = candybirdFetchShowingSiteFlagsFromConnection($conn ?? null);
+        if (!empty($rows)) {
+            return $rows;
+        }
+
+        foreach ([__DIR__ . '/admin-cb/dbh.inc.php', __DIR__ . '/dbh.inc.php'] as $configPath) {
+            $fallbackConn = candybirdSiteFlagConnectionFromFile($configPath);
+            if (!($fallbackConn instanceof mysqli)) {
+                continue;
+            }
+            $rows = candybirdFetchShowingSiteFlagsFromConnection($fallbackConn);
+            if (!empty($rows)) {
+                return $rows;
+            }
+        }
+
+        return [];
     }
 }
 
