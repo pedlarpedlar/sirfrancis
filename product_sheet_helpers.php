@@ -1846,34 +1846,9 @@ if (!function_exists('getCandybirdShowingSiteFlags')) {
         return $rows;
     }
 
-    function candybirdSiteFlagConnectionFromFile($path) {
-        if (!is_file($path)) {
-            return null;
-        }
-        $conn = null;
-        include $path;
-        return ($conn instanceof mysqli && !$conn->connect_error) ? $conn : null;
-    }
-
     function getCandybirdShowingSiteFlags() {
         global $conn;
-        $rows = candybirdFetchShowingSiteFlagsFromConnection($conn ?? null);
-        if (!empty($rows)) {
-            return $rows;
-        }
-
-        foreach ([__DIR__ . '/admin-cb/dbh.inc.php', __DIR__ . '/dbh.inc.php'] as $configPath) {
-            $fallbackConn = candybirdSiteFlagConnectionFromFile($configPath);
-            if (!($fallbackConn instanceof mysqli)) {
-                continue;
-            }
-            $rows = candybirdFetchShowingSiteFlagsFromConnection($fallbackConn);
-            if (!empty($rows)) {
-                return $rows;
-            }
-        }
-
-        return [];
+        return candybirdFetchShowingSiteFlagsFromConnection($conn ?? null);
     }
 }
 
