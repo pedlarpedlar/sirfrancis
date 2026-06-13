@@ -232,9 +232,50 @@ if (is_file($sheetCacheFile)) {
     $sheetProductCount = cbAdminScalar($conn, "SELECT COUNT(*) FROM product WHERE COALESCE(enabled_product, 1) = 1");
 }
 
+$dashboardPeriod = strtolower(trim((string) ($_GET['period'] ?? 'month')));
+if ($dashboardPeriod === 'alltime') {
+    $dashboardPeriod = 'all';
+}
+if (!in_array($dashboardPeriod, ['week', 'month', 'all'], true)) {
+    $dashboardPeriod = 'month';
+}
+
+$currentWeekStartSql = "DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)";
+$periodOptions = [
+    'week' => [
+        'label' => 'This week',
+        'button' => 'Weekly',
+        'where' => "order_date >= $currentWeekStartSql",
+        'previous_where' => "order_date >= DATE_SUB($currentWeekStartSql, INTERVAL 7 DAY) AND order_date < $currentWeekStartSql",
+        'comparison' => 'vs previous week',
+    ],
+    'month' => [
+        'label' => 'This month',
+        'button' => 'Monthly',
+        'where' => "order_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')",
+        'previous_where' => "order_date >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01') AND order_date < DATE_FORMAT(CURDATE(), '%Y-%m-01')",
+        'comparison' => 'vs previous month',
+    ],
+    'all' => [
+        'label' => 'All time',
+        'button' => 'All time',
+        'where' => '1 = 1',
+        'previous_where' => '',
+        'comparison' => 'all paid history',
+    ],
+];
+$periodConfig = $periodOptions[$dashboardPeriod];
+$periodWhere = $periodConfig['where'];
+$previousPeriodWhere = $periodConfig['previous_where'];
+
 $totalSales = $hasOrders ? cbAdminScalar($conn, "SELECT COALESCE(SUM(grand_total_amount), 0) FROM orders WHERE COALESCE(payment_status, 0) IN (1, 2)") : 0;
 $monthSales = $hasOrders ? cbAdminScalar($conn, "SELECT COALESCE(SUM(grand_total_amount), 0) FROM orders WHERE order_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND COALESCE(payment_status, 0) IN (1, 2)") : 0;
 $previousMonthSales = $hasOrders ? cbAdminScalar($conn, "SELECT COALESCE(SUM(grand_total_amount), 0) FROM orders WHERE order_date >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01') AND order_date < DATE_FORMAT(CURDATE(), '%Y-%m-01') AND COALESCE(payment_status, 0) IN (1, 2)") : 0;
+$periodSales = $hasOrders ? cbAdminScalar($conn, "SELECT COALESCE(SUM(grand_total_amount), 0) FROM orders WHERE $periodWhere AND COALESCE(payment_status, 0) IN (1, 2)") : 0;
+$previousPeriodSales = ($hasOrders && $previousPeriodWhere !== '') ? cbAdminScalar($conn, "SELECT COALESCE(SUM(grand_total_amount), 0) FROM orders WHERE $previousPeriodWhere AND COALESCE(payment_status, 0) IN (1, 2)") : 0;
+$periodPaidOrders = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE $periodWhere AND COALESCE(payment_status, 0) IN (1, 2)") : 0;
+$periodOrderCount = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE $periodWhere") : 0;
+$periodPendingOrders = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE $periodWhere AND (LOWER(COALESCE(order_status, '')) IN ('pending', 'processing', '') OR COALESCE(payment_status, 0) = 0)") : 0;
 $pendingOrders = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE LOWER(COALESCE(order_status, '')) IN ('pending', 'processing', '') OR COALESCE(payment_status, 0) = 0") : 0;
 $paidOrders = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE COALESCE(payment_status, 0) IN (1, 2)") : 0;
 $todayOrders = $hasOrders ? cbAdminScalar($conn, "SELECT COUNT(*) FROM orders WHERE DATE(order_date) = CURDATE()") : 0;
@@ -621,6 +662,11 @@ $dashboardCronJobs = [
     .dash-card .label { color: #6d6270; font-size: 13px; font-weight: 700; text-transform: uppercase; }
     .dash-card .value { color: #5b1178; font-size: 28px; font-weight: 800; line-height: 1.25; margin-top: 8px; }
     .dash-card .hint { color: #6d6270; font-size: 13px; margin-top: 8px; }
+    .dashboard-period-bar { align-items: center; background: #fff; border: 1px solid #eadfd2; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 14px; padding: 12px 14px; }
+    .dashboard-period-title { color: #2d1739; font-size: 15px; font-weight: 900; }
+    .dashboard-period-tabs { display: flex; flex-wrap: wrap; gap: 7px; }
+    .dashboard-period-tabs a { border: 1px solid #d9c7b4; border-radius: 999px; color: #5b1178; font-size: 13px; font-weight: 800; padding: 6px 12px; text-decoration: none; }
+    .dashboard-period-tabs a.active { background: #5b1178; border-color: #5b1178; color: #fff; }
     .dash-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; height: 100%; }
     .dash-panel h2 { color: #5b1178; font-size: 20px; margin-bottom: 15px; }
     .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
@@ -673,21 +719,35 @@ $dashboardCronJobs = [
         <div class="alert <?= $dashboardSuccess ? 'alert-success' : 'alert-danger' ?>"><?= htmlspecialchars($dashboardMessage, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
 
+    <div class="dashboard-period-bar">
+        <div>
+            <div class="dashboard-period-title">Order summary: <?= htmlspecialchars($periodConfig['label'], ENT_QUOTES, 'UTF-8') ?></div>
+            <small class="text-muted">Monthly is the default view when this page opens.</small>
+        </div>
+        <div class="dashboard-period-tabs" aria-label="Dashboard order summary period">
+            <?php foreach ($periodOptions as $periodKey => $periodOption): ?>
+                <a href="dashboard?period=<?= htmlspecialchars($periodKey, ENT_QUOTES, 'UTF-8') ?>" class="<?= $dashboardPeriod === $periodKey ? 'active' : '' ?>">
+                    <?= htmlspecialchars($periodOption['button'], ENT_QUOTES, 'UTF-8') ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
     <div class="dashboard-grid">
         <div class="dash-card">
-            <div class="label">All-time paid sales</div>
-            <div class="value"><?= cbAdminMoney($totalSales) ?></div>
-            <div class="hint"><?= number_format((float) $paidOrders) ?> paid orders</div>
+            <div class="label"><?= htmlspecialchars($periodConfig['label'], ENT_QUOTES, 'UTF-8') ?> paid sales</div>
+            <div class="value"><?= cbAdminMoney($periodSales) ?></div>
+            <div class="hint"><?= number_format((float) $periodPaidOrders) ?> paid of <?= number_format((float) $periodOrderCount) ?> total orders</div>
         </div>
         <div class="dash-card">
-            <div class="label">This month</div>
-            <div class="value"><?= cbAdminMoney($monthSales) ?></div>
-            <div class="hint"><?= cbAdminPercentChange($monthSales, $previousMonthSales) ?></div>
+            <div class="label"><?= htmlspecialchars($periodConfig['label'], ENT_QUOTES, 'UTF-8') ?> movement</div>
+            <div class="value"><?= $dashboardPeriod === 'all' ? number_format((float) $paidOrders) : cbAdminPercentChange($periodSales, $previousPeriodSales) ?></div>
+            <div class="hint"><?= $dashboardPeriod === 'all' ? 'all paid orders recorded' : htmlspecialchars($periodConfig['comparison'], ENT_QUOTES, 'UTF-8') ?></div>
         </div>
         <div class="dash-card">
-            <div class="label">Pending attention</div>
-            <div class="value"><?= number_format((float) $pendingOrders) ?></div>
-            <div class="hint"><?= number_format((float) $todayOrders) ?> orders today</div>
+            <div class="label"><?= htmlspecialchars($periodConfig['label'], ENT_QUOTES, 'UTF-8') ?> pending</div>
+            <div class="value"><?= number_format((float) $periodPendingOrders) ?></div>
+            <div class="hint"><?= number_format((float) $todayOrders) ?> orders today, <?= number_format((float) $pendingOrders) ?> pending overall</div>
         </div>
         <div class="dash-card">
             <div class="label">Sheet products</div>
