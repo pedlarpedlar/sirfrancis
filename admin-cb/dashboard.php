@@ -174,6 +174,57 @@ function cbAdminWeeklyReportCaption($kind, $count) {
     return number_format($count) . ' ' . $noun . ($count === 1 ? '' : 's') . ' in 7 days';
 }
 
+function cbAdminDashboardDateLabel($value) {
+    $value = trim((string) $value);
+    if ($value === '' || $value === '0000-00-00 00:00:00') {
+        return '';
+    }
+    $timestamp = strtotime($value);
+    return $timestamp ? date('d M Y H:i', $timestamp) : $value;
+}
+
+function cbAdminCouponLiveState($coupon) {
+    $now = new DateTime('now', new DateTimeZone('Africa/Johannesburg'));
+    $validFrom = function_exists('parseCandybirdCouponDate') ? parseCandybirdCouponDate($coupon['valid_from'] ?? '') : null;
+    $validUntil = function_exists('parseCandybirdCouponDate') ? parseCandybirdCouponDate($coupon['valid_until'] ?? '') : null;
+
+    if ($validFrom && $now < $validFrom) {
+        return 'scheduled';
+    }
+    if ($validUntil && $now >= $validUntil) {
+        return 'ended';
+    }
+    return 'active';
+}
+
+function cbAdminCouponDiscountLabel($coupon) {
+    $type = strtolower(trim((string) ($coupon['discount_type'] ?? 'percentage')));
+    $value = (float) ($coupon['discount_value'] ?? 0);
+    if ($value <= 0) {
+        return 'discount not set';
+    }
+    return $type === 'fixed' || $type === 'amount' || $type === 'rand'
+        ? cbAdminMoney($value) . ' off'
+        : number_format($value, 0) . '% off';
+}
+
+function cbAdminSiteFlagLiveState($flag) {
+    $status = strtolower(trim((string) ($flag['status'] ?? '')));
+    if ($status !== 'active') {
+        return 'paused';
+    }
+    $now = time();
+    $startsAt = trim((string) ($flag['starts_at'] ?? ''));
+    $endsAt = trim((string) ($flag['ends_at'] ?? ''));
+    if ($startsAt !== '' && $startsAt !== '0000-00-00 00:00:00' && strtotime($startsAt) > $now) {
+        return 'scheduled';
+    }
+    if ($endsAt !== '' && $endsAt !== '0000-00-00 00:00:00' && strtotime($endsAt) < $now) {
+        return 'ended';
+    }
+    return 'active';
+}
+
 function cbAdminReconcilePayfastPayments($conn) {
     if (!($conn instanceof mysqli) || !cbAdminTableExists($conn, 'orders')) {
         return;
@@ -336,7 +387,46 @@ $recentOrders = $hasOrders ? cbAdminRows($conn, "SELECT id, order_status, paymen
 $topProducts = ($hasOrderItems ? cbAdminRows($conn, "SELECT product_id, product_title, SUM(quantity) AS qty, SUM((price - COALESCE(discount_amount, 0)) * quantity) AS total FROM order_items GROUP BY product_id, product_title ORDER BY qty DESC LIMIT 6") : []);
 $recentReviews = $hasReviews ? cbAdminRows($conn, "SELECT product_id, u_name, rating, comment FROM reviews ORDER BY id DESC LIMIT 5") : [];
 $recentCampaigns = $hasScheduledEmails ? cbAdminRows($conn, "SELECT id, subject, scheduled_at, sent FROM scheduled_emails ORDER BY scheduled_at DESC LIMIT 5") : [];
+$pendingBroadcasts = $hasScheduledEmails ? cbAdminRows($conn, "SELECT id, subject, scheduled_at, email_heading FROM scheduled_emails WHERE COALESCE(sent, 0) = 0 ORDER BY scheduled_at ASC, id ASC LIMIT 6") : [];
 $recentCronjobs = $hasCronjobs ? cbAdminRows($conn, "SELECT job_name, description, execution_time FROM cronjobs ORDER BY id DESC LIMIT 12") : [];
+$dashboardCoupons = [];
+if (function_exists('getSheetCoupons')) {
+    $couponGroups = getSheetCoupons(false);
+    foreach ($couponGroups as $couponCode => $couponRows) {
+        foreach ((array) $couponRows as $couponRow) {
+            $state = cbAdminCouponLiveState($couponRow);
+            if (!in_array($state, ['active', 'scheduled'], true)) {
+                continue;
+            }
+            $couponRow['coupon_code'] = $couponCode;
+            $couponRow['dashboard_state'] = $state;
+            $dashboardCoupons[] = $couponRow;
+        }
+    }
+    usort($dashboardCoupons, function($a, $b) {
+        $stateOrder = ['active' => 0, 'scheduled' => 1];
+        $stateCompare = ($stateOrder[$a['dashboard_state']] ?? 9) <=> ($stateOrder[$b['dashboard_state']] ?? 9);
+        if ($stateCompare !== 0) {
+            return $stateCompare;
+        }
+        $aDate = strtotime((string) ($a['valid_from'] ?? '')) ?: 0;
+        $bDate = strtotime((string) ($b['valid_from'] ?? '')) ?: 0;
+        return $aDate <=> $bDate;
+    });
+    $dashboardCoupons = array_slice($dashboardCoupons, 0, 6);
+}
+$dashboardSiteFlags = [];
+if ($hasSiteFlags = cbAdminTableExists($conn, 'candybird_site_flags')) {
+    $siteFlagRows = cbAdminRows($conn, "SELECT id, flag_type, title, label_text, starts_at, ends_at, status FROM candybird_site_flags WHERE status = 'active' ORDER BY COALESCE(starts_at, created_at) ASC, id ASC LIMIT 12");
+    foreach ($siteFlagRows as $flagRow) {
+        $state = cbAdminSiteFlagLiveState($flagRow);
+        if (in_array($state, ['active', 'scheduled'], true)) {
+            $flagRow['dashboard_state'] = $state;
+            $dashboardSiteFlags[] = $flagRow;
+        }
+    }
+    $dashboardSiteFlags = array_slice($dashboardSiteFlags, 0, 6);
+}
 $emailLinkedVisitors = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SELECT pv.url, pv.referrer_url, pv.timestamp, s.user_id, s.session_id, s.ip_address, COALESCE(u.username, 'Guest') AS visitor_name, u.email
     FROM page_views pv
     LEFT JOIN sessions s ON pv.session_id = s.id
@@ -667,6 +757,19 @@ $dashboardCronJobs = [
     .dashboard-period-tabs { display: flex; flex-wrap: wrap; gap: 7px; }
     .dashboard-period-tabs a { border: 1px solid #d9c7b4; border-radius: 999px; color: #5b1178; font-size: 13px; font-weight: 800; padding: 6px 12px; text-decoration: none; }
     .dashboard-period-tabs a.active { background: #5b1178; border-color: #5b1178; color: #fff; }
+    .dashboard-now-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
+    .dashboard-now-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); min-height: 150px; padding: 14px; }
+    .dashboard-now-card h2 { color: #2d1739; font-size: 16px; font-weight: 900; margin: 0 0 10px; }
+    .dashboard-now-list { display: grid; gap: 9px; margin: 0; padding: 0; }
+    .dashboard-now-list li { border-top: 1px solid #f1e8df; display: block; list-style: none; padding-top: 8px; }
+    .dashboard-now-list li:first-child { border-top: 0; padding-top: 0; }
+    .dashboard-now-title { color: #281b14; display: block; font-size: 13px; font-weight: 900; line-height: 1.25; }
+    .dashboard-now-meta { color: #73665c; display: block; font-size: 12px; line-height: 1.35; margin-top: 2px; }
+    .dashboard-now-empty { color: #73665c; font-size: 13px; margin: 0; }
+    .dashboard-state-pill { border-radius: 999px; display: inline-flex; font-size: 11px; font-weight: 900; margin-right: 5px; padding: 3px 7px; text-transform: uppercase; }
+    .dashboard-state-pill.active { background: #e8f7ee; color: #17643a; }
+    .dashboard-state-pill.scheduled { background: #fff4d8; color: #815700; }
+    .dashboard-state-pill.warning { background: #fdecec; color: #a62626; }
     .dash-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; height: 100%; }
     .dash-panel h2 { color: #5b1178; font-size: 20px; margin-bottom: 15px; }
     .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
@@ -693,8 +796,8 @@ $dashboardCronJobs = [
     .status-dot.warn { background: #e8a100; }
     .status-dot.bad { background: #d53f3f; }
     .table-sm td, .table-sm th { vertical-align: middle; }
-    @media (max-width: 1199px) { .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .weekly-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 575px) { .dashboard-grid, .weekly-summary-grid { grid-template-columns: 1fr; } .dash-card .value { font-size: 24px; } }
+    @media (max-width: 1199px) { .dashboard-grid, .dashboard-now-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .weekly-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 575px) { .dashboard-grid, .dashboard-now-grid, .weekly-summary-grid { grid-template-columns: 1fr; } .dash-card .value { font-size: 24px; } }
 </style>
 
 <div class="container admin-dashboard">
@@ -718,6 +821,117 @@ $dashboardCronJobs = [
     <?php if ($dashboardMessage): ?>
         <div class="alert <?= $dashboardSuccess ? 'alert-success' : 'alert-danger' ?>"><?= htmlspecialchars($dashboardMessage, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
+
+    <div class="dashboard-now-grid">
+        <section class="dashboard-now-card">
+            <h2>Active & Scheduled Coupons</h2>
+            <?php if (empty($dashboardCoupons)): ?>
+                <p class="dashboard-now-empty">No active or scheduled coupons found.</p>
+            <?php else: ?>
+                <ul class="dashboard-now-list">
+                    <?php foreach ($dashboardCoupons as $coupon): ?>
+                        <li>
+                            <span class="dashboard-now-title">
+                                <span class="dashboard-state-pill <?= htmlspecialchars($coupon['dashboard_state'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($coupon['dashboard_state'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <?= htmlspecialchars($coupon['coupon_code'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                            <span class="dashboard-now-meta">
+                                <?= htmlspecialchars(cbAdminCouponDiscountLabel($coupon), ENT_QUOTES, 'UTF-8') ?>
+                                <?php if ((float) ($coupon['min_order_value'] ?? 0) > 0): ?>
+                                    · min <?= cbAdminMoney($coupon['min_order_value']) ?>
+                                <?php endif; ?>
+                            </span>
+                            <span class="dashboard-now-meta">
+                                <?= htmlspecialchars(cbAdminDashboardDateLabel($coupon['valid_from'] ?? '') ?: 'Already active', ENT_QUOTES, 'UTF-8') ?>
+                                →
+                                <?= htmlspecialchars(cbAdminDashboardDateLabel($coupon['valid_until'] ?? '') ?: 'No end date', ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <a href="coupons" class="btn btn-sm btn-outline-primary mt-3">Manage coupons</a>
+            <?php endif; ?>
+        </section>
+
+        <section class="dashboard-now-card">
+            <h2>Scheduled Broadcasts</h2>
+            <?php if (empty($pendingBroadcasts)): ?>
+                <p class="dashboard-now-empty">No pending broadcasts.</p>
+            <?php else: ?>
+                <ul class="dashboard-now-list">
+                    <?php foreach ($pendingBroadcasts as $broadcast): ?>
+                        <?php $isDue = strtotime((string) ($broadcast['scheduled_at'] ?? '')) <= time(); ?>
+                        <li>
+                            <span class="dashboard-now-title">
+                                <span class="dashboard-state-pill <?= $isDue ? 'warning' : 'scheduled' ?>"><?= $isDue ? 'due' : 'scheduled' ?></span>
+                                <?= htmlspecialchars($broadcast['subject'] ?? 'Untitled broadcast', ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                            <span class="dashboard-now-meta"><?= htmlspecialchars(cbAdminDashboardDateLabel($broadcast['scheduled_at'] ?? '') ?: 'No send date', ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <a href="broadcasts" class="btn btn-sm btn-outline-primary mt-3">Open broadcasts</a>
+            <?php endif; ?>
+        </section>
+
+        <section class="dashboard-now-card">
+            <h2>Site Notices</h2>
+            <?php if (empty($dashboardSiteFlags)): ?>
+                <p class="dashboard-now-empty">No active or scheduled site notices.</p>
+            <?php else: ?>
+                <ul class="dashboard-now-list">
+                    <?php foreach ($dashboardSiteFlags as $flag): ?>
+                        <li>
+                            <span class="dashboard-now-title">
+                                <span class="dashboard-state-pill <?= htmlspecialchars($flag['dashboard_state'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($flag['dashboard_state'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <?= htmlspecialchars($flag['title'] ?: ucwords(str_replace('_', ' ', $flag['flag_type'] ?? 'Notice')), ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                            <span class="dashboard-now-meta">
+                                <?= htmlspecialchars(cbAdminDashboardDateLabel($flag['starts_at'] ?? '') ?: 'Showing now', ENT_QUOTES, 'UTF-8') ?>
+                                →
+                                <?= htmlspecialchars(cbAdminDashboardDateLabel($flag['ends_at'] ?? '') ?: 'No end date', ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <a href="site_flags" class="btn btn-sm btn-outline-primary mt-3">Manage notices</a>
+            <?php endif; ?>
+        </section>
+
+        <section class="dashboard-now-card">
+            <h2>Operational Watch</h2>
+            <ul class="dashboard-now-list">
+                <li>
+                    <span class="dashboard-now-title">
+                        <span class="dashboard-state-pill <?= (int) $paymentIssues > 0 ? 'warning' : 'active' ?>"><?= (int) $paymentIssues > 0 ? 'check' : 'ok' ?></span>
+                        Payment checks
+                    </span>
+                    <span class="dashboard-now-meta"><?= number_format((float) $paymentIssues) ?> failed checks in 7 days</span>
+                </li>
+                <li>
+                    <span class="dashboard-now-title">
+                        <span class="dashboard-state-pill <?= (int) $siteErrors > 0 ? 'warning' : 'active' ?>"><?= (int) $siteErrors > 0 ? 'check' : 'ok' ?></span>
+                        Site errors
+                    </span>
+                    <span class="dashboard-now-meta"><?= number_format((float) $siteErrors) ?> error logs in 24 hours</span>
+                </li>
+                <li>
+                    <span class="dashboard-now-title">
+                        <span class="dashboard-state-pill scheduled">cron</span>
+                        Latest cron
+                    </span>
+                    <span class="dashboard-now-meta">
+                        <?php if (!empty($recentCronjobs[0])): ?>
+                            <?= htmlspecialchars($recentCronjobs[0]['job_name'] ?? 'Cron job', ENT_QUOTES, 'UTF-8') ?> · <?= htmlspecialchars(cbAdminDashboardDateLabel($recentCronjobs[0]['execution_time'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                        <?php else: ?>
+                            No recent cron records
+                        <?php endif; ?>
+                    </span>
+                </li>
+            </ul>
+            <a href="run_cron" class="btn btn-sm btn-outline-primary mt-3">Open cron tools</a>
+        </section>
+    </div>
 
     <div class="dashboard-period-bar">
         <div>
