@@ -271,6 +271,7 @@ $hasCart = cbAdminTableExists($conn, 'cart');
 $hasUserAddresses = cbAdminTableExists($conn, 'user_addresses');
 $hasIpGeolocation = cbAdminTableExists($conn, 'ip_geolocation');
 $hasIpGeolocationHistory = cbAdminTableExists($conn, 'ip_geolocation_history');
+$loadDashboardReports = (($_GET['reports'] ?? '') === 'full');
 
 cbAdminReconcilePayfastPayments($conn);
 
@@ -363,24 +364,18 @@ $sessionGeoSelect = $geoSourceSql !== ''
     : "'' AS suburb, '' AS city, '' AS country";
 $onlineVisitors = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, '')))
     FROM sessions s
-    $sessionGeoJoin
     WHERE $humanSessionFilter
-      AND $sessionGeoWhere
       AND COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)") : 0;
 $todayVisitors = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(DISTINCT CONCAT(COALESCE(s.ip_address, ''), '|', COALESCE(s.user_agent, '')))
     FROM sessions s
-    $sessionGeoJoin
     WHERE $humanSessionFilter
-      AND $sessionGeoWhere
       AND s.start_time >= CURDATE()") : 0;
 $todayRawSessions = $hasSessions ? cbAdminScalar($conn, "SELECT COUNT(*) FROM sessions WHERE DATE(start_time) = CURDATE()") : 0;
 $todayPageViews = ($hasPageViews && $hasSessions) ? cbAdminScalar($conn, "SELECT COUNT(*)
     FROM page_views pv
     LEFT JOIN sessions s ON pv.session_id = s.id
-    $sessionGeoJoin
     WHERE $humanPageFilter
       AND $humanSessionFilter
-      AND $sessionGeoWhere
       AND pv.timestamp >= CURDATE()") : 0;
 
 $recentOrders = $hasOrders ? cbAdminRows($conn, "SELECT id, order_status, payment_status, grand_total_amount, payment_method, order_date FROM orders ORDER BY order_date DESC LIMIT 8") : [];
@@ -427,6 +422,7 @@ if ($hasSiteFlags = cbAdminTableExists($conn, 'candybird_site_flags')) {
     }
     $dashboardSiteFlags = array_slice($dashboardSiteFlags, 0, 6);
 }
+if ($loadDashboardReports) {
 $emailLinkedVisitors = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SELECT pv.url, pv.referrer_url, pv.timestamp, s.user_id, s.session_id, s.ip_address, COALESCE(u.username, 'Guest') AS visitor_name, u.email
     FROM page_views pv
     LEFT JOIN sessions s ON pv.session_id = s.id
@@ -640,6 +636,36 @@ $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
       AND COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
     ORDER BY (COALESCE(s.end_time, s.start_time) >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)) DESC, last_seen DESC
     LIMIT 10") : [];
+} else {
+    $emailLinkedVisitors = [];
+    $topViewedPages = [];
+    $topReferrers = [];
+    $topProductClicks = [];
+    $topCategoryClicks = [];
+    $scrollDepths = [];
+    $zeroResultSearches = [];
+    $openCarts = [];
+    $orderMonthParts = [];
+    $cartMonthParts = [];
+    $orderCities = [];
+    $visitorCities = [];
+    $recentActivity = [];
+    $liveVisitorRows = [];
+    $weeklyVisitors = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $dayKey = date('Y-m-d', strtotime("-{$i} days"));
+        $weeklyVisitors[] = [
+            'label' => date('D d M', strtotime($dayKey)),
+            'count' => 0,
+        ];
+    }
+    $weeklyMetricCards = [
+        ['label' => 'Top search term', 'kind' => 'search', 'row' => null],
+        ['label' => 'Top product link', 'kind' => 'product_click', 'row' => null],
+        ['label' => 'Top category link', 'kind' => 'category_click', 'row' => null],
+        ['label' => 'Top add-to-cart source', 'kind' => 'add_to_cart', 'row' => null],
+    ];
+}
 $importantLinks = [
     [
         'label' => 'Products',
@@ -698,10 +724,10 @@ $importantLinks = [
 ];
 
 $sheetSample = [];
-if (function_exists('getSheetProducts')) {
-    $allSheetProducts = getSheetProducts(false);
-    if (is_array($allSheetProducts)) {
-        $sheetSample = array_slice(array_values($allSheetProducts), 0, 5);
+if (is_file($sheetCacheFile) && function_exists('parseCandybirdTsvRows')) {
+    $cachedSheetData = file_get_contents($sheetCacheFile);
+    if (is_string($cachedSheetData) && $cachedSheetData !== '') {
+        $sheetSample = array_slice(parseCandybirdTsvRows($cachedSheetData), 0, 5);
     }
 }
 
@@ -991,15 +1017,16 @@ $dashboardCronJobs = [
         <div class="dash-card">
             <div class="label">Online now</div>
             <div class="value"><?= number_format((float) $onlineVisitors) ?></div>
-            <div class="hint">Geo-qualified, active in the last 5 minutes</div>
+            <div class="hint">Bot-filtered, active in the last 5 minutes</div>
         </div>
         <a class="dash-card" href="visitor_breakdown?range=today" title="Open visitor breakdown">
-            <div class="label">Qualified visitors today</div>
+            <div class="label">Visitors today</div>
             <div class="value"><?= number_format((float) $todayVisitors) ?></div>
-            <div class="hint"><?= number_format((float) $todayPageViews) ?> geo-qualified page views, <?= number_format((float) $todayRawSessions) ?> raw sessions. Click to inspect.</div>
+            <div class="hint"><?= number_format((float) $todayPageViews) ?> bot-filtered page views, <?= number_format((float) $todayRawSessions) ?> raw sessions. Click to inspect.</div>
         </a>
     </div>
 
+    <?php if ($loadDashboardReports): ?>
     <div class="weekly-summary-grid">
         <div class="weekly-summary-card">
             <h2>Weekly Visitors</h2>
@@ -1031,6 +1058,17 @@ $dashboardCronJobs = [
             </div>
         <?php endforeach; ?>
     </div>
+    <?php else: ?>
+        <div class="dash-panel mb-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                <div>
+                    <h2 class="mb-1">Visitor & UX reports are on-demand</h2>
+                    <p class="text-muted mb-0">The dashboard now opens quickly. Load the heavier analytics only when you need the full visitor, search, cart and click reports.</p>
+                </div>
+                <a class="btn btn-primary mt-3 mt-md-0" href="dashboard?period=<?= htmlspecialchars($dashboardPeriod, ENT_QUOTES, 'UTF-8') ?>&reports=full">Load full reports</a>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="row">
         <div class="col-12 mb-4">
@@ -1202,6 +1240,7 @@ $dashboardCronJobs = [
             </div>
         </div>
 
+        <?php if ($loadDashboardReports): ?>
         <div class="col-12 mb-4">
             <div class="dash-panel">
                 <h2>Customer UX Intelligence</h2>
@@ -1490,6 +1529,7 @@ $dashboardCronJobs = [
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 
