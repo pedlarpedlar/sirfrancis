@@ -67,6 +67,102 @@ if (!function_exists('cbPricelistText')) {
     }
 }
 
+if (!function_exists('cbPricelistNormalizeArrayParam')) {
+    function cbPricelistNormalizeArrayParam($value) {
+        if (is_array($value)) {
+            $items = $value;
+        } else {
+            $items = preg_split('/,/', (string) $value);
+        }
+        $clean = [];
+        foreach ($items as $item) {
+            $item = trim((string) $item);
+            if ($item !== '') {
+                $clean[] = $item;
+            }
+        }
+        return array_values(array_unique($clean));
+    }
+}
+
+if (!function_exists('cbPricelistFiltersFromRequest')) {
+    function cbPricelistFiltersFromRequest($source) {
+        $sale = strtolower(trim((string) ($source['sale'] ?? 'all')));
+        if (!in_array($sale, ['all', 'sale', 'regular'], true)) {
+            $sale = 'all';
+        }
+        $limit = isset($source['limit']) ? (int) $source['limit'] : 0;
+        return [
+            'q' => trim((string) ($source['q'] ?? '')),
+            'categories' => cbPricelistNormalizeArrayParam($source['categories'] ?? []),
+            'sizes' => cbPricelistNormalizeArrayParam($source['sizes'] ?? []),
+            'min_price' => isset($source['min_price']) && $source['min_price'] !== '' ? max(0, (float) $source['min_price']) : null,
+            'max_price' => isset($source['max_price']) && $source['max_price'] !== '' ? max(0, (float) $source['max_price']) : null,
+            'sale' => $sale,
+            'limit' => $limit > 0 ? min($limit, 1000) : 0,
+        ];
+    }
+}
+
+if (!function_exists('cbPricelistNormalizeSearchText')) {
+    function cbPricelistNormalizeSearchText($value) {
+        $value = strtolower((string) $value);
+        $value = preg_replace('/[^a-z0-9]+/', ' ', $value);
+        return trim(preg_replace('/\s+/', ' ', $value));
+    }
+}
+
+if (!function_exists('cbPricelistProductMatchesFilters')) {
+    function cbPricelistProductMatchesFilters($product, $filters) {
+        $pricing = cbPricelistPricing($product);
+        $salePrice = (float) $pricing['sale_price'];
+
+        if ($filters['min_price'] !== null && $salePrice < (float) $filters['min_price']) {
+            return false;
+        }
+        if ($filters['max_price'] !== null && $salePrice > (float) $filters['max_price']) {
+            return false;
+        }
+        if ($filters['sale'] === 'sale' && empty($pricing['is_special'])) {
+            return false;
+        }
+        if ($filters['sale'] === 'regular' && !empty($pricing['is_special'])) {
+            return false;
+        }
+
+        $size = getSheetProductDisplaySize($product);
+        if (!empty($filters['sizes']) && !in_array($size, $filters['sizes'], true)) {
+            return false;
+        }
+
+        $categoryPath = cbPricelistCategoryPath($product);
+        if (!empty($filters['categories']) && !in_array($categoryPath, $filters['categories'], true)) {
+            return false;
+        }
+
+        $query = cbPricelistNormalizeSearchText($filters['q'] ?? '');
+        if ($query !== '') {
+            $haystack = cbPricelistNormalizeSearchText(implode(' ', [
+                $product['id'] ?? '',
+                $product['name'] ?? '',
+                $product['title'] ?? '',
+                $size,
+                $categoryPath,
+                $product['parent_category'] ?? '',
+                $product['child_category_1'] ?? '',
+                $product['child_category_2'] ?? '',
+            ]));
+            foreach (array_filter(explode(' ', $query)) as $token) {
+                if (strpos($haystack, $token) === false) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+
 if (!function_exists('cbPricelistSpecialUntil')) {
     function cbPricelistSpecialUntil($product) {
         $untilRaw = trim((string) ($product['discount_valid_until'] ?? $product['special_valid_until'] ?? $product['sale_valid_until'] ?? ''));
@@ -120,7 +216,7 @@ if (!function_exists('cbPricelistManualSortValue')) {
 
 if (!function_exists('cbPricelistProductGroups')) {
     function cbPricelistProductGroups($products, $sort = 'name', $direction = 'asc') {
-        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
+        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
         $direction = strtolower((string) $direction) === 'desc' ? 'desc' : 'asc';
         $groups = [];
 
@@ -166,6 +262,23 @@ if (!function_exists('cbPricelistProductGroups')) {
                 case 'price':
                     $compare = ((float) ($a['min_price'] ?? 0)) <=> ((float) ($b['min_price'] ?? 0));
                     break;
+                case 'sale':
+                    $aSale = 0;
+                    foreach ($a['products'] as $product) {
+                        if (cbPricelistPricing($product)['is_special']) {
+                            $aSale = 1;
+                            break;
+                        }
+                    }
+                    $bSale = 0;
+                    foreach ($b['products'] as $product) {
+                        if (cbPricelistPricing($product)['is_special']) {
+                            $bSale = 1;
+                            break;
+                        }
+                    }
+                    $compare = $bSale <=> $aSale;
+                    break;
                 case 'size':
                     $compare = ((float) ($a['min_size_sort'] ?? PHP_INT_MAX)) <=> ((float) ($b['min_size_sort'] ?? PHP_INT_MAX));
                     break;
@@ -196,9 +309,18 @@ if (!function_exists('cbPricelistPriceRange')) {
 }
 
 if (!function_exists('cbPricelistProductsByCategory')) {
-    function cbPricelistProductsByCategory($sort = 'name', $direction = 'asc') {
-        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
+    function cbPricelistProductsByCategory($sort = 'name', $direction = 'asc', $filters = []) {
+        $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
         $direction = strtolower((string) $direction) === 'desc' ? 'desc' : 'asc';
+        $filters = array_merge([
+            'q' => '',
+            'categories' => [],
+            'sizes' => [],
+            'min_price' => null,
+            'max_price' => null,
+            'sale' => 'all',
+            'limit' => 0,
+        ], is_array($filters) ? $filters : []);
         $categoryOrder = function_exists('getCandybirdCategoryDisplayOrder') ? getCandybirdCategoryDisplayOrder() : [];
         $customCategoryOrder = [];
         foreach ($categoryOrder as $index => $categoryName) {
@@ -218,6 +340,9 @@ if (!function_exists('cbPricelistProductsByCategory')) {
                 && (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category))
                 && (!function_exists('isCandybirdCategoryPathVisible') || isCandybirdCategoryPathVisible($categoryPath));
         });
+        $products = array_values(array_filter($products, function($product) use ($filters) {
+            return cbPricelistProductMatchesFilters($product, $filters);
+        }));
 
         $productsByCategory = [];
         foreach ($products as $product) {
@@ -253,6 +378,9 @@ if (!function_exists('cbPricelistProductsByCategory')) {
                     case 'price':
                         $compare = cbPricelistPricing($a)['sale_price'] <=> cbPricelistPricing($b)['sale_price'];
                         break;
+                    case 'sale':
+                        $compare = (int) cbPricelistPricing($b)['is_special'] <=> (int) cbPricelistPricing($a)['is_special'];
+                        break;
                     case 'size':
                         $compare = cbPricelistSortValue($a['size'] ?? '') <=> cbPricelistSortValue($b['size'] ?? '');
                         if ($compare === 0) {
@@ -274,6 +402,22 @@ if (!function_exists('cbPricelistProductsByCategory')) {
         }
         unset($categoryProducts);
 
+        if ((int) ($filters['limit'] ?? 0) > 0) {
+            $remaining = (int) $filters['limit'];
+            foreach ($productsByCategory as $categoryName => $categoryProducts) {
+                if ($remaining <= 0) {
+                    unset($productsByCategory[$categoryName]);
+                    continue;
+                }
+                if (count($categoryProducts) > $remaining) {
+                    $productsByCategory[$categoryName] = array_slice($categoryProducts, 0, $remaining);
+                    $remaining = 0;
+                } else {
+                    $remaining -= count($categoryProducts);
+                }
+            }
+        }
+
         return $productsByCategory;
     }
 }
@@ -285,6 +429,58 @@ if (!function_exists('cbPricelistProductCount')) {
             $count += count($products);
         }
         return $count;
+    }
+}
+
+if (!function_exists('cbPricelistFilterOptions')) {
+    function cbPricelistFilterOptions() {
+        $sizes = [];
+        $categories = [];
+        foreach (cbPricelistProductsByCategory('custom', 'asc') as $categoryPath => $products) {
+            $categories[$categoryPath] = cbPricelistDisplayCategoryPath($categoryPath);
+            foreach ($products as $product) {
+                $size = getSheetProductDisplaySize($product);
+                if ($size !== '') {
+                    $sizes[$size] = $size;
+                }
+            }
+        }
+        uksort($sizes, function($a, $b) {
+            $compare = cbPricelistSortValue($a) <=> cbPricelistSortValue($b);
+            return $compare === 0 ? strnatcasecmp($a, $b) : $compare;
+        });
+        asort($categories, SORT_NATURAL | SORT_FLAG_CASE);
+        return ['sizes' => $sizes, 'categories' => $categories];
+    }
+}
+
+if (!function_exists('cbPricelistWhatsappMoney')) {
+    function cbPricelistWhatsappMoney($value) {
+        $value = (float) $value;
+        return abs($value - round($value)) < 0.01 ? 'R' . number_format($value, 0) : 'R' . number_format($value, 2);
+    }
+}
+
+if (!function_exists('cbPricelistWhatsappLine')) {
+    function cbPricelistWhatsappLine($product) {
+        $title = getSheetProductDisplayTitle($product);
+        $pricing = cbPricelistPricing($product);
+        if ($pricing['is_special']) {
+            return $title . ' @ ~' . cbPricelistWhatsappMoney($pricing['normal_price']) . '~ ' . cbPricelistWhatsappMoney($pricing['sale_price']);
+        }
+        return $title . ' @ ' . cbPricelistWhatsappMoney($pricing['normal_price']);
+    }
+}
+
+if (!function_exists('cbPricelistFlattenProducts')) {
+    function cbPricelistFlattenProducts($productsByCategory) {
+        $products = [];
+        foreach ($productsByCategory as $categoryProducts) {
+            foreach ($categoryProducts as $product) {
+                $products[] = $product;
+            }
+        }
+        return $products;
     }
 }
 ?>

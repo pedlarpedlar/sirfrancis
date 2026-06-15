@@ -5,10 +5,20 @@ require_once __DIR__ . '/pricelist_helpers.php';
 date_default_timezone_set('Africa/Johannesburg');
 
 $sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
-$sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
+$sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
 $direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
-$productsByCategory = cbPricelistProductsByCategory($sort, $direction);
+$filters = cbPricelistFiltersFromRequest($_GET);
+$filterOptions = cbPricelistFilterOptions();
+$productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters);
 $productCount = cbPricelistProductCount($productsByCategory);
+$currentQuery = $_GET;
+$currentQuery['sort'] = $sort;
+$currentQuery['dir'] = $direction;
+$whatsappPricelistUrl = 'whatsapp-pricelist?' . http_build_query($currentQuery);
+$printPricelistUrl = 'pricelist-download?' . http_build_query($currentQuery);
+$tsvQuery = $currentQuery;
+$tsvQuery['format'] = 'tsv';
+$tsvPricelistUrl = 'pricelist-download?' . http_build_query($tsvQuery);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $limitedDescription = 'Compact CandyBird pricelist with current product prices, specials, sizes and online product links.';
@@ -29,7 +39,10 @@ include 'page_menues.php';
 function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
     $nextDirection = ($currentSort === $key && $currentDirection === 'asc') ? 'desc' : 'asc';
     $icon = $currentSort === $key ? ($currentDirection === 'asc' ? ' ^' : ' v') : '';
-    return '<a class="pricelist-sort-link" href="pricelist?sort=' . rawurlencode($key) . '&dir=' . rawurlencode($nextDirection) . '">' . cbPricelistText($label . $icon) . '</a>';
+    $query = $_GET;
+    $query['sort'] = $key;
+    $query['dir'] = $nextDirection;
+    return '<a class="pricelist-sort-link" href="pricelist?' . http_build_query($query) . '">' . cbPricelistText($label . $icon) . '</a>';
 }
 
 function cbPricelistCategorySortControls($currentSort, $currentDirection) {
@@ -38,6 +51,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
         cbPricelistSortLink('name', 'Name', $currentSort, $currentDirection),
         cbPricelistSortLink('price', 'Price', $currentSort, $currentDirection),
         cbPricelistSortLink('size', 'Size', $currentSort, $currentDirection),
+        cbPricelistSortLink('sale', 'Sale', $currentSort, $currentDirection),
         cbPricelistSortLink('id', 'ID', $currentSort, $currentDirection),
     ];
     return '<span class="pricelist-category-sort no-print"><span>Sort by</span>' . implode('', $links) . '</span>';
@@ -116,6 +130,30 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     font-size: 12px;
     white-space: nowrap;
   }
+  .pricelist-filter-panel {
+    background: #fff;
+    border: 1px solid #eadfd2;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    padding: 14px;
+  }
+  .pricelist-filter-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  }
+  .pricelist-filter-panel label {
+    color: #4b185f;
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+  .pricelist-filter-panel .form-control { border-color: #decbe7; border-radius: 6px; font-size: 13px; }
+  .pricelist-filter-panel select[multiple] { min-height: 92px; }
+  .pricelist-filter-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .pricelist-mini-fields { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pricelist-table { margin: 0; color: #2c2926; font-size: 13px; }
   .pricelist-table thead th {
     background: #f0e8f4;
@@ -230,6 +268,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     .pricelist-hero-media { max-width: 100%; width: 100%; }
     .pricelist-actions { justify-content: flex-start; }
     .pricelist-note { grid-template-columns: 1fr; }
+    .pricelist-filter-grid { grid-template-columns: 1fr; }
     .pricelist-search { align-items: stretch; flex-direction: column; }
     .pricelist-search-count { white-space: normal; }
     .pricelist-table { font-size: 12px; }
@@ -262,8 +301,9 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       </div>
       <img class="pricelist-hero-media no-print" src="https://www.candybird.co.za/assets/img/pricelist.jpg" alt="CandyBird pricelist product range" loading="lazy">
       <div class="pricelist-actions no-print">
-        <a href="pricelist-download?sort=<?= cbPricelistText($sort) ?>&dir=<?= cbPricelistText($direction) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
-        <a href="pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
+        <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp pricelist</a>
+        <a href="<?= cbPricelistText($printPricelistUrl) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
+        <a href="<?= cbPricelistText($tsvPricelistUrl) ?>" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
         <a href="products" class="btn btn-light"><i class="fas fa-shopping-basket mr-1"></i> Shop online</a>
       </div>
     </div>
@@ -275,11 +315,61 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       <div><strong>Latest prices:</strong> the live website pricelist is always the final reference.</div>
     </div>
 
-    <div class="pricelist-search no-print">
-      <label for="pricelist-search-input">Find item</label>
-      <input type="search" id="pricelist-search-input" placeholder="Try: 100g pecan plain, plain pecans 100g, pistachio 1kg">
-      <span class="pricelist-search-count" id="pricelist-search-count"><?= number_format($productCount) ?> options</span>
-    </div>
+    <form class="pricelist-filter-panel no-print" method="get" action="pricelist">
+      <div class="pricelist-filter-grid">
+        <div>
+          <label for="pl-q">Find item</label>
+          <input class="form-control" type="search" id="pl-q" name="q" value="<?= cbPricelistText($filters['q']) ?>" placeholder="Try: 100g pecan plain, pistachio 1kg">
+        </div>
+        <div>
+          <label for="pl-categories">Categories</label>
+          <select class="form-control" id="pl-categories" name="categories[]" multiple>
+            <?php foreach ($filterOptions['categories'] as $categoryPath => $categoryLabel): ?>
+              <option value="<?= cbPricelistText($categoryPath) ?>" <?= in_array($categoryPath, $filters['categories'], true) ? 'selected' : '' ?>><?= cbPricelistText($categoryLabel) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div>
+          <label for="pl-sizes">Sizes</label>
+          <select class="form-control" id="pl-sizes" name="sizes[]" multiple>
+            <?php foreach ($filterOptions['sizes'] as $size): ?>
+              <option value="<?= cbPricelistText($size) ?>" <?= in_array($size, $filters['sizes'], true) ? 'selected' : '' ?>><?= cbPricelistText($size) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div>
+          <label>Price and rows</label>
+          <div class="pricelist-mini-fields">
+            <input class="form-control" type="number" min="0" step="0.01" name="min_price" value="<?= cbPricelistText($filters['min_price'] ?? '') ?>" placeholder="Min R">
+            <input class="form-control" type="number" min="0" step="0.01" name="max_price" value="<?= cbPricelistText($filters['max_price'] ?? '') ?>" placeholder="Max R">
+            <input class="form-control" type="number" min="1" max="1000" step="1" name="limit" value="<?= cbPricelistText($filters['limit'] ?: '') ?>" placeholder="Limit rows">
+            <select class="form-control" name="sale">
+              <option value="all" <?= $filters['sale'] === 'all' ? 'selected' : '' ?>>All prices</option>
+              <option value="sale" <?= $filters['sale'] === 'sale' ? 'selected' : '' ?>>Specials only</option>
+              <option value="regular" <?= $filters['sale'] === 'regular' ? 'selected' : '' ?>>Non-sale only</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="pricelist-filter-actions">
+        <select class="form-control" name="sort" style="max-width:180px;">
+          <option value="custom" <?= $sort === 'custom' ? 'selected' : '' ?>>Custom order</option>
+          <option value="name" <?= $sort === 'name' ? 'selected' : '' ?>>Alphabetical</option>
+          <option value="price" <?= $sort === 'price' ? 'selected' : '' ?>>Price</option>
+          <option value="size" <?= $sort === 'size' ? 'selected' : '' ?>>Size</option>
+          <option value="sale" <?= $sort === 'sale' ? 'selected' : '' ?>>Sale status</option>
+          <option value="id" <?= $sort === 'id' ? 'selected' : '' ?>>Product ID</option>
+        </select>
+        <select class="form-control" name="dir" style="max-width:150px;">
+          <option value="asc" <?= $direction === 'asc' ? 'selected' : '' ?>>Low to high / A-Z</option>
+          <option value="desc" <?= $direction === 'desc' ? 'selected' : '' ?>>High to low / Z-A</option>
+        </select>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-filter mr-1"></i> Apply filters</button>
+        <a href="pricelist" class="btn btn-light">Clear</a>
+        <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp text</a>
+        <span class="pricelist-search-count" id="pricelist-search-count"><?= number_format($productCount) ?> matching options</span>
+      </div>
+    </form>
 
     <div class="pricelist-shell">
       <div class="table-responsive">

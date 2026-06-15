@@ -3,9 +3,10 @@ include 'session_logins.php';
 require_once __DIR__ . '/pricelist_helpers.php';
 
 $sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
-$sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price'], true) ? $sort : 'custom';
+$sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
 $direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
-$productsByCategory = cbPricelistProductsByCategory($sort, $direction);
+$filters = cbPricelistFiltersFromRequest($_GET);
+$productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters);
 $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
