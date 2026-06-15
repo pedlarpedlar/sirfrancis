@@ -91,13 +91,22 @@ if (!function_exists('cbPricelistFiltersFromRequest')) {
         if (!in_array($sale, ['all', 'sale', 'regular'], true)) {
             $sale = 'all';
         }
+        $priceRange = strtolower(trim((string) ($source['price_range'] ?? '')));
+        $minPrice = isset($source['min_price']) && $source['min_price'] !== '' ? max(0, (float) $source['min_price']) : null;
+        $maxPrice = isset($source['max_price']) && $source['max_price'] !== '' ? max(0, (float) $source['max_price']) : null;
+        if ($priceRange !== '' && $priceRange !== 'all') {
+            $rangeParts = explode('-', $priceRange, 2);
+            $minPrice = isset($rangeParts[0]) && $rangeParts[0] !== '' ? max(0, (float) $rangeParts[0]) : null;
+            $maxPrice = isset($rangeParts[1]) && $rangeParts[1] !== '' ? max(0, (float) $rangeParts[1]) : null;
+        }
         $limit = isset($source['limit']) ? (int) $source['limit'] : 0;
         return [
             'q' => trim((string) ($source['q'] ?? '')),
             'categories' => cbPricelistNormalizeArrayParam($source['categories'] ?? []),
             'sizes' => cbPricelistNormalizeArrayParam($source['sizes'] ?? []),
-            'min_price' => isset($source['min_price']) && $source['min_price'] !== '' ? max(0, (float) $source['min_price']) : null,
-            'max_price' => isset($source['max_price']) && $source['max_price'] !== '' ? max(0, (float) $source['max_price']) : null,
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+            'price_range' => $priceRange,
             'sale' => $sale,
             'limit' => $limit > 0 ? min($limit, 1000) : 0,
         ];
@@ -466,9 +475,9 @@ if (!function_exists('cbPricelistWhatsappLine')) {
         $title = getSheetProductDisplayTitle($product);
         $pricing = cbPricelistPricing($product);
         if ($pricing['is_special']) {
-            return $title . ' @ ~' . cbPricelistWhatsappMoney($pricing['normal_price']) . '~ ' . cbPricelistWhatsappMoney($pricing['sale_price']);
+            return $title . ' @ ~' . cbPricelistWhatsappMoney($pricing['normal_price']) . '~ *' . cbPricelistWhatsappMoney($pricing['sale_price']) . '*';
         }
-        return $title . ' @ ' . cbPricelistWhatsappMoney($pricing['normal_price']);
+        return $title . ' @ *' . cbPricelistWhatsappMoney($pricing['normal_price']) . '*';
     }
 }
 

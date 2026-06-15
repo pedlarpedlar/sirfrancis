@@ -153,7 +153,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   .pricelist-filter-panel .form-control { border-color: #decbe7; border-radius: 6px; font-size: 13px; }
   .pricelist-filter-panel select[multiple] { min-height: 92px; }
   .pricelist-filter-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .pricelist-mini-fields { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pricelist-mini-fields { display: grid; gap: 8px; grid-template-columns: 1fr; }
   .pricelist-table { margin: 0; color: #2c2926; font-size: 13px; }
   .pricelist-table thead th {
     background: #f0e8f4;
@@ -340,8 +340,23 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
         <div>
           <label>Price and rows</label>
           <div class="pricelist-mini-fields">
-            <input class="form-control" type="number" min="0" step="0.01" name="min_price" value="<?= cbPricelistText($filters['min_price'] ?? '') ?>" placeholder="Min R">
-            <input class="form-control" type="number" min="0" step="0.01" name="max_price" value="<?= cbPricelistText($filters['max_price'] ?? '') ?>" placeholder="Max R">
+            <select class="form-control" name="price_range">
+              <?php
+                $rangeOptions = [
+                  'all' => 'All prices',
+                  '0-50' => 'Up to R50',
+                  '50-100' => 'R50 to R100',
+                  '100-250' => 'R100 to R250',
+                  '250-500' => 'R250 to R500',
+                  '500-1000' => 'R500 to R1,000',
+                  '1000-' => 'R1,000 and above',
+                ];
+                $selectedRange = $filters['price_range'] ?: 'all';
+              ?>
+              <?php foreach ($rangeOptions as $rangeValue => $rangeLabel): ?>
+                <option value="<?= cbPricelistText($rangeValue) ?>" <?= $selectedRange === $rangeValue ? 'selected' : '' ?>><?= cbPricelistText($rangeLabel) ?></option>
+              <?php endforeach; ?>
+            </select>
             <input class="form-control" type="number" min="1" max="1000" step="1" name="limit" value="<?= cbPricelistText($filters['limit'] ?: '') ?>" placeholder="Limit rows">
             <select class="form-control" name="sale">
               <option value="all" <?= $filters['sale'] === 'all' ? 'selected' : '' ?>>All prices</option>

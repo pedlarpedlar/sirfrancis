@@ -11,10 +11,7 @@ $filters = cbPricelistFiltersFromRequest($_GET);
 $productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters);
 $products = cbPricelistFlattenProducts($productsByCategory);
 $validMonth = date('F Y');
-$displayPhone = trim((string) ($tel ?? ''));
-if ($displayPhone === '') {
-    $displayPhone = '0842319326';
-}
+$displayPhone = '0842319326';
 $waPhone = preg_replace('/\D+/', '', $displayPhone);
 if (strpos($waPhone, '0') === 0) {
     $waPhone = '27' . substr($waPhone, 1);
