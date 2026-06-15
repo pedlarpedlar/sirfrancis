@@ -1,6 +1,6 @@
 <?php
 $is_homepage = true;
-$skip_google_fonts = true;
+$skip_google_fonts = false;
 $defer_gtag = true;
 $defer_homepage_personalization = true;
 $load_shopping_nav = false;
@@ -78,11 +78,6 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
   position: absolute !important;
 }
 
-.home-promo-banner,
-.product-tab {
-  display: none !important;
-}
-
 .homepage-info-link {
   color: inherit;
   height: 100%;
@@ -141,15 +136,57 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 }
 
 .home-promo-banner .banner-thumb a {
-  background: #f7f3ee;
+  align-items: flex-end;
+  background: #28364B;
+  display: flex;
   height: clamp(190px, 24vw, 330px);
+  isolation: isolate;
+  position: relative;
+  text-decoration: none;
 }
 
 .home-promo-banner .banner-thumb img {
   display: block;
   height: 100%;
+  inset: 0;
   object-fit: cover;
+  position: absolute;
   width: 100%;
+  z-index: -2;
+}
+
+.home-promo-banner .banner-thumb a::after {
+  background: linear-gradient(180deg, rgba(40, 54, 75, 0.1), rgba(40, 54, 75, 0.92));
+  content: "";
+  inset: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.home-pathway-copy {
+  color: #fff;
+  padding: 22px;
+}
+
+.home-pathway-copy h2 {
+  color: #CEBD88;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.home-pathway-copy p {
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.product-tab,
+.common-banner.thingy,
+.blog-section {
+  display: none !important;
 }
 
 </style>
@@ -284,17 +321,21 @@ foreach ($slides as $index => $slide) {
 </div>
 <!-- main slider end -->
 
-<!-- common banner  start -->
+<!-- landing pathways start -->
 <div class="common-banner home-promo-banner bg-white pt-100 pb-20 ">
   <div class="container">
     <div class="row">
       <div class="col-md-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="private_labelling"
+            href="wholesale-pricelist"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/ocean.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis private labelling" width="570" height="330" loading="eager" decoding="async" />
+            <img src="assets/img/slider/slider.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async" />
+            <span class="home-pathway-copy">
+              <h2>Buy Bulk</h2>
+              <p>Marine collagen, fish gelatine and wellness ingredients for wholesale buyers and businesses.</p>
+            </span>
           </a>
         </div>
       </div>
@@ -304,24 +345,46 @@ foreach ($slides as $index => $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis online shop" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/slider/slide1.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async" />
+            <span class="home-pathway-copy">
+              <h2>Retail Shop</h2>
+              <p>Shop the retail range direct to the public.</p>
+            </span>
           </a>
         </div>
       </div>
       <div class="col-md-3 col-sm-6 mb-30">
         <div class="banner-thumb">
           <a
+            href="private_labelling"
+            class="zoom-in d-block overflow-hidden"
+          >
+            <img src="assets/img/slider/slide2.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async" />
+            <span class="home-pathway-copy">
+              <h2>Private Labelling</h2>
+              <p>Create your own supplement brand.</p>
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6 mb-30">
+        <div class="banner-thumb">
+          <a
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis stockist opportunity" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/slider/slide3.png" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async" />
+            <span class="home-pathway-copy">
+              <h2>Become a Stockist</h2>
+              <p>Apply to stock Sir Francis products and build a premium wellness income stream.</p>
+            </span>
           </a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- common banner  end -->
+<!-- landing pathways end -->
 
 <section class="homepage-seo-intro bg-white pt-25 pb-35">
   <div class="container">

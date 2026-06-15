@@ -50,7 +50,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   <div class="social-network">
     <ul class="d-flex justify-content-center"> <!-- Added justify-content-center class -->
       <li>
-        <a class="social-link-click" href="https://www.facebook.com/fishgelatine" target="_blank" aria-label="Sir Francis on Facebook"><span class="icon-social-facebook"></span></a>
+        <a class="social-link-click" href="https://www.facebook.com/marinecollagenSA" target="_blank" aria-label="Sir Francis on Facebook"><span class="icon-social-facebook"></span></a>
       </li>
       <li class="mr-0">
         <a class="social-link-click" href="https://www.instagram.com/fishgelatine" target="_blank" aria-label="Sir Francis on Instagram"><span class="icon-social-instagram"></span></a>
@@ -74,16 +74,16 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   <div class="footer-link-groups" aria-label="Footer links">
     <div>
       <h3>Shop</h3>
-      <a href="<?=$home_directory?>products">Online Shop</a>
+      <a href="<?=$home_directory?>products">Retail Shop</a>
       <a href="<?=$home_directory?>pricelist">Pricelist</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Wholesale Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
-      <a href="<?=$home_directory?>recipes">Recipes</a>
+      <a href="<?=$home_directory?>recipes">Knowledge Centre</a>
     </div>
     <div>
       <h3>Business</h3>
       <a href="<?=$home_directory?>bulk_ordering">Bulk Ordering</a>
-      <a href="<?=$home_directory?>resellers">For Resellers</a>
+      <a href="<?=$home_directory?>resellers">Become a Stockist</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Bulk Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
       <a href="<?=$home_directory?>contact">Custom Quote</a>

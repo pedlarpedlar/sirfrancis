@@ -50,7 +50,11 @@ if (function_exists('renderCandybirdSiteFlags')) {
     <nav class="offcanvas-menu">
       <ul>
         <li><a href="./">Home</a></li>
-        <li><a href="products">Online Shop</a></li>
+        <li><a href="wholesale-pricelist">Buy Bulk</a></li>
+        <li><a href="products">Retail Shop</a></li>
+        <li><a href="private_labelling">Private Labelling</a></li>
+        <li><a href="resellers">Become a Stockist</a></li>
+        <li><a href="contact">Contact Us</a></li>
 
 
 <?php
@@ -222,33 +226,24 @@ function generateMenuMain($parent_id, $conn) {
 $categories = buildSheetMenuCategories();
 ?>
 
-<li>
-    <a href="#"><span class="menu-text">Products</span></a>
-    <?php echo generateMenu($categories); // Generate and display the menu ?>
-</li>
         <li>
             <a href="#"><span class="menu-text">More</span></a>
             <ul class="offcanvas-submenu">
                 <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
                 <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
-                <li><a class="navmenu-click-mobile" href="about">About Us</a></li>
-                <li><a class="navmenu-click-mobile" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click-mobile" href="about">About Sir Francis</a></li>
                 <li><a class="navmenu-click-mobile" href="policies">Policies</a></li>
             </ul>
         </li>
         <li><a class="navmenu-click-mobile" href="recipes">Knowledge Centre</a></li>
-        <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
-        <li><a class="navmenu-click-mobile" href="about">About Sir Francis</a></li>
-        <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
-        <li><a class="navmenu-click-mobile" href="resellers">For Resellers</a></li>
         <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
       </ul>
     </nav>
     <div class="offcanvas-social py-30">
       <ul>
         <li>
-          <a class="social-link-click" href="https://www.facebook.com/fishgelatine" aria-label="Sir Francis on Facebook"><i class="icon-social-facebook"></i></a>
+          <a class="social-link-click" href="https://www.facebook.com/marinecollagenSA" aria-label="Sir Francis on Facebook"><i class="icon-social-facebook"></i></a>
         </li>
         <li>
           <a class="social-link-click" href="https://www.instagram.com/fishgelatine" aria-label="Sir Francis on Instagram"><i class="icon-social-instagram"></i></a>
@@ -418,7 +413,7 @@ foreach ($offCanvasCartItems as $item) {
             <div class="social-network2">
               <ul class="d-flex">
                 <li>
-                  <a href="https://www.facebook.com/fishgelatine" target="_blank" aria-label="Sir Francis on Facebook"
+                  <a href="https://www.facebook.com/marinecollagenSA" target="_blank" aria-label="Sir Francis on Facebook"
                     ><span class="icon-social-facebook"></span
                   ></a>
                 </li>
@@ -484,32 +479,19 @@ foreach ($offCanvasCartItems as $item) {
         <div class="col-xl-8 col-lg-7 d-none d-lg-block">
           <ul class="main-menu d-flex justify-content-center">
 
-            <?php
-
-            // Generate the "More" menu
-            $more_menu_html = '<li>';
-            $more_menu_html .= '<a href="#">Products <i class="ion-ios-arrow-down"></i></a>';
-            $more_menu_html .= generateMenuMain(NULL, $conn);
-            $more_menu_html .= '</li>';
-
-            echo $more_menu_html;
-            ?>
-
             <li class="active ml-0">
               <a class="navmenu-click" href="./">Home</a>
             </li>
-
-<!--             <li class=" ml-0">
-              <a class="navmenu-click" href="pricelist">Pricelist</a>
-            </li> -->
+            <li class="ml-0">
+              <a class="navmenu-click" href="wholesale-pricelist">Buy Bulk</a>
+            </li>
             <li class="position-static">
               <a class="navmenu-click" href="products"
-                >Online Shop <!-- <i class="ion-ios-arrow-down"> --></i
+                >Retail Shop <!-- <i class="ion-ios-arrow-down"> --></i
               ></a>
               </li>
-            <!-- <li> -->
-              <!-- <a class="navmenu-click" href="stockist">Resell <i class="ion-ios-arrow-down"></i> </a>-->
-            <!-- </li> -->
+            <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
+            <li><a class="navmenu-click" href="resellers">Become a Stockist</a></li>
             <li><a class="navmenu-click" href="contact">Contact Us</a></li>
 
             <li>
@@ -523,9 +505,9 @@ foreach ($offCanvasCartItems as $item) {
                   <a class="navmenu-click" href="return_policy">Buyer Protection</a>
                 </li>
                 <li>
-                  <a class="navmenu-click" href="about">About Us</a>
+                  <a class="navmenu-click" href="about">About Sir Francis</a>
                 </li>
-                <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click" href="recipes">Knowledge Centre</a></li>
                 <li><a class="navmenu-click" href="policies">Policies</a></li>
               </ul>
             </li>
