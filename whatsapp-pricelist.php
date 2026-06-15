@@ -11,7 +11,13 @@ $filters = cbPricelistFiltersFromRequest($_GET);
 $productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters);
 $products = cbPricelistFlattenProducts($productsByCategory);
 $validMonth = date('F Y');
-$displayPhone = '0842319326';
+$displayPhone = trim((string) ($hotline ?? ''));
+if ($displayPhone === '') {
+    $displayPhone = trim((string) ($tel ?? ''));
+}
+if ($displayPhone === '') {
+    $displayPhone = '0842319326';
+}
 $singleFilteredSize = count($filters['sizes'] ?? []) === 1 ? (string) $filters['sizes'][0] : '';
 $waPhone = preg_replace('/\D+/', '', $displayPhone);
 if (strpos($waPhone, '0') === 0) {
