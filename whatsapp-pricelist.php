@@ -24,6 +24,10 @@ $lines[] = '';
 foreach ($products as $product) {
     $lines[] = cbPricelistWhatsappLine($product, $singleFilteredSize !== '');
 }
+if ($singleFilteredSize !== '') {
+    $lines[] = '';
+    $lines[] = 'Prices above are for ' . $singleFilteredSize . ' packets. Other sizes available: See website.';
+}
 $lines[] = '';
 $lines[] = 'WhatsApp your order to ' . $displayPhone . ' and collect in Malabar, or:';
 $lines[] = 'Shop securely online www.candybird.co.za';
