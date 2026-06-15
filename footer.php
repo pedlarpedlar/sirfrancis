@@ -67,6 +67,9 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <span>Ozow Instant EFT</span>
     <span>Buy now, pay later coming soon</span>
   </div>
+  <p class="footer-quality-guarantee">
+    Price-match promise: for the same quality and pack size in South Africa, we aim to match and beat the price. If you find better value after buying, contact us for our money-back quality guarantee.
+  </p>
 
   <div class="footer-link-groups" aria-label="Footer links">
     <div>
@@ -244,6 +247,15 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   .payment-trust-strip i {
     color: #FCB42F;
     font-size: 15px;
+  }
+
+  .footer-quality-guarantee {
+    color: rgba(255,255,255,.86);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.55;
+    margin: 12px auto 0;
+    max-width: 600px;
   }
 
   .footer-link-groups h3 {

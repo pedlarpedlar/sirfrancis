@@ -12,6 +12,7 @@ $productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters)
 $products = cbPricelistFlattenProducts($productsByCategory);
 $validMonth = date('F Y');
 $displayPhone = '0842319326';
+$singleFilteredSize = count($filters['sizes'] ?? []) === 1 ? (string) $filters['sizes'][0] : '';
 $waPhone = preg_replace('/\D+/', '', $displayPhone);
 if (strpos($waPhone, '0') === 0) {
     $waPhone = '27' . substr($waPhone, 1);
@@ -21,7 +22,7 @@ $lines = [];
 $lines[] = 'Pricelist ' . $validMonth;
 $lines[] = '';
 foreach ($products as $product) {
-    $lines[] = cbPricelistWhatsappLine($product);
+    $lines[] = cbPricelistWhatsappLine($product, $singleFilteredSize !== '');
 }
 $lines[] = '';
 $lines[] = 'WhatsApp your order to ' . $displayPhone . ' and collect in Malabar, or:';

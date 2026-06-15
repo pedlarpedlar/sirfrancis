@@ -493,8 +493,14 @@ if (!function_exists('cbPricelistWhatsappMoney')) {
 }
 
 if (!function_exists('cbPricelistWhatsappLine')) {
-    function cbPricelistWhatsappLine($product) {
+    function cbPricelistWhatsappLine($product, $omitSize = false) {
         $title = getSheetProductDisplayTitle($product);
+        if ($omitSize) {
+            $size = getSheetProductDisplaySize($product);
+            if ($size !== '') {
+                $title = trim(preg_replace('/\s*' . preg_quote($size, '/') . '\s*$/i', '', $title));
+            }
+        }
         $pricing = cbPricelistPricing($product);
         if ($pricing['is_special']) {
             return $title . ' @ ~' . cbPricelistWhatsappMoney($pricing['normal_price']) . '~ *' . cbPricelistWhatsappMoney($pricing['sale_price']) . '*';
