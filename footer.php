@@ -20,9 +20,9 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       width: 100%;
       height: 20px;
       margin-bottom: -2px;
-      //background-image: url('<?=$home_directory?>assets/img/rope.png'); /* Set the background image */
-      background-repeat: repeat-x; /* Repeat horizontally */
-      background-position: bottom left; /* Align at the bottom-left corner */
+      background-image: url('<?=$home_directory?>assets/img/rope.png');
+      background-repeat: repeat-x;
+      background-position: bottom left;
       position: relative;
       z-index: 2;
     }
@@ -77,7 +77,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <a href="<?=$home_directory?>products">Online Shop</a>
       <a href="<?=$home_directory?>pricelist">Pricelist</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Wholesale Pricelist</a>
-      <a href="<?=$home_directory?>gifting">Shop Gifts</a>
+      <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
       <a href="<?=$home_directory?>recipes">Recipes</a>
     </div>
     <div>
@@ -206,7 +206,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   }
 
   ul.custom li a i {
-    color: #FCB42F !important;
+    color: #CEBD88 !important;
   }
 
   .footer-link-groups {
@@ -245,7 +245,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   }
 
   .payment-trust-strip i {
-    color: #FCB42F;
+    color: #CEBD88;
     font-size: 15px;
   }
 
@@ -259,7 +259,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   }
 
   .footer-link-groups h3 {
-    color: #FCB42F;
+    color: #CEBD88;
     font-size: 14px;
     margin: 0 0 8px;
     line-height: 1.25;
@@ -278,7 +278,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 
   .footer-link-groups a:hover,
   .footer-link-groups a:focus {
-    color: #FCB42F !important;
+    color: #CEBD88 !important;
     text-decoration: underline;
   }
 
@@ -503,7 +503,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 .global-search-item:hover,
 .global-search-all:hover {
   background: #fff8ed;
-  color: #2f2f31;
+  color: #28364B;
 }
 .global-search-item img {
   width: 52px;
@@ -1381,7 +1381,7 @@ $(document).ready(function () {
 function showNotification(success, message) {
     var notificationContainer = $('#notification-container');
     var notificationClass = success ? 'alert-success' : 'alert-danger';
-    var notificationStyle = success ? 'background-color: #FCB42F; color: #6e4cb2;' : 'background-color: #6e4cb2; color: #FCB42F;';
+    var notificationStyle = success ? 'background-color: #28364B; color: #CEBD88;' : 'background-color: #CEBD88; color: #28364B;';
 
     var notification = $('<div style="transition: background 0.3s, color 0.3s, box-shadow 0.3s; box-shadow: 0 0 5px rgba(206, 189, 136, 0.5);' + notificationStyle + '" class="alert ' + notificationClass + ' alert-dismissible fade show" role="alert">' +
         message +

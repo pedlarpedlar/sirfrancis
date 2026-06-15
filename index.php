@@ -78,6 +78,11 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
   position: absolute !important;
 }
 
+.home-promo-banner,
+.product-tab {
+  display: none !important;
+}
+
 .homepage-info-link {
   color: inherit;
   height: 100%;
@@ -153,37 +158,31 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 
 
 
-    .nut-border {
+    .rope {
       width: 100%;
-      height: 35px;
-      margin-top: -20px;
-      //background-image: url('assets/img/nut-border.svg'); /* Set the background image */
-      //background-repeat: repeat-x; /* Repeat horizontally */
+      height: 20px;
+      margin-top: -4px;
+      background-image: url('assets/img/rope.png');
+      background-repeat: repeat-x;
       background-position: bottom left; /* Align at the bottom-left corner */
       position: relative;
     }
 
-    .walnut {
-      width: 355px;
-      height: 350px;
+    .anchor {
+      width: 235px;
+      height: 320px;
       position: absolute;
-      bottom: -90px;
+      bottom: -50px;
       right: 60px;
+      background-image: url('assets/img/anchor-main.png');
       background-repeat: no-repeat;
       background-position: bottom right;
       background-size: contain;
       pointer-events: none;
     }
 
-    @media (min-width: 769px) {
-      .walnut {
-        background-image: url('assets/img/walnut-home.png');
-      }
-    }
-
     @media (max-width: 768px) {
-      /* Hide the .walnut element on screens smaller than tablets */
-      .walnut {
+      .anchor {
         display: none;
       }
     }
@@ -280,8 +279,8 @@ foreach ($slides as $index => $slide) {
     }, 2500);
   }, { once: true });
 </script>
-<div class="nut-border">
-  <div class="walnut"></div>
+<div class="rope">
+  <div class="anchor"></div>
 </div>
 <!-- main slider end -->
 
@@ -292,10 +291,10 @@ foreach ($slides as $index => $slide) {
       <div class="col-md-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="gifting"
+            href="private_labelling"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/gifting.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis private labelling" width="570" height="330" loading="eager" decoding="async" />
+            <img src="assets/img/ocean.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis private labelling" width="570" height="330" loading="eager" decoding="async" />
           </a>
         </div>
       </div>
@@ -379,7 +378,7 @@ foreach ($slides as $index => $slide) {
 
 <style>
   .customer-reviews-section {
-    background: linear-gradient(135deg, #ffffff 0%, #fff9e8 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #F1F0E8 100%);
   }
 
   .review-slide-card {
@@ -388,32 +387,32 @@ foreach ($slides as $index => $slide) {
     background: #ffffff;
     border-radius: 28px;
     padding: 45px 60px;
-    box-shadow: 0 18px 45px rgba(59, 20, 95, 0.12);
-    border: 2px solid #f6c945;
+    box-shadow: 0 18px 45px rgba(40, 54, 75, 0.14);
+    border: 2px solid #CEBD88;
   }
 
   .review-stars {
-    color: #f6c945;
+    color: #CEBD88;
     font-size: 1.4rem;
     margin-bottom: 15px;
   }
 
   .review-text {
-    color: #4f3d5f;
+    color: #28364B;
     font-size: 1.08rem;
     line-height: 1.8;
     font-style: italic;
   }
 
   .review-author {
-    color: #3b145f;
+    color: #28364B;
     font-weight: 800;
     margin-top: 20px;
   }
 
   .carousel-control-prev-icon,
   .carousel-control-next-icon {
-    background-color: #4b176f;
+    background-color: #28364B;
     border-radius: 50%;
     padding: 20px;
   }
@@ -523,7 +522,7 @@ foreach ($slides as $index => $slide) {
             <h2 class="title mb-3">Our products</h2>
             <img class="pb-3" src="assets/img/break.svg" alt="wave">
             <p class="text">
-              Browse our range of nuts, dried fruit and mixes. Need ideas for gifting? Check out some of our personalised gifting.
+              Browse Sir Francis marine collagen, fish gelatine, peptides, tripeptides, sea moss and private labelling options.
             </p>
           </div>
         </div>

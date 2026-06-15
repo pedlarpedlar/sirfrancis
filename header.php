@@ -42,7 +42,7 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
     <link rel="icon" type="image/png" sizes="32x32" href="<?=$home_directory?>assets/img/favicon.png">
     <link rel="shortcut icon" type="image/png" href="<?=$home_directory?>assets/img/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="<?=$home_directory?>assets/img/favicon.png">
-    <meta name="theme-color" content="#2f2f31">
+    <meta name="theme-color" content="#28364B">
     <link rel="canonical" href="<?= htmlspecialchars($page_url_canonical, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="description" content="<?= htmlspecialchars($description_meta, ENT_QUOTES, 'UTF-8') ?>">
     <meta property="og:type" content="<?= htmlspecialchars($og_type, ENT_QUOTES, 'UTF-8') ?>">

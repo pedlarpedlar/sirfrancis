@@ -200,9 +200,9 @@ $staticMedia = [
 $brands = [
     ['img' => '1.png', 'alt' => 'wholesale', 'link' => 'wholesale'],
     ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
-    ['img' => '3.png', 'alt' => 'gifting', 'link' => 'gifting'],
+    ['img' => '3.png', 'alt' => 'private labelling', 'link' => 'private_labelling'],
     ['img' => '4.png', 'alt' => 'private labelling', 'link' => 'private_labelling'],
     ['img' => '5.png', 'alt' => 'buyer protection', 'link' => 'return_policy'],
     ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
-    ['img' => '3.png', 'alt' => 'gifting', 'link' => 'gifting']
+    ['img' => '3.png', 'alt' => 'private labelling', 'link' => 'private_labelling']
 ];
