@@ -596,7 +596,7 @@ $.scrollUp({
     animationSpeed: 400,
     scrollTrigger: false,
     scrollTarget: false,
-    scrollText: '<img src="https://www.candybird.co.za/assets/img/arrow.svg" width="20px"/>',
+    scrollText: '<img src="https://www.fishgelatine.co.za/v2/assets/img/arrow.svg" width="20px"/>',
     // Using a Font Awesome anchor icon
     scrollTitle: false,
     scrollImg: false,

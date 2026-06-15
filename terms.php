@@ -57,7 +57,7 @@ include 'header.php';
 
             <article class="cb-policy-card">
                 <section class="cb-policy-section" id="ordering">
-                    <h2>1. Ordering from CandyBird</h2>
+                    <h2>1. Ordering from Sir Francis</h2>
                     <p>By placing an order on this website, you confirm that the order details, contact details, delivery details and product quantities are correct. You may checkout as a guest or by logging into your customer account.</p>
                     <p>After checkout, an order record is created so you can view the order breakdown and payment status. If payment is not completed immediately, the order may remain unpaid until PayFast or EFT payment is completed or manually confirmed.</p>
                 </section>
@@ -77,7 +77,7 @@ include 'header.php';
                     <h2>3. Payments</h2>
                     <p>Orders can be paid using the payment methods available at checkout, including PayFast where enabled, EFT where offered, and EFT via Ozow if that option is enabled. PayFast and Ozow payments are processed securely by their payment platforms. Normal EFT payments, while still offered, are manually verified by our team before being marked as paid.</p>
                     <p>An order record may still be created even if payment is not completed immediately, so the customer can return to the order details page and complete payment or request help.</p>
-                    <div class="cb-policy-callout">Please use your order number as reference when paying by normal EFT. Orders are only released for packing once payment is confirmed or otherwise approved by CandyBird.</div>
+                    <div class="cb-policy-callout">Please use your order number as reference when paying by normal EFT. Orders are only released for packing once payment is confirmed or otherwise approved by Sir Francis.</div>
                 </section>
 
                 <section class="cb-policy-section" id="delivery">
@@ -99,7 +99,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="returns">
                     <h2>7. Returns, refunds and order changes</h2>
-                    <p>Returns and refunds are handled according to our <a href="return_policy">Buyer Protection and Return Policy</a>. If an order needs to be cancelled, partially cancelled, refunded or adjusted due to stock, payment or delivery issues, CandyBird will update the order record and communicate with the customer.</p>
+                    <p>Returns and refunds are handled according to our <a href="return_policy">Buyer Protection and Return Policy</a>. If an order needs to be cancelled, partially cancelled, refunded or adjusted due to stock, payment or delivery issues, Sir Francis will update the order record and communicate with the customer.</p>
                     <p>Nothing in these terms is intended to exclude or reduce consumer rights that apply under South African law.</p>
                 </section>
 

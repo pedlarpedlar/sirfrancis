@@ -57,7 +57,7 @@ function cbSubscribeCouponValidityText($coupon) {
         return 'Valid from ' . $from . '.';
     }
 
-    return 'Valid while the coupon remains active on the CandyBird coupon sheet.';
+    return 'Valid while the coupon remains active on the Sir Francis coupon sheet.';
 }
 
 function cbSubscribeCouponOfferText($coupon, $couponCode) {
@@ -100,10 +100,10 @@ function cbSubscribeSendEmails($email, $couponCode = '', $coupon = null) {
             $mail->SMTPSecure = $smtp_type;
         }
         $mail->Port = (int) ($smtp_port ?? 587);
-        $mail->setFrom($smtp_username5, 'CandyBird');
+        $mail->setFrom($smtp_username5, 'Sir Francis');
         $mail->addAddress($email);
-        $mail->Subject = "Hooray! You've just subscribed to CandyBird's mailing list";
-        $body = is_file(__DIR__ . '/emails/email_subscribe.php') ? file_get_contents(__DIR__ . '/emails/email_subscribe.php') : 'Thank you for subscribing to CandyBird.';
+        $mail->Subject = "Hooray! You've just subscribed to Sir Francis's mailing list";
+        $body = is_file(__DIR__ . '/emails/email_subscribe.php') ? file_get_contents(__DIR__ . '/emails/email_subscribe.php') : 'Thank you for subscribing to Sir Francis.';
         $body = str_replace('{user_email_unsubscribe}', urlencode($email), $body);
         $body = str_replace('{coupon_code}', htmlspecialchars($couponCode, ENT_QUOTES, 'UTF-8'), $body);
         $body = str_replace('{coupon_offer}', htmlspecialchars(cbSubscribeCouponOfferText($coupon, $couponCode), ENT_QUOTES, 'UTF-8'), $body);
@@ -129,9 +129,9 @@ function cbSubscribeSendEmails($email, $couponCode = '', $coupon = null) {
             $adminMail->SMTPSecure = $smtp_type;
         }
         $adminMail->Port = (int) ($smtp_port ?? 587);
-        $adminMail->setFrom($smtp_username5, 'CandyBird');
+        $adminMail->setFrom($smtp_username5, 'Sir Francis');
         $adminMail->addAddress($smtp_username1, 'Admin');
-        $adminMail->Subject = 'New CandyBird subscriber';
+        $adminMail->Subject = 'New Sir Francis subscriber';
         $body = is_file(__DIR__ . '/emails/email_subscribe_admin.php') ? file_get_contents(__DIR__ . '/emails/email_subscribe_admin.php') : 'A user subscribed: {user_email}';
         $body = str_replace('{recipient_name}', 'Admin', $body);
         $body = str_replace('{user_email}', $email, $body);

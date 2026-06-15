@@ -16,51 +16,51 @@ $isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['g
 $isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller']) || in_array($productPageCategorySlug, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller'], true) || $requestPathSlug === 'resellers';
 $isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
 $isClearanceCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['clearance-basket', 'clearance']) || in_array($productPageCategorySlug, ['clearance-basket', 'clearance'], true) || $requestPathSlug === 'clearance-basket';
-$page_url_canonical = "https://www.candybird.co.za/products";
-$title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird';
-$page_url_og = "https://www.candybird.co.za/products";
-$description_meta = 'Shop CandyBird for quality nuts, nut packs, dried fruit, sweets, health mixes and unique gifting online. Port Elizabeth based with secure checkout, collection and delivery across South Africa.';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/products";
+$title_og = 'Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/products";
+$description_meta = 'Shop Sir Francis for quality nuts, nut packs, dried fruit, sweets, health mixes and unique gifting online. Port Elizabeth based with secure checkout, collection and delivery across South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 if ($isGiftingCategoryPage) {
-    $page_url_canonical = "https://www.candybird.co.za/gifting";
-    $title_og = 'Gifting, Hampers & Treat Packs Online | CandyBird';
-    $page_url_og = "https://www.candybird.co.za/gifting";
-    $description_meta = 'Shop CandyBird gifting packs, hampers and treat boxes for family, clients, staff and special occasions. Order online for collection or delivery across South Africa.';
+    $page_url_canonical = "https://www.fishgelatine.co.za/v2/gifting";
+    $title_og = 'Gifting, Hampers & Treat Packs Online | Sir Francis';
+    $page_url_og = "https://www.fishgelatine.co.za/v2/gifting";
+    $description_meta = 'Shop Sir Francis gifting packs, hampers and treat boxes for family, clients, staff and special occasions. Order online for collection or delivery across South Africa.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/gifting.jpg';
+    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/gifting.jpg';
     $image_type_og = 'image/jpeg';
 } elseif ($isResellerCategoryPage) {
-    $page_url_canonical = 'https://www.candybird.co.za/resellers';
-    $title_og = 'Reseller & Wholesale Packs Online | CandyBird';
+    $page_url_canonical = 'https://www.fishgelatine.co.za/v2/resellers';
+    $title_og = 'Reseller & Wholesale Packs Online | Sir Francis';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop CandyBird reseller and wholesale-friendly packs for stores, gifting businesses, food service and repeat bulk buyers. Order online or request support for larger quantities.';
+    $description_meta = 'Shop Sir Francis reseller and wholesale-friendly packs for stores, gifting businesses, food service and repeat bulk buyers. Order online or request support for larger quantities.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/reseller.jpeg';
+    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/reseller.jpeg';
     $image_type_og = 'image/jpeg';
 } elseif ($isSpecialsCategoryPage) {
-    $page_url_canonical = 'https://www.candybird.co.za/specials';
-    $title_og = 'Specials on Nuts, Dried Fruit & Treats Online | CandyBird';
+    $page_url_canonical = 'https://www.fishgelatine.co.za/v2/specials';
+    $title_og = 'Specials on Nuts, Dried Fruit & Treats Online | Sir Francis';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop current CandyBird specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
+    $description_meta = 'Shop current Sir Francis specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.jpg';
+    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg';
     $image_type_og = 'image/jpeg';
 } elseif ($isClearanceCategoryPage) {
-    $page_url_canonical = 'https://www.candybird.co.za/clearance-basket';
-    $title_og = 'Clearance Basket Deals | CandyBird';
+    $page_url_canonical = 'https://www.fishgelatine.co.za/v2/clearance-basket';
+    $title_og = 'Clearance Basket Deals | Sir Francis';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop CandyBird Clearance Basket for heavily reduced clearance stock, dated items and overstocked products. Separate from normal specials and promotions.';
+    $description_meta = 'Shop Sir Francis Clearance Basket for heavily reduced clearance stock, dated items and overstocked products. Separate from normal specials and promotions.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.candybird.co.za/assets/img/specials_banner.jpg';
+    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg';
     $image_type_og = 'image/jpeg';
 }
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
 ?>
 
-<title>Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | CandyBird</title>
+<title>Quality Nuts, Nut Packs, Dried Fruit & Gifting Online | Sir Francis</title>
 
 <?php
 include 'page_menues.php';
@@ -410,7 +410,7 @@ function generateProductsBreadcrumbsFromSheet($products, $selectedCategory = nul
     $breadcrumbs = [];
 
     // Home
-    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.candybird.co.za">Home</a></li>';
+    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>';
     // All Products
     $breadcrumbs[] = '<li class="breadcrumb-item"><a href="products">All Products</a></li>';
 
@@ -477,7 +477,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
 <section class="specials-clearance-banner">
   <div class="container">
-    <img src="https://www.candybird.co.za/assets/img/specials_banner.jpg" alt="CandyBird specials and clearance basket explained" loading="eager">
+    <img src="https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg" alt="Sir Francis specials and clearance basket explained" loading="eager">
   </div>
 </section>
 <?php endif; ?>
@@ -495,7 +495,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <span>Corporate, event and family gifting support</span>
         </div>
       </div>
-      <img class="category-social-image" src="https://www.candybird.co.za/assets/img/gifting.jpg" alt="CandyBird gifting packs and hampers" loading="lazy">
+      <img class="category-social-image" src="https://www.fishgelatine.co.za/v2/assets/img/gifting.jpg" alt="Sir Francis gifting packs and hampers" loading="lazy">
     </div>
   </div>
 </section>
@@ -505,14 +505,14 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     <div class="gifting-category-panel">
       <div>
         <h1>Reseller & Wholesale Packs</h1>
-        <p>Browse reseller-friendly CandyBird packs for stores, gifting businesses, food service and larger repeat buyers. These products are useful when you need clear sizes, dependable pricing and a quick way to build a basket for resale or bulk use.</p>
+        <p>Browse reseller-friendly Sir Francis packs for stores, gifting businesses, food service and larger repeat buyers. These products are useful when you need clear sizes, dependable pricing and a quick way to build a basket for resale or bulk use.</p>
         <div class="gifting-category-highlights">
           <span>Useful pack sizes for resale and repeat buying</span>
           <span>Clear online pricing with cart and checkout support</span>
           <span>Wholesale list available for larger bulk planning</span>
         </div>
       </div>
-      <img class="category-social-image" src="https://www.candybird.co.za/assets/img/reseller.jpeg" alt="CandyBird reseller and wholesale packs" loading="lazy">
+      <img class="category-social-image" src="https://www.fishgelatine.co.za/v2/assets/img/reseller.jpeg" alt="Sir Francis reseller and wholesale packs" loading="lazy">
     </div>
   </div>
 </section>
@@ -522,10 +522,10 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     <div class="products-page-visual-panel">
       <div>
         <h1>Online Shop</h1>
-        <p>Browse CandyBird nuts, dried fruit, sweets, gifting, specials and pantry favourites. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
+        <p>Browse Sir Francis nuts, dried fruit, sweets, gifting, specials and pantry favourites. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
       </div>
-      <a class="products-page-visual-link" href="pricelist" aria-label="View CandyBird pricelist">
-        <img src="https://www.candybird.co.za/assets/img/pricelist.jpg" alt="CandyBird online product range" loading="lazy">
+      <a class="products-page-visual-link" href="pricelist" aria-label="View Sir Francis pricelist">
+        <img src="https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg" alt="Sir Francis online product range" loading="lazy">
       </a>
     </div>
   </div>
@@ -1417,7 +1417,7 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     product._randomSort = index + Math.random();
     return product;
   }); // Setting the data globally for modals, cart, etc.
-  window.CANDYBIRD_PRODUCTS = ALL_PRODUCTS;
+  window.SIRFRANCIS_PRODUCTS = ALL_PRODUCTS;
 
 
   console.log(data);
@@ -1776,7 +1776,7 @@ function loadProductDetails(productId) {
 
 function updateModal(productData) {
     // Generate product images HTML
-    var product_url_og = 'https://www.candybird.co.za/assets/img/favicon.png';
+    var product_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/favicon.png';
     var productImagesHtml = '';
     var productThumbnailImagesHtml = '';
 
@@ -1815,7 +1815,7 @@ function updateModal(productData) {
               </div>
         `;
 
-        product_url_og = "https://www.candybird.co.za/" + encodeURIComponent(imageUrl);
+        product_url_og = "https://www.fishgelatine.co.za/v2/" + encodeURIComponent(imageUrl);
     });
 
 
@@ -1932,17 +1932,17 @@ function updateModal(productData) {
           <ul class="d-flex align-items-center">
             <li class="share">Share</li>
             <li>
-              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.candybird.co.za/product?id=${productId}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
+              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.fishgelatine.co.za/v2/product?id=${productId}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
             </li>
             <li>
-              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.candybird.co.za/product?id=${productId}&text=Check out this amazing product!" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
+              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.fishgelatine.co.za/v2/product?id=${productId}&text=Check out this amazing product!" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
             </li>
             <li>
               <a target="_blank" class="share-link-click" href="https://www.pinterest.com/pin/create/button/"
                data-pin-do="buttonBookmark"
                data-pin-custom="true"
                data-pin-save="true"
-               data-pin-url="https://www.candybird.co.za/product?id=${productId}"
+               data-pin-url="https://www.fishgelatine.co.za/v2/product?id=${productId}"
                data-pin-media="${product_url_og}"
                >
                <i class="ion-social-pinterest"></i>

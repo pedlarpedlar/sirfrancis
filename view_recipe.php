@@ -158,9 +158,9 @@ function countReplies($comments, $commentId) {
 $limitedDescription = "Delicious recipe for this page.";
 
 
-$page_url_canonical = "https://www.candybird.co.za/recipe?id=".$recipe_id;
-$title_og = 'Recipe - CandyBird';
-$page_url_og = "https://www.candybird.co.za/recipe?id=".$recipe_id;
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/recipe?id=".$recipe_id;
+$title_og = 'Recipe - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/recipe?id=".$recipe_id;
 $description_og = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 $description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 ?>
@@ -178,7 +178,7 @@ $description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Recipes - CandyBird</title>
+<title>Recipes - Sir Francis</title>
 
 
 <style>

@@ -3,9 +3,9 @@ include 'session_logins.php';
 include 'header.php';
 ?>
 <?php
-$page_url_canonical = "https://www.candybird.co.za/login";
-$title_og = 'Sign In or Register - Dried Fruit, Nuts, Sweets | CandyBird';
-$page_url_og = "https://www.candybird.co.za/login";
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/login";
+$title_og = 'Sign In or Register - Dried Fruit, Nuts, Sweets | Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/login";
 
 function candybirdSafeLoginRedirect($redirectUrl) {
     $redirectUrl = trim((string) $redirectUrl);
@@ -53,7 +53,7 @@ redirectLoggedInUser();
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Sign In - CandyBird</title>
+<title>Sign In - Sir Francis</title>
 <?php
 include 'page_menues.php';
 ?>
@@ -206,7 +206,7 @@ include 'page_menues.php';
       success: function (response) {
         if (response.success) {
           // Redirect on successful registration
-          window.location.href = response.redirect_url || 'https://www.candybird.co.za/login';
+          window.location.href = response.redirect_url || 'https://www.fishgelatine.co.za/v2/login';
         } else {
           // Combine all error messages into one string with line breaks
           let errorText = '';

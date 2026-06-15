@@ -21,13 +21,13 @@ $tsvQuery['format'] = 'tsv';
 $tsvPricelistUrl = 'pricelist-download?' . http_build_query($tsvQuery);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
-$limitedDescription = 'Compact CandyBird pricelist with current product prices, specials, sizes and online product links.';
-$page_url_canonical = "https://www.candybird.co.za/pricelist";
-$title_og = 'Pricelist - CandyBird';
-$page_url_og = "https://www.candybird.co.za/pricelist";
+$limitedDescription = 'Compact Sir Francis pricelist with current product prices, specials, sizes and online product links.';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/pricelist";
+$title_og = 'Pricelist - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';
@@ -166,7 +166,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     white-space: nowrap;
   }
   .pricelist-sort-link { color: inherit; text-decoration: none; }
-  .pricelist-sort-link:hover { color: #6b0099; text-decoration: underline; }
+  .pricelist-sort-link:hover { color: #28364B; text-decoration: underline; }
   .pricelist-table td { border-top: 1px solid #f0ebe4; padding: 6px 10px; vertical-align: middle; }
   .pricelist-table tbody tr:hover td { background: #fffaf2; }
   .pricelist-category td {
@@ -236,7 +236,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   .pricelist-size-row[hidden] { display: none !important; }
   .pricelist-size-row td:first-child { padding-left: 38px; }
   .product-link { color: #2c2926; font-weight: 700; text-decoration: none; }
-  .product-link:hover { color: #6b0099; }
+  .product-link:hover { color: #28364B; }
   .price-cell { color: #5b1178; font-weight: 800; white-space: nowrap; }
   .price-cell del { color: #8a7d8f; display: block; font-size: 11px; font-weight: 600; margin-bottom: 1px; }
   .price-cell .sale-price { color: #1d7d38; display: inline-block; }
@@ -296,10 +296,10 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   <div class="container">
     <div class="pricelist-hero">
       <div class="pricelist-hero-copy">
-        <h1>CandyBird Pricelist</h1>
+        <h1>Sir Francis Pricelist</h1>
         <p><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?></p>
       </div>
-      <img class="pricelist-hero-media no-print" src="https://www.candybird.co.za/assets/img/pricelist.jpg" alt="CandyBird pricelist product range" loading="lazy">
+      <img class="pricelist-hero-media no-print" src="https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg" alt="Sir Francis pricelist product range" loading="lazy">
       <div class="pricelist-actions no-print">
         <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp pricelist</a>
         <a href="<?= cbPricelistText($printPricelistUrl) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
@@ -481,13 +481,13 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       WhatsApp or email your order for an invoice, or checkout online for specials and convenience.
       Stock is subject to availability. Personalized/custom orders usually require 3-7 days.
       Prices are intended for <?= cbPricelistText($validMonth) ?>, but may change without notice due to stock refills, supplier changes, and seasonal availability.
-      View the latest list at www.candybird.co.za/pricelist.
+      View the latest list at www.fishgelatine.co.za/pricelist.
     </p>
   </div>
 </main>
 
 <script>
-window.CANDYBIRD_PRODUCTS = <?= json_encode(array_merge(...array_values($productsByCategory ?: [[]])), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+window.SIRFRANCIS_PRODUCTS = <?= json_encode(array_merge(...array_values($productsByCategory ?: [[]])), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
 document.addEventListener('click', function(event) {
   var button = event.target.closest('.pricelist-group-toggle');
   if (!button) return;

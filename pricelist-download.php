@@ -10,11 +10,11 @@ $productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters)
 $productCount = cbPricelistProductCount($productsByCategory);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
-$downloadTitle = 'CandyBird Pricelist ' . date('F Y');
+$downloadTitle = 'Sir Francis Pricelist ' . date('F Y');
 $format = strtolower(trim((string) ($_GET['format'] ?? 'html')));
 
 if ($format === 'tsv') {
-    $filename = 'CandyBird-Pricelist-' . date('F-Y') . '.tsv';
+    $filename = 'Sir Francis-Pricelist-' . date('F-Y') . '.tsv';
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     $out = fopen('php://output', 'w');
@@ -81,8 +81,8 @@ if ($format === 'tsv') {
 <body>
   <div class="topbar">
     <div>
-      <h1>CandyBird Pricelist</h1>
-      <div class="meta"><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?> | www.candybird.co.za/pricelist</div>
+      <h1>Sir Francis Pricelist</h1>
+      <div class="meta"><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?> | www.fishgelatine.co.za/pricelist</div>
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>

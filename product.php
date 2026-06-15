@@ -34,12 +34,12 @@ function cbProductMetaText($value, $limit = 180) {
 function cbProductAbsoluteUrl($url) {
     $url = trim((string) $url);
     if ($url === '') {
-        return 'https://www.candybird.co.za/assets/img/product/1.png';
+        return 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png';
     }
     if (preg_match('#^https?://#i', $url)) {
         return $url;
     }
-    return 'https://www.candybird.co.za/' . ltrim($url, '/');
+    return 'https://www.fishgelatine.co.za/v2/' . ltrim($url, '/');
 }
 
 function cbProductSocialImageUrl($product) {
@@ -53,7 +53,7 @@ function cbProductSocialImageUrl($product) {
     $productId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($product['id'] ?? 'product'));
 
     if ($rawImage === '') {
-        return 'https://www.candybird.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
+        return 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png?v=' . rawurlencode($productId);
     }
 
     $firstImage = trim(explode(',', $rawImage)[0] ?? '');
@@ -84,7 +84,7 @@ function cbProductSocialImageUrls($product) {
         $urls[] = $absolute;
     }
 
-    $urls[] = 'https://www.candybird.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
+    $urls[] = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png?v=' . rawurlencode($productId);
     return array_values(array_unique(array_filter($urls)));
 }
 
@@ -97,16 +97,16 @@ function cbProductSocialImageType($url) {
     return '';
 }
 
-$metaTitle = 'Product - CandyBird';
-$metaDescription = 'Shop premium nuts, dried fruit, sweets and healthy snacks from CandyBird.';
-$metaImage = 'https://www.candybird.co.za/assets/img/product/1.png';
+$metaTitle = 'Product - Sir Francis';
+$metaDescription = 'Shop premium nuts, dried fruit, sweets and healthy snacks from Sir Francis.';
+$metaImage = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png';
 $metaImages = [$metaImage];
-$metaUrl = $metaProduct ? getSheetProductUrl($metaProduct, true) : 'https://www.candybird.co.za/product';
+$metaUrl = $metaProduct ? getSheetProductUrl($metaProduct, true) : 'https://www.fishgelatine.co.za/v2/product';
 
 if ($metaProduct) {
     $metaProductTitle = getSheetProductDisplayTitle($metaProduct);
     $metaPrice = getSheetProductPrice($metaProduct);
-    $metaTitle = trim($metaProductTitle . ' - R' . number_format($metaPrice, 2) . ' | CandyBird');
+    $metaTitle = trim($metaProductTitle . ' - R' . number_format($metaPrice, 2) . ' | Sir Francis');
     $metaDescription = cbProductMetaText(($metaProduct['html_description'] ?? $metaProduct['description'] ?? '') ?: $metaProductTitle);
     $metaImages = cbProductSocialImageUrls($metaProduct);
     $metaImage = $metaImages[0] ?? $metaImage;
@@ -157,7 +157,7 @@ include 'header.php';
         'sku' => (string) ($metaProduct['id'] ?? ''),
         'brand' => [
             '@type' => 'Brand',
-            'name' => 'CandyBird',
+            'name' => 'Sir Francis',
         ],
         'category' => trim(implode(' > ', array_filter([
             $metaProduct['parent_category'] ?? '',
@@ -172,7 +172,7 @@ include 'header.php';
             'availability' => $productStockQty === 0 ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
             'itemCondition' => 'https://schema.org/NewCondition',
             'seller' => [
-                '@id' => 'https://www.candybird.co.za/#organization',
+                '@id' => 'https://www.fishgelatine.co.za/v2/#organization',
             ],
         ],
     ];
@@ -219,7 +219,7 @@ include 'header.php';
   }
 
   .product-gallery-thumb.active {
-    border-color: #6b0099;
+    border-color: #28364B;
     box-shadow: 0 0 0 2px rgba(107, 0, 153, 0.12);
   }
 
@@ -373,8 +373,8 @@ include 'header.php';
 
   .product-size-option.active,
   .product-size-option:hover {
-    border-color: #6b0099;
-    color: #6b0099;
+    border-color: #28364B;
+    color: #28364B;
     box-shadow: 0 0 0 2px rgba(107, 0, 153, 0.1);
   }
 
@@ -436,7 +436,7 @@ include 'header.php';
   .review-actions button {
     background: transparent;
     border: 0;
-    color: #6b0099;
+    color: #28364B;
     cursor: pointer;
     padding: 0;
     text-decoration: underline;
@@ -837,7 +837,7 @@ include 'header.php';
                 <div class="col-lg-5">
                     <div class="product-review-login <?=empty($_SESSION['user_id']) ? '' : 'd-none'?>" id="review-login-message">
                       <h3>Want to leave a review?</h3>
-                      <p class="mb-3">Please log in first so ratings stay genuine and attached to real CandyBird customers.</p>
+                      <p class="mb-3">Please log in first so ratings stay genuine and attached to real Sir Francis customers.</p>
                       <a href="<?=htmlspecialchars($reviewLoginHref, ENT_QUOTES, 'UTF-8')?>" class="btn btn-dark btn--md">Log in to review</a>
                     </div>
                     <div class="ratting-form-wrapper <?=empty($_SESSION['user_id']) ? 'd-none' : ''?>" id="review-form-wrapper">
@@ -1128,9 +1128,9 @@ $(function() {
       return item.id === String(productId);
     });
     if (product && product.slug) {
-      return 'https://www.candybird.co.za/' + encodeURIComponent(product.slug);
+      return 'https://www.fishgelatine.co.za/v2/' + encodeURIComponent(product.slug);
     }
-    return 'https://www.candybird.co.za/product?id=' + encodeURIComponent(productId);
+    return 'https://www.fishgelatine.co.za/v2/product?id=' + encodeURIComponent(productId);
   }
 
   function getProductPath(product) {
@@ -1185,7 +1185,7 @@ $(function() {
 
   function renderBreadcrumb(product) {
     const crumbs = [
-      '<li class="breadcrumb-item"><a href="https://www.candybird.co.za">Home</a></li>',
+      '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>',
       '<li class="breadcrumb-item"><a href="products">All Products</a></li>'
     ];
 
@@ -1332,7 +1332,7 @@ $(function() {
   }
 
   function renderReviews(productId) {
-    if (window.CANDYBIRD_CURRENT_PRODUCT && String(window.CANDYBIRD_CURRENT_PRODUCT.is_clearance || '').toLowerCase() === 'yes') {
+    if (window.SIRFRANCIS_CURRENT_PRODUCT && String(window.SIRFRANCIS_CURRENT_PRODUCT.is_clearance || '').toLowerCase() === 'yes') {
       $('#product-stars').html('<span class="badge badge-danger">Clearance / dated stock</span>');
       $('#reviews-list').html('<p class="mb-0">Reviews are not collected for clearance items because they are separate limited batches.</p>');
       return;
@@ -1344,7 +1344,7 @@ $(function() {
         const average = parseFloat(response.average_rating || 0);
         const reviewCount = parseInt(response.review_count || 0, 10);
         const myReview = response.my_review || null;
-        window.CANDYBIRD_CURRENT_REVIEWS = reviews;
+        window.SIRFRANCIS_CURRENT_REVIEWS = reviews;
 
         $('#product-stars').html(convertToStars(average) + '<a href="#pills-contact-tab" id="read-reviews-link"><span class="ml-2"><i class="far fa-comment-dots"></i></span> Read reviews <span>(' + reviewCount + ')</span></a>');
 
@@ -1483,7 +1483,7 @@ $(function() {
         if (!response || !response.available) return;
         const title = displayTitle(product);
         const matchedId = response.product_id || sourceId;
-        const message = encodeURIComponent('Assalamu alaikum / Hello CandyBird, please send me the wholesale/bulk options for ' + title + ' (Product ID ' + matchedId + ').');
+        const message = encodeURIComponent('Assalamu alaikum / Hello Sir Francis, please send me the wholesale/bulk options for ' + title + ' (Product ID ' + matchedId + ').');
         const whatsapp = wholesaleWhatsappDigits ? ' <a href="https://wa.me/' + encodeURIComponent(wholesaleWhatsappDigits) + '?text=' + message + '" target="_blank" rel="noopener noreferrer">WhatsApp for the bulk list</a>.' : '';
         $('#product-availability').length
           ? $('#product-availability').after('<div id="product-wholesale-note" class="product-wholesale-note"><strong>Available in wholesale/bulk.</strong>' + whatsapp + ' <a href="wholesale-pricelist">View wholesale pricelist</a>.</div>')
@@ -1492,7 +1492,7 @@ $(function() {
   }
 
   function renderProduct(product) {
-    window.CANDYBIRD_CURRENT_PRODUCT = product;
+    window.SIRFRANCIS_CURRENT_PRODUCT = product;
     const pageUrl = getProductUrl(product.id);
     const images = product.images.length ? product.images : [defaultImage];
     const plainDescription = stripHtml(product.description);
@@ -1505,7 +1505,7 @@ $(function() {
     $('#og-description').attr('content', shortDescription);
     $('#og-image').attr('content', images[0]);
     $('#og-url').attr('content', pageUrl);
-    $('#page-title').text(title + ' R' + product.discountedPrice.toFixed(2) + ' - CandyBird');
+    $('#page-title').text(title + ' R' + product.discountedPrice.toFixed(2) + ' - Sir Francis');
 
     renderBreadcrumb(product);
     renderImages(product);
@@ -1546,7 +1546,7 @@ $(function() {
     $('#review-product-id').val(product.id);
 
     $('#facebook-share').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl));
-    $('#twitter-share').attr('href', 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(pageUrl) + '&text=' + encodeURIComponent('Check out ' + title + ' on CandyBird'));
+    $('#twitter-share').attr('href', 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(pageUrl) + '&text=' + encodeURIComponent('Check out ' + title + ' on Sir Francis'));
     $('#pinterest-share').attr('href', 'https://www.pinterest.com/pin/create/button/').attr('data-pin-url', pageUrl).attr('data-pin-media', images[0]);
     $('#copy-product-link').attr('data-url', pageUrl);
 
@@ -1555,12 +1555,12 @@ $(function() {
     $('#product-detail-section, #product-tabs-section').removeClass('d-none');
 
     (function logProductView() {
-      if (window.CANDYBIRD_PRODUCT_VIEW_LOGGED === product.id) return;
+      if (window.SIRFRANCIS_PRODUCT_VIEW_LOGGED === product.id) return;
       if (typeof logAction !== 'function') {
         setTimeout(logProductView, 500);
         return;
       }
-      window.CANDYBIRD_PRODUCT_VIEW_LOGGED = product.id;
+      window.SIRFRANCIS_PRODUCT_VIEW_LOGGED = product.id;
       logAction(
         'UX product viewed',
         'Product: ' + product.id + ' | Title: ' + title + ' | Clearance: ' + (isClearance ? 'yes' : 'no'),
@@ -1578,7 +1578,7 @@ $(function() {
   $.getJSON('fetch_sheet_data.php')
     .done(function(data) {
       ALL_PRODUCTS = Array.isArray(data) ? data : [];
-      window.CANDYBIRD_PRODUCTS = ALL_PRODUCTS;
+      window.SIRFRANCIS_PRODUCTS = ALL_PRODUCTS;
 
       const currentProduct = ALL_PRODUCTS.map(normalizeProduct).find(function(product) {
         return product.id === productID || (productSlug && product.slug === productSlug);
@@ -1698,7 +1698,7 @@ $(function() {
 
   $('body').on('click', '.edit-review', function() {
     const reviewId = String($(this).data('review-id'));
-    const matchedReview = window.CANDYBIRD_CURRENT_REVIEWS ? window.CANDYBIRD_CURRENT_REVIEWS.find(function(item) {
+    const matchedReview = window.SIRFRANCIS_CURRENT_REVIEWS ? window.SIRFRANCIS_CURRENT_REVIEWS.find(function(item) {
       return String(item.id) === reviewId;
     }) : null;
 

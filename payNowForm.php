@@ -30,8 +30,8 @@ if ($user_id === null) {
 $order_id = (string) (int) preg_replace('/\D/', '', (string) ($order_id ?? ''));
 $cartTotal = round((float) ($cartTotal ?? 0), 2);
 $payNowForm = '';
-$return_url = 'https://www.candybird.co.za/order_details?order_id='.$order_id.$sessionParam.'&thankyou';
-$cancel_url = 'https://www.candybird.co.za/order_details?order_id='.$order_id.$sessionParam.'&payment-cancelled';
+$return_url = 'https://www.fishgelatine.co.za/v2/order_details?order_id='.$order_id.$sessionParam.'&thankyou';
+$cancel_url = 'https://www.fishgelatine.co.za/v2/order_details?order_id='.$order_id.$sessionParam.'&payment-cancelled';
 
 if ($order_id === '' || $cartTotal <= 0) {
     return;
@@ -47,11 +47,11 @@ $data = array(
     'merchant_key' => '5ksggz4e5rru2', // '46f0cd694581a', //live: 5ksggz4e5rru2
     'return_url' => $return_url,
     'cancel_url' => $cancel_url,
-    'notify_url' => 'https://www.candybird.co.za/notify',
+    'notify_url' => 'https://www.fishgelatine.co.za/v2/notify',
     // Transaction details
     'm_payment_id' => $order_id, //Unique payment ID to pass through to notify_url
     'amount' => number_format( sprintf( '%.2f', $cartTotal ), 2, '.', '' ),
-    'item_name' => substr('CandyBird Order ' . $order_id, 0, 100)
+    'item_name' => substr('Sir Francis Order ' . $order_id, 0, 100)
 );
 
 $data = array_filter($data, function ($value) {

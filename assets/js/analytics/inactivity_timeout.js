@@ -38,7 +38,7 @@ inactivityTime();
 
 function updateEndTime() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://www.candybird.co.za/update_end_time.php", true);
+    xhr.open("POST", "https://www.fishgelatine.co.za/v2/update_end_time.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send("session_id=" + sessionId); // Replace sessionId with the actual session ID
 }

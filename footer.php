@@ -1,6 +1,6 @@
 
 <?php
-if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
+if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
     $userId = null;
     $guestIdentifier = null;
 }
@@ -43,7 +43,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
           <div class="footer-widget mx-w-400">
 <div class="footer-logo mb-25">
     <a href="./">
-      <img src="<?=$home_directory?>assets/img/footer-image1.png" alt="footer logo" width="200px" />
+      <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="Sir Francis" class="footer-brand-logo" width="260" height="68" />
     </a>
   </div>
 
@@ -68,7 +68,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <span>Buy now, pay later coming soon</span>
   </div>
   <p class="footer-quality-guarantee">
-    Premium marine collagen, fish gelatine and private labelling support from South Africa's trusted Sir Francis team.
+    Premium marine collagen, fish gelatine and private labelling support from the Sir Francis team.
   </p>
 
   <div class="footer-link-groups" aria-label="Footer links">
@@ -207,6 +207,14 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 
   ul.custom li a i {
     color: #CEBD88 !important;
+  }
+
+  .footer-brand-logo {
+    display: block;
+    height: auto;
+    max-width: min(260px, 100%);
+    object-fit: contain;
+    width: 260px;
   }
 
   .footer-link-groups {
@@ -411,16 +419,16 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   .subscribe-offer-modal .modal-dialog { max-width: 460px; }
   .subscribe-offer-modal .modal-content { border: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 22px 55px rgba(45, 23, 57, .28); }
   .subscribe-offer-modal .offer-head { background: #2d1739; color: #fff; padding: 28px 30px 22px; position: relative; }
-  .subscribe-offer-modal .offer-head h3 { color: #fcb42f; font-size: 28px; line-height: 1.15; margin-bottom: 8px; }
+  .subscribe-offer-modal .offer-head h3 { color: #CEBD88; font-size: 28px; line-height: 1.15; margin-bottom: 8px; }
   .subscribe-offer-modal .offer-head p { color: #f8ecff; font-size: 15px; line-height: 1.55; max-width: 360px; }
-  .subscribe-offer-modal .offer-badge { background: #fcb42f; color: #2d1739; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .subscribe-offer-modal .offer-badge { background: #CEBD88; color: #2d1739; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
   .subscribe-offer-modal .close { position: absolute; right: 14px; top: 10px; opacity: .9; }
   .subscribe-offer-modal .offer-body { background: #fffaf2; padding: 26px 30px 30px; }
   .subscribe-offer-modal label { color: #2d1739; font-weight: 800; }
   .subscribe-offer-modal .form-control { background: #fff; border: 1px solid #dfd2c4; border-radius: 6px; min-height: 46px; padding: 10px 12px; }
   .subscribe-offer-modal .offer-fineprint { color: #6d6270; font-size: 12px; line-height: 1.45; margin: 12px 0 0; }
-  .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #5b1178; border-radius: 8px; padding: 16px; margin-top: 16px; display: none; }
-  .subscribe-offer-modal .coupon-code { color: #5b1178; font-size: 25px; font-weight: 900; letter-spacing: .04em; }
+  .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #28364B; border-radius: 8px; padding: 16px; margin-top: 16px; display: none; }
+  .subscribe-offer-modal .coupon-code { color: #28364B; font-size: 25px; font-weight: 900; letter-spacing: .04em; }
 </style>
 <div class="modal fade subscribe-offer-modal" id="subscribe-offer-modal" tabindex="-1" role="dialog" aria-labelledby="subscribe-offer-title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -462,7 +470,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 <div class="overlay">
   <div class="scale"></div>
   <form class="search-box" action="products" method="get" role="search" aria-label="Search products">
-    <input type="text" name="search" id="search-input" placeholder="Search pistachios, almonds, 1kg, chocolate..." autocomplete="off" aria-label="Search products" />
+    <input type="text" name="search" id="search-input" placeholder="Search collagen, gelatine, peptides, sea moss..." autocomplete="off" aria-label="Search products" />
     <button id="close" type="submit" aria-label="Submit product search">
       <i class="ion-ios-search-strong"></i>
     </button>
@@ -647,7 +655,7 @@ function updateModalContent(response) {
 }
 
 function getSheetProduct(productId) {
-    var products = window.CANDYBIRD_PRODUCTS || [];
+    var products = window.SIRFRANCIS_PRODUCTS || [];
     return products.find(function(product) {
         return String(product.id) === String(productId);
     }) || null;
@@ -1242,7 +1250,7 @@ $(document).ready(function () {
 
       if (!results.length) {
         $searchResults
-          .html('<div class="global-search-empty">No products found. Try a simpler word like pistachio, almond, salted, chocolate, 500g, or 1kg.</div>')
+          .html('<div class="global-search-empty">No products found. Try a simpler word like collagen, gelatine, peptides, sea moss, 500g, or 1kg.</div>')
           .addClass('is-visible');
         return;
       }
@@ -1434,7 +1442,7 @@ function initializeSlick() {
 </script>
 
 
-<?php $isAdminFooter = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-cb/') !== false; ?>
+<?php $isAdminFooter = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-sf/') !== false; ?>
 <?php if ($isAdminFooter): ?>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -1687,7 +1695,7 @@ function logAction(action, details = '', userId = null, guestIdentifier = '') {
 }
 
 (function() {
-    if (window.CANDYBIRD_LIGHT_ANALYTICS === false) return;
+    if (window.SIRFRANCIS_LIGHT_ANALYTICS === false) return;
     var userId = <?=json_encode($userId ?? null)?>;
     var guestIdentifier = <?=json_encode($guestIdentifier ?? '')?>;
     var currentSessionId = <?=json_encode($current_session_id ?? null)?>;
@@ -1871,7 +1879,7 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
     });
 </script>
 <?php
-$cbIsAdminArea = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-cb/') !== false;
+$cbIsAdminArea = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-sf/') !== false;
 ?>
 <?php if (!$cbIsAdminArea): ?>
 <script>

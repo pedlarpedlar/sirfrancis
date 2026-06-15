@@ -6,14 +6,14 @@ if (!function_exists('candybirdOzowConfig')) {
         $privateKey = $GLOBALS['ozow_private_key'] ?? (defined('OZOW_PRIVATE_KEY') ? OZOW_PRIVATE_KEY : '');
         $apiKey = $GLOBALS['ozow_api_key'] ?? (defined('OZOW_API_KEY') ? OZOW_API_KEY : '');
         $testMode = $GLOBALS['ozow_test_mode'] ?? (defined('OZOW_TEST_MODE') ? OZOW_TEST_MODE : true);
-        $displayName = $GLOBALS['ozow_display_name'] ?? (defined('OZOW_DISPLAY_NAME') ? OZOW_DISPLAY_NAME : 'CandyBird');
+        $displayName = $GLOBALS['ozow_display_name'] ?? (defined('OZOW_DISPLAY_NAME') ? OZOW_DISPLAY_NAME : 'Sir Francis');
 
         return [
             'site_code' => trim((string) $siteCode),
             'private_key' => trim((string) $privateKey),
             'api_key' => trim((string) $apiKey),
             'test_mode' => filter_var($testMode, FILTER_VALIDATE_BOOLEAN),
-            'display_name' => trim((string) $displayName) !== '' ? trim((string) $displayName) : 'CandyBird',
+            'display_name' => trim((string) $displayName) !== '' ? trim((string) $displayName) : 'Sir Francis',
             'pay_url' => 'https://pay.ozow.com',
         ];
     }
@@ -112,7 +112,7 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
         $orderId = (string) (int) $orderId;
         $displayOrderId = str_pad($orderId, 7, '0', STR_PAD_LEFT);
         $amount = number_format((float) $amount, 2, '.', '');
-        $returnBaseUrl = 'https://www.candybird.co.za/ozow_r?o=' . urlencode($orderId);
+        $returnBaseUrl = 'https://www.fishgelatine.co.za/v2/ozow_r?o=' . urlencode($orderId);
 
         $data = [
             'SiteCode' => $config['site_code'],
@@ -130,7 +130,7 @@ if (!function_exists('candybirdOzowBuildPaymentData')) {
             'CancelUrl' => $returnBaseUrl . '&s=c',
             'ErrorUrl' => $returnBaseUrl . '&s=e',
             'SuccessUrl' => $returnBaseUrl . '&s=s',
-            'NotifyUrl' => 'https://www.candybird.co.za/ozow_notify',
+            'NotifyUrl' => 'https://www.fishgelatine.co.za/v2/ozow_notify',
             'IsTest' => $config['test_mode'] ? 'true' : 'false',
         ];
 

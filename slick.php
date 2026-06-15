@@ -3,9 +3,9 @@ include 'session_logins.php';
 include 'header.php';
 ?>
 <?php
-$page_url_canonical = "https://www.candybird.co.za/slick";
-$title_og = 'My slick - CandyBird';
-$page_url_og = "https://www.candybird.co.za/slick"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/slick";
+$title_og = 'My slick - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/slick"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -21,7 +21,7 @@ $page_url_og = "https://www.candybird.co.za/slick"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>test - CandyBird</title>
+<title>test - Sir Francis</title>
 
 <?php
 include 'page_menues.php';

@@ -58,7 +58,7 @@ if (!shouldExcludeFromTracking($_SERVER['REQUEST_URI'])) {
 // Function to exclude certain paths or extensions from tracking
 function shouldExcludeFromTracking($request_uri) {
     $excluded_paths = array(
-        '/assets/', '/admin/', '/admin-cb/',
+        '/assets/', '/admin/', '/admin-sf/',
         '.css', '.js', '.map', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico',
         'log_action.php', 'update_end_time.php', 'session_logins.php',
         'fetch_sheet', 'fetch_homepage_products', 'add_to_cart', 'update_cart', 'remove_from_cart',

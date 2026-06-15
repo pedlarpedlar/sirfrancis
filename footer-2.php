@@ -1,6 +1,6 @@
 
 <?php
-if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
+if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
     $userId = null;
     $guestIdentifier = null;
 }
@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
         <div class="col-12 col-sm-6 col-lg-6 mb-30">
           <div class="footer-widget mx-w-400">
 <div class="footer-logo mb-25">
-    <a href="https://www.candybird.co.za">
+    <a href="https://www.fishgelatine.co.za/v2">
       <img src="<?=$home_directory?>assets/img/footer-image1.png" alt="footer logo" width="200px" />
     </a>
   </div>
@@ -80,7 +80,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
               <div class="nletter-form mt-20">
                 <form
                   class="form-inline position-relative"
-                  action="https://www.candybird.co.za/subscribe.inc.php"
+                  action="https://www.fishgelatine.co.za/v2/subscribe.inc.php"
                   target="_blank"
                   method="post"
                   id="subscribe_form"
@@ -113,7 +113,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
       <div class="col-12">
         <div class="d-flex flex-column align-items-center text-center pt-3">
           <p>
-            Copyright &copy; <a href="https://www.candybird.co.za">CandyBird</a>.
+            Copyright &copy; <a href="https://www.fishgelatine.co.za/v2">Sir Francis</a>.
             All Rights Reserved
           </p>
           <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="img" width="150px" class="mt-2"/>
@@ -150,7 +150,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-cb/') !== false) {
   }
 
   ul.custom li a i {
-    color: #FCB42F !important;
+    color: #CEBD88 !important;
   }
 
   
@@ -688,7 +688,7 @@ $(document).ready(function () {
         // AJAX Request using jQuery
         $.ajax({
             type: 'POST',
-            url: ' https://www.candybird.co.za/subscribe.inc.php',
+            url: ' https://www.fishgelatine.co.za/v2/subscribe.inc.php',
             data: { email: email },
             dataType: 'json',
             success: function (response) {
@@ -795,7 +795,7 @@ $(document).ready(function () {
 function showNotification(success, message) {
     var notificationContainer = $('#notification-container');
     var notificationClass = success ? 'alert-success' : 'alert-danger';
-    var notificationStyle = success ? 'background-color: #FCB42F; color: #6e4cb2;' : 'background-color: #6e4cb2; color: #FCB42F;';
+    var notificationStyle = success ? 'background-color: #CEBD88; color: #28364B;' : 'background-color: #28364B; color: #CEBD88;';
 
     var notification = $('<div style="transition: background 0.3s, color 0.3s, box-shadow 0.3s; box-shadow: 0 0 5px rgba(206, 189, 136, 0.5);' + notificationStyle + '" class="alert ' + notificationClass + ' alert-dismissible fade show" role="alert">' +
         message +
@@ -945,7 +945,7 @@ function loadProductDetails(productId) {
 
 function updateModal(productData) {
     // Generate product images HTML
-    var product_url_og = 'https://www.candybird.co.za/assets/img/favicon.png';
+    var product_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/favicon.png';
     var productImagesHtml = '';
     var productThumbnailImagesHtml = '';
 
@@ -982,7 +982,7 @@ function updateModal(productData) {
               </div>
         `;
 
-        product_url_og = "https://www.candybird.co.za/" + encodeURIComponent(imageUrl);
+        product_url_og = "https://www.fishgelatine.co.za/v2/" + encodeURIComponent(imageUrl);
     });
 
 
@@ -1095,17 +1095,17 @@ function updateModal(productData) {
           <ul class="d-flex align-items-center">
             <li class="share">Share</li>
             <li>
-              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.candybird.co.za/product?id=${productId}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
+              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.fishgelatine.co.za/v2/product?id=${productId}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
             </li>
             <li>
-              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.candybird.co.za/product?id=${productId}&text=Check out this amazing product!" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
+              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.fishgelatine.co.za/v2/product?id=${productId}&text=Check out this amazing product!" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
             </li>
             <li>
               <a target="_blank" class="share-link-click" href="https://www.pinterest.com/pin/create/button/"
                data-pin-do="buttonBookmark"
                data-pin-custom="true"
                data-pin-save="true"
-               data-pin-url="https://www.candybird.co.za/product?id=${productId}"
+               data-pin-url="https://www.fishgelatine.co.za/v2/product?id=${productId}"
                data-pin-media="${product_url_og}"
                >
                <i class="ion-social-pinterest"></i>

@@ -152,7 +152,7 @@ foreach ($order as $item) {
                 <img src="' . $image_url . '" width="50px" alt="item image"/>
             </td>
             <td style="width:50%; padding: 10px; border: 1px solid #ccc;">
-                <a href="https://www.candybird.co.za/product?id=' . $productId . '">' . $product_title . ' ' . $product_weight . '</a>
+                <a href="https://www.fishgelatine.co.za/v2/product?id=' . $productId . '">' . $product_title . ' ' . $product_weight . '</a>
             </td>
             <td style="width:10%; padding: 10px; border: 1px solid #ccc;">' . $quantity . '</td>
             <td style="width:25%; padding: 10px; border: 1px solid #ccc;">R' . ($product_price_for_email * $quantity) . '</td>
@@ -190,8 +190,8 @@ if ($check1 && $check2 && $check3 && $check4) {
     $result = "success";
 
 
-    $email_subject = "CandyBird | Payment Confirmation for Order #".$orderId_zeropad."";
-    $admin_email_subject = "CandyBird | Payment Received for Order #".$orderId_zeropad."";
+    $email_subject = "Sir Francis | Payment Confirmation for Order #".$orderId_zeropad."";
+    $admin_email_subject = "Sir Francis | Payment Received for Order #".$orderId_zeropad."";
 
     // Get the email body from the template file
     $email_body = file_get_contents('emails/email_payment.php');
@@ -200,8 +200,8 @@ if ($check1 && $check2 && $check3 && $check4) {
 
     
 } else {
-    $email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on CandyBird";
-    $admin_email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on CandyBird";
+    $email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on Sir Francis";
+    $admin_email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on Sir Francis";
     
     // Get the email body from the template file
     $email_body = file_get_contents('emails/email_payment_fail.php');
@@ -261,7 +261,7 @@ try {
     $mail->Port = $smtp_port;
 
     // Set sender and recipient(s)
-    $mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+    $mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
     $mail->addAddress($client_email, $client_name); // Recipient's email address and name
 
     // Set email subject
@@ -315,7 +315,7 @@ try {
     $admin_mail->Port = $smtp_port;
 
     // Set sender and recipient(s)
-    $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+    $admin_mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
     $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
 
     // Set email subject

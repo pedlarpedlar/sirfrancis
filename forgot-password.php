@@ -3,9 +3,9 @@ include 'session_logins.php';
 include 'header.php';
 ?>
 <?php
-$page_url_canonical = "https://www.candybird.co.za/forgot-password";
-$title_og = 'Forgot Password | CandyBird';
-$page_url_og = "https://www.candybird.co.za/forgot-password";
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/forgot-password";
+$title_og = 'Forgot Password | Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/forgot-password";
 
 ?>
 
@@ -22,7 +22,7 @@ $page_url_og = "https://www.candybird.co.za/forgot-password";
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Forgot Password - CandyBird</title>
+<title>Forgot Password - Sir Francis</title>
 <?php
 include 'page_menues.php';
 ?>

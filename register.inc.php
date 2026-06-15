@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $response = [
         "success" => true,
         "message" => "Registration successful. You can now log in.",
-        "redirect_url" => "https://www.candybird.co.za/login"
+        "redirect_url" => "https://www.fishgelatine.co.za/v2/login"
     ];
     header('Content-Type: application/json');
     echo json_encode($response);
@@ -109,10 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mail->SMTPSecure = $smtp_type;
         $mail->Port = $smtp_port;
 
-        $mail->setFrom($smtp_username5, 'CandyBird');
+        $mail->setFrom($smtp_username5, 'Sir Francis');
         $mail->addAddress($email, $username);
-        $mail->addReplyTo($smtp_username1, 'CandyBird');
-        $mail->Subject = "Welcome to CandyBird - Registration Confirmation";
+        $mail->addReplyTo($smtp_username1, 'Sir Francis');
+        $mail->Subject = "Welcome to Sir Francis - Registration Confirmation";
         $email_body = file_get_contents('emails/email_register.php');
         $email_body = str_replace('{recipient_name}', $username, $email_body);
         $email_body = str_replace('{user_email_unsubscribe}', $email, $email_body);
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $admin_mail->SMTPSecure = $smtp_type;
         $admin_mail->Port = $smtp_port;
 
-        $admin_mail->setFrom($smtp_username5, 'CandyBird');
+        $admin_mail->setFrom($smtp_username5, 'Sir Francis');
         $admin_mail->addAddress($smtp_username1, 'Admin');
         $admin_mail->Subject = "New User Registration";
         $admin_body = file_get_contents('emails/email_register_admin.php');

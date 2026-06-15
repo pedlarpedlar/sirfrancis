@@ -18,7 +18,7 @@ function candybirdSendReviewAdminEmail($sheetProduct, $productId, $reviewId, $di
     $productTitle = function_exists('getSheetProductDisplayTitle')
         ? getSheetProductDisplayTitle($sheetProduct)
         : trim(($sheetProduct['name'] ?? 'Product') . ' ' . ($sheetProduct['size'] ?? ''));
-    $productUrl = 'https://www.candybird.co.za/product?id=' . rawurlencode((string) $productId) . '#pills-contact';
+    $productUrl = 'https://www.fishgelatine.co.za/v2/product?id=' . rawurlencode((string) $productId) . '#pills-contact';
 
     try {
         $mail = new PHPMailer(true);
@@ -31,8 +31,8 @@ function candybirdSendReviewAdminEmail($sheetProduct, $productId, $reviewId, $di
             $mail->SMTPSecure = $smtp_type;
         }
         $mail->Port = (int) ($smtp_port ?? 587);
-        $mail->setFrom($smtp_username5, $website_company_name ?: 'CandyBird');
-        $mail->addAddress($smtp_username1, 'CandyBird Admin');
+        $mail->setFrom($smtp_username5, $website_company_name ?: 'Sir Francis');
+        $mail->addAddress($smtp_username1, 'Sir Francis Admin');
         $mail->isHTML(true);
         $mail->Subject = 'New product review: ' . $productTitle;
         $mail->Body = '<div style="font-family:Arial,sans-serif;color:#2c2926;line-height:1.6;">'
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reviewId = (int) ($_POST['review_id'] ?? 0);
 
     if ($name === '') {
-        $name = trim((string) ($_SESSION['username'] ?? 'CandyBird customer'));
+        $name = trim((string) ($_SESSION['username'] ?? 'Sir Francis customer'));
     }
     $name = substr($name, 0, 80);
 

@@ -18,7 +18,7 @@ if (file_exists($liveConfigPath)) {
 
 ?>
 
-<title>Unsubscribe from CandyBird mailing list - Sad to see you go!</title>
+<title>Unsubscribe from Sir Francis mailing list - Sad to see you go!</title>
 
 <?php
 include 'page_menues.php';
@@ -49,9 +49,9 @@ include 'page_menues.php';
 
             $stmt->bind_param("s", $user_email);
             if ($stmt->execute()) {
-               echo '<h1 class="text-center">Sad to see you go!</h1><p class="text-center text-success">&#10003; You have been successfully unsubscribed from CandyBird newsletter emails.<br>
+               echo '<h1 class="text-center">Sad to see you go!</h1><p class="text-center text-success">&#10003; You have been successfully unsubscribed from Sir Francis newsletter emails.<br>
                 It can take up to 5 business days for this to go into effect. Thanks for being patient.</p>
-                <p class="text-center">Please note: If you use CandyBird services and website or shop online, we will continue to send vital system updates and important information about your account.</p>';
+                <p class="text-center">Please note: If you use Sir Francis services and website or shop online, we will continue to send vital system updates and important information about your account.</p>';
 
 
                 // Send a separate email to the admin
@@ -65,11 +65,11 @@ include 'page_menues.php';
                 $admin_mail->Port = $smtp_port;
 
                 // Set sender and recipient(s)
-                $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+                $admin_mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
                 $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
 
                 // Set email subject
-                $admin_mail->Subject = "Oh no! User unsubscribed from mailing list on CandyBird";
+                $admin_mail->Subject = "Oh no! User unsubscribed from mailing list on Sir Francis";
 
                 // Get the email body for admin from the template file
                 $admin_email_body = file_get_contents('emails/email_unsubscribe_admin.php');

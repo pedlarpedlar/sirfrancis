@@ -101,7 +101,7 @@ function displayProducts(products) {
     var originalPrice = Number(product.original_price || product.price || 0);
     var finalPrice = Number(product.final_price || product.discounted_price || (originalPrice - Number(product.discount_amount || 0)) || originalPrice);
     var hasDiscount = originalPrice > 0 && finalPrice > 0 && finalPrice < originalPrice;
-    var productTitle = escapeHtml([product.title || product.name || 'CandyBird product', product.weight || product.size || ''].filter(Boolean).join(' '));
+    var productTitle = escapeHtml([product.title || product.name || 'Sir Francis product', product.weight || product.size || ''].filter(Boolean).join(' '));
 
     var productHtml = `
       <div class="slider-item">
@@ -173,7 +173,7 @@ function displayProducts(products) {
               <div class="media-body">
                 <div class="product-desc">
                   <h3 class="title">
-                    <a style="width:210px;display:block;" href="${escapeHtml(productUrl)}">${escapeHtml(product.title || product.name || 'CandyBird product')} ${escapeHtml(product.weight || product.size || '')}</a>
+                    <a style="width:210px;display:block;" href="${escapeHtml(productUrl)}">${escapeHtml(product.title || product.name || 'Sir Francis product')} ${escapeHtml(product.weight || product.size || '')}</a>
                   </h3>
                   <div class="star-rating">
                     ${generateStarRating(product.avg_rating)}

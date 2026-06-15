@@ -9,7 +9,7 @@ $updatedAt = date('d M Y');
 $format = strtolower(trim((string) ($_GET['format'] ?? 'html')));
 
 if ($format === 'tsv') {
-    $filename = 'CandyBird-Wholesale-Pricelist-' . date('F-Y') . '.tsv';
+    $filename = 'Sir Francis-Wholesale-Pricelist-' . date('F-Y') . '.tsv';
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
     $out = fopen('php://output', 'w');
@@ -34,7 +34,7 @@ if ($format === 'tsv') {
     exit;
 }
 
-$downloadTitle = 'CandyBird Wholesale Pricelist ' . date('F Y');
+$downloadTitle = 'Sir Francis Wholesale Pricelist ' . date('F Y');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,8 +75,8 @@ $downloadTitle = 'CandyBird Wholesale Pricelist ' . date('F Y');
 <body>
   <div class="topbar">
     <div>
-      <h1>CandyBird Wholesale Pricelist</h1>
-      <div class="meta"><?= number_format(count($rows)) ?> bulk lines | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?> | www.candybird.co.za/wholesale-pricelist</div>
+      <h1>Sir Francis Wholesale Pricelist</h1>
+      <div class="meta"><?= number_format(count($rows)) ?> bulk lines | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?> | www.fishgelatine.co.za/wholesale-pricelist</div>
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>

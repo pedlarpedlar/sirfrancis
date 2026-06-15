@@ -15,7 +15,7 @@ include 'header.php';
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>About Us | CandyBird - Nuts, Dried Fruit, Candy</title>
+<title>About Us | Sir Francis - Marine Collagen and Fish Gelatine</title>
 
 <?php
 include 'page_menues.php';
@@ -28,33 +28,28 @@ include 'page_menues.php';
     <div class="text-center mb-5">
       <span class="section-label">Our Story</span>
       <h1 class="display-5 fw-bold mt-3">
-        From a Passion for Baking to a Brand Built on Quality
+        Marine Ingredients Supplied with Care and Consistency
       </h1>
     </div>
 
     <div class="story-card mb-5">
       <p class="lead-story">
-        CandyBird began with a simple love for baking.
+        Sir Francis was built around dependable access to specialist marine ingredients.
       </p>
 
       <p>
-        What started as a home baking hobby — creating cakes and biscuits for friends and family —
-        soon revealed a bigger challenge: finding consistently fresh, high-quality nuts and baking
-        ingredients at affordable prices. To solve this, our founder began combining ingredient
-        orders with neighbours on a not-for-profit basis, simply to make premium products more
-        accessible to everyone.
+        What started as a focused supply service grew into a South African source for fish gelatine, marine collagen, peptides, tripeptides, sea moss and related wellness ingredients. The goal has always been practical: reliable product, clear communication and support for buyers who need consistency.
       </p>
 
       <p>
         Before long, word spread from neighbour to neighbour, and demand grew rapidly. Orders became
         larger, more frequent, and eventually evolved into something much bigger than originally
-        imagined. What started as a small community effort soon became CandyBird.
+        imagined. What started as a small community effort soon became Sir Francis.
       </p>
 
       <p>
-        Founded officially in 2020, CandyBird now sources, packs, manufactures, and distributes over
-        <strong>150 varieties</strong> of nuts, dried fruit, confectionery, snack foods, health
-        products, and treats across South Africa.
+        Sir Francis now supports both retail and bulk customers with marine collagen, fish gelatine,
+        supplement ingredients and private labelling solutions across South Africa.
       </p>
     </div>
 
@@ -66,17 +61,14 @@ include 'page_menues.php';
 
     <div class="story-card mb-5">
       <p>
-        While continuing with cake decorating tutoring and home baking, our founder spent countless
-        hours researching everything from nut grading and freshness preservation to storage methods
-        and quality control. Every aspect of the business was built from the ground up — labels
-        sourced from local printers, packaging designed in-house, and logistics personally managed.
+        The team spent years refining product knowledge, storage practices, supplier relationships, packaging requirements and customer support. Every part of the business was built around making specialist marine ingredients easier to understand, order and use.
       </p>
 
       <p>
         There were challenges, setbacks, and costly lessons along the way. From unreliable suppliers
         and fluctuating market prices to stock contamination and warehouse infestations, every
         obstacle tested the vision behind the brand. But through persistence, passion, and an
-        unwavering commitment to quality, CandyBird continued to grow.
+        unwavering commitment to quality, Sir Francis continued to grow.
       </p>
 
       <p>
@@ -87,7 +79,7 @@ include 'page_menues.php';
       </p>
 
       <p>
-        Today, CandyBird proudly supplies both <strong>B2B and B2C customers</strong> across South
+        Today, Sir Francis proudly supplies both <strong>B2B and B2C customers</strong> across South
         Africa, while remaining rooted in the same hands-on values that shaped the business from
         day one.
       </p>
@@ -120,7 +112,7 @@ include 'page_menues.php';
       <h2>Our Promise to You</h2>
 
       <p>
-        Customer satisfaction has always been at the heart of CandyBird. Guided by the Islamic
+        Customer satisfaction has always been at the heart of Sir Francis. Guided by the Islamic
         principle of <em>Iqaalah</em>, we proudly offer a
         <strong>100% satisfaction guarantee</strong>.
       </p>
@@ -137,7 +129,7 @@ include 'page_menues.php';
       <h2>Rooted in quality. Growing with purpose.</h2>
 
       <p>
-        CandyBird remains proudly home-based while continuing to grow throughout South Africa,
+        Sir Francis remains proudly home-based while continuing to grow throughout South Africa,
         with future ambitions focused on premium retail markets and franchising.
       </p>
 
@@ -160,20 +152,20 @@ include 'page_menues.php';
   .about-candybird h1,
   .about-candybird h2,
   .about-candybird h3 {
-    color: #3b145f;
+    color: #28364B;
     line-height: 1.2;
   }
 
   .about-candybird p {
-    color: #4f3d5f;
+    color: #28364B;
     font-size: 1.05rem;
     line-height: 1.9;
   }
 
   .section-label {
     display: inline-block;
-    background: #f6c945;
-    color: #3b145f;
+    background: #CEBD88;
+    color: #28364B;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -198,18 +190,18 @@ include 'page_menues.php';
   }
 
   .story-card {
-    border-left: 7px solid #f6c945;
+    border-left: 7px solid #CEBD88;
   }
 
   .lead-story {
     font-size: 1.7rem !important;
     font-weight: 700;
-    color: #4b176f !important;
+    color: #28364B !important;
     line-height: 1.4 !important;
   }
 
   .story-highlight {
-    background: linear-gradient(135deg, #4b176f 0%, #7a35a3 100%);
+    background: linear-gradient(135deg, #28364B 0%, #7a35a3 100%);
     border-radius: 28px;
     padding: 35px;
     text-align: center;
@@ -242,11 +234,11 @@ include 'page_menues.php';
 
   .promise-card {
     background: #fff8df;
-    border: 2px solid #f6c945;
+    border: 2px solid #CEBD88;
   }
 
   .promise-card h2 {
-    color: #4b176f;
+    color: #28364B;
     font-weight: 800;
     margin-bottom: 20px;
   }
@@ -296,7 +288,7 @@ include 'page_menues.php';
       <div id="candybird-rating" class="rating-box mt-4"></div>
       <div id="candybird-reviews" class="reviews-grid mt-4"></div>
 
-      <a href="https://www.google.com/search?q=CandyBird+reviews"
+      <a href="https://www.google.com/search?q=Sir Francis+reviews"
          target="_blank"
          class="btn google-review-btn mt-4">
         View More Reviews on Google
@@ -315,16 +307,16 @@ include 'page_menues.php';
     border-radius: 32px;
     padding: 45px;
     box-shadow: 0 18px 45px rgba(59, 20, 95, 0.12);
-    border: 2px solid #f6c945;
+    border: 2px solid #CEBD88;
   }
 
   .google-review-card h2 {
-    color: #3b145f;
+    color: #28364B;
     font-weight: 800;
   }
 
   .rating-box {
-    color: #4b176f;
+    color: #28364B;
     font-size: 1.25rem;
     font-weight: 700;
   }
@@ -340,30 +332,30 @@ include 'page_menues.php';
     border-radius: 22px;
     padding: 25px;
     text-align: left;
-    border-left: 5px solid #f6c945;
+    border-left: 5px solid #CEBD88;
   }
 
   .review-item h4 {
-    color: #3b145f;
+    color: #28364B;
     font-size: 1rem;
     font-weight: 800;
     margin-bottom: 8px;
   }
 
   .review-stars {
-    color: #f6c945;
+    color: #CEBD88;
     font-size: 1.1rem;
     margin-bottom: 12px;
   }
 
   .review-item p {
-    color: #4f3d5f;
+    color: #28364B;
     font-size: 0.95rem;
     line-height: 1.7;
   }
 
   .google-review-btn {
-    background: #4b176f;
+    background: #28364B;
     color: #ffffff;
     border-radius: 50px;
     padding: 14px 32px;
@@ -372,8 +364,8 @@ include 'page_menues.php';
   }
 
   .google-review-btn:hover {
-    background: #f6c945;
-    color: #3b145f;
+    background: #CEBD88;
+    color: #28364B;
   }
 
   @media (max-width: 992px) {
@@ -384,7 +376,7 @@ include 'page_menues.php';
 </style>
 
 <script>
-  function initCandyBirdReviews() {
+  function initCandybirdReviews() {
     const service = new google.maps.places.PlacesService(
       document.createElement("div")
     );
@@ -428,7 +420,7 @@ include 'page_menues.php';
 </script>
 
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initCandyBirdReviews">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initCandybirdReviews">
 </script>
   
 

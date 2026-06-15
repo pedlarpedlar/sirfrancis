@@ -4,16 +4,16 @@ $blogPosts = [
     [
         'id' => 1,
         'img' => '1.png',
-        'title' => 'Delicious Chocolate Chip Cookies with <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+        'title' => 'Delicious Chocolate Chip Cookies with <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
         'category' => 'Sweet Treats',
         'date' => '5TH Jan 2021',
         'servings' => '12',
         'cook_time' => '25 minutes',
-        'ingredients' => '<ul><li>1 cup unsalted butter, softened</li><li>1 cup brown sugar</li><li><span class="fraction">1/2</span> cup granulated sugar</li><li>2 large eggs</li><li>1 tsp vanilla extract</li><li>2 <span class="fraction">1/4</span> cups all-purpose flour</li><li>1 tsp baking soda</li><li><span class="fraction">1/2</span> tsp salt</li><li>2 cups semi-sweet chocolate chips</li><li>1 cup chopped <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li></ul>',
-        'instructions' => '<ol><li>Preheat oven to 350°F (175°C).</li><li>In a large bowl, cream together the butter and sugars until light and fluffy.</li><li>Beat in the eggs one at a time, then stir in the vanilla.</li><li>Combine the flour, baking soda, and salt; gradually blend into the creamed mixture.</li><li>Stir in the chocolate chips and <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>.</li><li>Drop by rounded spoonfuls onto ungreased baking sheets.</li><li>Bake for 10 to 12 minutes in the preheated oven, or until edges are nicely browned.</li><li>Let cookies cool on the baking sheets for a few minutes before transferring to a wire rack to cool completely.</li><li>Enjoy your cookies with a glass of milk or a cup of tea.</li></ol>',
+        'ingredients' => '<ul><li>1 cup unsalted butter, softened</li><li>1 cup brown sugar</li><li><span class="fraction">1/2</span> cup granulated sugar</li><li>2 large eggs</li><li>1 tsp vanilla extract</li><li>2 <span class="fraction">1/4</span> cups all-purpose flour</li><li>1 tsp baking soda</li><li><span class="fraction">1/2</span> tsp salt</li><li>2 cups semi-sweet chocolate chips</li><li>1 cup chopped <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li></ul>',
+        'instructions' => '<ol><li>Preheat oven to 350°F (175°C).</li><li>In a large bowl, cream together the butter and sugars until light and fluffy.</li><li>Beat in the eggs one at a time, then stir in the vanilla.</li><li>Combine the flour, baking soda, and salt; gradually blend into the creamed mixture.</li><li>Stir in the chocolate chips and <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>.</li><li>Drop by rounded spoonfuls onto ungreased baking sheets.</li><li>Bake for 10 to 12 minutes in the preheated oven, or until edges are nicely browned.</li><li>Let cookies cool on the baking sheets for a few minutes before transferring to a wire rack to cool completely.</li><li>Enjoy your cookies with a glass of milk or a cup of tea.</li></ol>',
         'source' => 'https://www.allrecipes.com/recipe/10813/best-chocolate-chip-cookies/',
-        'author' => 'CandyBird',
-        'intro' => 'These chocolate chip cookies, enriched with crunchy <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, are the perfect blend of sweet and nutty. Each bite offers a delightful crunch and a burst of chocolate, making them an irresistible treat for any occasion.'
+        'author' => 'Sir Francis',
+        'intro' => 'These chocolate chip cookies, enriched with crunchy <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, are the perfect blend of sweet and nutty. Each bite offers a delightful crunch and a burst of chocolate, making them an irresistible treat for any occasion.'
     ],
     [
         'id' => 2,
@@ -26,7 +26,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>1 cup quinoa</li><li>2 cups water</li><li><span class="fraction">1/2</span> cup chopped pecans</li><li><span class="fraction">1/2</span> cup dried cranberries</li><li><span class="fraction">1/4</span> cup chopped fresh parsley</li><li><span class="fraction">1/4</span> cup chopped green onions</li><li><span class="fraction">1/4</span> cup olive oil</li><li>2 tbsp lemon juice</li><li>1 tbsp honey</li><li>Salt and pepper to taste</li></ul>',
         'instructions' => '<ol><li>Rinse quinoa under cold water.</li><li>In a medium saucepan, combine quinoa and water. Bring to a boil, then reduce heat to low, cover, and simmer for 15 minutes or until water is absorbed. Let cool.</li><li>In a large bowl, combine quinoa, pecans, cranberries, parsley, and green onions.</li><li>In a small bowl, whisk together olive oil, lemon juice, honey, salt, and pepper.</li><li>Pour dressing over quinoa mixture and toss to coat.</li><li>Serve chilled or at room temperature. Enjoy as a light lunch or a refreshing side dish.</li></ol>',
         'source' => 'https://www.simplyquinoa.com/quinoa-salad-dried-cranberries-pecans/',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'This vibrant quinoa salad combines the nutty richness of pecans with the tartness of dried cranberries. It’s a refreshing and satisfying dish that’s perfect for a light lunch or as a side for your main meal.'
     ],
     [
@@ -37,10 +37,10 @@ $blogPosts = [
         'date' => '23RD Mar 2021',
         'servings' => '8',
         'cook_time' => '25 minutes',
-        'ingredients' => '<ul><li>3 cups rolled oats</li><li>1 cup mixed nuts (<a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, walnuts, cashews)</li><li><span class="fraction">1/2</span> cup seeds (pumpkin, sunflower, chia)</li><li><span class="fraction">1/2</span> cup honey or maple syrup</li><li><span class="fraction">1/4</span> cup coconut oil, melted</li><li>1 tsp vanilla extract</li><li>1 cup dried berries (cranberries, blueberries, raisins)</li></ul>',
+        'ingredients' => '<ul><li>3 cups rolled oats</li><li>1 cup mixed nuts (<a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, walnuts, cashews)</li><li><span class="fraction">1/2</span> cup seeds (pumpkin, sunflower, chia)</li><li><span class="fraction">1/2</span> cup honey or maple syrup</li><li><span class="fraction">1/4</span> cup coconut oil, melted</li><li>1 tsp vanilla extract</li><li>1 cup dried berries (cranberries, blueberries, raisins)</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 325°F (165°C). Line a baking sheet with parchment paper.</li><li>In a large bowl, mix oats, nuts, and seeds.</li><li>In a small bowl, whisk together honey or maple syrup, coconut oil, and vanilla extract.</li><li>Pour the wet mixture over the dry mixture and stir until evenly coated.</li><li>Spread the mixture onto the prepared baking sheet.</li><li>Bake for 20-25 minutes, stirring halfway through, until golden brown.</li><li>Let cool, then stir in dried berries. Store in an airtight container.</li><li>Enjoy as a breakfast cereal with milk or yogurt, or as a crunchy snack throughout the day.</li></ol>',
         'source' => 'https://cookieandkate.com/healthy-granola-recipe/',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Start your day with this wholesome granola, featuring a crunchy mix of nuts and seeds, perfectly sweetened with honey or maple syrup. It’s an energizing breakfast option that pairs beautifully with yogurt or milk.'
     ],
     [
@@ -51,10 +51,10 @@ $blogPosts = [
         'date' => '18TH Apr 2021',
         'servings' => '10',
         'cook_time' => '10 minutes prep + 1 hour chill',
-        'ingredients' => '<ul><li>1 cup pitted dates</li><li><span class="fraction">1/4</span> cup honey or maple syrup</li><li><span class="fraction">1/4</span> cup peanut butter or almond butter</li><li>1 <span class="fraction">1/2</span> cups rolled oats</li><li><span class="fraction">1/4</span> cup chia seeds</li><li><span class="fraction">1/4</span> cup sunflower seeds</li><li><span class="fraction">1/4</span> cup chopped <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li><span class="fraction">1/4</span> cup dried cranberries</li></ul>',
-        'instructions' => '<ol><li>In a food processor, pulse dates until they form a paste.</li><li>In a small saucepan, combine honey or maple syrup and nut butter over low heat until melted and smooth.</li><li>In a large bowl, combine oats, chia seeds, sunflower seeds, <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, and cranberries.</li><li>Add date paste and melted mixture to the dry ingredients and mix until well combined.</li><li>Press mixture into a parchment-lined baking dish.</li><li>Refrigerate for at least 1 hour before cutting into bars.</li><li>Enjoy as a convenient snack on the go or as a nutritious pre-workout bite.</li></ol>',
+        'ingredients' => '<ul><li>1 cup pitted dates</li><li><span class="fraction">1/4</span> cup honey or maple syrup</li><li><span class="fraction">1/4</span> cup peanut butter or almond butter</li><li>1 <span class="fraction">1/2</span> cups rolled oats</li><li><span class="fraction">1/4</span> cup chia seeds</li><li><span class="fraction">1/4</span> cup sunflower seeds</li><li><span class="fraction">1/4</span> cup chopped <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li><span class="fraction">1/4</span> cup dried cranberries</li></ul>',
+        'instructions' => '<ol><li>In a food processor, pulse dates until they form a paste.</li><li>In a small saucepan, combine honey or maple syrup and nut butter over low heat until melted and smooth.</li><li>In a large bowl, combine oats, chia seeds, sunflower seeds, <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, and cranberries.</li><li>Add date paste and melted mixture to the dry ingredients and mix until well combined.</li><li>Press mixture into a parchment-lined baking dish.</li><li>Refrigerate for at least 1 hour before cutting into bars.</li><li>Enjoy as a convenient snack on the go or as a nutritious pre-workout bite.</li></ol>',
         'source' => 'https://minimalistbaker.com/healthy-5-ingredient-granola-bars/',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'These energy bars are packed with natural sweetness from dates and a boost of nutrition from chia seeds and nuts. They make a perfect on-the-go snack or a pre-workout boost, offering a satisfying and wholesome bite.'
     ],
     [
@@ -65,53 +65,53 @@ $blogPosts = [
         'date' => '7TH May 2021',
         'servings' => '8',
         'cook_time' => '1 hour + 4 hours chilling',
-        'ingredients' => '<ul><li>1 1/2 cups crushed digestive biscuits</li><li>1/2 cup melted butter</li><li>2 (8 oz) packages cream cheese</li><li>1 cup sugar</li><li>1 tsp vanilla extract</li><li>3 large eggs</li><li>1 cup mixed berries (strawberries, blueberries, raspberries)</li><li><span class="fraction">1/4</span> cup chopped nuts (<a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, walnuts)</li></ul>',
+        'ingredients' => '<ul><li>1 1/2 cups crushed digestive biscuits</li><li>1/2 cup melted butter</li><li>2 (8 oz) packages cream cheese</li><li>1 cup sugar</li><li>1 tsp vanilla extract</li><li>3 large eggs</li><li>1 cup mixed berries (strawberries, blueberries, raspberries)</li><li><span class="fraction">1/4</span> cup chopped nuts (<a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, walnuts)</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 325°F (165°C).</li><li>In a medium bowl, combine crushed biscuits and melted butter. Press mixture into the bottom of a springform pan.</li><li>In a large bowl, beat cream cheese until smooth. Gradually add sugar and vanilla, beating until creamy.</li><li>Add eggs one at a time, mixing well after each addition.</li><li>Pour cream cheese mixture over the crust.</li><li>Bake for 55-60 minutes, or until the center is set.</li><li>Let cool completely, then refrigerate for at least 4 hours.</li><li>Top with mixed berries and chopped nuts before serving.</li><li>Enjoy this indulgent cheesecake with a dollop of whipped cream or a scoop of vanilla ice cream for an extra treat.</li></ol>',
         'source' => 'https://sallysbakingaddiction.com/the-best-cheesecake-recipe/',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'This creamy cheesecake, topped with fresh berries and crunchy nuts, offers a perfect balance of sweetness and texture. It’s a decadent dessert that’s sure to impress at any gathering.'
     ],
     [
         'id' => 6,
         'img' => '6.png',
-        'title' => 'Savory Herb and Garlic Roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+        'title' => 'Savory Herb and Garlic Roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
         'category' => 'Savory Snacks',
         'date' => '15TH Feb 2021',
         'servings' => '8',
         'cook_time' => '35 minutes',
-        'ingredients' => '<ul><li>2 cups raw <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>2 tbsp olive oil</li><li>2 cloves garlic, minced</li><li>1 tsp dried rosemary</li><li>1 tsp dried thyme</li><li><span class="fraction">1/2</span> tsp smoked paprika</li><li><span class="fraction">1/2</span> tsp sea salt</li><li><span class="fraction">1/4</span> tsp black pepper</li></ul>',
-        'instructions' => '<ol><li>Preheat oven to 300°F (150°C).</li><li>In a large mixing bowl, combine olive oil, minced garlic, rosemary, thyme, smoked paprika, salt, and black pepper.</li><li>Add <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> to the bowl and toss until they are evenly coated with the herb and oil mixture.</li><li>Spread the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake in the preheated oven for 25-30 minutes, stirring occasionally, until the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are golden brown and fragrant.</li><li>Remove from the oven and let cool completely before serving.</li><li>Store any leftovers in an airtight container to keep them fresh.</li></ol>',
+        'ingredients' => '<ul><li>2 cups raw <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>2 tbsp olive oil</li><li>2 cloves garlic, minced</li><li>1 tsp dried rosemary</li><li>1 tsp dried thyme</li><li><span class="fraction">1/2</span> tsp smoked paprika</li><li><span class="fraction">1/2</span> tsp sea salt</li><li><span class="fraction">1/4</span> tsp black pepper</li></ul>',
+        'instructions' => '<ol><li>Preheat oven to 300°F (150°C).</li><li>In a large mixing bowl, combine olive oil, minced garlic, rosemary, thyme, smoked paprika, salt, and black pepper.</li><li>Add <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> to the bowl and toss until they are evenly coated with the herb and oil mixture.</li><li>Spread the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake in the preheated oven for 25-30 minutes, stirring occasionally, until the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are golden brown and fragrant.</li><li>Remove from the oven and let cool completely before serving.</li><li>Store any leftovers in an airtight container to keep them fresh.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
-        'intro' => 'These savory roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are infused with a delightful blend of herbs and garlic, making them a perfect snack for any occasion. The combination of rosemary, thyme, and smoked paprika gives these <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> a rich and aromatic flavor that is simply irresistible.'
+        'author' => 'Sir Francis',
+        'intro' => 'These savory roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are infused with a delightful blend of herbs and garlic, making them a perfect snack for any occasion. The combination of rosemary, thyme, and smoked paprika gives these <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> a rich and aromatic flavor that is simply irresistible.'
     ],
     [
     'id' => 7,
     'img' => '7.png',
-    'title' => 'Spicy Honey-Glazed <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+    'title' => 'Spicy Honey-Glazed <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
     'category' => 'Savory Snacks',
     'date' => '22ND Mar 2021',
     'servings' => '10',
     'cook_time' => '20 minutes',
-    'ingredients' => '<ul><li>2 cups raw <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li><span class="fraction">1/4</span> cup honey</li><li>1 tbsp olive oil</li><li>1 tsp smoked paprika</li><li><span class="fraction">1/2</span> tsp cayenne pepper</li><li><span class="fraction">1/2</span> tsp sea salt</li><li><span class="fraction">1/4</span> tsp ground black pepper</li></ul>',
-    'instructions' => '<ol><li>Preheat oven to 325°F (165°C).</li><li>In a small saucepan, warm the honey and olive oil over low heat until combined.</li><li>Remove from heat and stir in smoked paprika, cayenne pepper, sea salt, and black pepper.</li><li>Place <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> in a large mixing bowl and pour the honey mixture over them, stirring until <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are evenly coated.</li><li>Spread the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake in the preheated oven for 15-20 minutes, stirring occasionally, until the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are golden and fragrant.</li><li>Remove from oven and let cool completely. The glaze will harden as the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> cool.</li><li>Store in an airtight container to keep them fresh.</li></ol>',
+    'ingredients' => '<ul><li>2 cups raw <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li><span class="fraction">1/4</span> cup honey</li><li>1 tbsp olive oil</li><li>1 tsp smoked paprika</li><li><span class="fraction">1/2</span> tsp cayenne pepper</li><li><span class="fraction">1/2</span> tsp sea salt</li><li><span class="fraction">1/4</span> tsp ground black pepper</li></ul>',
+    'instructions' => '<ol><li>Preheat oven to 325°F (165°C).</li><li>In a small saucepan, warm the honey and olive oil over low heat until combined.</li><li>Remove from heat and stir in smoked paprika, cayenne pepper, sea salt, and black pepper.</li><li>Place <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> in a large mixing bowl and pour the honey mixture over them, stirring until <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are evenly coated.</li><li>Spread the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake in the preheated oven for 15-20 minutes, stirring occasionally, until the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are golden and fragrant.</li><li>Remove from oven and let cool completely. The glaze will harden as the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> cool.</li><li>Store in an airtight container to keep them fresh.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'These spicy honey-glazed <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are a perfect combination of sweet and spicy, offering a tantalizing snack that is sure to please your taste buds. With a hint of smoked paprika and cayenne pepper, these <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> provide a delightful kick that complements the natural sweetness of honey.'
+    'author' => 'Sir Francis',
+    'intro' => 'These spicy honey-glazed <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are a perfect combination of sweet and spicy, offering a tantalizing snack that is sure to please your taste buds. With a hint of smoked paprika and cayenne pepper, these <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> provide a delightful kick that complements the natural sweetness of honey.'
 ],
 [
     'id' => 8,
     'img' => '8.png',
-    'title' => 'Maple Cinnamon <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+    'title' => 'Maple Cinnamon <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
     'category' => 'Sweet Treats',
     'date' => '10TH Apr 2021',
     'servings' => '8',
     'cook_time' => '25 minutes',
-    'ingredients' => '<ul><li>2 cups raw <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1/4 cup pure maple syrup</li><li>2 tbsp melted coconut oil</li><li>1 tsp ground cinnamon</li><li><span class="fraction">1/4</span> tsp sea salt</li></ul>',
-    'instructions' => '<ol><li>Preheat oven to 300°F (150°C).</li><li>In a large bowl, mix together maple syrup, melted coconut oil, ground cinnamon, and sea salt.</li><li>Add <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> to the bowl and stir until they are evenly coated with the mixture.</li><li>Spread <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake for 20-25 minutes, stirring occasionally, until the <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are golden brown and fragrant.</li><li>Allow to cool completely before storing in an airtight container.</li></ol>',
+    'ingredients' => '<ul><li>2 cups raw <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1/4 cup pure maple syrup</li><li>2 tbsp melted coconut oil</li><li>1 tsp ground cinnamon</li><li><span class="fraction">1/4</span> tsp sea salt</li></ul>',
+    'instructions' => '<ol><li>Preheat oven to 300°F (150°C).</li><li>In a large bowl, mix together maple syrup, melted coconut oil, ground cinnamon, and sea salt.</li><li>Add <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> to the bowl and stir until they are evenly coated with the mixture.</li><li>Spread <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> in a single layer on a baking sheet lined with parchment paper.</li><li>Bake for 20-25 minutes, stirring occasionally, until the <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are golden brown and fragrant.</li><li>Allow to cool completely before storing in an airtight container.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'These maple cinnamon <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are a delightful blend of sweet maple syrup and warm cinnamon. Perfect for a snack or a crunchy topping for salads and desserts.'
+    'author' => 'Sir Francis',
+    'intro' => 'These maple cinnamon <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are a delightful blend of sweet maple syrup and warm cinnamon. Perfect for a snack or a crunchy topping for salads and desserts.'
 ],
 
 [
@@ -125,7 +125,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 lb large shrimp, peeled and deveined</li><li>3 tbsp unsalted butter</li><li>3 cloves garlic, minced</li><li>1 tbsp lemon juice</li><li>1 tsp lemon zest</li><li>2 tbsp fresh parsley, chopped</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, melt butter over medium heat.</li><li>Add minced garlic and cook for 1-2 minutes until fragrant.</li><li>Add shrimp to the skillet, seasoning with salt and black pepper. Cook for 3-4 minutes on each side, or until shrimp are pink and opaque.</li><li>Stir in lemon juice and lemon zest, cooking for an additional 1 minute.</li><li>Remove from heat and stir in chopped parsley.</li><li>Serve immediately with your choice of side or over pasta.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This lemon garlic butter shrimp is a quick and delicious seafood dish with a burst of fresh lemon and aromatic garlic. Perfect for a weeknight dinner or a special occasion.'
 ],
 
@@ -140,7 +140,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 pizza dough (store-bought or homemade)</li><li>1 cup tomato sauce</li><li>1 1/2 cups fresh mozzarella cheese, sliced</li><li>1/4 cup fresh basil leaves</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 475°F (245°C).</li><li>Roll out the pizza dough on a floured surface to your desired thickness.</li><li>Transfer the dough to a baking sheet or pizza stone.</li><li>Spread tomato sauce evenly over the dough, leaving a small border around the edges.</li><li>Arrange mozzarella slices over the sauce.</li><li>Drizzle with olive oil and season with salt and black pepper.</li><li>Bake in the preheated oven for 15-20 minutes, or until the crust is golden and the cheese is melted and bubbly.</li><li>Remove from oven and top with fresh basil leaves before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This classic Margherita pizza features a simple yet flavorful combination of tomato sauce, fresh mozzarella, and basil. It’s a timeless favorite that’s easy to make and always satisfying.'
 ],
 [
@@ -154,7 +154,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 lb (450g) chicken breast, cubed</li><li>1 cup mushrooms, sliced</li><li>1 small onion, chopped</li><li>2 cloves garlic, minced</li><li>1 cup frozen peas</li><li>1 cup chicken broth</li><li>1 cup heavy cream</li><li>2 tbsp all-purpose flour</li><li>2 tbsp butter</li><li>1 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>1 sheet puff pastry</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 375°F (190°C).</li><li>In a large skillet, melt butter over medium heat. Add onions and garlic, and cook until translucent.</li><li>Add chicken and cook until browned. Stir in mushrooms and cook until tender.</li><li>Sprinkle flour over the mixture and stir to combine. Cook for 1-2 minutes.</li><li>Gradually add chicken broth and heavy cream, stirring constantly until the mixture thickens.</li><li>Stir in peas and dried thyme. Season with salt and black pepper to taste.</li><li>Transfer the mixture to a baking dish. Cover with puff pastry, trimming any excess.</li><li>Bake for 25-30 minutes, or until the pastry is golden brown and crispy.</li><li>Allow to cool slightly before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy chicken and mushroom pie features tender chunks of chicken and mushrooms in a rich, creamy sauce, all encased in a flaky puff pastry crust. It’s a comforting and hearty dish perfect for any meal.'
 ],
 
@@ -169,7 +169,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 medium sweet potatoes, peeled and cubed</li><li>1 can black beans, drained and rinsed</li><li>1 red bell pepper, chopped</li><li>1 small onion, chopped</li><li>2 cloves garlic, minced</li><li>1 tsp ground cumin</li><li>1 tsp smoked paprika</li><li>1/2 tsp chili powder</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>8 small corn tortillas</li><li>Fresh cilantro, chopped (for garnish)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 400°F (200°C).</li><li>In a large bowl, toss sweet potato cubes with olive oil, cumin, paprika, chili powder, salt, and black pepper.</li><li>Spread sweet potatoes on a baking sheet and roast for 20-25 minutes, or until tender and lightly browned.</li><li>In a skillet, heat a little olive oil over medium heat. Add onions and garlic, and cook until softened.</li><li>Add red bell pepper and cook for another 5 minutes.</li><li>Stir in black beans and cooked sweet potatoes. Cook until heated through.</li><li>Warm tortillas in a dry skillet or microwave.</li><li>Fill tortillas with the sweet potato and black bean mixture. Garnish with fresh cilantro before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These sweet potato and black bean tacos are packed with flavor and nutrients. The combination of roasted sweet potatoes and seasoned black beans creates a delicious vegetarian meal that’s both satisfying and healthy.'
 ],
 
@@ -184,7 +184,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g ground beef</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 slice white bread, soaked in milk</li><li>1/4 cup raisins</li><li>2 tbsp curry powder</li><li>1 tbsp sugar</li><li>1 tbsp vinegar</li><li>2 large eggs</li><li>1 cup milk</li><li>Salt and black pepper to taste</li><li>2 tbsp vegetable oil</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 350°F (175°C).</li><li>In a large skillet, heat oil over medium heat. Add onions and garlic, and cook until softened.</li><li>Add ground beef and cook until browned. Drain excess fat.</li><li>In a bowl, mash the soaked bread and mix with the beef, along with raisins, curry powder, sugar, and vinegar. Season with salt and black pepper.</li><li>Transfer mixture to a baking dish and press down evenly.</li><li>In a separate bowl, whisk together eggs and milk. Pour over the beef mixture.</li><li>Bake for 45-50 minutes, or until the top is golden brown and the filling is set.</li><li>Allow to cool slightly before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Classic beef bobotie is a traditional South African dish with a flavorful curry-spiced beef filling topped with a creamy egg custard. It’s a comforting and savory meal that’s sure to please everyone at the table.'
 ],
 [
@@ -198,7 +198,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>300g pasta (e.g., spaghetti or fettuccine)</li><li>500g large shrimp, peeled and deveined</li><li>4 cloves garlic, minced</li><li>2 tbsp olive oil</li><li>1 lemon, juiced and zested</li><li>1/2 cup chicken broth</li><li>1/4 cup fresh parsley, chopped</li><li>Salt and black pepper to taste</li><li>Grated Parmesan cheese (optional, for serving)</li></ul>',
     'instructions' => '<ol><li>Cook pasta according to package instructions until al dente. Drain and set aside.</li><li>In a large skillet, heat olive oil over medium heat. Add garlic and cook until fragrant, about 1 minute.</li><li>Add shrimp and cook until pink and opaque, about 3-4 minutes per side.</li><li>Stir in lemon juice, lemon zest, and chicken broth. Bring to a simmer and cook for 2 minutes.</li><li>Add cooked pasta to the skillet and toss to combine with the shrimp and sauce.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with fresh parsley and serve with grated Parmesan cheese if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This lemon garlic shrimp pasta is a light and flavorful dish with succulent shrimp and a zesty lemon sauce. It’s a quick and easy meal that’s perfect for a weeknight dinner or special occasion.'
 ],
 
@@ -213,7 +213,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 kg butternut squash, peeled and cubed</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 carrot, peeled and chopped</li><li>1 liter vegetable broth</li><li>1/2 cup coconut milk</li><li>2 tbsp olive oil</li><li>1 tsp ground cumin</li><li>1/2 tsp ground cinnamon</li><li>Salt and black pepper to taste</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>In a large pot, heat olive oil over medium heat. Add onion, garlic, and carrot, and cook until softened.</li><li>Add butternut squash, cumin, and cinnamon, and cook for another 5 minutes.</li><li>Pour in vegetable broth and bring to a boil. Reduce heat and simmer for 20 minutes, or until butternut squash is tender.</li><li>Using an immersion blender, puree the soup until smooth. Alternatively, carefully transfer in batches to a blender.</li><li>Stir in coconut milk and season with salt and black pepper to taste.</li><li>Heat through and garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy butternut squash soup is rich and comforting with a hint of sweetness and spice. It’s perfect for warming up on a chilly day and pairs beautifully with crusty bread.'
 ],
 
@@ -228,7 +228,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas (400g), drained and rinsed</li><li>2 cups fresh spinach</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 tbsp ginger, minced</li><li>1 can diced tomatoes (400g)</li><li>1 can coconut milk (400ml)</li><li>2 tbsp curry powder</li><li>1/2 tsp red chili powder</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, heat olive oil over medium heat. Add onion, garlic, and ginger, and cook until onion is translucent.</li><li>Add curry powder and red chili powder, and cook for another minute.</li><li>Stir in diced tomatoes and cook for 5 minutes.</li><li>Add chickpeas and coconut milk, and bring to a simmer.</li><li>Stir in fresh spinach and cook until wilted.</li><li>Season with salt and black pepper to taste.</li><li>Serve with rice or naan bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spicy chickpea and spinach curry is a flavorful and hearty dish with a rich coconut milk base and a kick of spice. It’s perfect for a satisfying vegetarian meal.'
 ],
 
@@ -243,7 +243,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>200g dark chocolate, chopped</li><li>150g unsalted butter</li><li>200g granulated sugar</li><li>3 large eggs</li><li>1 tsp vanilla extract</li><li>120g all-purpose flour</li><li>1/4 tsp salt</li><li>1/2 cup chopped nuts (optional)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 350°F (175°C). Line a baking pan with parchment paper.</li><li>In a heatproof bowl, melt chocolate and butter together over a pot of simmering water, stirring until smooth.</li><li>Remove from heat and stir in sugar until well combined. Add eggs one at a time, mixing well after each addition. Stir in vanilla extract.</li><li>Fold in flour and salt until just combined. If using, fold in chopped nuts.</li><li>Pour batter into prepared pan and spread evenly.</li><li>Bake for 25-30 minutes, or until a toothpick inserted into the center comes out with a few moist crumbs.</li><li>Cool in the pan before cutting into squares and serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These classic chocolate brownies are rich, fudgy, and irresistibly delicious. Perfect for satisfying your sweet tooth or sharing with friends and family.'
 ],
 [
@@ -257,7 +257,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken breast, sliced</li><li>1 can (400ml) coconut milk</li><li>2 tbsp green curry paste</li><li>1 red bell pepper, sliced</li><li>1 cup bamboo shoots, drained</li><li>1 cup baby corn</li><li>1 tbsp fish sauce</li><li>1 tbsp brown sugar</li><li>1 tbsp vegetable oil</li><li>Fresh basil leaves for garnish</li><li>Cooked jasmine rice for serving</li></ul>',
     'instructions' => '<ol><li>Heat vegetable oil in a large skillet or wok over medium heat. Add green curry paste and cook for 1 minute until fragrant.</li><li>Add chicken and cook until browned on all sides.</li><li>Pour in coconut milk and bring to a simmer.</li><li>Add bell pepper, bamboo shoots, and baby corn. Cook for 10 minutes, or until the chicken is cooked through and vegetables are tender.</li><li>Stir in fish sauce and brown sugar. Adjust seasoning as needed.</li><li>Serve with jasmine rice and garnish with fresh basil leaves.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Thai green curry with chicken is aromatic and creamy with just the right amount of spice. It’s a comforting and flavorful dish that pairs perfectly with jasmine rice.'
 ],
 
@@ -272,7 +272,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas (400g), drained and rinsed</li><li>1 cucumber, diced</li><li>1 cup cherry tomatoes, halved</li><li>1/2 cup red onion, finely chopped</li><li>1/2 cup black olives, sliced</li><li>1/4 cup feta cheese, crumbled</li><li>2 tbsp olive oil</li><li>1 tbsp red wine vinegar</li><li>1 tsp dried oregano</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large bowl, combine chickpeas, cucumber, cherry tomatoes, red onion, olives, and feta cheese.</li><li>In a small bowl, whisk together olive oil, red wine vinegar, and dried oregano. Season with salt and black pepper to taste.</li><li>Pour dressing over the salad and toss to combine.</li><li>Serve immediately or chill in the refrigerator before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Mediterranean chickpea salad is fresh, colorful, and packed with flavor. It’s a perfect side dish or light meal that’s both nutritious and satisfying.'
 ],
 
@@ -287,7 +287,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g beef sirloin, thinly sliced</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>200g mushrooms, sliced</li><li>1 cup beef broth</li><li>1 cup sour cream</li><li>2 tbsp all-purpose flour</li><li>2 tbsp butter</li><li>1 tbsp Dijon mustard</li><li>Salt and black pepper to taste</li><li>Fresh parsley for garnish</li><li>Cooked egg noodles for serving</li></ul>',
     'instructions' => '<ol><li>In a large skillet, melt butter over medium heat. Add onions and garlic, and cook until softened.</li><li>Add beef and cook until browned. Remove beef from the skillet and set aside.</li><li>Add mushrooms to the skillet and cook until tender.</li><li>Sprinkle flour over the mushrooms and stir to combine. Gradually add beef broth, stirring constantly until the mixture thickens.</li><li>Return beef to the skillet and stir in sour cream and Dijon mustard. Cook until heated through.</li><li>Season with salt and black pepper to taste.</li><li>Serve over cooked egg noodles and garnish with fresh parsley.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Classic beef stroganoff is a rich and creamy dish with tender beef and mushrooms in a savory sour cream sauce. It’s perfect served over egg noodles for a hearty and satisfying meal.'
 ],
 
@@ -302,7 +302,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup rolled oats</li><li>2 cups milk</li><li>1 large apple, peeled, cored, and diced</li><li>1 tsp ground cinnamon</li><li>2 tbsp brown sugar</li><li>1 tbsp butter</li><li>1/4 cup chopped walnuts (optional)</li></ul>',
     'instructions' => '<ol><li>In a medium saucepan, melt butter over medium heat. Add diced apple and cook until slightly softened, about 3 minutes.</li><li>Add rolled oats, milk, ground cinnamon, and brown sugar. Stir to combine.</li><li>Bring to a simmer and cook, stirring occasionally, until oats are tender and the mixture has thickened, about 5-7 minutes.</li><li>Remove from heat and stir in chopped walnuts if desired.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This apple cinnamon oatmeal is a warm and comforting breakfast with tender apples and a hint of spice. It’s perfect for starting your day on a cozy note.'
 ],
 [
@@ -316,7 +316,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 slices whole grain bread</li><li>1 ripe avocado</li><li>2 large eggs</li><li>1 tbsp white vinegar</li><li>Salt and black pepper to taste</li><li>Red pepper flakes (optional)</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>Toast the bread slices to your desired crispness.</li><li>While the bread is toasting, bring a small pot of water to a gentle simmer. Add white vinegar.</li><li>Crack each egg into a small bowl. Gently slide the eggs into the simmering water and cook for 3-4 minutes, until the whites are set but yolks are still runny. Remove with a slotted spoon and set aside.</li><li>In a bowl, mash the avocado with a fork and season with salt and black pepper.</li><li>Spread the mashed avocado evenly over the toasted bread slices.</li><li>Top each slice with a poached egg.</li><li>Sprinkle with red pepper flakes and garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This avocado toast with poached eggs is a delicious and nutritious breakfast that combines creamy avocado with perfectly poached eggs. It’s simple yet satisfying, ideal for starting your day right.'
 ],
 
@@ -331,7 +331,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup frozen mixed berries</li><li>1 banana</li><li>1/2 cup Greek yogurt</li><li>1/2 cup almond milk</li><li>1 tbsp honey</li><li>1/4 cup granola</li><li>Fresh berries and mint leaves for garnish</li></ul>',
     'instructions' => '<ol><li>In a blender, combine frozen berries, banana, Greek yogurt, almond milk, and honey. Blend until smooth.</li><li>Pour the smoothie into bowls.</li><li>Top with granola, fresh berries, and mint leaves.</li><li>Serve immediately with a spoon and enjoy your refreshing breakfast bowl.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This berry smoothie bowl is a vibrant and healthy breakfast option packed with antioxidants. It’s customizable with your favorite toppings for a nutritious start to your day.'
 ],
 
@@ -346,7 +346,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 large eggs</li><li>1/2 cup fresh spinach, chopped</li><li>1/4 cup feta cheese, crumbled</li><li>1/4 cup milk</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>Fresh herbs for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>In a bowl, whisk together eggs, milk, salt, and black pepper.</li><li>Heat olive oil in a non-stick skillet over medium heat.</li><li>Pour in the egg mixture and cook until edges begin to set, about 2 minutes.</li><li>Sprinkle spinach and feta cheese over one half of the omelette.</li><li>Fold the other half over the filling and cook for another 2-3 minutes, or until fully set.</li><li>Garnish with fresh herbs if desired and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spinach and feta omelette is a quick and flavorful breakfast packed with protein and greens. It’s perfect for a satisfying morning meal that’s both easy to prepare and delicious.'
 ],
 
@@ -361,7 +361,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 cups Greek yogurt</li><li>1 cup granola</li><li>1 cup mixed fresh fruit (e.g., berries, banana, kiwi)</li><li>2 tbsp honey</li><li>Fresh mint leaves for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>In serving glasses or bowls, layer Greek yogurt, granola, and fresh fruit.</li><li>Drizzle with honey on top.</li><li>Garnish with fresh mint leaves if desired.</li><li>Serve immediately or refrigerate until ready to eat.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Greek yogurt parfait is a light and nutritious breakfast that combines creamy yogurt with crunchy granola and fresh fruit. It’s a versatile dish that can be customized with your favorite toppings.'
 ],
 [
@@ -375,7 +375,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large sweet potatoes, peeled and diced</li><li>1 red bell pepper, diced</li><li>1 onion, diced</li><li>2 tbsp olive oil</li><li>1 tsp paprika</li><li>1/2 tsp ground cumin</li><li>Salt and black pepper to taste</li><li>2 large eggs</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large skillet over medium heat.</li><li>Add sweet potatoes and cook, stirring occasionally, for about 10 minutes until they start to soften.</li><li>Add red bell pepper and onion, and cook until vegetables are tender and lightly browned.</li><li>Stir in paprika, cumin, salt, and black pepper. Cook for an additional 2 minutes.</li><li>Make two wells in the hash and crack an egg into each well. Cover the skillet and cook until eggs are done to your liking.</li><li>Garnish with fresh parsley and serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This sweet potato hash with eggs is a hearty and flavorful breakfast that combines tender sweet potatoes with spiced vegetables and a perfectly cooked egg. It’s a satisfying and nutritious way to start your day.'
 ],
 
@@ -390,7 +390,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup all-purpose flour</li><li>2 tbsp sugar</li><li>1 tsp baking powder</li><li>1/2 tsp baking soda</li><li>1/4 tsp salt</li><li>1 cup buttermilk</li><li>1 large egg</li><li>1 ripe banana, mashed</li><li>2 tbsp melted butter</li><li>Butter or oil for cooking</li><li>Maple syrup for serving</li></ul>',
     'instructions' => '<ol><li>In a large bowl, whisk together flour, sugar, baking powder, baking soda, and salt.</li><li>In another bowl, mix buttermilk, egg, mashed banana, and melted butter.</li><li>Add wet ingredients to dry ingredients and stir until just combined. Be careful not to overmix.</li><li>Heat a non-stick skillet or griddle over medium heat and lightly grease with butter or oil.</li><li>Pour batter onto the skillet to form pancakes. Cook until bubbles form on the surface, then flip and cook until golden brown.</li><li>Serve warm with maple syrup and your favorite toppings.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These banana pancakes are fluffy, sweet, and packed with ripe banana flavor. They’re perfect for a cozy breakfast or brunch, and they pair beautifully with maple syrup and fresh fruit.'
 ],
 
@@ -405,7 +405,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup rolled oats</li><li>1 cup milk (or plant-based milk)</li><li>1/2 cup Greek yogurt</li><li>1 tbsp chia seeds</li><li>2 tbsp honey or maple syrup</li><li>1/2 cup mixed berries (fresh or frozen)</li><li>Fresh mint leaves for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>In a bowl or jar, combine oats, milk, Greek yogurt, chia seeds, and honey or maple syrup.</li><li>Stir well, cover, and refrigerate overnight.</li><li>In the morning, stir the oats and top with mixed berries.</li><li>Garnish with fresh mint leaves if desired and enjoy cold or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These overnight oats with berries are a convenient and nutritious breakfast option. Prepared the night before, they’re ready to eat in the morning and offer a creamy texture with a burst of berry flavor.'
 ],
 
@@ -420,7 +420,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large flour tortillas</li><li>1 cup fresh spinach</li><li>1 cup mushrooms, sliced</li><li>1/2 cup shredded cheese (e.g., cheddar or mozzarella)</li><li>2 large eggs</li><li>1 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>1/4 tsp garlic powder (optional)</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a skillet over medium heat. Add mushrooms and cook until tender.</li><li>Add spinach and cook until wilted. Season with salt, black pepper, and garlic powder if using.</li><li>In a separate bowl, whisk eggs and pour them into the skillet. Scramble with the mushrooms and spinach until cooked through.</li><li>Warm the tortillas in a dry skillet or microwave.</li><li>Divide the egg mixture between the tortillas and top with shredded cheese.</li><li>Wrap and serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This mushroom and spinach breakfast wrap is a savory and satisfying option for busy mornings. It’s packed with nutritious vegetables and cheese, making it a delicious start to your day.'
 ],
 [
@@ -434,7 +434,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup quinoa</li><li>2 cups water or milk</li><li>1 apple, diced</li><li>1 tsp ground cinnamon</li><li>2 tbsp honey or maple syrup</li><li>1/4 cup raisins or dried cranberries</li><li>Chopped nuts for topping (optional)</li></ul>',
     'instructions' => '<ol><li>Rinse quinoa under cold water and drain.</li><li>In a pot, bring water or milk to a boil. Add quinoa and reduce heat to a simmer.</li><li>Cover and cook for 15 minutes, or until quinoa is tender and liquid is absorbed.</li><li>Stir in diced apple, cinnamon, honey or maple syrup, and raisins or dried cranberries.</li><li>Cook for an additional 5 minutes, stirring occasionally.</li><li>Serve warm, topped with chopped nuts if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This apple cinnamon quinoa is a warm and comforting breakfast that combines fluffy quinoa with sweet apples and aromatic cinnamon. It’s a wholesome and filling meal to start your day.'
 ],
 
@@ -449,7 +449,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>6 large eggs</li><li>1 cup milk</li><li>1 cup mixed vegetables (e.g., bell peppers, tomatoes, zucchini), diced</li><li>1/2 cup shredded cheese (e.g., cheddar or feta)</li><li>1 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>Fresh herbs for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a bowl, whisk together eggs, milk, salt, and black pepper.</li><li>Heat olive oil in a skillet over medium heat. Add mixed vegetables and cook until tender.</li><li>Pour the egg mixture over the vegetables and cook until edges begin to set, about 5 minutes.</li><li>Sprinkle shredded cheese on top.</li><li>Transfer skillet to the oven and bake for 15-20 minutes, or until frittata is fully set and golden brown.</li><li>Garnish with fresh herbs if desired and serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This vegetable frittata is a versatile and delicious breakfast option loaded with vegetables and cheese. It’s easy to make and perfect for a nutritious start to your day.'
 ],
 
@@ -464,7 +464,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1/2 cup chia seeds</li><li>1 cup coconut milk</li><li>2 tbsp honey or maple syrup</li><li>1/2 tsp vanilla extract</li><li>Fresh fruit for topping (e.g., mango, berries)</li></ul>',
     'instructions' => '<ol><li>In a bowl or jar, mix chia seeds, coconut milk, honey or maple syrup, and vanilla extract.</li><li>Stir well, cover, and refrigerate overnight.</li><li>In the morning, stir the pudding and top with fresh fruit.</li><li>Serve chilled and enjoy your nutritious breakfast.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This coconut chia seed pudding is a creamy and satisfying breakfast that’s easy to prepare the night before. It’s packed with fiber and can be topped with your favorite fresh fruits for added flavor.'
 ],
 
@@ -479,7 +479,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 slices whole grain bread</li><li>2 large eggs</li><li>1 tomato, sliced</li><li>1/4 cup fresh basil leaves</li><li>2 tbsp mayonnaise</li><li>1 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a skillet over medium heat. Crack eggs into the skillet and cook until whites are set but yolks are still runny, or to your desired doneness.</li><li>Spread mayonnaise on one side of each slice of bread.</li><li>Assemble sandwiches with tomato slices, basil leaves, and cooked eggs.</li><li>Season with salt and black pepper.</li><li>Serve immediately and enjoy your fresh and flavorful breakfast sandwich.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This tomato basil breakfast sandwich is a delightful combination of fresh tomato, basil, and a perfectly cooked egg. It’s simple yet packed with flavor, making it an ideal choice for a quick and tasty breakfast.'
 ],
 [
@@ -493,7 +493,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can (400g) chickpeas, drained and rinsed</li><li>1 tbsp olive oil</li><li>1 tsp paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>Pat chickpeas dry with a paper towel. Place them in a bowl and toss with olive oil, paprika, cayenne pepper, garlic powder, and salt.</li><li>Spread chickpeas in a single layer on a baking sheet.</li><li>Bake for 25-30 minutes, shaking the pan halfway through, until chickpeas are crispy and golden brown.</li><li>Let cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy roasted chickpeas are a crunchy and flavorful snack that’s perfect for satisfying your cravings. Packed with protein and spices, they make a great addition to any healthy snack routine.'
 ],
 
@@ -508,7 +508,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup Greek yogurt</li><li>1/2 cup mixed berries (e.g., strawberries, blueberries, raspberries)</li><li>2 tbsp honey or maple syrup</li><li>1/4 cup granola</li><li>Fresh mint leaves for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>In a bowl or glass, layer Greek yogurt, mixed berries, and honey or maple syrup.</li><li>Top with granola and garnish with fresh mint leaves if desired.</li><li>Serve immediately for a refreshing and nutritious snack.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Greek yogurt and berry parfait is a quick and delicious snack that combines creamy yogurt with fresh berries and crunchy granola. It’s a great way to enjoy a balance of protein, fruit, and fiber.'
 ],
 
@@ -523,7 +523,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 celery stalks</li><li>1/4 cup almond butter</li><li>1 tbsp honey (optional)</li><li>Chopped nuts or seeds for topping (optional)</li></ul>',
     'instructions' => '<ol><li>Wash and cut celery stalks into bite-sized pieces.</li><li>Spread almond butter evenly into each celery stalk.</li><li>Drizzle with honey if desired and sprinkle with chopped nuts or seeds.</li><li>Serve immediately or store in an airtight container in the fridge for up to 3 days.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This almond butter stuffed celery is a crunchy and satisfying snack that’s easy to prepare. The creamy almond butter pairs perfectly with the crisp celery, and a touch of honey adds a hint of sweetness.'
 ],
 
@@ -538,7 +538,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 large cucumber, sliced into rounds</li><li>1/2 cup hummus</li><li>Cherry tomatoes for garnish (optional)</li><li>Fresh dill or parsley for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>Spread a small dollop of hummus onto each cucumber slice.</li><li>Garnish with cherry tomatoes or fresh dill/parsley if desired.</li><li>Serve immediately as a refreshing and healthy snack.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These cucumber and hummus bites are a light and tasty snack that’s perfect for a quick pick-me-up. The crisp cucumber slices topped with creamy hummus offer a satisfying crunch and fresh flavor.'
 ],
 [
@@ -552,7 +552,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 tuna steaks (about 200g each)</li><li>2 tbsp soy sauce</li><li>1 tbsp olive oil</li><li>1 tsp sesame oil</li><li>2 cloves garlic, minced</li><li>1 tbsp ginger, minced</li><li>Salt and black pepper to taste</li><li>Chopped green onions for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>In a small bowl, mix soy sauce, olive oil, sesame oil, garlic, and ginger.</li><li>Season tuna steaks with salt and black pepper. Brush both sides with the soy sauce mixture.</li><li>Heat a skillet over medium-high heat and sear the tuna steaks for about 2-3 minutes per side, or until desired doneness is achieved.</li><li>Garnish with chopped green onions if desired and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These pan-seared tuna steaks are quick to make and full of flavor. The combination of soy sauce, garlic, and ginger gives the tuna a deliciously savory taste.'
 ],
 
@@ -567,7 +567,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g large shrimp, peeled and deveined</li><li>2 tbsp vegetable oil</li><li>1 red bell pepper, sliced</li><li>1 green bell pepper, sliced</li><li>1 onion, sliced</li><li>3 cloves garlic, minced</li><li>2 tbsp soy sauce</li><li>1 tbsp sriracha sauce (or to taste)</li><li>1 tbsp honey</li><li>Salt and black pepper to taste</li><li>Chopped cilantro for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>Heat vegetable oil in a large skillet or wok over medium-high heat.</li><li>Add garlic and onion, and cook until fragrant and softened, about 2 minutes.</li><li>Add bell peppers and cook for another 3-4 minutes.</li><li>Add shrimp, soy sauce, sriracha sauce, and honey. Stir-fry until shrimp are cooked through, about 5 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with chopped cilantro if desired and serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spicy shrimp stir-fry is packed with vibrant flavors and is ready in just minutes. The combination of sriracha and honey adds a perfect balance of heat and sweetness.'
 ],
 
@@ -582,7 +582,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g calamari rings</li><li>1 cup flour</li><li>1 tsp paprika</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt and black pepper to taste</li><li>1 cup buttermilk</li><li>Vegetable oil for frying</li><li>Lemon wedges for serving</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix flour, paprika, garlic powder, onion powder, salt, and black pepper.</li><li>Dip calamari rings in buttermilk, then coat with the seasoned flour mixture.</li><li>Heat vegetable oil in a deep skillet or fryer to 180°C (350°F).</li><li>Fry calamari rings in batches until golden brown and crispy, about 2-3 minutes per batch. Drain on paper towels.</li><li>Serve with lemon wedges for squeezing over the calamari.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These crispy calamari rings are a perfect appetizer or snack. Coated in a seasoned flour mixture and fried to golden perfection, they’re best served with a squeeze of fresh lemon juice.'
 ],
 
@@ -597,7 +597,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g large prawns, peeled and deveined</li><li>3 tbsp olive oil</li><li>4 cloves garlic, minced</li><li>1 lemon, juiced</li><li>1 tsp paprika</li><li>Salt and black pepper to taste</li><li>Chopped parsley for garnish (optional)</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large skillet over medium heat. Add minced garlic and cook until fragrant, about 1 minute.</li><li>Add prawns and cook for 2-3 minutes per side, or until pink and opaque.</li><li>Stir in lemon juice and paprika. Cook for another 1-2 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with chopped parsley if desired and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These garlic lemon prawns are quick, flavorful, and perfect for any occasion. The combination of garlic and lemon enhances the natural sweetness of the prawns.'
 ],
 [
@@ -611,7 +611,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 fish fillets (e.g., hake or tilapia), about 150g each</li><li>1/2 cup breadcrumbs</li><li>1/4 cup grated Parmesan cheese</li><li>2 tbsp fresh parsley, chopped</li><li>1 tbsp fresh thyme, chopped</li><li>1 tsp dried oregano</li><li>2 cloves garlic, minced</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>In a bowl, mix breadcrumbs, Parmesan cheese, parsley, thyme, oregano, garlic, and olive oil.</li><li>Season fish fillets with salt and black pepper. Press the breadcrumb mixture onto the top of each fillet.</li><li>Bake for 20-25 minutes, or until the fish flakes easily with a fork and the topping is golden brown.</li><li>Serve hot with a side of your choice.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This herb-crusted baked fish is a healthy and delicious meal. The crunchy topping adds a burst of flavor to tender fish fillets, making it perfect for a family dinner.'
 ],
 
@@ -626,7 +626,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g calamari rings</li><li>2 tbsp olive oil</li><li>2 tbsp lemon juice</li><li>2 cloves garlic, minced</li><li>1 tsp red chili flakes</li><li>1/2 tsp smoked paprika</li><li>Salt and black pepper to taste</li><li>Lemon wedges for serving</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine olive oil, lemon juice, garlic, red chili flakes, smoked paprika, salt, and black pepper.</li><li>Add calamari rings and toss to coat. Let marinate for 10 minutes.</li><li>Preheat a grill or grill pan over medium-high heat.</li><li>Grill calamari for 2-3 minutes per side, or until charred and tender.</li><li>Serve with lemon wedges for squeezing over the calamari.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy grilled calamari rings are full of bold flavors and perfect for a summer BBQ. The marinade adds a zesty kick to the calamari, making it a great appetizer or main course.'
 ],
 
@@ -641,7 +641,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g large shrimp, peeled and deveined</li><li>1 red bell pepper, cut into chunks</li><li>1 green bell pepper, cut into chunks</li><li>1 onion, cut into chunks</li><li>1 zucchini, sliced</li><li>3 tbsp olive oil</li><li>2 tbsp soy sauce</li><li>1 tbsp honey</li><li>1 tsp dried oregano</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix olive oil, soy sauce, honey, dried oregano, salt, and black pepper.</li><li>Add shrimp and vegetables to the bowl and toss to coat.</li><li>Thread shrimp and vegetables onto skewers, alternating them.</li><li>Preheat a grill or grill pan over medium-high heat.</li><li>Grill skewers for 3-4 minutes per side, or until shrimp are cooked through and vegetables are tender.</li><li>Serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These shrimp and veggie skewers are a great option for a quick and healthy meal. The flavorful marinade enhances the shrimp and vegetables, making them perfect for grilling.'
 ],
 
@@ -656,7 +656,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g large prawns, peeled and deveined</li><li>3 tbsp butter</li><li>3 cloves garlic, minced</li><li>1 lemon, juiced</li><li>1/4 cup chicken or vegetable broth</li><li>1 tbsp chopped fresh parsley</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, melt butter over medium heat. Add minced garlic and cook until fragrant, about 1 minute.</li><li>Add prawns and cook for 2-3 minutes per side, or until pink and opaque.</li><li>Stir in lemon juice and broth, cooking until the sauce thickens slightly, about 2 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with chopped parsley and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These lemon butter prawns are rich and flavorful, with a tangy lemon sauce that perfectly complements the sweetness of the prawns. Ideal for a quick and elegant dinner.'
 ],
 [
@@ -670,7 +670,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 large bell peppers (any color)</li><li>1 cup quinoa, rinsed</li><li>2 cups vegetable broth</li><li>1 cup corn kernels (fresh or frozen)</li><li>1 cup black beans, drained and rinsed</li><li>1 cup diced tomatoes</li><li>1/2 cup chopped fresh cilantro</li><li>1 tsp cumin</li><li>1 tsp paprika</li><li>Salt and black pepper to taste</li><li>1 cup shredded cheese (optional)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 190°C (375°F).</li><li>Cut the tops off the bell peppers and remove seeds and membranes. Place them upright in a baking dish.</li><li>In a saucepan, bring vegetable broth to a boil. Add quinoa, reduce heat, and simmer for 15 minutes, or until quinoa is cooked and liquid is absorbed.</li><li>In a bowl, combine cooked quinoa, corn, black beans, diced tomatoes, cilantro, cumin, paprika, salt, and black pepper.</li><li>Stuff the bell peppers with the quinoa mixture. Sprinkle shredded cheese on top if desired.</li><li>Bake for 30 minutes, or until peppers are tender and cheese is melted and bubbly.</li><li>Serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These stuffed bell peppers are a hearty and nutritious vegetarian meal. The combination of quinoa, beans, and vegetables makes them filling and flavorful.'
 ],
 
@@ -685,7 +685,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>300g pasta of your choice</li><li>2 ripe avocados</li><li>2 cloves garlic</li><li>1/4 cup fresh basil leaves</li><li>1/4 cup lemon juice</li><li>1/4 cup olive oil</li><li>Salt and black pepper to taste</li><li>Grated Parmesan cheese for serving (optional)</li></ul>',
     'instructions' => '<ol><li>Cook pasta according to package instructions. Drain and set aside.</li><li>In a food processor, combine avocados, garlic, basil, lemon juice, and olive oil. Blend until smooth. Season with salt and black pepper to taste.</li><li>Toss the cooked pasta with the avocado sauce until well coated.</li><li>Serve with grated Parmesan cheese if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy avocado pasta is a delicious and healthy alternative to traditional pasta sauces. It’s rich and flavorful, thanks to the creamy avocado base.'
 ],
 
@@ -700,7 +700,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large sweet potatoes, peeled and diced</li><li>1 can black beans, drained and rinsed</li><li>1 tbsp olive oil</li><li>1 tsp cumin</li><li>1 tsp smoked paprika</li><li>1/2 tsp chili powder</li><li>Salt and black pepper to taste</li><li>8 small tortillas</li><li>Chopped fresh cilantro for garnish</li><li>Optional toppings: avocado, sour cream, salsa</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Toss sweet potato cubes with olive oil, cumin, smoked paprika, chili powder, salt, and black pepper. Spread on a baking sheet.</li><li>Bake for 20-25 minutes, or until sweet potatoes are tender and lightly caramelized.</li><li>Warm tortillas in a dry skillet or oven.</li><li>To assemble tacos, fill each tortilla with roasted sweet potatoes, black beans, and any desired toppings.</li><li>Garnish with chopped cilantro and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These sweet potato and black bean tacos are a tasty and nutritious vegetarian option. The combination of sweet potatoes and black beans provides a satisfying and flavorful filling.'
 ],
 
@@ -715,7 +715,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup quinoa, rinsed</li><li>2 cups water or vegetable broth</li><li>1 red bell pepper, diced</li><li>1 yellow bell pepper, diced</li><li>1 zucchini, diced</li><li>1 red onion, diced</li><li>2 tbsp olive oil</li><li>1 tsp dried oregano</li><li>Salt and black pepper to taste</li><li>1/4 cup crumbled feta cheese (optional)</li><li>1/4 cup fresh basil or parsley, chopped</li><li>2 tbsp balsamic vinegar</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Toss diced vegetables with olive oil, oregano, salt, and black pepper. Spread on a baking sheet.</li><li>Roast for 25-30 minutes, or until vegetables are tender and caramelized.</li><li>In a saucepan, bring water or vegetable broth to a boil. Add quinoa, reduce heat, and simmer for 15 minutes, or until quinoa is cooked and liquid is absorbed.</li><li>In a large bowl, combine cooked quinoa, roasted vegetables, crumbled feta cheese (if using), and chopped basil or parsley.</li><li>Drizzle with balsamic vinegar and toss to combine.</li><li>Serve warm or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This roasted vegetable quinoa salad is a healthy and flavorful dish. The roasted vegetables add a rich depth of flavor to the protein-packed quinoa, making it a perfect side or main course.'
 ],
 [
@@ -729,7 +729,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas, drained and rinsed</li><li>2 cups fresh spinach leaves</li><li>1 large onion, diced</li><li>2 cloves garlic, minced</li><li>1 tbsp ginger, minced</li><li>1 can diced tomatoes</li><li>1 cup coconut milk</li><li>2 tbsp curry powder</li><li>1 tsp ground cumin</li><li>1 tsp ground coriander</li><li>1/2 tsp red chili powder (optional)</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large pan, heat olive oil over medium heat. Add onions and cook until translucent.</li><li>Add garlic and ginger, and cook for 1 minute until fragrant.</li><li>Stir in curry powder, cumin, coriander, and red chili powder (if using). Cook for 1 minute.</li><li>Add diced tomatoes and coconut milk. Bring to a simmer.</li><li>Add chickpeas and cook for 10 minutes, or until heated through and flavors are combined.</li><li>Stir in fresh spinach and cook until wilted.</li><li>Season with salt and black pepper to taste. Serve hot with rice or naan bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spicy chickpea and spinach curry is a comforting and hearty dish. The blend of spices and creamy coconut milk makes it a flavorful and satisfying vegetarian meal.'
 ],
 
@@ -744,7 +744,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large eggplants</li><li>1 cup cooked quinoa</li><li>1/2 cup chopped tomatoes</li><li>1/2 cup black olives, sliced</li><li>1/4 cup crumbled feta cheese</li><li>1/4 cup fresh basil, chopped</li><li>2 cloves garlic, minced</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Cut eggplants in half lengthwise and scoop out the flesh, leaving a 1 cm border.</li><li>Brush the eggplant halves with olive oil and place them on a baking sheet. Bake for 20 minutes.</li><li>In a bowl, combine quinoa, chopped tomatoes, olives, feta cheese, basil, garlic, salt, and black pepper.</li><li>Fill the eggplant halves with the quinoa mixture. Return to the oven and bake for an additional 15-20 minutes, or until eggplants are tender and filling is heated through.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Mediterranean stuffed eggplant is a delightful and nutritious dish. The combination of quinoa, vegetables, and feta cheese creates a flavorful filling for tender roasted eggplants.'
 ],
 
@@ -759,7 +759,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 small butternut squash, peeled and diced</li><li>2 tbsp olive oil</li><li>1/2 tsp ground cinnamon</li><li>1/4 tsp nutmeg</li><li>Salt and black pepper to taste</li><li>4 cups kale, chopped</li><li>1/4 cup dried cranberries</li><li>1/4 cup crumbled feta cheese</li><li>1/4 cup walnuts, chopped</li><li>2 tbsp balsamic vinaigrette</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Toss butternut squash with olive oil, cinnamon, nutmeg, salt, and black pepper. Spread on a baking sheet.</li><li>Roast for 25-30 minutes, or until tender and lightly caramelized.</li><li>In a large bowl, combine roasted butternut squash, kale, dried cranberries, feta cheese, and walnuts.</li><li>Drizzle with balsamic vinaigrette and toss to combine.</li><li>Serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This butternut squash and kale salad is a flavorful and nutritious choice. The combination of roasted butternut squash, kale, and crunchy walnuts creates a satisfying and healthy dish.'
 ],
 
@@ -774,7 +774,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup dried green or brown lentils, rinsed</li><li>1 large carrot, diced</li><li>1 celery stalk, diced</li><li>1 large onion, diced</li><li>2 cloves garlic, minced</li><li>1 can diced tomatoes</li><li>1 tsp dried thyme</li><li>1 tsp ground cumin</li><li>4 cups vegetable broth</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large pot, heat olive oil over medium heat. Add onions, carrots, and celery. Cook until vegetables are softened.</li><li>Add garlic and cook for 1 minute until fragrant.</li><li>Stir in lentils, diced tomatoes, thyme, cumin, salt, and black pepper.</li><li>Add vegetable broth and bring to a boil. Reduce heat and simmer for 30 minutes, or until lentils are tender.</li><li>Adjust seasoning to taste and serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This vegetarian lentil soup is hearty and packed with flavor. It’s perfect for a cozy meal and provides a great source of protein and fiber.'
 ],
 
@@ -789,7 +789,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 can (400g) diced tomatoes</li><li>2 cups vegetable broth</li><li>1 tsp dried basil</li><li>1/2 tsp sugar</li><li>Salt and black pepper to taste</li><li>1/2 cup heavy cream (optional)</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large pot over medium heat. Add onion and cook until softened.</li><li>Add garlic and cook for 1 minute until fragrant.</li><li>Stir in diced tomatoes, vegetable broth, basil, sugar, salt, and black pepper. Bring to a boil, then reduce heat and simmer for 20 minutes.</li><li>Use an immersion blender to puree the soup until smooth. (Alternatively, carefully transfer the soup in batches to a blender.)</li><li>Stir in heavy cream if using, and adjust seasoning as needed. Serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This classic tomato soup is comforting and flavorful, perfect for a cozy meal. The addition of cream makes it extra rich and smooth.'
 ],
 
@@ -804,7 +804,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 large butternut squash, peeled and diced</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 tsp ground ginger</li><li>1/2 tsp ground nutmeg</li><li>4 cups vegetable broth</li><li>1 cup coconut milk</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Toss butternut squash with olive oil and spread on a baking sheet. Roast for 25-30 minutes, or until tender.</li><li>In a large pot, heat olive oil over medium heat. Add onion and cook until softened.</li><li>Add garlic, ginger, and nutmeg. Cook for 1 minute until fragrant.</li><li>Add roasted butternut squash and vegetable broth. Bring to a boil, then reduce heat and simmer for 10 minutes.</li><li>Use an immersion blender to puree the soup until smooth. (Alternatively, carefully transfer the soup in batches to a blender.)</li><li>Stir in coconut milk and season with salt and black pepper. Serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy butternut squash soup is velvety and comforting, with a hint of sweetness and spices. It’s perfect for a warming meal.'
 ],
 
@@ -819,7 +819,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup dried red lentils, rinsed</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 large carrot, diced</li><li>1 celery stalk, diced</li><li>1 can diced tomatoes</li><li>1 tsp ground cumin</li><li>1 tsp smoked paprika</li><li>1/2 tsp ground turmeric</li><li>1/4 tsp cayenne pepper (optional)</li><li>4 cups vegetable broth</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large pot, heat olive oil over medium heat. Add onion, carrot, and celery. Cook until vegetables are softened.</li><li>Add garlic, cumin, smoked paprika, turmeric, and cayenne pepper (if using). Cook for 1 minute until fragrant.</li><li>Stir in lentils, diced tomatoes, and vegetable broth. Bring to a boil, then reduce heat and simmer for 25 minutes, or until lentils are tender.</li><li>Season with salt and black pepper to taste. Serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spicy lentil soup is hearty and flavorful, with a kick from spices. It’s perfect for a filling and warming meal.'
 ],
 
@@ -834,7 +834,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 large onion, chopped</li><li>2 cloves garlic, minced</li><li>1 large carrot, diced</li><li>1 celery stalk, diced</li><li>1 zucchini, diced</li><li>1 cup green beans, chopped</li><li>1 can diced tomatoes</li><li>1 can kidney beans, drained and rinsed</li><li>1 cup small pasta (e.g., macaroni)</li><li>4 cups vegetable broth</li><li>1 tsp dried oregano</li><li>1 tsp dried basil</li><li>Salt and black pepper to taste</li><li>Grated Parmesan cheese for serving (optional)</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large pot over medium heat. Add onion, carrot, and celery. Cook until vegetables are softened.</li><li>Add garlic and cook for 1 minute until fragrant.</li><li>Stir in zucchini, green beans, diced tomatoes, kidney beans, pasta, vegetable broth, oregano, basil, salt, and black pepper.</li><li>Bring to a boil, then reduce heat and simmer for 20 minutes, or until pasta and vegetables are tender.</li><li>Serve hot with grated Parmesan cheese if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This minestrone soup is a classic Italian dish loaded with vegetables and pasta. It’s hearty, nutritious, and perfect for a satisfying meal.'
 ],
 [
@@ -848,7 +848,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>100g dark chocolate, chopped</li><li>1/2 cup unsalted butter</li><li>1 cup powdered sugar</li><li>2 large eggs</li><li>2 large egg yolks</li><li>1 tsp vanilla extract</li><li>1/2 cup all-purpose flour</li><li>Butter and cocoa powder for greasing</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F). Grease 4 ramekins with butter and dust with cocoa powder.</li><li>In a heatproof bowl, melt the chocolate and butter together over a pot of simmering water. Stir until smooth.</li><li>Remove from heat and whisk in powdered sugar until well combined.</li><li>Whisk in eggs and egg yolks, one at a time, followed by vanilla extract.</li><li>Fold in flour until just combined.</li><li>Divide the batter evenly among the prepared ramekins.</li><li>Bake for 12-14 minutes, or until the edges are set but the centers are still soft.</li><li>Let cool for 1 minute before inverting onto plates. Serve warm, optionally with a scoop of vanilla ice cream.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These chocolate lava cakes are a decadent dessert with a gooey, molten center. Perfect for special occasions or a sweet indulgence.'
 ],
 
@@ -863,7 +863,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 cups sweetened shredded coconut</li><li>1/2 cup granulated sugar</li><li>1/4 cup all-purpose flour</li><li>2 large egg whites</li><li>1/2 tsp vanilla extract</li><li>Pinch of salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>In a large bowl, combine shredded coconut, sugar, flour, and salt.</li><li>In another bowl, beat egg whites until stiff peaks form. Gently fold egg whites into the coconut mixture until well combined.</li><li>Drop spoonfuls of the mixture onto the prepared baking sheet.</li><li>Bake for 20-25 minutes, or until the edges are golden brown.</li><li>Let cool completely on a wire rack before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Coconut macaroons are a chewy, sweet treat with a delightful crunch. They’re perfect for those who love coconut desserts.'
 ],
 
@@ -878,7 +878,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 1/2 cups all-purpose flour</li><li>1/2 cup granulated sugar</li><li>1/2 cup unsalted butter, cold and cubed</li><li>1 cup granulated sugar (for filling)</li><li>2 large eggs</li><li>1/4 cup freshly squeezed lemon juice</li><li>1/4 cup all-purpose flour (for filling)</li><li>Powdered sugar for dusting</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Grease a 9x9-inch baking pan.</li><li>For the crust, in a bowl, mix flour, sugar, and cold butter until the mixture resembles coarse crumbs.</li><li>Press the mixture into the bottom of the prepared pan. Bake for 15 minutes.</li><li>For the filling, in a separate bowl, whisk together sugar, eggs, lemon juice, and flour until smooth.</li><li>Pour the filling over the pre-baked crust.</li><li>Bake for 25-30 minutes, or until the filling is set and the edges are lightly golden.</li><li>Cool completely, then dust with powdered sugar before cutting into bars.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These lemon bars have a tangy lemon filling with a buttery crust, making them a refreshing and sweet treat for any occasion.'
 ],
 
@@ -893,7 +893,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup creamy peanut butter</li><li>1 cup granulated sugar</li><li>1 large egg</li><li>1 tsp vanilla extract</li><li>1/2 tsp baking soda</li><li>Pinch of salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>In a bowl, mix peanut butter, sugar, egg, vanilla extract, baking soda, and salt until smooth.</li><li>Drop spoonfuls of dough onto the prepared baking sheet, spacing them about 2 inches apart.</li><li>Flatten each cookie with a fork, making a crisscross pattern.</li><li>Bake for 12-15 minutes, or until the edges are golden brown.</li><li>Cool on the baking sheet for a few minutes before transferring to a wire rack to cool completely.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These peanut butter cookies are rich and chewy, with a perfect balance of sweetness and peanut flavor. They’re a classic favorite for cookie lovers.'
 ],
 [
@@ -907,7 +907,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>3 ripe bananas, mashed</li><li>1/2 cup unsalted butter, melted</li><li>1 cup granulated sugar</li><li>2 large eggs</li><li>1 tsp vanilla extract</li><li>1 1/2 cups all-purpose flour</li><li>1 tsp baking powder</li><li>1/2 tsp baking soda</li><li>Pinch of salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 175°C (350°F). Grease a 9x5-inch loaf pan.</li><li>In a large bowl, mix mashed bananas, melted butter, and sugar until combined.</li><li>Whisk in eggs and vanilla extract.</li><li>In another bowl, combine flour, baking powder, baking soda, and salt.</li><li>Gradually add dry ingredients to the banana mixture, stirring until just combined.</li><li>Pour batter into the prepared loaf pan.</li><li>Bake for 60-65 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Cool in the pan for 10 minutes before transferring to a wire rack to cool completely.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This classic banana bread is moist and flavorful, perfect for breakfast or a sweet snack. It’s a great way to use up ripe bananas.'
 ],
 
@@ -922,7 +922,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 1/2 cups graham cracker crumbs</li><li>1/4 cup granulated sugar</li><li>1/2 cup unsalted butter, melted</li><li>500g cream cheese, softened</li><li>1 cup granulated sugar</li><li>2 large eggs</li><li>1 tsp vanilla extract</li><li>1 cup mixed berries (fresh or frozen)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 175°C (350°F). Grease a 9x13-inch baking pan.</li><li>In a bowl, combine graham cracker crumbs, sugar, and melted butter. Press mixture into the bottom of the prepared pan to form a crust.</li><li>In a large bowl, beat cream cheese until smooth. Add sugar and beat until creamy.</li><li>Add eggs one at a time, beating well after each addition. Mix in vanilla extract.</li><li>Spread cream cheese mixture over the crust.</li><li>Drop berries evenly over the top, gently pressing them into the filling.</li><li>Bake for 35-40 minutes, or until the edges are set and the center is slightly jiggly.</li><li>Cool completely before cutting into bars and serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These berry cheesecake bars are a delicious and easy dessert, combining a buttery graham cracker crust with creamy cheesecake and fresh berries.'
 ],
 
@@ -937,7 +937,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1/2 cup unsalted butter</li><li>1 cup granulated sugar</li><li>2 large eggs</li><li>1 tsp vanilla extract</li><li>1/2 cup unsweetened cocoa powder</li><li>1/2 cup all-purpose flour</li><li>1/4 tsp salt</li><li>1/4 tsp baking powder</li><li>1/2 cup caramel sauce</li><li>Sea salt for sprinkling</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 175°C (350°F). Grease an 8x8-inch baking pan.</li><li>In a saucepan, melt butter over low heat. Remove from heat and stir in sugar, eggs, and vanilla extract.</li><li>Mix in cocoa powder, flour, salt, and baking powder until well combined.</li><li>Spread batter evenly in the prepared pan.</li><li>Drop spoonfuls of caramel sauce over the batter and swirl with a knife to create a marble effect.</li><li>Bake for 25-30 minutes, or until a toothpick inserted into the center comes out with a few moist crumbs.</li><li>Sprinkle with sea salt while still warm. Cool completely before cutting into squares.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These salted caramel brownies are rich and fudgy, with a swirl of gooey caramel and a hint of sea salt. They’re perfect for chocolate and caramel lovers.'
 ],
 
@@ -952,7 +952,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 pre-made pie crust</li><li>1 cup maple syrup</li><li>1/2 cup brown sugar</li><li>1/4 cup unsalted butter, melted</li><li>3 large eggs</li><li>1 tsp vanilla extract</li><li>1 1/2 cups pecan halves</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 175°C (350°F). Place the pie crust into a 9-inch pie dish.</li><li>In a bowl, whisk together maple syrup, brown sugar, melted butter, eggs, and vanilla extract until smooth.</li><li>Stir in pecan halves.</li><li>Pour filling into the prepared pie crust.</li><li>Bake for 45-50 minutes, or until the filling is set and slightly puffed.</li><li>Cool completely before slicing. Serve at room temperature or slightly warmed.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This maple pecan pie is a sweet and nutty dessert with a rich maple flavor. It’s a delightful treat for any occasion.'
 ],
 [
@@ -963,10 +963,10 @@ $blogPosts = [
     'date' => '15TH Jan 2024',
     'servings' => '12',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>1 cup pitted dates</li><li>1/2 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1/2 cup walnuts</li><li>2 tbsp cocoa powder</li><li>1 tbsp honey (or maple syrup)</li><li>1/4 cup unsweetened shredded coconut</li></ul>',
-    'instructions' => '<ol><li>In a food processor, combine dates, <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, walnuts, cocoa powder, and honey.</li><li>Process until the mixture is finely chopped and sticks together when pressed.</li><li>Roll the mixture into 12 small balls.</li><li>Roll each ball in shredded coconut to coat.</li><li>Store in an airtight container in the refrigerator for up to 1 week.</li></ol>',
+    'ingredients' => '<ul><li>1 cup pitted dates</li><li>1/2 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1/2 cup walnuts</li><li>2 tbsp cocoa powder</li><li>1 tbsp honey (or maple syrup)</li><li>1/4 cup unsweetened shredded coconut</li></ul>',
+    'instructions' => '<ol><li>In a food processor, combine dates, <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, walnuts, cocoa powder, and honey.</li><li>Process until the mixture is finely chopped and sticks together when pressed.</li><li>Roll the mixture into 12 small balls.</li><li>Roll each ball in shredded coconut to coat.</li><li>Store in an airtight container in the refrigerator for up to 1 week.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These date and nut energy balls are a healthy, sweet treat packed with nutrients. Perfect for a quick snack or post-workout boost.'
 ],
 
@@ -981,7 +981,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 1/2 cups all-purpose flour</li><li>1/2 cup granulated sugar</li><li>1/4 cup brown sugar</li><li>1 tsp baking powder</li><li>1/2 tsp baking soda</li><li>1/2 tsp salt</li><li>1 tsp ground cinnamon</li><li>1/2 cup unsalted butter, melted</li><li>1/2 cup milk</li><li>1 large egg</li><li>1 tsp vanilla extract</li><li>1 cup peeled and chopped apple</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a muffin tin with paper liners.</li><li>In a large bowl, combine flour, granulated sugar, brown sugar, baking powder, baking soda, salt, and cinnamon.</li><li>In another bowl, whisk together melted butter, milk, egg, and vanilla extract.</li><li>Pour the wet ingredients into the dry ingredients and mix until just combined.</li><li>Fold in chopped apple.</li><li>Spoon batter into the muffin tin, filling each cup about 3/4 full.</li><li>Bake for 25-30 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Cool in the tin for 5 minutes before transferring to a wire rack to cool completely.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These cinnamon apple muffins are soft and flavorful, with a hint of spice and chunks of fresh apple. Perfect for breakfast or a sweet snack.'
 ],
 
@@ -996,7 +996,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup almond butter</li><li>1/2 cup coconut oil</li><li>1/4 cup honey or maple syrup</li><li>1/2 cup cocoa powder</li><li>1/4 tsp salt</li></ul>',
     'instructions' => '<ol><li>Line a muffin tin with paper liners.</li><li>In a heatproof bowl, melt coconut oil over a pot of simmering water.</li><li>Stir in almond butter, honey (or maple syrup), cocoa powder, and salt until smooth.</li><li>Spoon the mixture into the muffin cups, filling each about halfway.</li><li>Refrigerate for at least 1 hour, or until set.</li><li>Store in an airtight container in the refrigerator for up to 2 weeks.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These almond butter cups are a rich and creamy treat, combining the smoothness of almond butter with the sweetness of cocoa. A healthier alternative to traditional candy.'
 ],
 
@@ -1011,7 +1011,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 1/2 cups all-purpose flour</li><li>1 cup granulated sugar</li><li>1/2 tsp baking powder</li><li>1/2 tsp baking soda</li><li>1/2 tsp salt</li><li>1 tsp ground cinnamon</li><li>1/2 tsp ground nutmeg</li><li>1/2 tsp ground ginger</li><li>1/2 cup vegetable oil</li><li>1 cup canned pumpkin puree</li><li>2 large eggs</li><li>1 tsp vanilla extract</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Grease and flour a 9-inch round cake pan.</li><li>In a bowl, mix flour, sugar, baking powder, baking soda, salt, cinnamon, nutmeg, and ginger.</li><li>In another bowl, whisk together oil, pumpkin puree, eggs, and vanilla extract.</li><li>Gradually add dry ingredients to the wet ingredients, mixing until just combined.</li><li>Pour batter into the prepared cake pan.</li><li>Bake for 40-45 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Cool in the pan for 10 minutes before transferring to a wire rack to cool completely. Frost if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This pumpkin spice cake is moist and full of warm spices, making it a perfect treat for autumn or any time you crave a cozy dessert.'
 ],
 
@@ -1026,7 +1026,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken thighs, boneless and skinless</li><li>2 tbsp olive oil</li><li>2 cloves garlic, minced</li><li>1 tbsp ground cumin</li><li>1 tbsp ground paprika</li><li>1 tsp ground turmeric</li><li>1 tsp ground coriander</li><li>1 tsp ground cinnamon</li><li>1/2 tsp ground black pepper</li><li>1/2 tsp salt</li><li>1/4 cup plain yogurt</li><li>1 tbsp lemon juice</li><li>Fresh pita bread, for serving</li><li>Chopped fresh vegetables, for serving</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix olive oil, garlic, cumin, paprika, turmeric, coriander, cinnamon, black pepper, and salt.</li><li>Add yogurt and lemon juice to the mixture and stir well.</li><li>Cut chicken into strips and coat with the spice mixture. Marinate for at least 1 hour in the refrigerator.</li><li>Preheat a grill or skillet over medium-high heat.</li><li>Cook chicken strips for 5-7 minutes on each side, or until fully cooked and slightly charred.</li><li>Serve with pita bread and chopped fresh vegetables.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spicy chicken shawarma is flavorful and juicy, perfect for a quick and satisfying meal. Serve it with pita bread and fresh veggies for a complete experience.'
 ],
 
@@ -1041,7 +1041,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 block (about 300g) firm tofu, drained and cubed</li><li>2 tbsp soy sauce</li><li>1 tbsp sesame oil</li><li>2 tbsp vegetable oil</li><li>1 bell pepper, sliced</li><li>1 cup broccoli florets</li><li>1 cup snap peas</li><li>2 carrots, sliced</li><li>2 cloves garlic, minced</li><li>1 tbsp ginger, minced</li><li>2 tbsp hoisin sauce</li><li>1 tbsp sesame seeds</li></ul>',
     'instructions' => '<ol><li>In a large skillet or wok, heat vegetable oil over medium-high heat.</li><li>Add tofu cubes and cook until golden brown on all sides. Remove from the skillet and set aside.</li><li>In the same skillet, add sesame oil, garlic, and ginger. Stir-fry for 1 minute.</li><li>Add bell pepper, broccoli, snap peas, and carrots. Stir-fry for 5-7 minutes, or until vegetables are tender-crisp.</li><li>Return tofu to the skillet and add soy sauce and hoisin sauce. Stir well to coat everything evenly.</li><li>Cook for an additional 2 minutes, then sprinkle with sesame seeds before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This vegetable stir-fry with tofu is a quick and healthy dish, packed with colorful veggies and savory flavors. Perfect for a weeknight dinner.'
 ],
 
@@ -1056,7 +1056,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup dried lentils, rinsed</li><li>1 tbsp olive oil</li><li>1 onion, chopped</li><li>2 cloves garlic, minced</li><li>1 tbsp ground cumin</li><li>1 tbsp ground coriander</li><li>1 tsp turmeric</li><li>1 tsp ground paprika</li><li>1 can (400g) diced tomatoes</li><li>2 cups vegetable broth</li><li>2 cups fresh spinach</li><li>Salt and pepper to taste</li><li>Cooked rice, for serving</li></ul>',
     'instructions' => '<ol><li>In a large pot, heat olive oil over medium heat. Add onion and garlic and cook until softened.</li><li>Add cumin, coriander, turmeric, and paprika. Stir and cook for 1 minute.</li><li>Add lentils, diced tomatoes, and vegetable broth. Bring to a boil.</li><li>Reduce heat and simmer for 25-30 minutes, or until lentils are tender.</li><li>Stir in fresh spinach and cook until wilted.</li><li>Season with salt and pepper to taste. Serve over cooked rice.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This lentil and spinach curry is hearty and flavorful, with a blend of spices that enhances the natural sweetness of the lentils and spinach. A satisfying and nutritious meal.'
 ],
 
@@ -1071,7 +1071,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g large shrimp, peeled and deveined</li><li>3 tbsp unsalted butter</li><li>4 cloves garlic, minced</li><li>1/4 cup chicken broth</li><li>1 tbsp lemon juice</li><li>1/4 tsp red pepper flakes</li><li>2 tbsp fresh parsley, chopped</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, melt butter over medium heat.</li><li>Add garlic and cook for 1 minute, until fragrant.</li><li>Add shrimp and cook for 2-3 minutes per side, until pink and opaque.</li><li>Pour in chicken broth and lemon juice. Stir in red pepper flakes.</li><li>Cook for an additional 2 minutes, until the sauce has slightly reduced.</li><li>Season with salt and black pepper to taste. Sprinkle with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This garlic butter shrimp is quick and flavorful, with a rich garlic butter sauce that’s perfect for a fast and delicious dinner. Serve with rice or pasta for a complete meal.'
 ],
 [
@@ -1085,7 +1085,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken breast, cut into cubes</li><li>1 red bell pepper, cut into chunks</li><li>1 green bell pepper, cut into chunks</li><li>1 onion, cut into chunks</li><li>1 zucchini, sliced</li><li>2 tbsp olive oil</li><li>2 tbsp lemon juice</li><li>1 tsp dried oregano</li><li>1 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>Wooden skewers, soaked in water</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix olive oil, lemon juice, oregano, thyme, salt, and black pepper.</li><li>Add chicken cubes to the marinade and toss to coat. Marinate for at least 30 minutes.</li><li>Thread chicken and vegetables onto skewers, alternating between chicken and vegetables.</li><li>Preheat grill or grill pan over medium-high heat.</li><li>Grill skewers for 10-15 minutes, turning occasionally, until chicken is cooked through and vegetables are tender.</li><li>Serve warm with a side of rice or a fresh salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These chicken and vegetable skewers are a delicious and healthy option for a summer BBQ or a quick weeknight meal. The marinade adds a flavorful touch to the tender chicken and crisp vegetables.'
 ],
 
@@ -1100,7 +1100,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>12 large mushrooms, stems removed</li><li>250g ground beef</li><li>1 cup fresh spinach, chopped</li><li>1/2 cup breadcrumbs</li><li>1/4 cup grated Parmesan cheese</li><li>2 cloves garlic, minced</li><li>1 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 190°C (375°F). Line a baking sheet with parchment paper.</li><li>In a skillet, heat olive oil over medium heat. Add garlic and cook for 1 minute.</li><li>Add ground beef and cook until browned. Drain excess fat.</li><li>Stir in chopped spinach and cook until wilted. Remove from heat.</li><li>Mix in breadcrumbs, Parmesan cheese, salt, and black pepper.</li><li>Spoon the beef mixture into the mushroom caps and place on the prepared baking sheet.</li><li>Bake for 15-20 minutes, or until mushrooms are tender and the filling is golden brown.</li><li>Garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These beef and spinach stuffed mushrooms are a savory and satisfying appetizer or main dish. The combination of ground beef, spinach, and Parmesan creates a flavorful filling that’s sure to impress.'
 ],
 
@@ -1115,7 +1115,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g baby potatoes, halved</li><li>3 tbsp olive oil</li><li>3 cloves garlic, minced</li><li>1 tbsp dried rosemary</li><li>1 tbsp dried thyme</li><li>Salt and black pepper to taste</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>In a large bowl, toss potatoes with olive oil, garlic, rosemary, thyme, salt, and black pepper.</li><li>Spread potatoes in a single layer on the prepared baking sheet.</li><li>Roast for 30-40 minutes, or until potatoes are golden brown and tender, stirring halfway through.</li><li>Garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These garlic herb roasted potatoes are a simple yet flavorful side dish. The combination of garlic, rosemary, and thyme adds a delicious touch to perfectly roasted baby potatoes.'
 ],
 
@@ -1130,7 +1130,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup fresh spinach, chopped</li><li>1 can (400g) artichoke hearts, drained and chopped</li><li>1 cup sour cream</li><li>1/2 cup mayonnaise</li><li>1/2 cup grated Parmesan cheese</li><li>2 cloves garlic, minced</li><li>1/4 tsp salt</li><li>1/4 tsp black pepper</li><li>1/4 tsp red pepper flakes (optional)</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Grease a baking dish.</li><li>In a bowl, mix spinach, artichoke hearts, sour cream, mayonnaise, Parmesan cheese, garlic, salt, black pepper, and red pepper flakes (if using).</li><li>Transfer mixture to the prepared baking dish.</li><li>Bake for 20-25 minutes, or until bubbly and golden brown on top.</li><li>Serve warm with tortilla chips, crackers, or fresh bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy spinach and artichoke dip is a crowd-pleaser, perfect for parties or as a savory snack. It’s rich and cheesy with a delightful blend of spinach and artichokes.'
 ],
 [
@@ -1144,7 +1144,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g ground beef</li><li>1 small onion, finely chopped</li><li>2 cloves garlic, minced</li><li>1 tsp ground cumin</li><li>1 tsp ground coriander</li><li>1/2 tsp paprika</li><li>1/2 tsp cayenne pepper (adjust to taste)</li><li>1/2 tsp salt</li><li>1/4 tsp black pepper</li><li>Fresh parsley for garnish</li><li>Wooden skewers, soaked in water</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine ground beef, onion, garlic, cumin, coriander, paprika, cayenne pepper, salt, and black pepper.</li><li>Mix thoroughly until well combined.</li><li>Divide mixture into equal portions and shape into long sausage-like patties around the soaked skewers.</li><li>Preheat grill or grill pan over medium-high heat.</li><li>Grill kofta for 8-10 minutes, turning occasionally, until cooked through.</li><li>Garnish with fresh parsley before serving. Serve with pita bread and yogurt sauce.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy beef kofta skewers are packed with flavor and perfect for a quick meal. Serve them with pita bread and a cooling yogurt sauce for a delicious and satisfying dish.'
 ],
 
@@ -1159,7 +1159,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken breast, thinly sliced</li><li>1 red bell pepper, sliced</li><li>1 green bell pepper, sliced</li><li>1 cup broccoli florets</li><li>1 cup snap peas</li><li>2 tbsp soy sauce</li><li>1 tbsp oyster sauce</li><li>1 tbsp olive oil</li><li>2 cloves garlic, minced</li><li>1 tsp fresh ginger, grated</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large skillet or wok over medium-high heat.</li><li>Add garlic and ginger, and stir-fry for 30 seconds until fragrant.</li><li>Add chicken slices and cook until browned and cooked through, about 5-7 minutes.</li><li>Add bell peppers, broccoli, and snap peas. Stir-fry for another 5 minutes, or until vegetables are tender-crisp.</li><li>Stir in soy sauce and oyster sauce. Cook for an additional 2 minutes, until everything is well coated and heated through.</li><li>Season with salt and black pepper to taste. Serve hot with steamed rice or noodles.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This chicken stir-fry is a quick and healthy option for dinner. Packed with colorful vegetables and a savory sauce, it’s a satisfying meal that’s ready in just 25 minutes.'
 ],
 
@@ -1174,7 +1174,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 large sweet potatoes, peeled and cut into fries</li><li>2 tbsp olive oil</li><li>1 tsp smoked paprika</li><li>1/2 tsp ground cumin</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>1/4 tsp cayenne pepper (optional)</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F). Line a baking sheet with parchment paper.</li><li>In a large bowl, toss sweet potato fries with olive oil until evenly coated.</li><li>In a small bowl, mix together paprika, cumin, garlic powder, onion powder, cayenne pepper, salt, and black pepper.</li><li>Sprinkle the spice mixture over the sweet potato fries and toss to coat evenly.</li><li>Spread the fries in a single layer on the prepared baking sheet.</li><li>Bake for 20-25 minutes, flipping halfway through, until fries are crispy and golden brown.</li><li>Serve hot with your favorite dipping sauce.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy baked sweet potato fries are a healthier alternative to traditional fries. Crisped to perfection and seasoned with a blend of spices, they make a delicious and addictive snack or side dish.'
 ],
 
@@ -1189,7 +1189,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup red lentils, rinsed</li><li>1 onion, chopped</li><li>2 cloves garlic, minced</li><li>1 tbsp curry powder</li><li>1 tsp ground cumin</li><li>1 tsp ground coriander</li><li>1 cup diced tomatoes</li><li>1 cup chopped carrots</li><li>1 cup chopped potatoes</li><li>2 cups vegetable broth</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>Fresh cilantro for garnish</li></ul>',
     'instructions' => '<ol><li>In a large pot, heat olive oil over medium heat. Add onion and garlic, and sauté until softened.</li><li>Add curry powder, cumin, and coriander, and cook for another minute.</li><li>Stir in diced tomatoes, carrots, potatoes, and lentils. Pour in vegetable broth and bring to a boil.</li><li>Reduce heat and simmer for 25-30 minutes, or until lentils and vegetables are tender.</li><li>Season with salt and black pepper. Garnish with fresh cilantro before serving. Enjoy with rice or naan bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This lentil and vegetable curry is a comforting and nutritious dish. Full of flavor and hearty ingredients, it’s a great option for a filling meal that’s easy to prepare.'
 ],
 [
@@ -1203,7 +1203,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can (400g) chickpeas, drained and rinsed</li><li>1 cup cherry tomatoes, halved</li><li>1 cucumber, diced</li><li>1/4 cup red onion, finely chopped</li><li>1/4 cup Kalamata olives, pitted and sliced</li><li>1/4 cup feta cheese, crumbled</li><li>2 tbsp olive oil</li><li>1 tbsp lemon juice</li><li>1 tsp dried oregano</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large bowl, combine chickpeas, cherry tomatoes, cucumber, red onion, olives, and feta cheese.</li><li>In a small bowl, whisk together olive oil, lemon juice, oregano, salt, and black pepper.</li><li>Pour dressing over salad and toss gently to combine.</li><li>Chill in the refrigerator for at least 15 minutes before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Mediterranean chickpea salad is vibrant and refreshing, packed with fresh vegetables and feta cheese. It’s perfect as a light lunch or a healthy side dish.'
 ],
 
@@ -1218,7 +1218,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup quinoa, rinsed</li><li>2 cups water</li><li>1 can (400g) black beans, drained and rinsed</li><li>1 red bell pepper, diced</li><li>1/2 cup corn kernels (fresh or frozen)</li><li>1/4 cup red onion, chopped</li><li>1/4 cup fresh cilantro, chopped</li><li>2 tbsp olive oil</li><li>1 tbsp lime juice</li><li>1 tsp ground cumin</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a saucepan, bring water to a boil. Add quinoa, reduce heat, and simmer for 15 minutes, or until quinoa is cooked and water is absorbed. Let it cool.</li><li>In a large bowl, combine cooked quinoa, black beans, bell pepper, corn, red onion, and cilantro.</li><li>In a small bowl, whisk together olive oil, lime juice, cumin, salt, and black pepper.</li><li>Pour dressing over salad and toss to combine.</li><li>Chill before serving for best flavor.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This quinoa and black bean salad is a hearty and nutritious option, full of protein and fresh flavors. It’s a great choice for a satisfying lunch or a side dish at dinner.'
 ],
 
@@ -1233,7 +1233,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 large head of romaine lettuce, chopped</li><li>1/2 cup croutons</li><li>1/4 cup grated Parmesan cheese</li><li>1/4 cup Caesar dressing</li><li>1 tbsp olive oil</li><li>1 clove garlic, minced</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large bowl, toss chopped lettuce with Caesar dressing until evenly coated.</li><li>Heat olive oil in a skillet over medium heat. Add garlic and cook for 1 minute until fragrant. Toss in croutons and cook until golden brown.</li><li>Top the salad with croutons, Parmesan cheese, and a sprinkle of salt and black pepper.</li><li>Serve immediately for a crispy, fresh salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This classic Caesar salad is a timeless favorite, featuring crisp romaine lettuce, crunchy croutons, and a rich Caesar dressing. It’s perfect as a side dish or a light meal.'
 ],
 
@@ -1248,7 +1248,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 medium beets, peeled and cut into wedges</li><li>2 tbsp olive oil</li><li>Salt and black pepper to taste</li><li>100g goat cheese, crumbled</li><li>1/4 cup walnuts, toasted</li><li>2 cups mixed greens</li><li>2 tbsp balsamic vinegar</li><li>1 tbsp honey</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Toss beet wedges with olive oil, salt, and black pepper, and spread on a baking sheet.</li><li>Roast beets for 35-40 minutes, until tender and caramelized.</li><li>In a large bowl, combine mixed greens with roasted beets, goat cheese, and toasted walnuts.</li><li>In a small bowl, whisk together balsamic vinegar and honey. Drizzle over the salad and toss gently to combine.</li><li>Serve immediately for a flavorful and elegant salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This roasted beet and goat cheese salad is a delightful combination of sweet, tangy, and savory flavors. The roasted beets and creamy goat cheese make it a gourmet salad that’s perfect for any occasion.'
 ],
 [
@@ -1262,23 +1262,23 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup bulgur wheat</li><li>2 cups water</li><li>1/2 cup dates, chopped</li><li>1/2 cup walnuts, chopped</li><li>1/2 cup parsley, chopped</li><li>1/4 cup red onion, finely chopped</li><li>1/4 cup olive oil</li><li>2 tbsp lemon juice</li><li>1/2 tsp ground cumin</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a saucepan, bring water to a boil. Add bulgur wheat, cover, and simmer for 12 minutes until water is absorbed and bulgur is tender. Let it cool.</li><li>In a large bowl, combine cooked bulgur, dates, walnuts, parsley, and red onion.</li><li>In a small bowl, whisk together olive oil, lemon juice, cumin, salt, and black pepper.</li><li>Pour dressing over salad and toss to combine.</li><li>Chill before serving to allow flavors to meld.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This bulgur wheat and date salad offers a delightful combination of sweet dates, crunchy walnuts, and fresh parsley. It’s a nutritious and satisfying salad that’s perfect for a light lunch or a side dish.'
 ],
 
 [
     'id' => 91,
     'img' => '91.png',
-    'title' => 'Kale Salad with <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a> and Pomegranate',
+    'title' => 'Kale Salad with <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a> and Pomegranate',
     'category' => 'Salads',
     'date' => '5TH May 2024',
     'servings' => '4',
     'cook_time' => '10 minutes',
-    'ingredients' => '<ul><li>4 cups kale, chopped</li><li>1/2 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, sliced</li><li>1/2 cup pomegranate seeds</li><li>1/4 cup red onion, thinly sliced</li><li>1/4 cup olive oil</li><li>2 tbsp apple cider vinegar</li><li>1 tbsp honey</li><li>Salt and black pepper to taste</li></ul>',
-    'instructions' => '<ol><li>In a large bowl, massage chopped kale with a bit of olive oil for a couple of minutes to soften it.</li><li>Add <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, pomegranate seeds, and red onion to the kale.</li><li>In a small bowl, whisk together olive oil, apple cider vinegar, honey, salt, and black pepper.</li><li>Pour dressing over the salad and toss to coat evenly.</li><li>Serve immediately or chill for a more refreshing taste.</li></ol>',
+    'ingredients' => '<ul><li>4 cups kale, chopped</li><li>1/2 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, sliced</li><li>1/2 cup pomegranate seeds</li><li>1/4 cup red onion, thinly sliced</li><li>1/4 cup olive oil</li><li>2 tbsp apple cider vinegar</li><li>1 tbsp honey</li><li>Salt and black pepper to taste</li></ul>',
+    'instructions' => '<ol><li>In a large bowl, massage chopped kale with a bit of olive oil for a couple of minutes to soften it.</li><li>Add <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, pomegranate seeds, and red onion to the kale.</li><li>In a small bowl, whisk together olive oil, apple cider vinegar, honey, salt, and black pepper.</li><li>Pour dressing over the salad and toss to coat evenly.</li><li>Serve immediately or chill for a more refreshing taste.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'This kale salad with <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> and pomegranate is a vibrant and crunchy dish, offering a perfect balance of flavors and textures. It’s a refreshing and nutritious option for a healthy meal.'
+    'author' => 'Sir Francis',
+    'intro' => 'This kale salad with <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> and pomegranate is a vibrant and crunchy dish, offering a perfect balance of flavors and textures. It’s a refreshing and nutritious option for a healthy meal.'
 ],
 
 [
@@ -1292,7 +1292,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 cups baby spinach</li><li>1/2 cup dates, chopped</li><li>1/4 cup poppy seeds</li><li>1/4 cup sunflower seeds</li><li>1/4 cup red onion, thinly sliced</li><li>1/4 cup feta cheese, crumbled</li><li>2 tbsp olive oil</li><li>1 tbsp balsamic vinegar</li><li>1 tbsp honey</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large bowl, combine baby spinach, chopped dates, poppy seeds, sunflower seeds, red onion, and feta cheese.</li><li>In a small bowl, whisk together olive oil, balsamic vinegar, honey, salt, and black pepper.</li><li>Pour dressing over salad and toss gently to combine.</li><li>Serve immediately for the freshest taste.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spinach salad with poppy seeds and dates is a delightful mix of sweet and savory flavors. The combination of crunchy seeds, sweet dates, and tangy feta creates a satisfying and wholesome salad.'
 ],
 
@@ -1307,7 +1307,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 apples, cored and thinly sliced</li><li>1/2 cup walnuts, chopped</li><li>4 cups mixed salad greens</li><li>1/4 cup dried cranberries</li><li>1/4 cup crumbled blue cheese</li><li>2 tbsp lemon juice</li><li>2 tbsp olive oil</li><li>1 tbsp honey</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large bowl, combine mixed greens, apple slices, walnuts, dried cranberries, and blue cheese.</li><li>In a small bowl, whisk together lemon juice, olive oil, honey, salt, and black pepper.</li><li>Pour dressing over salad and toss gently to combine.</li><li>Serve immediately for a crisp and fresh salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This apple and walnut salad is a delightful mix of crisp apples, crunchy walnuts, and tangy blue cheese, all dressed with a zesty lemon dressing. It’s a refreshing and satisfying salad that’s perfect for any meal.'
 ],
 
@@ -1322,7 +1322,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can (400g) chickpeas, drained and rinsed</li><li>1 tbsp olive oil</li><li>1 tsp smoked paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>Pat chickpeas dry with a paper towel and toss them with olive oil, smoked paprika, cayenne pepper, garlic powder, onion powder, and salt.</li><li>Spread chickpeas in a single layer on a baking sheet.</li><li>Roast for 25-30 minutes, stirring occasionally, until crispy and golden brown.</li><li>Let cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy roasted chickpeas are a crunchy and flavorful snack, perfect for satisfying your salty cravings. The blend of spices adds a kick that makes them irresistible.'
 ],
 
@@ -1337,7 +1337,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>12 large mushrooms, stems removed</li><li>1/2 cup cream cheese, softened</li><li>1/2 cup grated Parmesan cheese</li><li>1/4 cup breadcrumbs</li><li>2 cloves garlic, minced</li><li>2 tbsp chopped fresh parsley</li><li>1 tbsp olive oil</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a bowl, mix cream cheese, Parmesan cheese, breadcrumbs, garlic, parsley, olive oil, salt, and black pepper.</li><li>Spoon the cheese mixture into the mushroom caps.</li><li>Place stuffed mushrooms on a baking sheet and bake for 20-25 minutes, until mushrooms are tender and cheese is golden.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These cheese-stuffed mushrooms are a savory treat, with a creamy cheese filling and a hint of garlic and parsley. They make for a perfect appetizer or party snack.'
 ],
 
@@ -1352,7 +1352,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 cups pretzel sticks</li><li>1/4 cup melted butter</li><li>1/4 cup grated Parmesan cheese</li><li>2 cloves garlic, minced</li><li>1/2 tsp dried oregano</li><li>1/2 tsp dried basil</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a large bowl, mix melted butter, Parmesan cheese, garlic, oregano, basil, and salt.</li><li>Toss pretzel sticks in the butter mixture until evenly coated.</li><li>Spread pretzels on a baking sheet and bake for 15-20 minutes, stirring once halfway through.</li><li>Let cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These garlic Parmesan pretzels are seasoned to perfection, offering a crunchy, cheesy, and garlicky snack. They’re ideal for snacking on while watching a movie or entertaining guests.'
 ],
 
@@ -1364,10 +1364,10 @@ $blogPosts = [
     'date' => '15TH Jun 2024',
     'servings' => '4',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>1 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1 cup cashews</li><li>1 cup pecans</li><li>2 tbsp olive oil</li><li>1 tbsp smoked paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt to taste</li></ul>',
+    'ingredients' => '<ul><li>1 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1 cup cashews</li><li>1 cup pecans</li><li>2 tbsp olive oil</li><li>1 tbsp smoked paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a large bowl, toss nuts with olive oil, smoked paprika, cayenne pepper, garlic powder, onion powder, and salt.</li><li>Spread nuts on a baking sheet in a single layer.</li><li>Roast for 10-15 minutes, stirring occasionally, until nuts are golden and fragrant.</li><li>Allow to cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spiced nuts mix is a savory and crunchy snack with a perfect blend of spices. Ideal for parties or as a quick and satisfying treat.'
 ],
 [
@@ -1381,23 +1381,23 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 medium zucchinis, thinly sliced</li><li>2 tbsp olive oil</li><li>1/2 cup grated Parmesan cheese</li><li>1/2 cup breadcrumbs</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a bowl, toss zucchini slices with olive oil.</li><li>In another bowl, mix Parmesan cheese, breadcrumbs, garlic powder, onion powder, salt, and black pepper.</li><li>Dredge zucchini slices in the breadcrumb mixture and place on a baking sheet in a single layer.</li><li>Bake for 25-30 minutes, flipping halfway through, until crispy and golden brown.</li><li>Cool slightly before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These baked zucchini chips are a healthier alternative to potato chips, offering a crispy texture with a savory Parmesan coating. Perfect for a crunchy snack.'
 ],
 
 [
     'id' => 99,
     'img' => '99.png',
-    'title' => 'Herbed Roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+    'title' => 'Herbed Roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
     'category' => 'Savory Snacks',
     'date' => '25TH Jun 2024',
     'servings' => '4',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>1 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1 tbsp olive oil</li><li>1 tsp dried rosemary</li><li>1 tsp dried thyme</li><li>1/2 tsp garlic powder</li><li>Salt to taste</li></ul>',
-    'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a bowl, toss <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> with olive oil, rosemary, thyme, garlic powder, and salt.</li><li>Spread <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> on a baking sheet in a single layer.</li><li>Roast for 10-15 minutes, stirring occasionally, until fragrant and golden brown.</li><li>Allow to cool before serving.</li></ol>',
+    'ingredients' => '<ul><li>1 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1 tbsp olive oil</li><li>1 tsp dried rosemary</li><li>1 tsp dried thyme</li><li>1/2 tsp garlic powder</li><li>Salt to taste</li></ul>',
+    'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a bowl, toss <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> with olive oil, rosemary, thyme, garlic powder, and salt.</li><li>Spread <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> on a baking sheet in a single layer.</li><li>Roast for 10-15 minutes, stirring occasionally, until fragrant and golden brown.</li><li>Allow to cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'These herbed roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> are packed with savory flavors and make a great snack for any occasion. The blend of rosemary and thyme gives them a delightful taste.'
+    'author' => 'Sir Francis',
+    'intro' => 'These herbed roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> are packed with savory flavors and make a great snack for any occasion. The blend of rosemary and thyme gives them a delightful taste.'
 ],
 
 [
@@ -1411,7 +1411,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can (400g) chickpeas, drained and rinsed</li><li>2 tbsp olive oil</li><li>1/4 cup grated Parmesan cheese</li><li>2 cloves garlic, minced</li><li>1/2 tsp dried oregano</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>Pat chickpeas dry with a paper towel and toss with olive oil, Parmesan cheese, garlic, oregano, salt, and black pepper.</li><li>Spread chickpeas on a baking sheet in a single layer.</li><li>Roast for 25-30 minutes, stirring occasionally, until crispy and golden brown.</li><li>Let cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These garlic Parmesan roasted chickpeas are a crunchy and flavorful snack, perfect for anyone who loves a savory bite with a touch of cheese.'
 ],
 
@@ -1426,7 +1426,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 sheet puff pastry, thawed</li><li>1 cup spinach, chopped</li><li>1/2 cup grated mozzarella cheese</li><li>1/4 cup grated Parmesan cheese</li><li>1 egg, beaten (for egg wash)</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>Roll out puff pastry on a floured surface and cut into squares.</li><li>In a bowl, mix spinach, mozzarella cheese, Parmesan cheese, salt, and black pepper.</li><li>Spoon mixture onto the center of each pastry square.</li><li>Fold pastry over the filling to form a triangle and press edges to seal.</li><li>Brush tops with beaten egg.</li><li>Bake for 15-20 minutes, until golden and puffed.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These cheesy spinach puffs are a delightful blend of gooey cheese and fresh spinach wrapped in flaky pastry. They make an excellent snack or appetizer.'
 ],
 [
@@ -1440,7 +1440,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large onions, sliced into rings</li><li>1 cup buttermilk</li><li>1 cup all-purpose flour</li><li>1 cup breadcrumbs</li><li>1/2 cup grated Parmesan cheese</li><li>1 tsp paprika</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>Soak onion rings in buttermilk for at least 30 minutes.</li><li>In a bowl, mix flour, paprika, garlic powder, onion powder, salt, and black pepper.</li><li>In another bowl, combine breadcrumbs and Parmesan cheese.</li><li>Dredge each onion ring in the flour mixture, then dip in buttermilk, and coat with the breadcrumb mixture.</li><li>Place on a baking sheet lined with parchment paper.</li><li>Bake for 20-25 minutes, flipping halfway through, until golden and crispy.</li><li>Serve hot with your favorite dipping sauce.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These crispy baked onion rings are a healthier alternative to fried versions. Coated in a seasoned breadcrumb mixture, they’re perfect for snacking or as a side dish.'
 ],
 
@@ -1455,7 +1455,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 large sweet potatoes, peeled and cut into fries</li><li>2 tbsp olive oil</li><li>1 tsp paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a large bowl, toss sweet potato fries with olive oil, paprika, cayenne pepper, garlic powder, onion powder, and salt.</li><li>Spread fries in a single layer on a baking sheet.</li><li>Bake for 25-30 minutes, flipping halfway through, until crispy and golden brown.</li><li>Serve hot with your favorite dipping sauce.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These spicy baked sweet potato fries are a delicious and healthier alternative to regular fries. The blend of spices adds a flavorful kick, making them a great snack or side dish.'
 ],
 
@@ -1470,7 +1470,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 head cauliflower, cut into bite-sized florets</li><li>2 tbsp olive oil</li><li>1/2 cup grated Parmesan cheese</li><li>1/2 tsp garlic powder</li><li>1/2 tsp dried oregano</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a large bowl, toss cauliflower florets with olive oil, Parmesan cheese, garlic powder, oregano, salt, and black pepper.</li><li>Spread cauliflower on a baking sheet in a single layer.</li><li>Bake for 25-30 minutes, flipping halfway through, until crispy and golden brown.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These crispy garlic Parmesan cauliflower bites are a tasty and healthy snack. They offer a savory and cheesy flavor with a crispy texture, perfect for munching.'
 ],
 
@@ -1485,7 +1485,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>8 jalapeño peppers, halved and seeded</li><li>1 cup shredded cheddar cheese</li><li>4 tbsp cream cheese, softened</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>1/2 tsp paprika</li><li>Salt and black pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a bowl, mix cheddar cheese, cream cheese, garlic powder, onion powder, paprika, salt, and black pepper.</li><li>Spoon cheese mixture into each jalapeño half.</li><li>Place on a baking sheet and bake for 15-20 minutes, until cheese is melted and bubbly.</li><li>Let cool slightly before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These cheddar stuffed jalapeño poppers are a spicy and cheesy treat. They’re perfect for parties or as a zesty snack, combining the heat of jalapeños with creamy cheddar.'
 ],
 [
@@ -1499,7 +1499,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>2 carrots, sliced</li><li>2 celery stalks, sliced</li><li>6 cups chicken broth</li><li>2 cups cooked chicken, shredded</li><li>1 cup egg noodles</li><li>1 bay leaf</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh parsley</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large pot over medium heat. Add onion and garlic, and sauté until softened.</li><li>Add carrots and celery, and cook for another 5 minutes.</li><li>Pour in chicken broth and bring to a boil.</li><li>Add chicken, egg noodles, and bay leaf. Reduce heat and simmer for 20 minutes, until noodles are tender.</li><li>Season with salt and black pepper to taste.</li><li>Stir in fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This classic chicken noodle soup is a comforting and hearty meal, perfect for chilly days. Tender chicken, vegetables, and egg noodles are combined in a flavorful broth.'
 ],
 
@@ -1514,7 +1514,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>2 cups cooked chicken, shredded</li><li>1 cup frozen corn kernels</li><li>4 cups chicken broth</li><li>1 cup milk</li><li>1 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh chives</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a pot over medium heat. Add onion and garlic, and sauté until translucent.</li><li>Add chicken and corn, and cook for 5 minutes.</li><li>Pour in chicken broth and bring to a boil.</li><li>Reduce heat and stir in milk and dried thyme. Simmer for 15 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with fresh chives before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy chicken and corn soup is a satisfying and flavorful option, blending tender chicken with sweet corn and a creamy broth. It’s perfect for a quick and comforting meal.'
 ],
 [
@@ -1528,7 +1528,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>1 can (400g) diced tomatoes</li><li>2 cups seafood stock</li><li>200g shrimp, peeled and deveined</li><li>1 tsp dried basil</li><li>1/2 tsp dried oregano</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh basil</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a pot over medium heat. Add onion and garlic, and sauté until softened.</li><li>Stir in diced tomatoes and seafood stock. Bring to a boil.</li><li>Add shrimp, basil, and oregano. Reduce heat and simmer for 5-7 minutes, until shrimp are cooked through.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with fresh basil before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This shrimp and tomato soup is a light and flavorful option, featuring tender shrimp in a rich tomato-based broth with aromatic herbs. Ideal for a quick and satisfying meal.'
 ],
 
@@ -1543,7 +1543,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 tbsp butter</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>2 cups diced potatoes</li><li>4 cups fish stock</li><li>300g white fish fillets, cut into chunks</li><li>1 cup heavy cream</li><li>1 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh parsley</li></ul>',
     'instructions' => '<ol><li>Melt butter in a pot over medium heat. Add onion and garlic, and cook until translucent.</li><li>Add diced potatoes and fish stock. Bring to a boil.</li><li>Reduce heat and simmer for 15 minutes, until potatoes are tender.</li><li>Add fish and cook for another 5 minutes.</li><li>Stir in heavy cream and thyme. Simmer for an additional 5 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy fish chowder is rich and hearty, featuring tender fish and potatoes in a creamy, flavorful broth. It’s a comforting and filling option for any meal.'
 ],
 [
@@ -1557,7 +1557,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>2 carrots, diced</li><li>2 celery stalks, diced</li><li>1 cup cooked chicken, shredded</li><li>1 cup rice</li><li>6 cups chicken broth</li><li>1 bay leaf</li><li>1 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh parsley</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a large pot over medium heat. Add onion and garlic, and sauté until softened.</li><li>Add carrots and celery, and cook for 5 minutes.</li><li>Pour in chicken broth and bring to a boil.</li><li>Add chicken, rice, bay leaf, and thyme. Reduce heat and simmer for 20 minutes, until rice is tender.</li><li>Season with salt and black pepper to taste.</li><li>Stir in fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This comforting chicken and rice soup is a perfect meal for chilly days. It’s packed with tender chicken, vegetables, and rice, all simmered in a flavorful broth.'
 ],
 
@@ -1572,7 +1572,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>2 cups cooked chicken, shredded</li><li>4 cups chicken broth</li><li>1 cup orzo pasta</li><li>1 lemon, juiced</li><li>1 tsp dried oregano</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh dill</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a pot over medium heat. Add onion and garlic, and cook until translucent.</li><li>Add chicken, chicken broth, and orzo pasta. Bring to a boil.</li><li>Reduce heat and simmer for 10 minutes, until orzo is tender.</li><li>Stir in lemon juice, oregano, salt, and black pepper.</li><li>Garnish with fresh dill before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This lemon chicken soup is light and refreshing, with a zesty lemon flavor. Tender chicken and orzo pasta are combined in a flavorful broth, making it a delicious and satisfying meal.'
 ],
 [
@@ -1586,7 +1586,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 tbsp butter</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>1 cup diced tomatoes</li><li>2 cups shrimp stock</li><li>250g shrimp, peeled and deveined</li><li>1 cup heavy cream</li><li>1 tsp paprika</li><li>1/2 tsp dried thyme</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh chives</li></ul>',
     'instructions' => '<ol><li>Melt butter in a pot over medium heat. Add onion and garlic, and cook until softened.</li><li>Stir in diced tomatoes and shrimp stock. Bring to a boil.</li><li>Add shrimp and simmer for 5-7 minutes, until shrimp are cooked.</li><li>Stir in heavy cream, paprika, and thyme. Simmer for 10 minutes.</li><li>Season with salt and black pepper to taste.</li><li>Garnish with fresh chives before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This creamy shrimp bisque is rich and indulgent, featuring tender shrimp in a velvety, flavorful broth. It’s perfect for a special occasion or a cozy meal.'
 ],
 
@@ -1601,7 +1601,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 tbsp olive oil</li><li>1 onion, diced</li><li>2 cloves garlic, minced</li><li>1 red bell pepper, diced</li><li>1 cup green beans, chopped</li><li>4 cups seafood stock</li><li>250g prawns, peeled and deveined</li><li>1 tsp dried basil</li><li>Salt and black pepper to taste</li><li>2 tbsp chopped fresh parsley</li></ul>',
     'instructions' => '<ol><li>Heat olive oil in a pot over medium heat. Add onion and garlic, and cook until translucent.</li><li>Add bell pepper and green beans, and cook for 5 minutes.</li><li>Pour in seafood stock and bring to a boil.</li><li>Add prawns and cook for 5 minutes, until prawns are pink and cooked through.</li><li>Season with basil, salt, and black pepper.</li><li>Garnish with fresh parsley before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This prawn and vegetable soup is light and flavorful, featuring tender prawns and a mix of fresh vegetables in a savory broth. It’s perfect for a healthy and satisfying meal.'
 ],
 [
@@ -1615,7 +1615,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup unsalted butter, softened</li><li>1 cup granulated sugar</li><li>2 large eggs</li><li>2 tsp vanilla extract</li><li>1 1/2 cups all-purpose flour</li><li>1 1/2 tsp baking powder</li><li>1/2 cup milk</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and line a muffin tin with paper liners.</li><li>Cream together the butter and sugar until light and fluffy.</li><li>Add eggs one at a time, beating well after each addition. Stir in vanilla.</li><li>In a separate bowl, combine flour and baking powder. Gradually add to the creamed mixture, alternating with milk, beginning and ending with flour.</li><li>Spoon batter into prepared muffin cups, filling each about 2/3 full.</li><li>Bake for 20-25 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Cool completely before frosting.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These classic vanilla cupcakes are light and fluffy, perfect for any occasion. Topped with your favorite frosting, they make a delightful treat that’s sure to please.'
 ],
 
@@ -1627,10 +1627,10 @@ $blogPosts = [
     'date' => '15TH Sep 2024',
     'servings' => '8',
     'cook_time' => '45 minutes',
-    'ingredients' => '<ul><li>1 1/2 cups crushed digestive biscuits</li><li>1/2 cup melted butter</li><li>200g dark chocolate, chopped</li><li>1 cup heavy cream</li><li>1/4 cup almond butter</li><li>1/4 cup chopped <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li></ul>',
-    'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Mix crushed digestive biscuits with melted butter and press into the bottom of a tart pan.</li><li>Bake crust for 10 minutes, then let cool.</li><li>Heat heavy cream in a saucepan until just about to boil. Remove from heat and add chopped chocolate. Stir until smooth.</li><li>Spread almond butter over the cooled crust. Pour the chocolate mixture over the top.</li><li>Sprinkle chopped <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> on top.</li><li>Refrigerate for at least 2 hours before serving.</li></ol>',
+    'ingredients' => '<ul><li>1 1/2 cups crushed digestive biscuits</li><li>1/2 cup melted butter</li><li>200g dark chocolate, chopped</li><li>1 cup heavy cream</li><li>1/4 cup almond butter</li><li>1/4 cup chopped <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li></ul>',
+    'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Mix crushed digestive biscuits with melted butter and press into the bottom of a tart pan.</li><li>Bake crust for 10 minutes, then let cool.</li><li>Heat heavy cream in a saucepan until just about to boil. Remove from heat and add chopped chocolate. Stir until smooth.</li><li>Spread almond butter over the cooled crust. Pour the chocolate mixture over the top.</li><li>Sprinkle chopped <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> on top.</li><li>Refrigerate for at least 2 hours before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This rich and indulgent chocolate almond tart features a buttery digestive biscuit crust, smooth chocolate ganache, and a hint of almond butter, finished with a crunchy almond topping.'
 ],
 
@@ -1645,7 +1645,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup crushed digestive biscuits</li><li>1/4 cup granulated sugar</li><li>1/2 cup melted butter</li><li>400g cream cheese, softened</li><li>1/2 cup granulated sugar</li><li>2 large eggs</li><li>1/4 cup lemon juice</li><li>2 tbsp lemon zest</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Mix crushed digestive biscuits with sugar and melted butter. Press into the bottom of a baking dish.</li><li>In a bowl, beat cream cheese and sugar until smooth. Add eggs one at a time, beating well after each addition. Stir in lemon juice and zest.</li><li>Pour cream cheese mixture over the crust.</li><li>Bake for 30-35 minutes, or until set. Cool completely before cutting into bars.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These lemon cheesecake bars are a refreshing and tangy dessert, combining a buttery digestive biscuit crust with a creamy lemon cheesecake filling. Perfect for a sweet and citrusy treat.'
 ],
 
@@ -1657,11 +1657,11 @@ $blogPosts = [
     'date' => '25TH Sep 2024',
     'servings' => '16',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>1 cup pitted dates</li><li>1 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1/2 cup shredded coconut</li><li>1 tbsp honey</li><li>1 tsp vanilla extract</li></ul>',
-    'instructions' => '<ol><li>In a food processor, combine dates and <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> until finely chopped.</li><li>Add honey and vanilla extract, and process until the mixture sticks together.</li><li>Roll mixture into small balls and coat with shredded coconut.</li><li>Refrigerate for at least 30 minutes before serving.</li></ol>',
+    'ingredients' => '<ul><li>1 cup pitted dates</li><li>1 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1/2 cup shredded coconut</li><li>1 tbsp honey</li><li>1 tsp vanilla extract</li></ul>',
+    'instructions' => '<ol><li>In a food processor, combine dates and <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> until finely chopped.</li><li>Add honey and vanilla extract, and process until the mixture sticks together.</li><li>Roll mixture into small balls and coat with shredded coconut.</li><li>Refrigerate for at least 30 minutes before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'These almond date truffles are a naturally sweet and healthy dessert, combining the richness of dates and <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> with a hint of vanilla and a coconut coating.'
+    'author' => 'Sir Francis',
+    'intro' => 'These almond date truffles are a naturally sweet and healthy dessert, combining the richness of dates and <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> with a hint of vanilla and a coconut coating.'
 ],
 [
     'id' => 118,
@@ -1674,7 +1674,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 ripe pears, peeled and sliced</li><li>1/2 cup granulated sugar</li><li>1 tsp ground cinnamon</li><li>1/4 tsp ground nutmeg</li><li>1 tbsp lemon juice</li><li>1 cup rolled oats</li><li>1/2 cup all-purpose flour</li><li>1/2 cup brown sugar</li><li>1/4 cup unsalted butter, cold and cubed</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). In a bowl, mix pears with granulated sugar, cinnamon, nutmeg, and lemon juice.</li><li>Transfer the pear mixture to a baking dish.</li><li>In another bowl, combine oats, flour, brown sugar, and cold butter. Use your fingers or a pastry cutter to blend until the mixture resembles coarse crumbs.</li><li>Sprinkle the crumble topping over the pears.</li><li>Bake for 35-40 minutes, or until the topping is golden brown and the pears are tender.</li><li>Let cool slightly before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This spiced pear crumble features tender, spiced pears topped with a buttery oat crumble. It’s a warm and comforting dessert perfect for any season.'
 ],
 
@@ -1689,7 +1689,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup almond flour</li><li>1/2 cup granulated sugar</li><li>1/4 cup unsalted butter, softened</li><li>3 large eggs</li><li>1/2 cup orange juice</li><li>1 tsp orange zest</li><li>1/2 tsp baking powder</li><li>1/4 tsp salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and grease a cake pan.</li><li>In a bowl, cream together the butter and sugar until light and fluffy. Beat in the eggs one at a time.</li><li>Mix in the orange juice and zest.</li><li>In another bowl, combine almond flour, baking powder, and salt. Gradually add to the wet ingredients and mix until smooth.</li><li>Pour batter into the prepared pan and smooth the top.</li><li>Bake for 40-45 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Allow to cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This orange almond cake is a moist and flavorful dessert with a hint of citrus and nutty almond flour. It’s simple yet elegant, perfect for any occasion.'
 ],
 [
@@ -1703,7 +1703,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 package phyllo dough, thawed</li><li>1 cup unsalted butter, melted</li><li>2 cups finely chopped walnuts</li><li>1 cup granulated sugar</li><li>1 tsp ground cinnamon</li><li>1 cup water</li><li>1 cup honey</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Brush a 9x13 inch baking dish with melted butter.</li><li>Layer 8 sheets of phyllo dough in the baking dish, brushing each sheet with melted butter.</li><li>In a bowl, mix chopped walnuts, sugar, and cinnamon. Sprinkle a portion of this mixture over the phyllo dough.</li><li>Continue layering phyllo dough and nut mixture, ending with 8 layers of phyllo dough.</li><li>Cut the baklava into diamond shapes before baking.</li><li>Bake for 45-50 minutes, or until golden brown.</li><li>While the baklava is baking, combine water and honey in a saucepan and bring to a boil. Simmer for 10 minutes and let cool.</li><li>Pour the honey syrup over the hot baklava as soon as it comes out of the oven.</li><li>Allow to cool completely before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Baklava is a rich and sweet pastry made with layers of phyllo dough, chopped nuts, and honey syrup. This classic Mediterranean dessert is both decadent and delicious.'
 ],
 
@@ -1718,7 +1718,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1/2 cup rice</li><li>1 liter milk</li><li>1 cup granulated sugar</li><li>1/4 cup cornstarch</li><li>1 tsp vanilla extract</li><li>1/4 cup water</li><li>Ground cinnamon for garnish</li></ul>',
     'instructions' => '<ol><li>Rinse the rice under cold water. In a saucepan, combine rice and water and bring to a boil. Reduce heat and simmer for 10 minutes, until rice is tender.</li><li>In another saucepan, heat milk and sugar until the sugar dissolves.</li><li>Mix cornstarch with a small amount of cold milk to make a slurry, then stir into the warm milk. Cook, stirring constantly, until the mixture thickens.</li><li>Add the cooked rice to the milk mixture and stir well. Cook for another 10 minutes, stirring frequently.</li><li>Remove from heat and stir in vanilla extract.</li><li>Pour pudding into serving dishes and let cool. Refrigerate for at least 4 hours.</li><li>Before serving, sprinkle with ground cinnamon.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Turkish rice pudding, or Sütlaç, is a creamy and comforting dessert made with rice, milk, and a touch of vanilla. It’s often garnished with cinnamon for a warm, aromatic finish.'
 ],
 
@@ -1733,7 +1733,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 1/2 cups pitted dates, chopped</li><li>1 cup boiling water</li><li>1/2 cup unsalted butter, softened</li><li>1 cup granulated sugar</li><li>2 large eggs</li><li>1 1/2 cups all-purpose flour</li><li>1 tsp baking soda</li><li>1/2 tsp ground cinnamon</li><li>1/4 tsp salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and grease a loaf pan.</li><li>Pour boiling water over chopped dates and let sit for 10 minutes. Mash slightly with a fork.</li><li>In a bowl, cream together butter and sugar until light and fluffy. Beat in eggs one at a time.</li><li>In another bowl, mix flour, baking soda, cinnamon, and salt.</li><li>Gradually add dry ingredients to the butter mixture and mix until combined. Fold in the date mixture.</li><li>Pour batter into the prepared pan and smooth the top.</li><li>Bake for 40-45 minutes, or until a toothpick inserted into the center comes out clean.</li><li>Allow to cool before slicing and serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Arabic Date Cake, or Kek Tayeb, is a moist and sweet dessert made with chopped dates and a hint of cinnamon. It’s a traditional treat with a rich flavor and a perfect accompaniment to tea or coffee.'
 ],
 
@@ -1748,7 +1748,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup water</li><li>1 cup granulated sugar</li><li>1/2 cup cornstarch</li><li>1/4 cup lemon juice</li><li>1/4 tsp cream of tartar</li><li>1 tsp rosewater (optional)</li><li>Powdered sugar for dusting</li></ul>',
     'instructions' => '<ol><li>In a saucepan, combine water and sugar. Bring to a boil and simmer until the sugar dissolves.</li><li>In another bowl, mix cornstarch with a small amount of water to make a slurry. Add to the boiling sugar mixture and stir well.</li><li>Continue to cook over medium heat, stirring constantly, until the mixture thickens and pulls away from the sides of the pan.</li><li>Remove from heat and stir in lemon juice, cream of tartar, and rosewater if using.</li><li>Pour mixture into a greased pan and let set at room temperature for at least 4 hours or overnight.</li><li>Cut into small squares and dust with powdered sugar before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Turkish Delight, or Lokum, is a chewy and sweet confection flavored with rosewater. It’s a traditional Turkish treat that’s perfect for sharing or enjoying with a cup of tea.'
 ],
 [
@@ -1762,7 +1762,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g prawns, peeled and deveined</li><li>4 tbsp unsalted butter</li><li>4 cloves garlic, minced</li><li>1 tbsp lemon juice</li><li>1/4 cup chopped fresh parsley</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, melt the butter over medium heat. Add garlic and cook until fragrant, about 1 minute.</li><li>Add the prawns and cook for 2-3 minutes on each side, or until pink and opaque.</li><li>Stir in lemon juice and parsley. Season with salt and pepper to taste.</li><li>Remove from heat and serve immediately. Pair with rice or crusty bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Garlic Butter Prawns are succulent and flavorful, cooked in a rich garlic butter sauce. This easy recipe is perfect for a quick yet delicious meal.'
 ],
 
@@ -1777,7 +1777,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g calamari rings</li><li>1 cup all-purpose flour</li><li>1 tsp paprika</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>Salt and pepper to taste</li><li>Oil for frying</li><li>Lemon wedges for serving</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix flour, paprika, cayenne pepper, garlic powder, onion powder, salt, and pepper.</li><li>Coat calamari rings in the flour mixture, shaking off excess.</li><li>Heat oil in a large skillet over medium-high heat. Fry calamari rings in batches until golden brown, about 2-3 minutes per side.</li><li>Drain on paper towels and serve hot with lemon wedges.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Spicy Calamari Rings are crispy and full of flavor, with a spicy kick that pairs perfectly with a squeeze of fresh lemon. A great appetizer or snack!'
 ],
 
@@ -1792,7 +1792,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 fish fillets (such as cod or haddock)</li><li>2 tbsp olive oil</li><li>1 lemon, thinly sliced</li><li>1 tbsp dried mixed herbs (e.g., thyme, oregano, basil)</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Place fish fillets on a baking sheet lined with parchment paper.</li><li>Brush fish with olive oil and season with salt, pepper, and dried herbs. Top with lemon slices.</li><li>Bake for 20-25 minutes, or until the fish flakes easily with a fork.</li><li>Serve with steamed vegetables or a light salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Herbed Baked Fish is a light and healthy option that’s easy to prepare. The combination of herbs and lemon adds a fresh flavor to the tender fish fillets.'
 ],
 
@@ -1807,7 +1807,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g shrimp, peeled and deveined</li><li>1 can (400ml) coconut milk</li><li>2 tbsp red curry paste</li><li>1 tbsp olive oil</li><li>1 onion, chopped</li><li>1 bell pepper, sliced</li><li>1 tbsp fish sauce (or soy sauce for a vegetarian alternative)</li><li>Fresh cilantro for garnish</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, heat olive oil over medium heat. Add onion and bell pepper, and sauté until softened, about 5 minutes.</li><li>Stir in curry paste and cook for 1 minute. Add coconut milk and fish sauce, and bring to a simmer.</li><li>Add shrimp and cook for 5-7 minutes, or until pink and cooked through.</li><li>Season with salt and pepper to taste. Garnish with fresh cilantro before serving.</li><li>Serve over rice or with naan bread.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Coconut Curry Shrimp is a creamy and spicy dish with a rich coconut flavor and aromatic curry spices. It’s a satisfying meal that pairs well with rice.'
 ],
 [
@@ -1821,23 +1821,23 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 cups arugula</li><li>1/2 cup walnuts, toasted</li><li>1/2 cup dates, pitted and sliced</li><li>1/4 cup crumbled feta cheese</li><li>1/4 red onion, thinly sliced</li><li>2 tbsp olive oil</li><li>1 tbsp balsamic vinegar</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Heat 1 tablespoon of olive oil in a skillet over medium heat. Add dates and cook until lightly caramelized, about 2-3 minutes. Remove from heat and set aside.</li><li>In a large bowl, combine arugula, toasted walnuts, crumbled feta, and red onion.</li><li>Drizzle with balsamic vinegar and remaining olive oil. Toss to coat.</li><li>Top salad with fried dates and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Arugula Salad with Fried Dates and Walnuts combines the peppery bite of arugula with sweet dates, crunchy walnuts, and tangy feta. It’s a perfect mix of flavors and textures.'
 ],
 
 [
     'id' => 140,
     'img' => '140.png',
-    'title' => 'Spinach Salad with Fried Dates and <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+    'title' => 'Spinach Salad with Fried Dates and <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
     'category' => 'Salads',
     'date' => '10TH Jan 2023',
     'servings' => '4',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>4 cups baby spinach</li><li>1/2 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, sliced and toasted</li><li>1/2 cup dates, pitted and chopped</li><li>1/4 cup red bell pepper, thinly sliced</li><li>1/4 cup goat cheese, crumbled</li><li>2 tbsp olive oil</li><li>1 tbsp apple cider vinegar</li><li>1 tsp honey</li><li>Salt and pepper to taste</li></ul>',
-    'instructions' => '<ol><li>Heat 1 tablespoon of olive oil in a skillet over medium heat. Add chopped dates and cook for 2-3 minutes until slightly caramelized. Remove from heat and set aside.</li><li>In a large bowl, combine baby spinach, toasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, red bell pepper, and crumbled goat cheese.</li><li>In a small bowl, whisk together remaining olive oil, apple cider vinegar, honey, salt, and pepper.</li><li>Drizzle dressing over salad and toss to combine.</li><li>Top with fried dates and serve immediately.</li></ol>',
+    'ingredients' => '<ul><li>4 cups baby spinach</li><li>1/2 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, sliced and toasted</li><li>1/2 cup dates, pitted and chopped</li><li>1/4 cup red bell pepper, thinly sliced</li><li>1/4 cup goat cheese, crumbled</li><li>2 tbsp olive oil</li><li>1 tbsp apple cider vinegar</li><li>1 tsp honey</li><li>Salt and pepper to taste</li></ul>',
+    'instructions' => '<ol><li>Heat 1 tablespoon of olive oil in a skillet over medium heat. Add chopped dates and cook for 2-3 minutes until slightly caramelized. Remove from heat and set aside.</li><li>In a large bowl, combine baby spinach, toasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, red bell pepper, and crumbled goat cheese.</li><li>In a small bowl, whisk together remaining olive oil, apple cider vinegar, honey, salt, and pepper.</li><li>Drizzle dressing over salad and toss to combine.</li><li>Top with fried dates and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'Spinach Salad with Fried Dates and <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a> is a delightful combination of tender spinach, crunchy <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, and sweet dates with a tangy dressing. It’s a refreshing and satisfying salad.'
+    'author' => 'Sir Francis',
+    'intro' => 'Spinach Salad with Fried Dates and <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a> is a delightful combination of tender spinach, crunchy <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, and sweet dates with a tangy dressing. It’s a refreshing and satisfying salad.'
 ],
 
 [
@@ -1851,7 +1851,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 cups mixed greens (e.g., lettuce, spinach, arugula)</li><li>1/2 cup pecans, toasted</li><li>1/2 cup dates, pitted and sliced</li><li>1/4 cup blue cheese, crumbled</li><li>1/4 cup sliced cucumbers</li><li>2 tbsp olive oil</li><li>1 tbsp red wine vinegar</li><li>1 tsp Dijon mustard</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Heat 1 tablespoon of olive oil in a skillet over medium heat. Add dates and cook until lightly caramelized, about 2-3 minutes. Remove from heat and set aside.</li><li>In a large bowl, combine mixed greens, toasted pecans, sliced cucumbers, and crumbled blue cheese.</li><li>In a small bowl, whisk together remaining olive oil, red wine vinegar, Dijon mustard, salt, and pepper.</li><li>Drizzle dressing over salad and toss to coat.</li><li>Top with fried dates and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Mixed Green Salad with Fried Pecans and Dates is a blend of crunchy pecans, sweet dates, and tangy blue cheese over fresh greens. It’s a flavorful and satisfying salad that’s perfect for any occasion.'
 ],
 [
@@ -1865,7 +1865,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 boneless, skinless chicken breasts</li><li>2 tbsp olive oil</li><li>1 lemon, juiced</li><li>2 cloves garlic, minced</li><li>1 tsp dried oregano</li><li>1 tsp dried thyme</li><li>Salt and pepper to taste</li><li>Fresh parsley for garnish</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix olive oil, lemon juice, garlic, oregano, thyme, salt, and pepper.</li><li>Add chicken breasts to the marinade, ensuring they are well coated. Marinate for at least 30 minutes.</li><li>Preheat grill to medium-high heat. Grill chicken for 6-8 minutes per side, or until fully cooked and internal temperature reaches 75°C (165°F).</li><li>Garnish with fresh parsley before serving.</li><li>Serve with roasted vegetables or a side salad.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Lemon Herb Grilled Chicken is a juicy and flavorful dish, perfect for a summer meal. Marinated in a zesty lemon and herb mixture, it’s grilled to perfection and garnished with fresh parsley.'
 ],
 
@@ -1880,7 +1880,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 large bell peppers (any color)</li><li>1 cup quinoa, rinsed</li><li>1 1/2 cups vegetable broth</li><li>1 cup corn kernels</li><li>1 cup black beans, drained and rinsed</li><li>1 cup diced tomatoes</li><li>1 tsp cumin</li><li>1 tsp paprika</li><li>1/2 cup shredded cheese (optional)</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Cut the tops off the bell peppers and remove seeds and membranes.</li><li>In a medium pot, bring vegetable broth to a boil. Add quinoa, reduce heat, and simmer for 15 minutes until quinoa is cooked and liquid is absorbed.</li><li>In a bowl, combine cooked quinoa, corn, black beans, diced tomatoes, cumin, paprika, salt, and pepper.</li><li>Stuff each bell pepper with the quinoa mixture. Place stuffed peppers in a baking dish and cover with foil.</li><li>Bake for 30 minutes. Remove foil, sprinkle with cheese if using, and bake for an additional 10 minutes.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Stuffed Bell Peppers with Quinoa and Vegetables are a hearty and nutritious meal. Filled with a savory mixture of quinoa, beans, and vegetables, they make for a colorful and satisfying main course.'
 ],
 
@@ -1895,7 +1895,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup Arborio rice</li><li>200g mushrooms, sliced</li><li>1 small onion, finely chopped</li><li>2 cloves garlic, minced</li><li>4 cups vegetable broth</li><li>1/2 cup white wine</li><li>1/2 cup grated Parmesan cheese</li><li>2 tbsp olive oil</li><li>2 tbsp butter</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a large skillet, heat olive oil and butter over medium heat. Add onions and garlic, and cook until translucent.</li><li>Add mushrooms and cook until softened.</li><li>Stir in Arborio rice and cook for 1-2 minutes until lightly toasted.</li><li>Deglaze the pan with white wine and cook until mostly absorbed.</li><li>Add vegetable broth, one cup at a time, stirring frequently until liquid is absorbed and rice is creamy.</li><li>Stir in Parmesan cheese and season with salt and pepper.</li><li>Serve warm with additional Parmesan if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Creamy Mushroom Risotto is a rich and comforting dish made with Arborio rice, sautéed mushrooms, and Parmesan cheese. It’s a luxurious main course that’s perfect for any special occasion.'
 ],
 
@@ -1910,22 +1910,22 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken breast, thinly sliced</li><li>1 red bell pepper, sliced</li><li>1 green bell pepper, sliced</li><li>1 cup broccoli florets</li><li>1 cup snap peas</li><li>3 tbsp soy sauce</li><li>1 tbsp sriracha sauce</li><li>2 tbsp vegetable oil</li><li>2 cloves garlic, minced</li><li>1 tsp ginger, minced</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Heat vegetable oil in a large skillet or wok over medium-high heat. Add garlic and ginger, and cook for 1 minute.</li><li>Add chicken and cook until browned and cooked through.</li><li>Add bell peppers, broccoli, and snap peas. Stir-fry for 5-7 minutes until vegetables are tender-crisp.</li><li>Stir in soy sauce and sriracha. Cook for an additional 2 minutes.</li><li>Season with salt and pepper to taste.</li><li>Serve over steamed rice or noodles.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Spicy Chicken and Vegetable Stir-Fry is a quick and flavorful dish with a spicy kick. It combines tender chicken with crisp vegetables in a savory sauce, making it a satisfying and easy meal.'
 ],
 [
     'id' => 154,
     'img' => '154.png',
-    'title' => 'Spiced Roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a>',
+    'title' => 'Spiced Roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a>',
     'category' => 'Healthy Snacks',
     'date' => '20TH Apr 2023',
     'servings' => '4',
     'cook_time' => '15 minutes',
-    'ingredients' => '<ul><li>1 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1 tbsp olive oil</li><li>1 tsp smoked paprika</li><li>1/2 tsp cumin</li><li>1/2 tsp garlic powder</li><li>1/2 tsp salt</li></ul>',
-    'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>Toss <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> with olive oil and spices until evenly coated.</li><li>Spread <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a> in a single layer on the baking sheet.</li><li>Bake for 10-15 minutes, stirring occasionally, until golden and fragrant.</li><li>Allow to cool before serving.</li></ol>',
+    'ingredients' => '<ul><li>1 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1 tbsp olive oil</li><li>1 tsp smoked paprika</li><li>1/2 tsp cumin</li><li>1/2 tsp garlic powder</li><li>1/2 tsp salt</li></ul>',
+    'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>Toss <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> with olive oil and spices until evenly coated.</li><li>Spread <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a> in a single layer on the baking sheet.</li><li>Bake for 10-15 minutes, stirring occasionally, until golden and fragrant.</li><li>Allow to cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
-    'intro' => 'Spiced Roasted <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ Almonds</a> are a crunchy, savory snack with a kick of flavor. Perfect for munching on-the-go or as a party snack.'
+    'author' => 'Sir Francis',
+    'intro' => 'Spiced Roasted <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ Almonds</a> are a crunchy, savory snack with a kick of flavor. Perfect for munching on-the-go or as a party snack.'
 ],
 
 [
@@ -1936,10 +1936,10 @@ $blogPosts = [
     'date' => '25TH Apr 2023',
     'servings' => '8',
     'cook_time' => '10 minutes + 1 hour chilling',
-    'ingredients' => '<ul><li>1 cup dates, pitted</li><li>1 cup mixed nuts (e.g., <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a>, walnuts)</li><li>1/4 cup sunflower seeds</li><li>1/4 cup shredded coconut</li><li>1 tbsp honey</li></ul>',
+    'ingredients' => '<ul><li>1 cup dates, pitted</li><li>1 cup mixed nuts (e.g., <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a>, walnuts)</li><li>1/4 cup sunflower seeds</li><li>1/4 cup shredded coconut</li><li>1 tbsp honey</li></ul>',
     'instructions' => '<ol><li>In a food processor, blend dates until they form a sticky paste.</li><li>Add mixed nuts, sunflower seeds, shredded coconut, and honey. Pulse until well combined.</li><li>Press mixture into a lined baking dish and refrigerate for at least 1 hour.</li><li>Cut into bars and store in an airtight container in the refrigerator.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Date and Nut Energy Bars are a quick, nutritious snack. Packed with dates and nuts, they provide a satisfying and energy-boosting treat.'
 ],
 
@@ -1954,7 +1954,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 medium zucchinis, thinly sliced</li><li>2 tbsp olive oil</li><li>1/2 cup grated Parmesan cheese</li><li>1 tsp dried oregano</li><li>1/2 tsp garlic powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>In a bowl, toss zucchini slices with olive oil, Parmesan cheese, oregano, garlic powder, and salt.</li><li>Arrange zucchini slices in a single layer on the baking sheet.</li><li>Bake for 20-25 minutes, turning halfway through, until crispy and golden brown.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Baked Zucchini Chips are a healthy alternative to potato chips. They’re crispy, cheesy, and packed with flavor, making them an excellent snack choice.'
 ],
 
@@ -1969,7 +1969,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas, drained and rinsed</li><li>2 tbsp olive oil</li><li>1 tsp smoked paprika</li><li>1/2 tsp cumin</li><li>1/2 tsp garlic powder</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>Pat chickpeas dry with a paper towel. Toss with olive oil and spices.</li><li>Spread chickpeas in a single layer on the baking sheet.</li><li>Bake for 25-30 minutes, shaking the pan halfway through, until crispy.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Crispy Chickpea Snacks are a crunchy, protein-packed snack. Seasoned with spices and baked until crispy, they’re a great alternative to chips.'
 ],
 [
@@ -1983,7 +1983,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup pumpkin seeds (pepitas)</li><li>1 tbsp olive oil</li><li>1/2 tsp smoked paprika</li><li>1/2 tsp garlic powder</li><li>1/2 tsp salt</li><li>1/4 tsp black pepper</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>In a bowl, toss pumpkin seeds with olive oil and spices until evenly coated.</li><li>Spread seeds in a single layer on the baking sheet.</li><li>Bake for 12-15 minutes, stirring occasionally, until golden brown and crispy.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Roasted Pumpkin Seeds are a crunchy and nutritious snack. With a hint of smoky paprika and garlic, they make a delicious and healthy choice.'
 ],
 
@@ -1998,7 +1998,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 apples, cored and sliced</li><li>1/4 cup almond butter</li><li>1 tbsp honey (optional)</li><li>1/4 tsp cinnamon (optional)</li></ul>',
     'instructions' => '<ol><li>Arrange apple slices on a plate.</li><li>Serve with almond butter for dipping.</li><li>Drizzle with honey and sprinkle with cinnamon if desired.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Apple Slices with Almond Butter are a simple and satisfying snack. The sweet and creamy almond butter pairs perfectly with crisp apple slices.'
 ],
 
@@ -2013,7 +2013,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas, drained and rinsed</li><li>1 tbsp olive oil</li><li>1/2 tsp cayenne pepper</li><li>1/2 tsp smoked paprika</li><li>1/2 tsp cumin</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>Pat chickpeas dry with a paper towel. Toss with olive oil and spices.</li><li>Spread chickpeas in a single layer on the baking sheet.</li><li>Bake for 25-30 minutes, shaking the pan halfway through, until crispy.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Spicy Roasted Chickpeas are a crunchy, protein-rich snack with a spicy kick. Perfect for satisfying cravings in a healthier way.'
 ],
 
@@ -2025,10 +2025,10 @@ $blogPosts = [
     'date' => '25TH May 2025',
     'servings' => '6',
     'cook_time' => '5 minutes',
-    'ingredients' => '<ul><li>1/2 cup <a href="https://www.candybird.co.za/product?id=1"> CandyBird™ almonds</a></li><li>1/2 cup walnuts</li><li>1/2 cup sunflower seeds</li><li>1/4 cup pumpkin seeds</li><li>1/4 cup dried cranberries</li><li>1/4 cup dark chocolate chips (optional)</li></ul>',
+    'ingredients' => '<ul><li>1/2 cup <a href="https://www.fishgelatine.co.za/v2/product?id=1"> Sir Francis™ almonds</a></li><li>1/2 cup walnuts</li><li>1/2 cup sunflower seeds</li><li>1/4 cup pumpkin seeds</li><li>1/4 cup dried cranberries</li><li>1/4 cup dark chocolate chips (optional)</li></ul>',
     'instructions' => '<ol><li>Combine all ingredients in a large bowl.</li><li>Mix well and store in an airtight container.</li><li>Enjoy as a quick and nutritious snack.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Nut and Seed Trail Mix is a versatile and wholesome snack. Loaded with a variety of nuts and seeds, it’s great for on-the-go energy.'
 ],
 [
@@ -2042,7 +2042,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>12 mini bell peppers</li><li>1 cup cream cheese, softened</li><li>1/4 cup finely chopped fresh herbs (e.g., parsley, chives)</li><li>1/4 cup finely shredded cheddar cheese</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>Cut the tops off the mini bell peppers and remove the seeds.</li><li>In a bowl, mix the cream cheese, herbs, cheddar cheese, salt, and pepper until well combined.</li><li>Stuff each bell pepper with the cream cheese mixture.</li><li>Place stuffed peppers on the baking sheet and bake for 10-15 minutes until the peppers are tender.</li><li>Serve warm or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Stuffed Mini Bell Peppers are a delightful vegetarian snack. Filled with a creamy herb cheese mixture, they make a flavorful and attractive appetizer.'
 ],
 
@@ -2057,7 +2057,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 large whole wheat tortillas</li><li>1 cup hummus</li><li>1 cup shredded carrots</li><li>1 cup sliced cucumbers</li><li>1 cup sliced bell peppers</li><li>1 cup baby spinach</li></ul>',
     'instructions' => '<ol><li>Spread hummus evenly over each tortilla.</li><li>Layer with shredded carrots, cucumbers, bell peppers, and spinach.</li><li>Roll up the tortillas tightly and cut into slices.</li><li>Serve immediately or wrap in plastic wrap for a portable snack.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Hummus and Veggie Wraps are a quick and healthy vegetarian snack. Packed with fresh vegetables and creamy hummus, they’re perfect for a light meal or snack.'
 ],
 
@@ -2072,7 +2072,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 slices of baguette, toasted</li><li>1 ripe avocado, diced</li><li>1 cup cherry tomatoes, halved</li><li>1 tbsp olive oil</li><li>1 tbsp balsamic vinegar</li><li>Salt and pepper to taste</li><li>Fresh basil leaves for garnish</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine avocado, cherry tomatoes, olive oil, and balsamic vinegar. Season with salt and pepper.</li><li>Top each toasted baguette slice with the avocado and tomato mixture.</li><li>Garnish with fresh basil leaves.</li><li>Serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Avocado and Tomato Bruschetta is a refreshing and easy-to-make snack. The creamy avocado and juicy tomatoes on crispy baguette slices create a delicious combination.'
 ],
 
@@ -2087,7 +2087,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 pack samosa pastry sheets</li><li>2 cups boiled and mashed potatoes</li><li>1 cup peas, boiled</li><li>1/2 cup finely chopped onions</li><li>1/2 tsp cumin seeds</li><li>1/2 tsp coriander powder</li><li>1/2 tsp turmeric powder</li><li>1/2 tsp chili powder</li><li>Salt to taste</li><li>Oil for frying</li></ul>',
     'instructions' => '<ol><li>In a pan, heat a little oil and add cumin seeds. Sauté onions until golden brown.</li><li>Add spices and mix well. Stir in mashed potatoes and peas. Cook for 5 minutes and let cool.</li><li>Cut samosa pastry sheets into strips and fold into triangles, filling with the potato mixture.</li><li>Seal edges with a little water and fry in hot oil until golden brown and crispy.</li><li>Drain on paper towels and serve hot.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Vegetable Samosas are a popular vegetarian snack with a spiced potato filling. Crispy and flavorful, they make an excellent treat for any occasion.'
 ],
 
@@ -2103,7 +2103,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>12 mini bell peppers, halved and seeded</li><li>150g cream cheese</li><li>50g grated cheddar cheese</li><li>1 tbsp chopped fresh parsley</li><li>1 garlic clove, minced</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F). Line a baking sheet with parchment paper.</li><li>In a bowl, mix cream cheese, cheddar cheese, parsley, garlic, salt, and pepper.</li><li>Stuff each pepper half with the cheese mixture.</li><li>Place on the baking sheet and bake for 15-20 minutes until the peppers are tender and the filling is golden.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'These Stuffed Mini Peppers are a delightful appetizer filled with a creamy cheese mixture, perfect for parties or a simple snack.'
 ],
 [
@@ -2117,7 +2117,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 can chickpeas, drained and rinsed</li><li>60ml tahini</li><li>2 tbsp olive oil</li><li>1 garlic clove</li><li>Juice of 1 lemon</li><li>Salt to taste</li><li>4 pita bread, cut into wedges</li><li>1 tsp paprika (for garnish)</li></ul>',
     'instructions' => '<ol><li>In a food processor, blend chickpeas, tahini, olive oil, garlic, lemon juice, and salt until smooth.</li><li>Transfer to a serving bowl and garnish with paprika.</li><li>For the pita chips, preheat oven to 200°C (400°F). Arrange pita wedges on a baking sheet, brush with olive oil, and bake for 5-7 minutes until crispy.</li><li>Serve hummus with warm pita chips.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Creamy hummus paired with crispy pita chips makes for a delicious and healthy appetizer or snack.'
 ],
 [
@@ -2131,7 +2131,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>200g fresh spinach, chopped</li><li>150g feta cheese, crumbled</li><li>100g Greek yogurt</li><li>1 tbsp olive oil</li><li>1 garlic clove, minced</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a skillet, heat olive oil over medium heat and sauté garlic until fragrant.</li><li>Add spinach and cook until wilted. Remove from heat and let cool.</li><li>In a bowl, combine spinach, feta cheese, Greek yogurt, salt, and pepper. Mix well.</li><li>Serve with pita bread or vegetable sticks.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Spinach and Feta Dip is creamy and full of flavor, perfect for serving with pita bread or veggie sticks.'
 ],
 [
@@ -2145,7 +2145,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>100g cheddar cheese, cut into cubes</li><li>100g black olives</li><li>100g green olives</li><li>Wooden skewers</li></ul>',
     'instructions' => '<ol><li>Thread cheese cubes and olives onto wooden skewers, alternating between them.</li><li>Arrange on a serving platter and serve immediately.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Cheese and Olive Skewers are a simple yet elegant appetizer that combines the rich flavors of cheese with briny olives.'
 ],
 [
@@ -2159,7 +2159,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 red bell pepper, sliced</li><li>1 yellow bell pepper, sliced</li><li>1 zucchini, sliced</li><li>1 red onion, sliced</li><li>2 tbsp olive oil</li><li>1 tsp dried oregano</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>Arrange vegetables on the baking sheet and drizzle with olive oil. Sprinkle with oregano, salt, and pepper.</li><li>Roast for 25-30 minutes, until vegetables are tender and lightly browned.</li><li>Serve warm or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'A colorful and flavorful Roasted Vegetable Platter is perfect as an appetizer or side dish, bringing out the natural sweetness of the vegetables.'
 ],
 
@@ -2175,7 +2175,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 kg potatoes, peeled and diced</li><li>4 cloves garlic, minced</li><li>50g butter</li><li>100ml milk</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Boil potatoes in salted water until tender, about 15 minutes.</li><li>In a small pan, melt butter and sauté garlic until fragrant.</li><li>Drain potatoes and return to the pot. Mash until smooth.</li><li>Stir in garlic butter and milk. Season with salt and pepper.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Garlic Mashed Potatoes are creamy and rich with a hint of garlic, making them a perfect side dish for any meal.'
 ],
 [
@@ -2189,7 +2189,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup quinoa</li><li>2 cups water</li><li>1/2 cup cherry tomatoes, halved</li><li>1/2 cucumber, diced</li><li>1/4 cup red onion, chopped</li><li>2 tbsp olive oil</li><li>1 tbsp lemon juice</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>Rinse quinoa under cold water. In a pot, combine quinoa and water. Bring to a boil, then reduce heat and simmer for 15 minutes until water is absorbed.</li><li>Let quinoa cool, then combine with tomatoes, cucumber, and red onion. Toss with olive oil, lemon juice, salt, and pepper.</li><li>Serve chilled or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Quinoa Salad is a light and refreshing side dish that pairs well with any main course.'
 ],
 [
@@ -2203,7 +2203,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 sweet potatoes, peeled and cubed</li><li>2 tbsp olive oil</li><li>1 tsp ground cinnamon</li><li>1/2 tsp ground cumin</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 200°C (400°F). Line a baking sheet with parchment paper.</li><li>In a bowl, toss sweet potatoes with olive oil, cinnamon, cumin, and salt.</li><li>Spread on the baking sheet and roast for 25-30 minutes, until tender and caramelized.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Roasted Sweet Potatoes are naturally sweet and spiced to perfection, making a delightful side dish.'
 ],
 [
@@ -2217,7 +2217,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cucumber, sliced</li><li>1 cup Greek yogurt</li><li>1 tbsp olive oil</li><li>1 tbsp chopped fresh dill</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine Greek yogurt, olive oil, dill, salt, and pepper.</li><li>Add cucumber slices and toss to coat.</li><li>Serve chilled.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'This Cucumber and Yogurt Salad is a cool and refreshing side dish, perfect for hot days or as a light accompaniment.'
 ],
 [
@@ -2231,7 +2231,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>4 ears of corn, husked</li><li>50g butter, softened</li><li>2 tbsp chopped fresh herbs (parsley, chives, thyme)</li><li>Salt to taste</li></ul>',
     'instructions' => '<ol><li>Bring a large pot of water to a boil. Add corn and cook for 10-15 minutes until tender.</li><li>In a bowl, mix softened butter with chopped herbs and salt.</li><li>Spread herb butter over cooked corn and serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Corn on the Cob with Herb Butter is a classic side dish, offering a burst of flavor with each bite.'
 ],
 
@@ -2246,7 +2246,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>1 kg baby potatoes, halved</li><li>3 tbsp olive oil</li><li>4 cloves garlic, minced</li><li>1/4 cup grated Parmesan cheese</li><li>2 tbsp chopped fresh parsley</li><li>Salt and pepper to taste</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a bowl, toss potatoes with olive oil, garlic, salt, and pepper.</li><li>Spread potatoes on a baking sheet and roast for 25-30 minutes, or until golden and crispy.</li><li>Remove from oven and sprinkle with Parmesan cheese and parsley.</li><li>Serve warm.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Garlic Parmesan Roasted Potatoes are crispy on the outside and tender on the inside, making them a flavorful addition to any meal.'
     ],
     [
@@ -2260,7 +2260,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>500g carrots, peeled and sliced</li><li>2 tbsp honey</li><li>2 tbsp olive oil</li><li>1/2 tsp ground cinnamon</li><li>Salt to taste</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 190°C (375°F).</li><li>In a bowl, toss carrots with olive oil, honey, cinnamon, and salt.</li><li>Spread carrots on a baking sheet and roast for 20-25 minutes, or until tender and caramelized.</li><li>Serve warm.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Honey Glazed Carrots are a sweet and savory side dish that pairs well with a variety of main courses.'
     ],
     [
@@ -2274,7 +2274,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>200g fresh spinach</li><li>200g mushrooms, sliced</li><li>1 cup heavy cream</li><li>1/2 cup grated Gruyère cheese</li><li>1/4 cup breadcrumbs</li><li>2 tbsp butter</li><li>Salt and pepper to taste</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a pan, sauté mushrooms in butter until golden. Add spinach and cook until wilted.</li><li>Transfer the mixture to a baking dish. Pour cream over the top and sprinkle with cheese and breadcrumbs.</li><li>Bake for 25-30 minutes, or until golden and bubbly.</li><li>Serve warm.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Creamy Spinach and Mushroom Gratin is a rich and comforting side dish, perfect for adding a touch of elegance to your meal.'
     ],
     [
@@ -2288,7 +2288,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>500g Brussels sprouts, halved</li><li>2 tbsp olive oil</li><li>2 tbsp balsamic vinegar</li><li>Salt and pepper to taste</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 200°C (400°F).</li><li>In a bowl, toss Brussels sprouts with olive oil, balsamic vinegar, salt, and pepper.</li><li>Spread Brussels sprouts on a baking sheet and roast for 25-30 minutes, or until crispy on the edges.</li><li>Serve warm.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Balsamic Roasted Brussels Sprouts offer a tangy and sweet flavor, perfect as a side dish for any meal.'
     ],
     [
@@ -2302,7 +2302,7 @@ $blogPosts = [
         'ingredients' => '<ul><li>4 medium zucchinis, halved lengthwise</li><li>1 cup cooked quinoa</li><li>1/2 cup diced tomatoes</li><li>1/4 cup chopped fresh basil</li><li>1/4 cup grated Parmesan cheese</li><li>2 tbsp olive oil</li><li>Salt and pepper to taste</li></ul>',
         'instructions' => '<ol><li>Preheat oven to 180°C (350°F).</li><li>In a bowl, mix cooked quinoa, tomatoes, basil, Parmesan cheese, salt, and pepper.</li><li>Brush zucchini halves with olive oil and scoop out the center to create boats.</li><li>Fill zucchini boats with quinoa mixture and place on a baking sheet.</li><li>Bake for 20-25 minutes, or until zucchini is tender.</li><li>Serve warm.</li></ol>',
         'source' => '',
-        'author' => 'CandyBird',
+        'author' => 'Sir Francis',
         'intro' => 'Stuffed Zucchini Boats are a versatile and healthy side dish, perfect for adding a burst of flavor to your meal.'
     ],
 
@@ -2317,7 +2317,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup mayonnaise</li><li>3 cloves garlic, minced</li><li>1 tbsp lemon juice</li><li><span class="fraction">1/2</span> tsp salt</li><li><span class="fraction">1/4</span> tsp black pepper</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine mayonnaise, minced garlic, lemon juice, salt, and pepper.</li><li>Mix well until smooth.</li><li>Refrigerate for at least 30 minutes before serving to let the flavors meld.</li><li>Serve with vegetables, seafood, or sandwiches.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Creamy Garlic Aioli is a rich, flavorful sauce that pairs perfectly with a variety of dishes.'
 ],
 [
@@ -2331,7 +2331,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup mayonnaise</li><li>2 tbsp Sriracha sauce</li><li>1 tbsp lime juice</li><li><span class="fraction">1/2</span> tsp garlic powder</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix mayonnaise, Sriracha sauce, lime juice, and garlic powder.</li><li>Stir until smooth and well combined.</li><li>Adjust the amount of Sriracha to taste for desired spice level.</li><li>Use as a dip or a spread for sandwiches and burgers.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Spicy Sriracha Mayo adds a kick of heat and flavor, making it a great addition to any meal.'
 ],
 [
@@ -2345,7 +2345,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g ripe tomatoes, chopped</li><li><span class="fraction">1/2</span> cup sugar</li><li><span class="fraction">1/2</span> cup white vinegar</li><li><span class="fraction">1/2</span> tsp salt</li><li><span class="fraction">1/4</span> tsp ground cloves</li><li><span class="fraction">1/2</span> tsp paprika</li><li><span class="fraction">1/4</span> tsp onion powder</li></ul>',
     'instructions' => '<ol><li>In a pot, combine chopped tomatoes, sugar, vinegar, salt, cloves, paprika, and onion powder.</li><li>Bring to a boil, then reduce heat and simmer for 30 minutes, stirring occasionally.</li><li>Blend mixture until smooth, then strain to remove seeds and skins.</li><li>Return to heat and simmer for another 15 minutes until thickened.</li><li>Let cool and store in a bottle or jar.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Classic Tomato Ketchup is a homemade version of the beloved condiment, perfect for burgers and fries.'
 ],
 [
@@ -2359,7 +2359,7 @@ $blogPosts = [
     'ingredients' => '<ul><li><span class="fraction">1/4</span> cup olive oil</li><li>2 tbsp lemon juice</li><li>1 tbsp chopped fresh parsley</li><li>1 tsp Dijon mustard</li><li><span class="fraction">1/2</span> tsp salt</li><li><span class="fraction">1/4</span> tsp black pepper</li></ul>',
     'instructions' => '<ol><li>In a small bowl, whisk together olive oil, lemon juice, parsley, Dijon mustard, salt, and pepper.</li><li>Continue to whisk until well combined.</li><li>Use immediately or store in the refrigerator for up to a week.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Lemon Herb Dressing is a light and zesty option, ideal for salads and grilled vegetables.'
 ],
 [
@@ -2373,7 +2373,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup plain yogurt</li><li>2 tbsp fresh mint, chopped</li><li>1 tbsp lemon juice</li><li>1 clove garlic, minced</li><li><span class="fraction">1/2</span> tsp salt</li></ul>',
     'instructions' => '<ol><li>In a bowl, combine yogurt, chopped mint, lemon juice, minced garlic, and salt.</li><li>Mix until smooth and well combined.</li><li>Chill in the refrigerator for at least 30 minutes before serving.</li><li>Use as a dip or a sauce for grilled meats and vegetables.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Mint Yogurt Sauce offers a refreshing and cooling flavor, perfect for complementing spicy dishes.'
 ],
 [
@@ -2387,7 +2387,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g all-purpose flour</li><li>2 tsp salt</li><li>1 tbsp sugar</li><li>2 tsp active dry yeast</li><li>350ml warm water</li><li>60ml olive oil</li><li>2 tbsp chopped fresh rosemary</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F).</li><li>In a bowl, mix flour, salt, sugar, and yeast.</li><li>Slowly add warm water and olive oil, mixing until a dough forms.</li><li>Knead the dough on a floured surface for 5 minutes.</li><li>Place dough in a lightly oiled bowl, cover with a cloth, and let rise for 1 hour.</li><li>Transfer dough to a baking sheet, press it out, and make dimples with your fingers.</li><li>Sprinkle rosemary over the top and drizzle with olive oil.</li><li>Bake for 20-25 minutes until golden brown.</li><li>Let cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Classic Focaccia Bread is a soft, flavorful bread with a crisp crust, perfect for dipping in olive oil or serving with meals.'
 ],
 [
@@ -2401,7 +2401,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>250g all-purpose flour</li><li>1 tbsp baking powder</li><li><span class="fraction">1/2</span> tsp salt</li><li>60g cold butter, cubed</li><li>100g shredded cheddar cheese</li><li>2 tbsp chopped fresh chives</li><li>150ml milk</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F).</li><li>In a bowl, mix flour, baking powder, and salt.</li><li>Cut in butter until mixture resembles coarse crumbs.</li><li>Stir in cheese and chives.</li><li>Pour in milk and mix until just combined.</li><li>Turn dough onto a floured surface and gently roll out to 2cm thickness.</li><li>Cut into rounds and place on a baking sheet.</li><li>Bake for 12-15 minutes until golden brown.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Cheese and Herb Scones are savory, flaky treats perfect for breakfast or as a side for soups and salads.'
 ],
 [
@@ -2415,7 +2415,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>200g all-purpose flour</li><li>100g rolled oats</li><li>100g honey</li><li>1 tsp baking powder</li><li>1/2 tsp baking soda</li><li><span class="fraction">1/2</span> tsp salt</li><li>1 egg</li><li>120ml milk</li><li>60ml vegetable oil</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and line a muffin tin with paper liners.</li><li>In a bowl, mix flour, oats, baking powder, baking soda, and salt.</li><li>In another bowl, whisk egg, milk, honey, and oil.</li><li>Combine wet and dry ingredients, mixing until just combined.</li><li>Divide batter evenly among muffin cups.</li><li>Bake for 18-20 minutes until a toothpick inserted comes out clean.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Honey Oat Muffins are naturally sweetened with honey and loaded with hearty oats, making them a delicious and wholesome treat.'
 ],
 [
@@ -2429,7 +2429,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>250g pizza dough</li><li>2 tbsp melted butter</li><li>2 cloves garlic, minced</li><li><span class="fraction">1/4</span> cup grated Parmesan cheese</li><li>1 tbsp chopped fresh parsley</li><li><span class="fraction">1/2</span> tsp salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F).</li><li>Roll out pizza dough into a rectangle on a floured surface.</li><li>Cut into strips and place on a baking sheet.</li><li>Brush with melted butter and sprinkle with minced garlic, Parmesan cheese, parsley, and salt.</li><li>Bake for 12-15 minutes until golden and crispy.</li><li>Serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Garlic Parmesan Breadsticks are perfect for dipping in marinara sauce or enjoying alongside your favorite pasta dish.'
 ],
 [
@@ -2443,7 +2443,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>250g all-purpose flour</li><li>1 tbsp sugar</li><li>1 tsp salt</li><li>1 tsp active dry yeast</li><li>150ml warm water</li><li>2 tbsp baking soda</li><li>1 egg, beaten</li><li>Coarse salt for sprinkling</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 220°C (425°F) and line a baking sheet with parchment paper.</li><li>In a bowl, mix flour, sugar, salt, and yeast.</li><li>Add warm water and mix until a dough forms.</li><li>Knead dough on a floured surface for 5 minutes, then let rise for 1 hour.</li><li>Divide dough into 8 pieces and shape into pretzels.</li><li>Bring a pot of water to a boil, add baking soda, and briefly boil each pretzel for 30 seconds.</li><li>Place pretzels on the baking sheet, brush with beaten egg, and sprinkle with coarse salt.</li><li>Bake for 15-20 minutes until golden brown.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Soft Pretzels are warm, chewy, and perfect for snacking or serving with mustard for dipping.'
 ],
 
@@ -2458,7 +2458,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup gluten-free all-purpose flour</li><li>2 tbsp sugar</li><li>1 tbsp baking powder</li><li><span class="fraction">1/2</span> tsp salt</li><li>1 cup milk</li><li>1 egg</li><li>2 tbsp melted butter</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix flour, sugar, baking powder, and salt.</li><li>In another bowl, whisk milk, egg, and melted butter.</li><li>Combine wet and dry ingredients until just mixed.</li><li>Heat a non-stick skillet over medium heat and lightly grease.</li><li>Pour batter onto skillet, cooking for 2-3 minutes per side until golden brown.</li><li>Serve warm with your favorite toppings.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Gluten-Free Pancakes are fluffy and delicious, perfect for a weekend breakfast or brunch.'
 ],
 [
@@ -2472,7 +2472,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup quinoa, rinsed</li><li>2 cups water</li><li>1 avocado, diced</li><li>1 cup cherry tomatoes, halved</li><li>1/4 cup chopped red onion</li><li>2 tbsp olive oil</li><li>2 tbsp lemon juice</li><li>Salt and pepper to taste</li></ul>',
     'instructions' => '<ol><li>In a pot, bring water to a boil. Add quinoa, reduce heat, and simmer for 15 minutes until water is absorbed and quinoa is tender.</li><li>Let quinoa cool.</li><li>In a bowl, combine cooled quinoa, avocado, cherry tomatoes, and red onion.</li><li>Whisk olive oil and lemon juice together, then pour over salad.</li><li>Toss to combine and season with salt and pepper.</li><li>Serve chilled or at room temperature.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Quinoa Salad with Avocado is a fresh and nutritious dish that’s perfect for a light lunch or side.'
 ],
 [
@@ -2486,7 +2486,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>2 cups almond flour</li><li>1/2 tsp baking soda</li><li><span class="fraction">1/4</span> tsp salt</li><li>3 ripe bananas, mashed</li><li>3 eggs</li><li>1/4 cup honey</li><li>1/4 cup melted coconut oil</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and line a loaf pan with parchment paper.</li><li>In a bowl, mix almond flour, baking soda, and salt.</li><li>In another bowl, combine bananas, eggs, honey, and melted coconut oil.</li><li>Mix wet and dry ingredients until well combined.</li><li>Pour batter into prepared loaf pan.</li><li>Bake for 40-45 minutes until a toothpick inserted comes out clean.</li><li>Cool before slicing.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Almond Flour Banana Bread is a moist and flavorful treat that’s naturally gluten-free and perfect for breakfast or a snack.'
 ],
 [
@@ -2500,7 +2500,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>500g chicken tenders</li><li>1 cup gluten-free breadcrumbs</li><li>1/2 cup grated Parmesan cheese</li><li>1 tsp paprika</li><li>1/2 tsp garlic powder</li><li>1/2 tsp onion powder</li><li>2 eggs, beaten</li><li>Salt and pepper to taste</li><li>Oil for frying</li></ul>',
     'instructions' => '<ol><li>In a bowl, mix gluten-free breadcrumbs, Parmesan cheese, paprika, garlic powder, onion powder, salt, and pepper.</li><li>Dip chicken tenders in beaten eggs, then coat with breadcrumb mixture.</li><li>Heat oil in a skillet over medium heat.</li><li>Fry chicken tenders for 3-4 minutes per side until golden brown and cooked through.</li><li>Drain on paper towels and serve warm.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Gluten-Free Chicken Tenders are crispy and delicious, perfect for a quick meal or as a party appetizer.'
 ],
 [
@@ -2514,7 +2514,7 @@ $blogPosts = [
     'ingredients' => '<ul><li>1 cup coconut flour</li><li>1/2 cup coconut oil, melted</li><li>1/2 cup honey</li><li>2 eggs</li><li>1/2 tsp vanilla extract</li><li>1/2 tsp baking soda</li><li>1/2 cup chocolate chips</li><li><span class="fraction">1/4</span> tsp salt</li></ul>',
     'instructions' => '<ol><li>Preheat oven to 180°C (350°F) and line a baking sheet with parchment paper.</li><li>In a bowl, mix coconut flour, baking soda, and salt.</li><li>In another bowl, whisk melted coconut oil, honey, eggs, and vanilla extract.</li><li>Combine wet and dry ingredients, then fold in chocolate chips.</li><li>Drop spoonfuls of dough onto the baking sheet.</li><li>Bake for 10-12 minutes until edges are golden.</li><li>Cool before serving.</li></ol>',
     'source' => '',
-    'author' => 'CandyBird',
+    'author' => 'Sir Francis',
     'intro' => 'Coconut Flour Chocolate Chip Cookies are a chewy, naturally gluten-free treat that’s sure to satisfy your sweet tooth.'
 ],
 

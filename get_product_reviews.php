@@ -84,8 +84,8 @@ while ($row = $result->fetch_assoc()) {
         'product_id' => (int) $row['product_id'],
         'rating' => $rating,
         'comment' => $row['comment'] ?? '',
-        'name' => $row['u_name'] ?: ($row['username'] ?: 'CandyBird customer'),
-        'display_name' => $row['u_name'] ?: ($row['username'] ?: 'CandyBird customer'),
+        'name' => $row['u_name'] ?: ($row['username'] ?: 'Sir Francis customer'),
+        'display_name' => $row['u_name'] ?: ($row['username'] ?: 'Sir Francis customer'),
         'can_manage' => $canManage,
         'created_at' => '',
     ];

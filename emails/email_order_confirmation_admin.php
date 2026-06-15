@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CandyBird Order Received</title>
+    <title>Sir Francis Order Received</title>
 </head>
 <body style="margin:0;padding:0;background:#f5f2ea;font-family:Arial,Helvetica,sans-serif;color:#2b2230;">
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f5f2ea;margin:0;padding:24px 12px;">
@@ -11,13 +11,13 @@
             <td align="center">
                 <table width="680" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:680px;background:#ffffff;border-collapse:collapse;">
                     <tr>
-                        <td style="background:#5b1178;padding:22px 28px;">
+                        <td style="background:#28364B;padding:22px 28px;">
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="left">
-                                        <img src="https://www.candybird.co.za/assets/img/emails/footer-image1.png" alt="CandyBird" width="142" style="display:block;max-width:142px;border:0;">
+                                        <img src="https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
                                     </td>
-                                    <td align="right" style="color:#fcb42f;font-size:22px;font-weight:700;">Order received</td>
+                                    <td align="right" style="color:#CEBD88;font-size:22px;font-weight:700;">Order received</td>
                                 </tr>
                             </table>
                         </td>
@@ -29,11 +29,11 @@
                             {resend_notice}
                             <table cellpadding="0" cellspacing="0" role="presentation" style="margin-top:20px;">
                                 <tr>
-                                    <td style="background:#5b1178;">
+                                    <td style="background:#28364B;">
                                         <a href="{admin_order_url}" style="display:inline-block;padding:12px 18px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">Open printable order</a>
                                     </td>
                                     <td style="width:10px;"></td>
-                                    <td style="background:#fcb42f;">
+                                    <td style="background:#CEBD88;">
                                         <a href="{order_details_url}" style="display:inline-block;padding:12px 18px;color:#2b2230;text-decoration:none;font-size:14px;font-weight:700;">View customer page</a>
                                     </td>
                                 </tr>
@@ -103,8 +103,8 @@
                                     <td align="right" style="padding:12px 0;border-top:1px solid #e8e1d7;color:#1d7d38;font-weight:700;">{order_discount}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:14px 0;border-top:2px solid #5b1178;font-size:18px;font-weight:700;">Total</td>
-                                    <td align="right" style="padding:14px 0;border-top:2px solid #5b1178;font-size:18px;font-weight:700;color:#5b1178;">{order_total}</td>
+                                    <td style="padding:14px 0;border-top:2px solid #28364B;font-size:18px;font-weight:700;">Total</td>
+                                    <td align="right" style="padding:14px 0;border-top:2px solid #28364B;font-size:18px;font-weight:700;color:#28364B;">{order_total}</td>
                                 </tr>
                             </table>
                         </td>
@@ -122,9 +122,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="background:#f5f2ea;padding:24px 18px;color:#5b1178;font-size:12px;line-height:1.7;">
+                        <td align="center" style="background:#f5f2ea;padding:24px 18px;color:#28364B;font-size:12px;line-height:1.7;">
                             <p style="margin:0 0 10px;">Web owner copy</p>
-                            <p style="margin:0;">Copyright &copy; {year} CandyBird. All rights reserved.</p>
+                            <p style="margin:0;">Copyright &copy; {year} Sir Francis. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>

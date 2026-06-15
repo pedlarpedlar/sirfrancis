@@ -470,7 +470,7 @@ if (!function_exists('fetchCandybirdTsvSheet')) {
         }
 
         if ($freshFetched && $tsv_data && !candybirdTsvDataLooksSafeToCache($cacheKey, $tsv_data)) {
-            error_log('CandyBird sheet fetch ignored because product row count looked unsafe: ' . candybirdTsvValidProductCount($tsv_data));
+            error_log('Sir Francis sheet fetch ignored because product row count looked unsafe: ' . candybirdTsvValidProductCount($tsv_data));
             $tsv_data = is_file($cacheFile) ? file_get_contents($cacheFile) : false;
             $freshFetched = false;
         }
@@ -1407,7 +1407,7 @@ if (!function_exists('getCandybirdCategoryUrl')) {
             $slug = getCandybirdCategorySlug($categoryName);
         }
         $path = $slug !== '' ? '/' . rawurlencode($slug) : '/products?category=' . rawurlencode((string) $categoryName);
-        return $absolute ? 'https://www.candybird.co.za' . $path : ltrim($path, '/');
+        return $absolute ? 'https://www.fishgelatine.co.za/v2' . $path : ltrim($path, '/');
     }
 }
 
@@ -1450,7 +1450,7 @@ if (!function_exists('getSheetProductUrl')) {
         $path = $slug !== ''
             ? '/' . rawurlencode($slug)
             : '/product?id=' . rawurlencode((string) ($product['id'] ?? ''));
-        return $absolute ? 'https://www.candybird.co.za' . $path : ltrim($path, '/');
+        return $absolute ? 'https://www.fishgelatine.co.za/v2' . $path : ltrim($path, '/');
     }
 }
 
@@ -2019,7 +2019,7 @@ if (!function_exists('getSheetProductImage')) {
 }
 
 if (!function_exists('getCandybirdAbsoluteImageUrl')) {
-    function getCandybirdAbsoluteImageUrl($imageUrl, $fallback = 'https://www.candybird.co.za/assets/img/product/1.png') {
+    function getCandybirdAbsoluteImageUrl($imageUrl, $fallback = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png') {
         $imageUrl = trim((string) $imageUrl);
 
         if ($imageUrl === '' || $imageUrl === '#') {
@@ -2035,7 +2035,7 @@ if (!function_exists('getCandybirdAbsoluteImageUrl')) {
         }
 
         $imageUrl = ltrim($imageUrl, '/');
-        return 'https://www.candybird.co.za/' . str_replace(' ', '%20', $imageUrl);
+        return 'https://www.fishgelatine.co.za/v2/' . str_replace(' ', '%20', $imageUrl);
     }
 }
 
@@ -2208,7 +2208,7 @@ if (!function_exists('ensureCandybirdOrderItemSnapshotColumns')) {
             }
 
             if (!$conn->query($alterSql)) {
-                error_log("CandyBird could not add order item snapshot column {$column}: " . $conn->error);
+                error_log("Sir Francis could not add order item snapshot column {$column}: " . $conn->error);
                 $checked = false;
                 return false;
             }
@@ -2236,7 +2236,7 @@ if (!function_exists('ensureCandybirdCartClearanceColumns')) {
         }
         $checked = (bool) $conn->query("ALTER TABLE cart ADD COLUMN clearance_id VARCHAR(120) NULL AFTER product_id");
         if (!$checked) {
-            error_log('CandyBird could not add cart clearance_id column: ' . $conn->error);
+            error_log('Sir Francis could not add cart clearance_id column: ' . $conn->error);
         }
         return $checked;
     }
@@ -2772,14 +2772,14 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
     }
 }
 
-if (!defined('CANDYBIRD_FREE_SHIPPING_AMOUNT')) {
-    define('CANDYBIRD_FREE_SHIPPING_AMOUNT', 500);
+if (!defined('SIRFRANCIS_FREE_SHIPPING_AMOUNT')) {
+    define('SIRFRANCIS_FREE_SHIPPING_AMOUNT', 500);
 }
 
 if (!function_exists('getCandybirdFreeShippingAmount')) {
     function getCandybirdFreeShippingAmount($configuredAmount = null) {
         $amount = is_numeric($configuredAmount) ? (float) $configuredAmount : 0;
-        return $amount > 0 ? $amount : (float) CANDYBIRD_FREE_SHIPPING_AMOUNT;
+        return $amount > 0 ? $amount : (float) SIRFRANCIS_FREE_SHIPPING_AMOUNT;
     }
 }
 
@@ -2811,7 +2811,7 @@ if (!function_exists('getCandybirdDefaultDeliveryOptions')) {
                 ],
             ],
             'collect' => [
-                'label' => 'Collect from CandyBird',
+                'label' => 'Collect from Sir Francis',
                 'enabled' => true,
                 'estimate' => 'Usually ready within 1-2 working days once confirmed',
                 'free_shipping_eligible' => false,

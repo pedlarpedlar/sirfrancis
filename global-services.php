@@ -4,9 +4,9 @@ date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 
 include 'header.php';
 
-$page_url_canonical = "https://www.candybird.co.za/global-services";
-$title_og = 'Global Services and Delivery - CandyBird';
-$page_url_og = "https://www.candybird.co.za/global-services";
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/global-services";
+$title_og = 'Global Services and Delivery - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/global-services";
 $description_og = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 $description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 
@@ -45,7 +45,7 @@ include 'page_menues.php';
 
   <section class="global-services-header">
     <div class="container">
-      <h2 class="title">Global Services by Candybird</h2>
+      <h2 class="title">Global Services by Sir Francis</h2>
       <p class="subtitle">Expanding Our Reach to Serve You Worldwide</p>
     </div>
   </section>

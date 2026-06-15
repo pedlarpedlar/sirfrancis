@@ -48,11 +48,11 @@ $displayImage = is_file($largeImagePath)
     ? "assets/img/blog-post/large-blog/" . rawurlencode($imageFile)
     : (is_file($thumbImagePath) ? "assets/img/blog-post/" . rawurlencode($imageFile) : "assets/img/blog-post/large-blog/" . $fallbackImageNumber . ".png");
 
-$image_url_og = "https://www.candybird.co.za/" . $displayImage;
+$image_url_og = "https://www.fishgelatine.co.za/v2/" . $displayImage;
 
-$page_url_canonical = "https://www.candybird.co.za/recipe?id=".$recipe_id;
-$title_og = $url_title . ' - CandyBird';
-$page_url_og = "https://www.candybird.co.za/recipe?id=".$recipe_id;
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/recipe?id=".$recipe_id;
+$title_og = $url_title . ' - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/recipe?id=".$recipe_id;
 $description_og = htmlspecialchars($intro, ENT_QUOTES, 'UTF-8');
 $description_meta = htmlspecialchars($intro, ENT_QUOTES, 'UTF-8');
 ?>
@@ -147,7 +147,7 @@ $description_meta = htmlspecialchars($intro, ENT_QUOTES, 'UTF-8');
 </style>
 
 
-<title><?=$url_title?> - CandyBird</title>
+<title><?=$url_title?> - Sir Francis</title>
 
 <?php
 
@@ -162,9 +162,9 @@ $breadcrumbs .= '<div class="row">';
 $breadcrumbs .= '<div class="col-12">';
 $breadcrumbs .= '<ol class="breadcrumb bg-transparent m-0 p-0 align-items-center justify-content-center">';
 
-$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.candybird.co.za">Home</a></li>';
-$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.candybird.co.za/recipes">Recipes</a></li>';
-$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.candybird.co.za/recipes?category='.urlencode($category).'">'.htmlspecialchars($category, ENT_QUOTES, 'UTF-8').'</a></li>';
+$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>';
+$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2/recipes">Recipes</a></li>';
+$breadcrumbs .= '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2/recipes?category='.urlencode($category).'">'.htmlspecialchars($category, ENT_QUOTES, 'UTF-8').'</a></li>';
 $breadcrumbs .= '<li class="breadcrumb-item">' . $url_title . '</li>';
 
 $breadcrumbs .= '</ol>';
@@ -250,10 +250,10 @@ echo $breadcrumbs;
             <span class="title">Share:</span>
             <ul class="social">
               <li>
-                <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.candybird.co.za/recipe?id=<?=$recipe_id?>" target="_blank"><i class="ion-social-facebook"></i></a>
+                <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://www.fishgelatine.co.za/v2/recipe?id=<?=$recipe_id?>" target="_blank"><i class="ion-social-facebook"></i></a>
               </li>
               <li>
-                <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.candybird.co.za/recipe?id=<?=$recipe_id?>&text=Check out this recipe!" target="_blank"><i class="ion-social-twitter"></i></a>
+                <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://www.fishgelatine.co.za/v2/recipe?id=<?=$recipe_id?>&text=Check out this recipe!" target="_blank"><i class="ion-social-twitter"></i></a>
               </li>
               <!-- <li>
                 <a href="#"><i class="ion-social-google"></i></a>
@@ -268,7 +268,7 @@ echo $breadcrumbs;
 
         <div class="blog-single-tags-share d-sm-flex justify-content-between print-only mt-15">
           <div class="blog-single-tags d-flex">
-            <span class="title">Love this recipe? Find more at www.candybird.co.za</span>
+            <span class="title">Love this recipe? Find more at www.fishgelatine.co.za</span>
             <!-- <ul class="tag-list">
               <li><a href="#"><?=$category?></a></li>
             </ul> -->

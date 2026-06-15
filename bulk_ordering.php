@@ -1,10 +1,10 @@
 <?php
 include 'session_logins.php';
 include 'header.php';
-$page_url_canonical = "https://www.candybird.co.za/bulk_ordering";
-$title_og = 'Bulk Ordering - CandyBird';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/bulk_ordering";
+$title_og = 'Bulk Ordering - Sir Francis';
 $page_url_og = $page_url_canonical;
-$description_meta = 'Bulk ordering for CandyBird nuts, dried fruit, gifting, events, resellers and business customers.';
+$description_meta = 'Bulk ordering for Sir Francis marine collagen, fish gelatine, peptides, sea moss, resellers and business customers.';
 include 'page_menues.php';
 ?>
 
@@ -25,7 +25,7 @@ include 'page_menues.php';
     .cb-service-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
     .cb-service-actions a { border-radius: 6px; padding: 12px 16px; font-weight: 700; }
     .cb-service-actions .primary { background: #2a1b1b; color: #fff; }
-    .cb-service-actions .secondary { background: #FCB42F; color: #251d18; }
+    .cb-service-actions .secondary { background: #CEBD88; color: #251d18; }
     @media (max-width: 991px) { .cb-service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 575px) { .cb-service-grid { grid-template-columns: 1fr; } .cb-service-hero { padding: 38px 0 30px; } }
 </style>
@@ -34,7 +34,7 @@ include 'page_menues.php';
     <section class="cb-service-hero">
         <div class="container">
             <h1>Bulk Ordering</h1>
-            <p>Ordering for a team, event, family, reseller, pantry, school, masjid, office or gifting campaign? CandyBird can help you plan bigger orders with sensible product choices and delivery expectations.</p>
+            <p>Ordering for a clinic, reseller, wellness brand, manufacturer, retailer or distribution project? Sir Francis can help you plan bigger orders with sensible product choices and delivery expectations.</p>
             <div class="cb-service-actions">
                 <a class="primary" href="contact">Request help with a bulk order</a>
                 <a class="secondary" href="pricelist">View pricelist</a>
@@ -47,15 +47,15 @@ include 'page_menues.php';
             <div class="cb-service-grid">
                 <div class="cb-service-card">
                     <h2>Events</h2>
-                    <p>Snack tables, favour packs, hampers and large family occasions.</p>
+                    <p>Retail packs, repeat-use orders and specialist wellness ingredient supply.</p>
                 </div>
                 <div class="cb-service-card">
                     <h2>Workplaces</h2>
-                    <p>Office snacks, staff gifts, client packs and meeting-room refills.</p>
+                    <p>Bulk marine collagen, fish gelatine and sea moss support for business buyers.</p>
                 </div>
                 <div class="cb-service-card">
                     <h2>Resellers</h2>
-                    <p>Bulk supply for shops, pop-ups, home businesses and gifting brands.</p>
+                    <p>Bulk supply for shops, distributors, wellness brands and private-label projects.</p>
                 </div>
                 <div class="cb-service-card">
                     <h2>Pantry orders</h2>
@@ -70,7 +70,7 @@ include 'page_menues.php';
                     <li>Approximate quantity or budget</li>
                     <li>Preferred pack size, if known</li>
                     <li>Delivery area and date needed</li>
-                    <li>Whether branding, labels or gift packaging is required</li>
+                    <li>Whether branding, labels or private-label packaging is required</li>
                 </ul>
                 <p>For very large orders, shipping may need a custom quote. Lead times may apply where stock needs to be prepared, sourced or packed specially.</p>
             </div>

@@ -7,10 +7,10 @@ $rowsByCategory = getCandybirdWholesaleRowsByCategory();
 $rowCount = count($wholesaleRows);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
-$limitedDescription = 'CandyBird wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
-$page_url_canonical = 'https://www.candybird.co.za/wholesale-pricelist';
-$title_og = 'Wholesale Pricelist - CandyBird';
-$image_url_og = 'https://www.candybird.co.za/assets/img/wholesale.jpg';
+$limitedDescription = 'Sir Francis wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
+$page_url_canonical = 'https://www.fishgelatine.co.za/v2/wholesale-pricelist';
+$title_og = 'Wholesale Pricelist - Sir Francis';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/wholesale.jpg';
 $image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';
@@ -21,13 +21,13 @@ $whatsappDigits = preg_replace('/\D+/', '', (string) ($hotline ?? $tel ?? ''));
 if (strpos($whatsappDigits, '0') === 0) {
     $whatsappDigits = '27' . substr($whatsappDigits, 1);
 }
-$whatsappMessage = rawurlencode('Assalamu alaikum / Hello CandyBird, please send me the current wholesale pricelist and help me with a bulk order.');
+$whatsappMessage = rawurlencode('Assalamu alaikum / Hello Sir Francis, please send me the current wholesale pricelist and help me with a bulk order.');
 
 include 'header.php';
 include 'page_menues.php';
 ?>
 
-<title>Wholesale Pricelist - <?= cbWholesaleText($website_company_name ?? 'CandyBird') ?></title>
+<title>Wholesale Pricelist - <?= cbWholesaleText($website_company_name ?? 'Sir Francis') ?></title>
 
 <style>
   .wholesale-price-page { background:#f7f4ef; color:#2c2926; padding:28px 0 48px; }
@@ -65,7 +65,7 @@ include 'page_menues.php';
   .wholesale-product { min-width:220px; }
   .wholesale-product-image { aspect-ratio:1; border:1px solid #eadfd2; border-radius:6px; object-fit:cover; width:52px; }
   .wholesale-product a { color:#2c2926; font-weight:800; text-decoration:none; }
-  .wholesale-product a:hover { color:#6b0099; }
+  .wholesale-product a:hover { color:#28364B; }
   .wholesale-price { color:#5b1178; font-size:16px; font-weight:900; min-width:145px; }
   .wholesale-muted { color:#6d6270; font-size:12px; line-height:1.45; }
   .wholesale-mini { color:#6d6270; display:block; font-size:11px; line-height:1.45; margin-top:3px; }
@@ -87,10 +87,10 @@ include 'page_menues.php';
   <div class="container">
     <div class="wholesale-hero">
       <div class="wholesale-hero-copy">
-        <h1>CandyBird Wholesale Pricelist</h1>
+        <h1>Sir Francis Wholesale Pricelist</h1>
         <p><?= number_format($rowCount) ?> bulk line<?= $rowCount === 1 ? '' : 's' ?> | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?>. Wholesale prices are for bulk planning and confirmed by quote before invoicing.</p>
       </div>
-      <img class="wholesale-hero-media" src="https://www.candybird.co.za/assets/img/wholesale.jpg" alt="CandyBird wholesale and bulk pricelist" loading="lazy">
+      <img class="wholesale-hero-media" src="https://www.fishgelatine.co.za/v2/assets/img/wholesale.jpg" alt="Sir Francis wholesale and bulk pricelist" loading="lazy">
       <div class="wholesale-actions">
         <a href="wholesale-pricelist-download" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
         <a href="wholesale-pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
@@ -203,7 +203,7 @@ include 'page_menues.php';
       Wholesale pricing is not displayed on individual product pages; product pages only indicate when an item has a bulk option.
     </p>
     <div class="wholesale-private-note">
-      This wholesale pricelist is for items packed according to <?= cbWholesaleText($website_company_name ?? 'CandyBird') ?> configuration sizes and branding. For private labelling with your own printed packaging, filling and supply, the minimum quantity is one full container, about 15 tons of product.
+      This wholesale pricelist is for items packed according to <?= cbWholesaleText($website_company_name ?? 'Sir Francis') ?> configuration sizes and branding. For private labelling with your own printed packaging, filling and supply, the minimum quantity is one full container, about 15 tons of product.
     </div>
   </div>
 </main>
@@ -350,12 +350,12 @@ include 'page_menues.php';
     var message = casesNeeded > 0
       ? 'Estimate uses ' + casesNeeded + ' bulk case' + (casesNeeded === 1 ? '' : 's') + ' of ' + row.size + '. Approx leftover/unpacked: ' + leftoverKg.toFixed(2) + 'kg.'
       : 'Estimate uses the listed per-kg/product price.';
-    message += ' Final quote depends on stock, packaging, delivery and confirmation by CandyBird.';
+    message += ' Final quote depends on stock, packaging, delivery and confirmation by Sir Francis.';
     document.getElementById('wholesale-calc-message').textContent = message;
 
     var whatsapp = document.getElementById('wholesale-calc-whatsapp');
     if (whatsapp && whatsappDigits) {
-      var text = 'Assalamu alaikum / Hello CandyBird, please quote this wholesale estimate:%0A' +
+      var text = 'Assalamu alaikum / Hello Sir Francis, please quote this wholesale estimate:%0A' +
         'Product: ' + encodeURIComponent(row.title + ' | ' + row.size) + '%0A' +
         'Packing: ' + encodeURIComponent(packSummary.join(', ') || 'Not specified') + '%0A' +
         'Total requested: ' + encodeURIComponent(totalKg.toFixed(2) + 'kg') + '%0A' +

@@ -903,7 +903,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $emailItemImage = htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8');
                 $emailItemUrl = $rowCart1['product_url'] ?? ('product?id=' . urlencode($clearanceId !== '' ? ('CLR:' . $clearanceId) : (string) $productId));
                 if (!preg_match('#^https?://#i', $emailItemUrl)) {
-                    $emailItemUrl = 'https://www.candybird.co.za/' . ltrim($emailItemUrl, '/');
+                    $emailItemUrl = 'https://www.fishgelatine.co.za/v2/' . ltrim($emailItemUrl, '/');
                 }
                 $emailFullLineTotal = (float) $productPrice * (int) $quantity;
                 $emailDiscountedLineTotal = $productDiscountedPrice * (int) $quantity;
@@ -1197,8 +1197,8 @@ $productDiscountAmount = max((float) $order_discount, (float) $discountAmount);
 $totalSavingsAmount = $productDiscountAmount + (float) $couponAmount + (float) $shippingDiscountAmount;
 $orderDiscountTotal = '-' . candybirdEmailMoney($totalSavingsAmount);
 $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
-$orderDetailsUrl = 'https://www.candybird.co.za/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
-$adminOrderUrl = 'https://www.candybird.co.za/admin-cb/order_details?order_id=' . urlencode((string) $orderId);
+$orderDetailsUrl = 'https://www.fishgelatine.co.za/v2/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
+$adminOrderUrl = 'https://www.fishgelatine.co.za/v2/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
 $couponLabel = $couponCode !== '' ? 'Coupon (' . candybirdEmailText($couponCode) . ')' : 'Coupon';
 
 $productDiscountRow = '';
@@ -1266,14 +1266,14 @@ try {
     $customerMailResult = cbCandybirdSendMail(
         $billing_email_address,
         $billing_first_name,
-        "CandyBird | Order Confirmation | #".$orderId_zeropad,
+        "Sir Francis | Order Confirmation | #".$orderId_zeropad,
         $email_body,
         ['prefer_mail_transport' => true]
     );
     if (!empty($customerMailResult['success'])) {
         $response['email_message'] = 'Order email sent successfully.';
     } else {
-        error_log('CandyBird order confirmation email failed for order ' . $orderId_zeropad . ': ' . ($customerMailResult['error'] ?? 'unknown error'));
+        error_log('Sir Francis order confirmation email failed for order ' . $orderId_zeropad . ': ' . ($customerMailResult['error'] ?? 'unknown error'));
         $response['email_message'] = 'Order placed, but the confirmation email could not be sent.';
     }
 
@@ -1289,18 +1289,18 @@ try {
     $adminMailResult = cbCandybirdSendMail(
         $smtp_username1,
         'Admin',
-        "CandyBird | Order Received | #".$orderId_zeropad,
+        "Sir Francis | Order Received | #".$orderId_zeropad,
         $admin_email_body,
         [
             'reply_to_email' => $billing_email_address,
-            'reply_to_name' => trim($billing_first_name) ?: 'CandyBird customer',
+            'reply_to_name' => trim($billing_first_name) ?: 'Sir Francis customer',
             'prefer_mail_transport' => true,
         ]
     );
     if (!empty($adminMailResult['success'])) {
         $response['admin_email_message'] = 'Admin email sent successfully.';
     } else {
-        error_log('CandyBird admin order email failed for order ' . $orderId_zeropad . ': ' . ($adminMailResult['error'] ?? 'unknown error'));
+        error_log('Sir Francis admin order email failed for order ' . $orderId_zeropad . ': ' . ($adminMailResult['error'] ?? 'unknown error'));
         $response['admin_email_message'] = 'Order placed, but the admin email could not be sent.';
     }
 
@@ -1322,14 +1322,14 @@ try {
         $mailRegister->Port = $smtp_port;
 
         // Set sender and recipient(s)
-        $mailRegister->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+        $mailRegister->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
         $mailRegister->addAddress($billing_email_address, $billing_first_name); // Recipient's email address and name
 
         // Set "Reply-To" address
-        $mailRegister->addReplyTo($smtp_username1, 'CandyBird');
+        $mailRegister->addReplyTo($smtp_username1, 'Sir Francis');
 
         // Set email subject
-        $mailRegister->Subject = "Welcome to CandyBird - Registration Confirmation";
+        $mailRegister->Subject = "Welcome to Sir Francis - Registration Confirmation";
 
         // Get the email body from the template file
         $email_body = file_get_contents('emails/email_register.php');
@@ -1364,7 +1364,7 @@ try {
         $admin_mail_register->Port = $smtp_port;
 
         // Set sender and recipient(s)
-        $admin_mail_register->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+        $admin_mail_register->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
         $admin_mail_register->addAddress($smtp_username1, 'Admin'); // Admin email address
 
         // Set email subject

@@ -167,7 +167,7 @@ foreach ($categories as $catId => $category) {
 
                 $pricelist_table .= "<td style='vertical-align: middle;'><span style='display: inline-block; vertical-align: middle; margin-right:5px'>" . $imageTag . "</span>";
 
-                $productLink = "https://www.candybird.co.za/product?id=" . htmlspecialchars($firstProduct['id']);
+                $productLink = "https://www.fishgelatine.co.za/v2/product?id=" . htmlspecialchars($firstProduct['id']);
                 
                 $pricelist_table .= "<a href='" . $productLink . "' style='vertical-align: middle'>" . htmlspecialchars($productTitle) . "</a></td>";
 

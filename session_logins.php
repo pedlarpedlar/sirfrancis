@@ -60,7 +60,7 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
 
         $free_shipping_amount = getCandybirdFreeShippingAmount();
         $tel = "";
-        $website_email = "info@candybird.co.za";
+        $website_email = "info@fishgelatine.co.za";
         $website_email2 = "";
         $website_address = "";
         $headquarters = "";
@@ -68,15 +68,15 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
         $banking_details = "";
         $productIds = [];
         $support_email = $website_email;
-        $website_company_name = "CandyBird";
+        $website_company_name = "Sir Francis";
         $return_window = "14 days";
-        $limitedDescription = "CandyBird offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
+        $limitedDescription = "Sir Francis offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
         $description_og = $limitedDescription;
         $description_meta = $limitedDescription;
-        $title_og = "CandyBird";
-        $image_url_og = "https://www.candybird.co.za/assets/img/product/1.png";
-        $page_url_og = "https://www.candybird.co.za";
-        $page_url_canonical = "https://www.candybird.co.za";
+        $title_og = "Sir Francis";
+        $image_url_og = "https://www.fishgelatine.co.za/v2/assets/img/product/1.png";
+        $page_url_og = "https://www.fishgelatine.co.za/v2";
+        $page_url_canonical = "https://www.fishgelatine.co.za/v2";
 
         $_SESSION['cart_total'] = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
         $_SESSION['cart_discounts'] = isset($_SESSION['cart_discounts']) ? $_SESSION['cart_discounts'] : 0;
@@ -622,7 +622,7 @@ if ($resultWebsiteSettings) {
 
 
     $support_email = $settings['email_1'];
-    $website_company_name = "CandyBird"; // For Privacy Policy, Terms, etc
+    $website_company_name = "Sir Francis"; // For Privacy Policy, Terms, etc
 } else {
     // Handle the case where the query fails
     echo "Error fetching website configurations: " . $conn->error;
@@ -633,13 +633,13 @@ if ($resultWebsiteSettings) {
 // $return_window = "48 hours";
 $return_window = "14 days";
 
-$limitedDescription = $limitedDescription ?? "CandyBird offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
+$limitedDescription = $limitedDescription ?? "Sir Francis offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
 $description_og = $description_og ?? $limitedDescription;
 $description_meta = $description_meta ?? $limitedDescription;
-$title_og = $title_og ?? "CandyBird";
-$image_url_og = $image_url_og ?? "https://www.candybird.co.za/assets/img/product/1.png";
-$page_url_og = $page_url_og ?? "https://www.candybird.co.za";
-$page_url_canonical = $page_url_canonical ?? "https://www.candybird.co.za";
+$title_og = $title_og ?? "Sir Francis";
+$image_url_og = $image_url_og ?? "https://www.fishgelatine.co.za/v2/assets/img/product/1.png";
+$page_url_og = $page_url_og ?? "https://www.fishgelatine.co.za/v2";
+$page_url_canonical = $page_url_canonical ?? "https://www.fishgelatine.co.za/v2";
 
 
 

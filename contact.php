@@ -10,8 +10,8 @@ $contactWhatsappDigits = preg_replace('/\D+/', '', $contactWhatsappNumber);
 if (strpos($contactWhatsappDigits, '0') === 0) {
     $contactWhatsappDigits = '27' . substr($contactWhatsappDigits, 1);
 }
-$consumerEmail = 'consumer@candybird.co.za';
-$contactGoogleAddress = 'CandyBird, 18 Babiana Rd, Malabar, Port Elizabeth, South Africa';
+$consumerEmail = 'info@fishgelatine.co.za';
+$contactGoogleAddress = 'Sir Francis, 18 Babiana Rd, Malabar, Port Elizabeth, South Africa';
 $googleReviewUrl = 'https://g.page/r/CfEBOxQp_13OEBE/review';
 $googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($contactGoogleAddress);
 $googleEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($contactGoogleAddress) . '&output=embed';
@@ -36,7 +36,7 @@ if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
 $contactStartedAt = time();
 $_SESSION['contact_form_started_at'] = $contactStartedAt;
 ?>
-<title>Contact Us - CandyBird</title>
+<title>Contact Us - Sir Francis</title>
 <?php include 'page_menues.php'; ?>
 
 <style>
@@ -55,9 +55,9 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
   .cb-contact-item p, .cb-contact-item a { color: #5d514b; line-height: 1.65; }
   .cb-contact-highlight { background: #fff8e6; border: 1px solid #f1d79f; border-radius: 8px; margin-top: 12px; padding: 14px; }
   .cb-review-panel { background: #2a1b1b; border-radius: 8px; color: #fff; margin-top: 16px; padding: 16px; }
-  .cb-review-panel h3 { color: #FCB42F; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin: 0 0 8px; }
+  .cb-review-panel h3 { color: #CEBD88; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin: 0 0 8px; }
   .cb-review-panel p { color: rgba(255,255,255,.86); line-height: 1.55; margin-bottom: 12px; }
-  .cb-review-panel a { background: #FCB42F; border-radius: 6px; color: #251d18; display: inline-flex; align-items: center; gap: 8px; font-weight: 800; padding: 10px 13px; text-decoration: none; }
+  .cb-review-panel a { background: #CEBD88; border-radius: 6px; color: #251d18; display: inline-flex; align-items: center; gap: 8px; font-weight: 800; padding: 10px 13px; text-decoration: none; }
   .cb-hours-list { list-style: none; margin: 0; padding: 0; }
   .cb-hours-list li { align-items: flex-start; border-top: 1px solid #f0e5da; display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; }
   .cb-hours-list li:first-child { border-top: 0; padding-top: 0; }
@@ -66,7 +66,7 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
   .cb-contact-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
   .cb-contact-actions a { border-radius: 6px; padding: 11px 15px; font-weight: 700; }
   .cb-contact-actions .dark { background: #2a1b1b; color: #fff; }
-  .cb-contact-actions .gold { background: #FCB42F; color: #251d18; }
+  .cb-contact-actions .gold { background: #CEBD88; color: #251d18; }
   .cb-contact-form input, .cb-contact-form textarea { width: 100%; border: 1px solid #e5d6c7; border-radius: 6px; padding: 12px 13px; background: #fff; }
   .cb-contact-form label { color: #3f332e; font-weight: 700; }
   .cb-contact-form .contact-website-field { position: absolute; left: -10000px; opacity: 0; height: 1px; width: 1px; overflow: hidden; }
@@ -79,7 +79,7 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
 <main class="cb-contact">
   <section class="cb-contact-hero">
     <div class="container">
-      <h1>Contact CandyBird</h1>
+      <h1>Contact Sir Francis</h1>
       <p>Questions, compliments, complaints, delivery help, bulk orders, gifting, private labelling or customer support. Use the details below and we will route your message to the right person.</p>
       <div class="cb-contact-actions">
         <?php if (!empty($contactWhatsappDigits)): ?>
@@ -104,7 +104,7 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
           <div class="cb-contact-item">
             <h3><i class="fas fa-warehouse"></i>Operational address</h3>
             <p><?=htmlspecialchars($contactGoogleAddress, ENT_QUOTES, 'UTF-8')?></p>
-            <p class="cb-contact-highlight mb-0">Use this exact address in Google Maps for the CandyBird location: <strong>CandyBird, 18 Babiana Rd, Malabar, Port Elizabeth</strong>.</p>
+            <p class="cb-contact-highlight mb-0">Use this exact address in Google Maps for the Sir Francis location: <strong>Sir Francis, 18 Babiana Rd, Malabar, Port Elizabeth</strong>.</p>
           </div>
 
           <div class="cb-contact-item">
@@ -124,7 +124,7 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
             <h3><i class="fab fa-google"></i>Public transparency</h3>
             <p>Customers are welcome to leave a public Google review so others can see real feedback before ordering.</p>
             <div class="cb-review-panel">
-              <h3><i class="fas fa-star"></i>Rate CandyBird on Google</h3>
+              <h3><i class="fas fa-star"></i>Rate Sir Francis on Google</h3>
               <p>Share your experience with our products, delivery, collection, gifting, or customer service.</p>
               <a href="<?=$googleReviewUrl?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-google"></i>Post a Google review</a>
             </div>

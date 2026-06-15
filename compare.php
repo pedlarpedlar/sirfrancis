@@ -64,7 +64,7 @@ foreach ($compareItems as $item) {
 
     $compare_header .= '<th scope="col" class="text-center">
                           <div class="compare-product-image-wrap">
-                            <img src="' . htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($item['title'] ?? 'CandyBird product', ENT_QUOTES, 'UTF-8') . '" />
+                            <img src="' . htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($item['title'] ?? 'Sir Francis product', ENT_QUOTES, 'UTF-8') . '" />
                             ' . ($isClearance ? '<span class="compare-clearance-ribbon">Clearance</span>' : '') . '
                           </div>
                           <span class="sub-title d-block">' . htmlspecialchars($item['title'] ?? '', ENT_QUOTES, 'UTF-8') . '</span>
@@ -84,9 +84,9 @@ $compare_header .= '</tr>';
 ?>
 
 <?php
-$page_url_canonical = "https://www.candybird.co.za/compare";
-$title_og = 'Compare Items - CandyBird';
-$page_url_og = "https://www.candybird.co.za/compare"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/compare";
+$title_og = 'Compare Items - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/compare"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -102,7 +102,7 @@ $page_url_og = "https://www.candybird.co.za/compare"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Compare Items - CandyBird</title>
+<title>Compare Items - Sir Francis</title>
 
 <?php
 include 'page_menues.php';

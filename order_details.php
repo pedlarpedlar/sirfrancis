@@ -358,15 +358,15 @@ include 'header.php';
 ?>
 
 <!-- Meta and Open Graph tags -->
-<link rel="canonical" href="https://www.candybird.co.za/profile">
-<meta name="description" content="Order details for CandyBird.">
-<meta property="og:title" content="My Account - CandyBird">
-<meta property="og:description" content="View your order details on CandyBird.">
+<link rel="canonical" href="https://www.fishgelatine.co.za/v2/profile">
+<meta name="description" content="Order details for Sir Francis.">
+<meta property="og:title" content="My Account - Sir Francis">
+<meta property="og:description" content="View your order details on Sir Francis.">
 <meta property="og:image" content="your_image_url_here">
-<meta property="og:url" content="https://www.candybird.co.za/profile">
+<meta property="og:url" content="https://www.fishgelatine.co.za/v2/profile">
 <meta property="og:type" content="website">
 
-<title>Order Details - Order <?=$display_order_id?> on CandyBird</title>
+<title>Order Details - Order <?=$display_order_id?> on Sir Francis</title>
 
 <style>
 .admin-view-label {
@@ -494,10 +494,10 @@ if ($admin_id !== NULL) {
         </div>
         <div class="header-right">
             <div class="company-details">
-                <strong>Candybird Pty Ltd</strong><br>
+                <strong>Sir Francis Pty Ltd</strong><br>
                 Port Elizabeth, Eastern Cape<br>
                 South Africa<br>
-                Email: sales@candybird.co.za<br>
+                Email: info@fishgelatine.co.za<br>
                 Phone: +27 41 00 11 786
             </div>
         </div>

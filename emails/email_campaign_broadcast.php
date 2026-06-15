@@ -11,13 +11,13 @@
             <td align="center">
                 <table width="680" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:680px;background:#ffffff;border-collapse:collapse;">
                     <tr>
-                        <td style="background:#5b1178;padding:22px 28px;">
+                        <td style="background:#28364B;padding:22px 28px;">
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="left">
-                                        <img src="https://www.candybird.co.za/assets/img/emails/footer-image1.png" alt="CandyBird" width="142" style="display:block;max-width:142px;border:0;">
+                                        <img src="https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
                                     </td>
-                                    <td align="right" style="color:#fcb42f;font-size:21px;font-weight:700;">{email_heading}</td>
+                                    <td align="right" style="color:#CEBD88;font-size:21px;font-weight:700;">{email_heading}</td>
                                 </tr>
                             </table>
                         </td>
@@ -31,15 +31,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="center" style="background:#f5f2ea;padding:24px 18px;color:#5b1178;font-size:12px;line-height:1.7;">
-                            <p style="margin:0 0 10px;">Need help? <a href="mailto:sales@candybird.co.za" style="color:#5b1178;text-decoration:none;font-weight:700;">sales@candybird.co.za</a></p>
+                        <td align="center" style="background:#f5f2ea;padding:24px 18px;color:#28364B;font-size:12px;line-height:1.7;">
+                            <p style="margin:0 0 10px;">Need help? <a href="mailto:info@fishgelatine.co.za" style="color:#28364B;text-decoration:none;font-weight:700;">info@fishgelatine.co.za</a></p>
                             <p style="margin:0 0 10px;">
-                                <a href="https://www.candybird.co.za/products" style="color:#5b1178;text-decoration:none;">Shop</a> |
-                                <a href="https://www.candybird.co.za/contact" style="color:#5b1178;text-decoration:none;">Help</a> |
-                                <a href="https://www.candybird.co.za/privacypolicy" style="color:#5b1178;text-decoration:none;">Privacy policy</a>
+                                <a href="https://www.fishgelatine.co.za/v2/products" style="color:#28364B;text-decoration:none;">Shop</a> |
+                                <a href="https://www.fishgelatine.co.za/v2/contact" style="color:#28364B;text-decoration:none;">Help</a> |
+                                <a href="https://www.fishgelatine.co.za/v2/privacypolicy" style="color:#28364B;text-decoration:none;">Privacy policy</a>
                             </p>
-                            <p style="margin:0;">Copyright &copy; {year} CandyBird. All rights reserved.</p>
-                            <p style="margin:10px 0 0;font-size:11px;">You are receiving this because you subscribed to CandyBird emails. <a href="https://www.candybird.co.za/unsubscribe?email={user_email_unsubscribe}" style="color:#5b1178;text-decoration:none;">Unsubscribe</a></p>
+                            <p style="margin:0;">Copyright &copy; {year} Sir Francis. All rights reserved.</p>
+                            <p style="margin:10px 0 0;font-size:11px;">You are receiving this because you subscribed to Sir Francis emails. <a href="https://www.fishgelatine.co.za/v2/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe</a></p>
                         </td>
                     </tr>
                 </table>

@@ -38,7 +38,7 @@ include 'header.php';
         <div class="container">
             <span class="cb-policy-updated">Last updated: 19 April 2026</span>
             <h1>Privacy Policy</h1>
-            <p>How CandyBird collects, uses and protects customer information when you browse, subscribe, create an account, checkout or contact us.</p>
+            <p>How Sir Francis collects, uses and protects customer information when you browse, subscribe, create an account, checkout or contact us.</p>
         </div>
     </section>
 
@@ -75,7 +75,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="payments">
                     <h2>3. Payments</h2>
-                    <p>Card and online payments may be handled by PayFast or other payment providers shown at checkout. CandyBird records order and payment status, but sensitive card details are processed by the payment provider and are not stored by CandyBird.</p>
+                    <p>Card and online payments may be handled by PayFast or other payment providers shown at checkout. Sir Francis records order and payment status, but sensitive card details are processed by the payment provider and are not stored by Sir Francis.</p>
                 </section>
 
                 <section class="cb-policy-section" id="delivery">
@@ -96,7 +96,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="cctv">
                     <h2>7. CCTV at stores and collection points</h2>
-                    <p>CandyBird may use CCTV at stores, collection points, packing areas and customer-facing premises for safety, security, parcel protection and incident review. CCTV footage may include a person's image, movement, vehicle or collection activity. For more detail, please read our <a href="cctv-policy">CCTV Policy</a>.</p>
+                    <p>Sir Francis may use CCTV at stores, collection points, packing areas and customer-facing premises for safety, security, parcel protection and incident review. CCTV footage may include a person's image, movement, vehicle or collection activity. For more detail, please read our <a href="cctv-policy">CCTV Policy</a>.</p>
                 </section>
 
                 <section class="cb-policy-section" id="rights">

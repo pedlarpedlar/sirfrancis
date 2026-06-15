@@ -1,11 +1,11 @@
 <?php
 include 'session_logins.php';
-$page_url_canonical = 'https://www.candybird.co.za/cctv-policy';
-$title_og = 'CCTV Policy | CandyBird';
+$page_url_canonical = 'https://www.fishgelatine.co.za/v2/cctv-policy';
+$title_og = 'CCTV Policy | Sir Francis';
 $page_url_og = $page_url_canonical;
-$description_meta = 'CandyBird CCTV policy for stores, collection points, packing areas and customer-facing premises.';
+$description_meta = 'Sir Francis CCTV policy for stores, collection points, packing areas and customer-facing premises.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 include 'header.php';
 ?>
@@ -46,7 +46,7 @@ include 'header.php';
         <div class="container">
             <span class="cb-cctv-updated">Last updated: 11 May 2026</span>
             <h1>CCTV Policy</h1>
-            <p>This policy explains how CandyBird uses closed-circuit television and security camera footage at our stores, collection points, packing areas and customer-facing premises. CCTV is used for safety, security, order protection and incident review.</p>
+            <p>This policy explains how Sir Francis uses closed-circuit television and security camera footage at our stores, collection points, packing areas and customer-facing premises. CCTV is used for safety, security, order protection and incident review.</p>
         </div>
     </section>
 
@@ -65,7 +65,7 @@ include 'header.php';
             <article class="cb-cctv-card">
                 <section class="cb-cctv-section" id="where">
                     <h2>1. Where cameras may be used</h2>
-                    <p>CCTV may be used at CandyBird stores, collection counters, packing areas, dispatch points, receiving areas, entrances, exits, parking or loading areas, and other places where products, customers, staff, visitors, vehicles or parcels need reasonable protection.</p>
+                    <p>CCTV may be used at Sir Francis stores, collection counters, packing areas, dispatch points, receiving areas, entrances, exits, parking or loading areas, and other places where products, customers, staff, visitors, vehicles or parcels need reasonable protection.</p>
                     <div class="cb-cctv-callout">Where practical, CCTV notices or signs will be displayed so customers, visitors, staff and service providers know that recording may take place.</div>
                 </section>
 
@@ -82,13 +82,13 @@ include 'header.php';
 
                 <section class="cb-cctv-section" id="what">
                     <h2>3. What may be captured</h2>
-                    <p>CCTV footage may show a person's image, movement, clothing, vehicle, collection activity, parcel handover, order-related interaction or other activity visible to the camera. Unless a specific notice states otherwise, CandyBird CCTV is intended to record video footage and not private conversations.</p>
+                    <p>CCTV footage may show a person's image, movement, clothing, vehicle, collection activity, parcel handover, order-related interaction or other activity visible to the camera. Unless a specific notice states otherwise, Sir Francis CCTV is intended to record video footage and not private conversations.</p>
                     <div class="cb-cctv-warning">Cameras are positioned for legitimate security and operational purposes. They should not be used in private areas where people reasonably expect privacy.</div>
                 </section>
 
                 <section class="cb-cctv-section" id="access">
                     <h2>4. Who may access footage</h2>
-                    <p>Access to CCTV footage is limited to authorised CandyBird management, appointed security or technical service providers, and other authorised persons who need access for a valid business, safety, legal, insurance or security reason. Footage is not used for entertainment, public posting or unnecessary monitoring.</p>
+                    <p>Access to CCTV footage is limited to authorised Sir Francis management, appointed security or technical service providers, and other authorised persons who need access for a valid business, safety, legal, insurance or security reason. Footage is not used for entertainment, public posting or unnecessary monitoring.</p>
                 </section>
 
                 <section class="cb-cctv-section" id="retention">
@@ -104,7 +104,7 @@ include 'header.php';
 
                 <section class="cb-cctv-section" id="contact">
                     <h2>7. Contact</h2>
-                    <p>For CCTV, privacy or access requests, contact us at <a href="mailto:<?=$support_email?>"><?=$support_email?></a>. For complaints or compliments, you may also use <a href="mailto:consumer@candybird.co.za">consumer@candybird.co.za</a>.</p>
+                    <p>For CCTV, privacy or access requests, contact us at <a href="mailto:<?=$support_email?>"><?=$support_email?></a>. For complaints or compliments, you may also use <a href="mailto:info@fishgelatine.co.za">info@fishgelatine.co.za</a>.</p>
                     <div class="cb-cctv-links">
                         <a href="privacypolicy">Privacy Policy</a>
                         <a href="terms">Terms</a>

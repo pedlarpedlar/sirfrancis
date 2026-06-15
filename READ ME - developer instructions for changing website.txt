@@ -5,7 +5,7 @@ Set cronjobs in cPanel for the following files:
 	generate_google_shopping_items.php (Command line:) php -q -f /home/candybirdco/public_html/crons/generate_google_shopping_items.php /home/candybirdco/public_html/crons/
 	db_backup_and_email.php (Command line:) php -q -f /home/candybirdco/public_html/crons/db_backup_and_email.php /home/candybirdco/public_html/crons/
 	geolocation.php (Command line:) php -q -f /home/candybirdco/public_html/crons/geolocation.php /home/candybirdco/public_html/crons/
-	send_scheduled_emails.php (Command line:) php -q -f /home/candybirdco/public_html/admin-cb/send_scheduled_emails.php /home/candybirdco/public_html/admin-cb/
+	send_scheduled_emails.php (Command line:) php -q -f /home/candybirdco/public_html/admin-sf/send_scheduled_emails.php /home/candybirdco/public_html/admin-sf/
 
 	Notes:
 	The sitemap page is just to let google know which pages you want to prioritise in search results. I put certain pages as priority 10, and generated all the products to show as priority 6. This can be changed around according to webmaster's preferences.
@@ -34,8 +34,8 @@ Change Colors:
 	style.css: (search and replace)
 		rgba(107, 0, 153, 0.5)
 		rgba(107, 0, 153, 0.7)
-		#FCB42F
-		#6b0099
+		#CEBD88
+		#28364B
 
 Showing products on Google (free) shopping tab:
 	Client must have a Merchant Account center setup (https://myaccount.google.com/?utm_source=sign_in_no_continue&pli=1&nlr=1)

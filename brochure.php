@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CandyBird Sale Flyer</title>
+  <title>Sir Francis Sale Flyer</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root{
-      --cb-purple:#4b0082;
-      --cb-purple-dark:#2a004d;
-      --cb-yellow:#ffb000;
-      --cb-yellow-soft:#ffd36a;
+      --cb-purple:#28364B;
+      --cb-purple-dark:#172235;
+      --cb-yellow:#CEBD88;
+      --cb-yellow-soft:#E7D8A6;
       --cb-cream:#ffffff;
       --cb-ink:#211526;
       --cb-muted:#74667a;
@@ -20,7 +20,7 @@
     .screen-toolbar{position:sticky;top:0;z-index:50;background:var(--cb-purple-dark);color:white;padding:10px;text-align:center;font-size:13px}
     .screen-toolbar button{border:0;border-radius:999px;background:var(--cb-yellow);color:var(--cb-purple-dark);font-weight:800;padding:8px 16px;margin-right:10px}
     .flyer{width:210mm;min-height:297mm;margin:18px auto;background:#ffffff;box-shadow:0 25px 70px rgba(42,0,77,.22);overflow:hidden}
-    .hero{background:linear-gradient(135deg,#2a004d 0%,#4b0082 58%,#6410a8 100%);color:white;border-bottom:10px solid var(--cb-yellow)}
+    .hero{background:linear-gradient(135deg,#172235 0%,#28364B 58%,#3B4B63 100%);color:white;border-bottom:10px solid var(--cb-yellow)}
     .brand{font-size:22px;font-weight:900;letter-spacing:.03em;color:var(--cb-yellow)}
     .validity{display:inline-block;border:2px solid var(--cb-yellow);border-radius:999px;color:var(--cb-yellow);padding:7px 14px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;white-space:normal;text-align:right;background:rgba(255,176,0,.08)}
     h1{font-size:46px;line-height:.94;font-weight:900;letter-spacing:-1.8px;margin:0;max-width:520px}
@@ -42,7 +42,7 @@
     .sale-size{font-size:10px;font-weight:900;color:var(--cb-purple);white-space:nowrap}
     .was-price{font-size:9px;font-weight:900;color:#817286;text-decoration-line:line-through;text-decoration-thickness:2px;text-decoration-color:var(--cb-purple)}
     .save-text{font-size:9px;font-weight:900;color:#ff7a00;text-transform:uppercase;line-height:1.05}
-    .clearance-wrap{background:linear-gradient(135deg,#2a004d 0%,#4b0082 70%,#6410a8 100%);color:white;margin-top:28px;border-top:10px solid var(--cb-yellow)}
+    .clearance-wrap{background:linear-gradient(135deg,#172235 0%,#28364B 70%,#3B4B63 100%);color:white;margin-top:28px;border-top:10px solid var(--cb-yellow)}
     .clearance-wrap .section-title{color:white}
     .bottom-validity{border-top:1px solid rgba(50,20,59,.14);font-size:10px;color:var(--cb-muted);font-weight:700}
     .empty,.error{border:2px dashed rgba(50,20,59,.18);border-radius:18px;background:white;color:var(--cb-muted);font-weight:800;padding:28px;text-align:center}
@@ -127,19 +127,19 @@
   <main class="flyer">
     <header class="hero p-4 p-md-5">
       <div class="d-flex justify-content-between gap-3 align-items-start mb-4">
-        <div class="brand">CandyBird</div>
+        <div class="brand">Sir Francis</div>
         <div class="validity" id="validityTop">Sale valid between today till while stocks last</div>
       </div>
       <div class="row g-4 align-items-end">
-        <div class="col-8"><div class="text-uppercase fw-bold mb-2" style="color:var(--cb-yellow);letter-spacing:.22em;font-size:10px">Sale brochure</div><h1>Sophisticated treats, sweeter prices.</h1></div>
-        <div class="col-4"><div class="hero-copy">Limited-time offers on selected CandyBird favourites.</div></div>
+        <div class="col-8"><div class="text-uppercase fw-bold mb-2" style="color:var(--cb-yellow);letter-spacing:.22em;font-size:10px">Product brochure</div><h1>Marine collagen, fish gelatine and specialist supply.</h1></div>
+        <div class="col-4"><div class="hero-copy">Limited-time offers on selected Sir Francis favourites.</div></div>
       </div>
     </header>
 
     <section class="p-4">
       <div class="d-flex align-items-end justify-content-between mb-3"><h2 class="section-title">Current Specials</h2></div>
       <div id="specials"></div>
-      <div class="bottom-validity d-flex justify-content-between gap-3 mt-4 pt-3"><div><div id="validityBottom">Sale valid between today till while stocks last</div><div style="margin-top:6px;font-size:9px;line-height:1.35">If any errors are spotted, email <strong>sales@candybird.co.za</strong> or WhatsApp <strong>084 231 9326</strong> and qualify for a 20% discount coupon.</div></div><span>www.candybird.co.za</span></div>
+      <div class="bottom-validity d-flex justify-content-between gap-3 mt-4 pt-3"><div><div id="validityBottom">Sale valid between today till while stocks last</div><div style="margin-top:6px;font-size:9px;line-height:1.35">If any errors are spotted, email <strong>info@fishgelatine.co.za</strong> or WhatsApp <strong>084 231 9326</strong> and qualify for a 20% discount coupon.</div></div><span>www.fishgelatine.co.za</span></div>
     </section>
 
     <section class="clearance-wrap p-4">
@@ -154,7 +154,7 @@
   <script>
     const PRODUCT_TSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhtg-QlUDokG6Tcsj29r1RMRWp9y9Fl2rcjh17s5F3xc5Re6tfaU54imMepBWNbA1xJKoVvNCUOX2d/pub?gid=380423212&single=true&output=tsv";
     const CLEARANCE_TSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvZQRweWXcY9ap_m_wZnut2KpFF-Y7Kcvwh9AutZwdB7H768y0bZZhZfdXo28L6740zYbRTA-K2da-/pub?gid=0&single=true&output=tsv";
-    const SITE_ROOT = "https://www.candybird.co.za";
+    const SITE_ROOT = "https://www.fishgelatine.co.za/v2";
     const $ = id => document.getElementById(id);
     const chr = n => String.fromCharCode(n);
     const key = value => String(value || "").trim().toLowerCase().split(" ").join("_").split("-").join("_").split(".").join("_");
@@ -224,13 +224,13 @@
     }
     function normalTitle(row){return getTitle(row).trim().toLowerCase()}
     function groupProducts(rows){const map=new Map();rows.forEach(row=>{const title=getTitle(row)||`Product ${getId(row)}`;const groupKey=normalTitle(row)||getId(row);if(!map.has(groupKey))map.set(groupKey,{title,brand:getBrand(row),category:getCategory(row),imageRow:row,items:[]});map.get(groupKey).items.push(row)});return [...map.values()]}
-    function categoryDescription(category){const c=String(category||"").toLowerCase();if(c.includes("health"))return"Natural alternatives and wellness-minded pantry picks for everyday living.";if(c.includes("nut"))return"Crunchy, premium nuts for baking, gifting and everyday nibbling.";if(c.includes("gift"))return"Beautiful treats and thoughtful picks for sharing, gifting and spoiling.";if(c.includes("dried")||c.includes("fruit"))return"Naturally sweet dried fruit favourites for lunchboxes, platters and baking.";if(c.includes("sweet")||c.includes("candy")||c.includes("choc"))return"Sweet moments, colourful favourites and indulgent little treats.";if(c.includes("bake")||c.includes("baking"))return"Quality baking essentials for cakes, cookies and homemade favourites.";if(c.includes("snack"))return"Easy grab-and-go snacks for cravings, lunchboxes and entertaining.";return"Selected CandyBird favourites on sale for a limited time."}
+    function categoryDescription(category){const c=String(category||"").toLowerCase();if(c.includes("collagen"))return"Marine collagen options for retail, wholesale and formulation needs.";if(c.includes("gelatine")||c.includes("gelatin"))return"Fish gelatine supply for food, capsule, cosmetic and specialist applications.";if(c.includes("peptide"))return"Peptides and tripeptides for wellness and private-label product development.";if(c.includes("moss"))return"Sea moss and wellness ingredients for modern supplement ranges.";if(c.includes("private")||c.includes("label"))return"Private-label support for brands that need reliable supply and guidance.";return"Selected Sir Francis products and supply options for serious buyers."}
     function groupedByCategory(groups){
   const preferred = [
-    "nuts",
-    "gifts",
-    "dried fruit",
-    "sweets & chocolates",
+    "marine collagen",
+    "fish gelatine",
+    "peptides",
+    "sea moss",
     "baking",
     "snacks",
     "more specials"
@@ -270,10 +270,10 @@
   const match = validity.match(/(\d{1,2}\s+\w+\s+\d{4})\s*-\s*(\d{1,2}\s+\w+\s+\d{4})/i);
 
   if(match){
-    return `Candybird Sales Brochure ${match[1]} - ${match[2]}`;
+    return `Sir Francis Sales Brochure ${match[1]} - ${match[2]}`;
   }
 
-  return "Candybird Sales Brochure";
+  return "Sir Francis Sales Brochure";
 }
 function downloadPDF(){
 

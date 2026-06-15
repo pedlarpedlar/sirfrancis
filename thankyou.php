@@ -8,9 +8,9 @@ include 'header.php';
 ?>
 
 <?php
-$page_url_canonical = "https://www.candybird.co.za/thankyou";
-$title_og = 'Thank you for shopping on Candybird';
-$page_url_og = "https://www.candybird.co.za/thankyou"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/thankyou";
+$title_og = 'Thank you for shopping on Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/thankyou"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -27,7 +27,7 @@ $page_url_og = "https://www.candybird.co.za/thankyou"
 <meta property="og:type" content="website">
 
 
-<title>Thank you for shopping on Candybird</title>
+<title>Thank you for shopping on Sir Francis</title>
 
 <?php
 include 'page_menues.php';

@@ -194,8 +194,8 @@ if ($check1 && $check3 && $check5 && ($check4 || $check2)) {
     }
 
     //Set Email Subjects and Bodies for successful payments
-    $email_subject = "CandyBird | Payment Confirmation for Order #".$orderId_zeropad."";
-    $admin_email_subject = "CandyBird | Payment Received for Order #".$orderId_zeropad."";
+    $email_subject = "Sir Francis | Payment Confirmation for Order #".$orderId_zeropad."";
+    $admin_email_subject = "Sir Francis | Payment Received for Order #".$orderId_zeropad."";
 
     // Get the email body from the template file
     $email_body = file_get_contents('emails/email_payment.php');
@@ -221,8 +221,8 @@ if ($check1 && $check3 && $check5 && ($check4 || $check2)) {
     }
 
     //Set Email Subjects and Bodies for failed payments
-    $email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on CandyBird";
-    $admin_email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on CandyBird";
+    $email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on Sir Francis";
+    $admin_email_subject = "Oops... Payment Failed for Order #".$orderId_zeropad." on Sir Francis";
     
     // Get the email body from the template file
     $email_body = file_get_contents('emails/email_payment_fail.php');
@@ -301,7 +301,7 @@ foreach ($order as $item) {
                 <img src="' . $image_url . '" width="50px" alt="item image"/>
             </td>
             <td style="width:50%; padding: 10px; border: 1px solid #ccc;">
-                <a href="https://www.candybird.co.za/product?id=' . $productId . '">' . $product_title . ' ' . $product_weight . '</a>
+                <a href="https://www.fishgelatine.co.za/v2/product?id=' . $productId . '">' . $product_title . ' ' . $product_weight . '</a>
             </td>
             <td style="width:10%; padding: 10px; border: 1px solid #ccc;">' . $quantity . '</td>
             <td style="width:25%; padding: 10px; border: 1px solid #ccc;">' . $emailPriceHtml . '</td>
@@ -431,7 +431,7 @@ try {
     if (!empty($clientMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Email sent successfully!');
     } else {
-        error_log("CandyBird payment email failed for order " . $orderId_zeropad . ": " . ($clientMailResult['error'] ?? 'unknown error'));
+        error_log("Sir Francis payment email failed for order " . $orderId_zeropad . ": " . ($clientMailResult['error'] ?? 'unknown error'));
     }
 
     // // Get the email body for admin from the template file
@@ -465,14 +465,14 @@ try {
         $admin_email_body,
         [
             'reply_to_email' => $client_email,
-            'reply_to_name' => $client_name ?: 'CandyBird customer',
+            'reply_to_name' => $client_name ?: 'Sir Francis customer',
             'prefer_mail_transport' => true,
         ]
     );
     if (!empty($adminMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Admin email sent successfully!');
     } else {
-        error_log("CandyBird admin payment email failed for order " . $orderId_zeropad . ": " . ($adminMailResult['error'] ?? 'unknown error'));
+        error_log("Sir Francis admin payment email failed for order " . $orderId_zeropad . ": " . ($adminMailResult['error'] ?? 'unknown error'));
     }
 
 

@@ -76,8 +76,8 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->CharSet = 'UTF-8';
                 $mail->Encoding = 'base64';
                 $mail->Sender = $mailFallbackFrom;
-                $mail->XMailer = 'CandyBird Mailer';
-                $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'CandyBird');
+                $mail->XMailer = 'Sir Francis Mailer';
+                $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'Sir Francis');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
                 foreach ($bccRecipients as $bccEmail => $bccName) {
                     if (strcasecmp($bccEmail, $toEmail) !== 0) {
@@ -85,9 +85,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                     }
                 }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
+                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'Sir Francis');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'CandyBird');
+                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'Sir Francis');
                 }
                 $mail->isHTML(true);
                 $mail->Subject = $subject;
@@ -100,7 +100,7 @@ if (!function_exists('cbCandybirdSendMail')) {
                 return ['success' => true, 'sender' => $mailFallbackFrom, 'transport' => 'mail'];
             } catch (Throwable $e) {
                 $lastError = 'mail() preferred route: ' . $e->getMessage();
-                error_log('CandyBird preferred mail() route failed via ' . $mailFallbackFrom . ': ' . $e->getMessage());
+                error_log('Sir Francis preferred mail() route failed via ' . $mailFallbackFrom . ': ' . $e->getMessage());
             }
         }
 
@@ -119,8 +119,8 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->CharSet = 'UTF-8';
                 $mail->Encoding = 'base64';
                 $mail->Sender = $account['email'];
-                $mail->XMailer = 'CandyBird Mailer';
-                $mail->setFrom($account['email'], $options['from_name'] ?? 'CandyBird');
+                $mail->XMailer = 'Sir Francis Mailer';
+                $mail->setFrom($account['email'], $options['from_name'] ?? 'Sir Francis');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
                 foreach ($bccRecipients as $bccEmail => $bccName) {
                     if (strcasecmp($bccEmail, $toEmail) !== 0) {
@@ -128,9 +128,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                     }
                 }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
+                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'Sir Francis');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'CandyBird');
+                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'Sir Francis');
                 }
                 $mail->isHTML(true);
                 $mail->Subject = $subject;
@@ -143,7 +143,7 @@ if (!function_exists('cbCandybirdSendMail')) {
                 return ['success' => true, 'sender' => $account['email']];
             } catch (Throwable $e) {
                 $lastError = $e->getMessage();
-                error_log('CandyBird mail send failed via ' . $account['email'] . ': ' . $lastError);
+                error_log('Sir Francis mail send failed via ' . $account['email'] . ': ' . $lastError);
             }
         }
 
@@ -154,8 +154,8 @@ if (!function_exists('cbCandybirdSendMail')) {
                 $mail->CharSet = 'UTF-8';
                 $mail->Encoding = 'base64';
                 $mail->Sender = $mailFallbackFrom;
-                $mail->XMailer = 'CandyBird Mailer';
-                $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'CandyBird');
+                $mail->XMailer = 'Sir Francis Mailer';
+                $mail->setFrom($mailFallbackFrom, $options['from_name'] ?? 'Sir Francis');
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
                 foreach ($bccRecipients as $bccEmail => $bccName) {
                     if (strcasecmp($bccEmail, $toEmail) !== 0) {
@@ -163,9 +163,9 @@ if (!function_exists('cbCandybirdSendMail')) {
                     }
                 }
                 if (!empty($options['reply_to_email']) && filter_var($options['reply_to_email'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'CandyBird');
+                    $mail->addReplyTo($options['reply_to_email'], $options['reply_to_name'] ?? 'Sir Francis');
                 } elseif (!empty($GLOBALS['smtp_username1']) && filter_var($GLOBALS['smtp_username1'], FILTER_VALIDATE_EMAIL)) {
-                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'CandyBird');
+                    $mail->addReplyTo($GLOBALS['smtp_username1'], 'Sir Francis');
                 }
                 $mail->isHTML(true);
                 $mail->Subject = $subject;
@@ -178,7 +178,7 @@ if (!function_exists('cbCandybirdSendMail')) {
                 return ['success' => true, 'sender' => $mailFallbackFrom, 'transport' => 'mail'];
             } catch (Throwable $e) {
                 $lastError = trim(($lastError ? $lastError . ' | ' : '') . 'mail() fallback: ' . $e->getMessage());
-                error_log('CandyBird mail() fallback failed via ' . $mailFallbackFrom . ': ' . $e->getMessage());
+                error_log('Sir Francis mail() fallback failed via ' . $mailFallbackFrom . ': ' . $e->getMessage());
             }
         }
 

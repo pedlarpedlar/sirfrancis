@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate input
     if (empty($billing_first_name) || empty($billing_last_name) || empty($current_pwd) || empty($display_name)) {
-        $error = "All fields are required."
+        $error = "All fields are required.";
         $response = array(
             "success" => false,
             "message" => $error
@@ -33,14 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!empty($new_pwd) || !empty($confirm_pwd)) {
         // If new password fields are not empty, check for password change
         if (empty($new_pwd) || empty($confirm_pwd)) {
-            $error = "New passwords are required for password change."
+            $error = "New passwords are required for password change.";
             $response = array(
                 "success" => false,
                 "message" => $error
             );
             logAction('User Profile Update Failed Attempt', $error, $userId, $guestIdentifier);
         } elseif ($new_pwd !== $confirm_pwd) {
-            $error = "New passwords do not match."
+            $error = "New passwords do not match.";
             $response = array(
                 "success" => false,
                 "message" => $error
@@ -93,11 +93,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $admin_mail->Port = $smtp_port;
 
                     // Set sender and recipient(s)
-                    $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+                    $admin_mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
                     $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
 
                     // Set email subject
-                    $admin_mail->Subject = "User Successfully Changed Password | CandyBird";
+                    $admin_mail->Subject = "User Successfully Changed Password | Sir Francis";
 
                     // Get the email body for admin from the template file
                     $admin_email_body = file_get_contents('emails/email_changed_password_admin.php');

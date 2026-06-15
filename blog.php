@@ -29,7 +29,7 @@ if ($blogsResult) {
     while ($row = $blogsResult->fetch_assoc()) {
         $blogId = $row['id'];
 
-        $blog_url = "https://www.candybird.co.za/blog?id=".$blogId;
+        $blog_url = "https://www.fishgelatine.co.za/v2/blog?id=".$blogId;
 
         $title = $row['title'];
         $content = $row['content'];
@@ -39,7 +39,7 @@ if ($blogsResult) {
 
         $image_url_encoded = str_replace(' ', '%20', $imageUrl);
 
-        $image_url_og = /*"https://www.candybird.co.za/" .*/ $image_url_encoded;
+        $image_url_og = /*"https://www.fishgelatine.co.za/v2/" .*/ $image_url_encoded;
 
         $tags = $row['tags'];
 
@@ -71,9 +71,9 @@ if ($blogsResult) {
 }
 
 
-$page_url_canonical = "https://www.candybird.co.za/blog";
-$title_og = $title.' - CandyBird';
-$page_url_og = "https://www.candybird.co.za/blog"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/blog";
+$title_og = $title.' - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/blog"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -89,7 +89,7 @@ $page_url_og = "https://www.candybird.co.za/blog"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title><?=$title?> - CandyBird</title>
+<title><?=$title?> - Sir Francis</title>
 <?php
 include 'page_menues.php';
 ?>

@@ -2,22 +2,22 @@
 include 'session_logins.php';
 include 'header.php';
 
-$page_url_canonical = "https://www.candybird.co.za/recipes";
-$title_og = 'Recipes - CandyBird';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/recipes";
+$title_og = 'Recipes - Sir Francis';
 $page_url_og = $page_url_canonical;
-$description_og = 'Browse CandyBird recipes for nuts, dried fruit, snacks, desserts, breakfasts, savoury dishes and gifting ideas.';
+$description_og = 'Browse Sir Francis recipes for nuts, dried fruit, snacks, desserts, breakfasts, savoury dishes and gifting ideas.';
 $description_meta = $description_og;
 
 include 'page_menues.php';
 include 'recipe_posts.php';
 
 function cbRecipeText($value) {
-    $value = str_replace(['CandyBirdâ„¢', 'â€™', 'Â°F', 'Â°C'], ['CandyBird', "'", 'F', 'C'], (string) $value);
+    $value = str_replace(['Sir Francisâ„¢', 'â€™', 'Â°F', 'Â°C'], ['Sir Francis', "'", 'F', 'C'], (string) $value);
     return htmlspecialchars(strip_tags($value), ENT_QUOTES, 'UTF-8');
 }
 
 function cbRecipeCleanHtml($value) {
-    return str_replace(['CandyBirdâ„¢', 'â€™', 'Â°F', 'Â°C'], ['CandyBird', "'", 'F', 'C'], (string) $value);
+    return str_replace(['Sir Francisâ„¢', 'â€™', 'Â°F', 'Â°C'], ['Sir Francis', "'", 'F', 'C'], (string) $value);
 }
 
 function cbRecipeExcerpt($value, $limit = 145) {
@@ -75,7 +75,7 @@ $visibleRecipeCount = count($recipes);
     .recipes-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .recipes-actions a { border-radius: 6px; padding: 12px 16px; font-weight: 800; }
     .recipes-actions .primary { background: #2a1b1b; color: #fff; }
-    .recipes-actions .secondary { background: #FCB42F; color: #251d18; }
+    .recipes-actions .secondary { background: #CEBD88; color: #251d18; }
     .recipes-wrap { padding: 34px 0 68px; }
     .recipes-toolbar { background: #fff; border: 1px solid #eee1d4; border-radius: 8px; padding: 16px; box-shadow: 0 12px 34px rgba(71,44,22,.06); margin-bottom: 20px; }
     .recipes-toolbar-row { display: grid; grid-template-columns: minmax(220px, 1fr) auto; gap: 12px; align-items: center; }
@@ -188,10 +188,10 @@ $visibleRecipeCount = count($recipes);
             </div>
 
             <div class="recipes-info">
-                <h2>Share a CandyBird kitchen idea</h2>
-                <p>Customers are welcome to send family recipes, snack ideas, lunchbox combinations, gifting ideas or pantry tips using CandyBird ingredients. Recipes may be reviewed before publishing, and copyrighted material should only be shared with permission.</p>
+                <h2>Share a Sir Francis kitchen idea</h2>
+                <p>Customers are welcome to send family recipes, snack ideas, lunchbox combinations, gifting ideas or pantry tips using Sir Francis ingredients. Recipes may be reviewed before publishing, and copyrighted material should only be shared with permission.</p>
                 <ul>
-                    <li>Email recipes to <a href="mailto:recipes@candybird.co.za">recipes@candybird.co.za</a>.</li>
+                    <li>Email product questions to <a href="mailto:info@fishgelatine.co.za">info@fishgelatine.co.za</a>.</li>
                     <li>Include your name, recipe title, ingredients, method, serving size and a photo if you have one.</li>
                     <li>Browse ingredients from the <a href="products">online shop</a> or use the <a href="pricelist">pricelist</a> for planning bigger kitchen orders.</li>
                 </ul>

@@ -1,6 +1,7 @@
 ---
 deployment:
   tasks:
-    - /bin/mkdir -p /home2/rukbanor/fishgelatine.co.za/v2/
-    - /bin/cp -R /home2/rukbanor/repositories/sirfrancis/* /home2/rukbanor/fishgelatine.co.za/v2/
-    - /bin/touch /home2/rukbanor/fishgelatine.co.za/v2/deploy-ran.txt
+      - /bin/mkdir -p /home2/rukbanor/fishgelatine.co.za/v2/
+      - /bin/rm -rf /home2/rukbanor/fishgelatine.co.za/v2/admin-cb
+      - /bin/cp -R /home2/rukbanor/repositories/sirfrancis/* /home2/rukbanor/fishgelatine.co.za/v2/
+      - /bin/touch /home2/rukbanor/fishgelatine.co.za/v2/deploy-ran.txt

@@ -34,7 +34,7 @@ function generateBreadcrumbs($conn, $productId) {
     $breadcrumbs = [];
 
     // Home breadcrumb
-    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.candybird.co.za">Home</a></li>';
+    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>';
 
     // Fetch parent categories
     if (!empty($row['category_id'])) {

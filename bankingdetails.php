@@ -4,9 +4,9 @@ date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 
 include 'header.php';
 
-$page_url_canonical = "https://www.candybird.co.za/bankingdetails";
-$title_og = 'Banking Details - CandyBird';
-$page_url_og = "https://www.candybird.co.za/bankingdetails";
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/bankingdetails";
+$title_og = 'Banking Details - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/bankingdetails";
 $description_og = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 $description_meta = htmlspecialchars($limitedDescription, ENT_QUOTES, 'UTF-8');
 
@@ -48,7 +48,7 @@ include 'page_menues.php';
             <ul>
                 <li>Ensure you use the correct bank account details provided below.</li>
                 <li>Include your invoice number or order number in the payment reference.</li>
-                <li>For any questions or concerns, please contact our support team at support@candybird.co.za.</li>
+                <li>For any questions or concerns, please contact our support team at info@fishgelatine.co.za.</li>
                 <li>Payments are processed within 2-3 business days. Thank you for your patience.</li>
             </ul>
         </div>
@@ -62,7 +62,7 @@ include 'page_menues.php';
                 <p>
                     <strong>Bank Name:</strong> FNB Bank<br>
                     <strong>Branch Code:</strong> 250655<br>
-                    <strong>Account Name:</strong> CandyBird (PTY) Ltd<br>
+                    <strong>Account Name:</strong> Sir Francis (PTY) Ltd<br>
                     <strong>Account Number:</strong> 62793190829<br>
                     <strong>Account Type:</strong> Current<br>
                     <strong>SWIFT CODE:</strong> FIRNZAJJ<br>
@@ -79,7 +79,7 @@ include 'page_menues.php';
                 <p>
                     <strong>Bank Name:</strong> Nedbank<br>
                     <strong>Branch Code:</strong> 198765<br>
-                    <strong>Account Name:</strong> CandyBird (PTY) Ltd<br>
+                    <strong>Account Name:</strong> Sir Francis (PTY) Ltd<br>
                     <strong>Account Number:</strong> 1206148063<br>
                     <strong>Account Type:</strong> Cheque<br>
                     <strong>SWIFT CODE:</strong> NEDSZAJJ<br>
@@ -96,7 +96,7 @@ include 'page_menues.php';
                 <p>
                     <strong>Bank Name:</strong> Capitec Bank<br>
                     <strong>Branch Code:</strong> 470010<br>
-                    <strong>Account Name:</strong> CandyBird (PTY) Ltd<br>
+                    <strong>Account Name:</strong> Sir Francis (PTY) Ltd<br>
                     <strong>Account Number:</strong> 1368715581<br>
                     <strong>Account Type:</strong> Savings<br>
                     <strong>SWIFT CODE:</strong> CABLZAJJ<br>

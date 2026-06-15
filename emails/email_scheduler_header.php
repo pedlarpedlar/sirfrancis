@@ -16,13 +16,13 @@
 <body style="font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal; background-color: #F1F0E8;">
 
 <!-- Header Section -->
-<table width="100%" style="background-color: #6b0099; color: #ffffff;" cellpadding="20">
+<table width="100%" style="background-color: #28364B; color: #ffffff;" cellpadding="20">
     <tr>
         <td align="left" style="padding-left: 20px;">
-            <img src="https://www.candybird.co.za/assets/img/emails/footer-image1.png" alt="candybird" width="150" style="max-width: 150px;">
+            <img src="https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png" alt="Sir Francis" width="150" style="max-width: 150px;">
         </td>
         <td align="right" style="padding-right: 20px;">
-            <h3 style="font-size: 30px; font-weight: bold; color: #FCB42F; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">{email_heading}</h3>
+            <h3 style="font-size: 30px; font-weight: bold; color: #CEBD88; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">{email_heading}</h3>
         </td>
     </tr>
 </table>

@@ -36,18 +36,18 @@ if ($singleFilteredSize !== '') {
 }
 $lines[] = '';
 $lines[] = 'WhatsApp your order to ' . $displayPhone . ' and collect in Malabar, or:';
-$lines[] = 'Shop securely online www.candybird.co.za';
+$lines[] = 'Shop securely online www.fishgelatine.co.za';
 $lines[] = '';
 $lines[] = '_Delivery available from only R55! Free delivery options also available_';
 $whatsappText = implode("\n", $lines);
 
-$limitedDescription = 'Copy-ready CandyBird WhatsApp pricelist text.';
-$page_url_canonical = "https://www.candybird.co.za/whatsapp-pricelist";
-$title_og = 'WhatsApp Pricelist - CandyBird';
-$page_url_og = "https://www.candybird.co.za/whatsapp-pricelist";
+$limitedDescription = 'Copy-ready Sir Francis WhatsApp pricelist text.';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/whatsapp-pricelist";
+$title_og = 'WhatsApp Pricelist - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/whatsapp-pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';

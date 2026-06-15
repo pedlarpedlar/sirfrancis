@@ -2,9 +2,9 @@
 include 'session_logins.php';
 include 'header.php';
 
-$page_url_canonical = "https://www.candybird.co.za/checkout";
-$title_og = 'Checkout - CandyBird';
-$page_url_og = "https://www.candybird.co.za/checkout"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/checkout";
+$title_og = 'Checkout - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/checkout"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -20,7 +20,7 @@ $page_url_og = "https://www.candybird.co.za/checkout"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Secure Checkout - CandyBird - Dried Fruit, Nuts, Sweets</title>
+<title>Secure Checkout - Sir Francis - Dried Fruit, Nuts, Sweets</title>
 
 <?php
 include 'page_menues.php';
@@ -153,7 +153,7 @@ if ($conn instanceof mysqli) {
     }
 }
 if ($google_maps_api_key === '') {
-    $google_maps_api_key = trim((string) getenv('CANDYBIRD_GOOGLE_MAPS_API_KEY'));
+    $google_maps_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
 }
 
 
@@ -409,7 +409,7 @@ foreach ($paymentMethods as $paymentMethod) {
                     if ($methodKey === 'locker') {
                         $methodHelp = 'Free shipping can apply over R' . number_format($free_shipping_amount, 2) . ($methodHelp ? '. Estimate: ' . $methodHelp : '');
                     } elseif ($methodKey === 'collect') {
-                        $methodHelp = 'Collect from CandyBird. ' . ($methodHelp ? 'Estimate: ' . $methodHelp : 'No courier fee.');
+                        $methodHelp = 'Collect from Sir Francis. ' . ($methodHelp ? 'Estimate: ' . $methodHelp : 'No courier fee.');
                     } elseif ($methodHelp) {
                         $methodHelp = 'Estimate: ' . $methodHelp;
                     }
@@ -605,7 +605,7 @@ foreach ($paymentMethods as $paymentMethod) {
                 }
 
                 .delivery-method-option.active {
-                    border-color: #6b0099;
+                    border-color: #28364B;
                     box-shadow: 0 0 0 2px rgba(107, 0, 153, 0.12);
                     background: #fff;
                 }

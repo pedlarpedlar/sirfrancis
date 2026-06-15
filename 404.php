@@ -10,9 +10,9 @@ include 'header.php';
 ?>
 
 <?php
-$page_url_canonical = "https://www.candybird.co.za/404";
-$title_og = 'Oops... That page does not exist on CandyBird';
-$page_url_og = "https://www.candybird.co.za/404"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/404";
+$title_og = 'Oops... That page does not exist on Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/404"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -48,7 +48,7 @@ include 'page_menues.php';
         <ol
           class="breadcrumb bg-transparent m-0 p-0 align-items-center justify-content-center"
         >
-          <li class="breadcrumb-item"><a href="https://www.candybird.co.za">Back Home</a></li>
+          <li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Back Home</a></li>
         </ol>
       </div>
     </div>

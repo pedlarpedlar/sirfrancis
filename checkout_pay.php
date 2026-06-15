@@ -99,9 +99,9 @@
 //     // Merchant details
 //     'merchant_id' => '10000100', // live: 14090292
 //     'merchant_key' => '46f0cd694581a', //live: 5ksggz4e5rru2
-//     'return_url' => 'https://www.candybird.co.za/order_details?thankyou',
-//     'cancel_url' => 'https://www.candybird.co.za/checkout',
-//     'notify_url' => 'https://www.candybird.co.za/notify?order_id='.$order[0]['id'].'&user_id='.$user_id,
+//     'return_url' => 'https://www.fishgelatine.co.za/v2/order_details?thankyou',
+//     'cancel_url' => 'https://www.fishgelatine.co.za/v2/checkout',
+//     'notify_url' => 'https://www.fishgelatine.co.za/v2/notify?order_id='.$order[0]['id'].'&user_id='.$user_id,
 //     // Buyer details
 //     'name_first' => $order[0]['billing_first_name'],
 //     'name_last'  => $order[0]['billing_last_name'],

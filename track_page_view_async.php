@@ -32,7 +32,7 @@ function cbAsyncTrackingExcludedUrl($url) {
     $excludedFragments = [
         '/assets/',
         '/uploads/',
-        '/admin-cb/',
+        '/admin-sf/',
         'track_page_view',
         'log_action',
         'update_end_time',

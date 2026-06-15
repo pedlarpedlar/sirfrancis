@@ -34,9 +34,9 @@ include 'session_logins.php';
 include 'header.php';
 ?>
 <?php
-$page_url_canonical = "https://www.candybird.co.za/reset-password";
-$title_og = 'Reset your Password | CandyBird';
-$page_url_og = "https://www.candybird.co.za/reset-password";
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/reset-password";
+$title_og = 'Reset your Password | Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/reset-password";
 
 ?>
 
@@ -53,7 +53,7 @@ $page_url_og = "https://www.candybird.co.za/reset-password";
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Reset your Password - CandyBird</title>
+<title>Reset your Password - Sir Francis</title>
 <?php
 include 'page_menues.php';
 ?>

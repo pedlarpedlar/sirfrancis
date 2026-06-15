@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 
 date_default_timezone_set('Africa/Johannesburg');
-const CANDYBIRD_DATABASES_EMAIL = 'databases@candybird.co.za';
+const SIRFRANCIS_DATABASES_EMAIL = 'databases@candybird.co.za';
 
 $rootDir = dirname(__DIR__);
 $accountRoot = dirname($rootDir);
@@ -32,7 +32,7 @@ function cbBackupDirectory($rootDir, $accountRoot) {
         return $preferred;
     }
 
-    $fallback = $rootDir . '/admin-cb/uploads/backups';
+    $fallback = $rootDir . '/admin-sf/uploads/backups';
     if (cbBackupEnsureDir($fallback)) {
         $denyFile = $fallback . '/.htaccess';
         if (!is_file($denyFile)) {
@@ -67,7 +67,7 @@ function cbBackupConnectDatabase() {
     }
 
     if (!$db->select_db($DB_dbname)) {
-        throw new RuntimeException('Could not select CandyBird database: ' . $DB_dbname);
+        throw new RuntimeException('Could not select Sir Francis database: ' . $DB_dbname);
     }
 
     $db->set_charset('utf8mb4');
@@ -120,7 +120,7 @@ function cbBackupWriteSql($conn, $sqlFile, $onlyTables = null) {
         throw new RuntimeException('Could not create SQL backup file: ' . $sqlFile);
     }
 
-    fwrite($handle, "-- CandyBird database backup\n");
+    fwrite($handle, "-- Sir Francis database backup\n");
     fwrite($handle, "-- Database: " . $DB_dbname . "\n");
     fwrite($handle, "-- Created: " . date('Y-m-d H:i:s') . "\n\n");
     fwrite($handle, "CREATE DATABASE IF NOT EXISTS `" . str_replace('`', '``', $DB_dbname) . "` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\n");
@@ -191,7 +191,7 @@ function cbBackupZipDatabaseOnly($zipFile, $sqlFile) {
 
     $zip->addFile($sqlFile, 'database/database.sql');
     $zip->addFromString('RESTORE_NOTES.txt',
-        "CandyBird daily business-data backup\n" .
+        "Sir Francis daily business-data backup\n" .
         "Created: " . date('Y-m-d H:i:s') . "\n\n" .
         "This daily backup contains users, user addresses, subscribers, orders, order items, order adjustments, payment checks and coupon usage for " . $DB_dbname . ".\n" .
         "It is only created when these business-data tables have changed since the previous daily backup.\n"
@@ -235,8 +235,8 @@ function cbBackupShouldSkip($path, $rootDir, $backupDir) {
         '/Website CSV Product Lists/',
         '/error_log',
         '/vendor/bin/',
-        '/admin-cb/uploads/backups/',
-        '/admin-cb/uploads/databases/',
+        '/admin-sf/uploads/backups/',
+        '/admin-sf/uploads/databases/',
         '/uploads/backups/',
         '/uploads/databases/',
         '/TCPDF-main/',
@@ -329,7 +329,7 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
 
     $zip->addFile($sqlFile, 'database/database.sql');
     $zip->addFromString('RESTORE_NOTES.txt',
-        "CandyBird full backup\n" .
+        "Sir Francis full backup\n" .
         "Created: " . date('Y-m-d H:i:s') . "\n\n" .
         "Contents:\n" .
         "- website/: website files from public_html\n" .
@@ -505,16 +505,16 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup', $manifest 
             $mail->SMTPSecure = $smtp_type;
         }
         $mail->Port = (int) ($smtp_port ?? 587);
-        $mail->setFrom($smtp_username5, 'CandyBird Backups');
-        $mail->addAddress(CANDYBIRD_DATABASES_EMAIL, 'CandyBird Databases');
+        $mail->setFrom($smtp_username5, 'Sir Francis Backups');
+        $mail->addAddress(SIRFRANCIS_DATABASES_EMAIL, 'Sir Francis Databases');
         if (!empty($smtp_username1)) {
-            $mail->addReplyTo($smtp_username1, 'CandyBird');
+            $mail->addReplyTo($smtp_username1, 'Sir Francis');
         }
         $fileName = basename($zipFile);
         $sizeMb = number_format($sizeBytes / 1048576, 2);
         $backupTypeText = htmlspecialchars($backupType, ENT_QUOTES, 'UTF-8');
         $fileNameText = htmlspecialchars($fileName, ENT_QUOTES, 'UTF-8');
-        $downloadUrl = 'https://www.candybird.co.za/admin-cb/backups';
+        $downloadUrl = 'https://www.fishgelatine.co.za/v2/admin-sf/backups';
         $createdAt = date('d M Y H:i');
         $includedFiles = number_format((int) ($manifest['included_files'] ?? 0));
         $includedSize = cbBackupFormatBytes((float) ($manifest['included_file_bytes'] ?? 0));
@@ -533,12 +533,12 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup', $manifest 
                 . ($largestRows !== '' ? '<h3 style="font-size:14px;margin:16px 0 6px;color:#201717;">Largest included files</h3><table style="width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;">' . $largestRows . '</table>' : '');
         }
 
-        $mail->Subject = 'CandyBird ' . $backupType . ' completed';
+        $mail->Subject = 'Sir Francis ' . $backupType . ' completed';
         $mail->isHTML(true);
         $mail->Body = '<div style="margin:0;background:#f6f7fb;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;color:#252525;">'
             . '<div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e8e8ef;border-radius:14px;overflow:hidden;">'
             . '<div style="background:#201717;color:#ffffff;padding:22px 26px;">'
-            . '<div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#f3c9aa;">CandyBird Admin</div>'
+            . '<div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#f3c9aa;">Sir Francis Admin</div>'
             . '<h1 style="margin:8px 0 0;font-size:24px;line-height:1.25;font-weight:700;">Backup completed</h1>'
             . '</div>'
             . '<div style="padding:26px;">'
@@ -555,7 +555,7 @@ function cbBackupNotify($zipFile, $sizeBytes, $backupType = 'Backup', $manifest 
             . '</div>'
             . '</div>'
             . '</div>';
-        $mail->AltBody = "CandyBird backup completed\n\n"
+        $mail->AltBody = "Sir Francis backup completed\n\n"
             . "Type: " . $backupType . "\n"
             . "File: " . $fileName . "\n"
             . "Size: " . $sizeMb . " MB\n"

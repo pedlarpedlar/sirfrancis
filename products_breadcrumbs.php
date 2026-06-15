@@ -37,7 +37,7 @@ function generateProductsBreadcrumbs($conn, $categoryId = null, $searchTerm = nu
     $breadcrumbs = [];
 
     // Home breadcrumb
-    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.candybird.co.za">Home</a></li>';
+    $breadcrumbs[] = '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>';
 
     // All Products breadcrumb
     $breadcrumbs[] = '<li class="breadcrumb-item"><a href="products">All Products</a></li>';

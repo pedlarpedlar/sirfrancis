@@ -59,7 +59,7 @@ foreach ($products as $product) {
         continue;
     }
 
-    $name = trim((string) ($product['name'] ?? $product['title'] ?? 'CandyBird product'));
+    $name = trim((string) ($product['name'] ?? $product['title'] ?? 'Sir Francis product'));
     $size = trim((string) ($product['size'] ?? $product['weight'] ?? ''));
     $title = trim($name . ' ' . $size);
     $description = trim(strip_tags((string) ($product['html_description'] ?? $product['description'] ?? $title)));
@@ -75,7 +75,7 @@ foreach ($products as $product) {
 
     $link = function_exists('getSheetProductUrl')
         ? getSheetProductUrl($product, true)
-        : 'https://www.candybird.co.za/' . rawurlencode(getSheetProductSlug($product));
+        : 'https://www.fishgelatine.co.za/v2/' . rawurlencode(getSheetProductSlug($product));
     $itemGroupId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($name));
 
     $values = [
@@ -95,7 +95,7 @@ foreach ($products as $product) {
         'no',
         '',
         $id,
-        'CandyBird',
+        'Sir Francis',
         trim((string) ($product['label'] ?? '')),
         trim((string) ($product['parent_category'] ?? '')),
         implode(',', $additionalImages),

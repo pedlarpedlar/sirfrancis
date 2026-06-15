@@ -5,9 +5,9 @@ exit;
 include 'header.php';
 ?>
     <?php
-    $page_url_canonical = "https://www.candybird.co.za/products";
-    $title_og = 'Products - CandyBird';
-    $page_url_og = "https://www.candybird.co.za/products"
+    $page_url_canonical = "https://www.fishgelatine.co.za/v2/products";
+    $title_og = 'Products - Sir Francis';
+    $page_url_og = "https://www.fishgelatine.co.za/v2/products"
     ?>
 
     <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -23,7 +23,7 @@ include 'header.php';
     <meta property="og:url" content="<?=$page_url_og?>">
     <meta property="og:type" content="website">
 
-    <title>Products - CandyBird</title>
+    <title>Products - Sir Francis</title>
 <?php
 include 'page_menues.php';
 ?>

@@ -44,7 +44,7 @@ include 'header.php';
         <div class="container">
             <span class="cb-policy-updated">Last updated: 19 April 2026</span>
             <h1>Buyer Protection and Returns</h1>
-            <p>We want customers to feel comfortable ordering from CandyBird. If something arrives wrong, damaged, short, stale, unsuitable or not as described, we want to know and we want to fix it fairly.</p>
+            <p>We want customers to feel comfortable ordering from Sir Francis. If something arrives wrong, damaged, short, stale, unsuitable or not as described, we want to know and we want to fix it fairly.</p>
         </div>
     </section>
 
@@ -67,9 +67,9 @@ include 'header.php';
                         <img src="assets/img/iqaalah.png" alt="Iqaalah buyer protection">
                         <p>Iqaalah sits at the heart of this page: a customer should feel safe enough to tell us when a purchase did not sit right, and we should be willing to reverse or resolve it fairly where possible.</p>
                     </div>
-                    <p>Returns and feedback are welcome. We would rather know about a problem than leave a customer unhappy. CandyBird supports a fair, generous approach inspired by Iqaalah, an Arabic term meaning the willing reversal or cancellation of a sale. In practice, we treat it as buyer protection: if a customer is genuinely unsatisfied, regrets the purchase, or received something that did not meet what was promised, we aim to resolve it through refund, replacement, credit or another fair outcome.</p>
+                    <p>Returns and feedback are welcome. We would rather know about a problem than leave a customer unhappy. Sir Francis supports a fair, generous approach inspired by Iqaalah, an Arabic term meaning the willing reversal or cancellation of a sale. In practice, we treat it as buyer protection: if a customer is genuinely unsatisfied, regrets the purchase, or received something that did not meet what was promised, we aim to resolve it through refund, replacement, credit or another fair outcome.</p>
                     <div class="cb-policy-callout">
-                        Iqaalah is a recognised principle in Islamic commercial ethics: where a concluded sale is reversed by agreement, the buyer returns the goods and the seller returns the price. A hadith, meaning a recorded narration, reports that Nabi Muhammad, the Messenger, peace and blessings be upon him, encouraged accepting the cancellation of a sale for a regretful buyer. CandyBird applies this as a serious buyer-protection standard, subject to product condition, food safety, lawful consumer rights, and the practical limits set out in this policy.
+                        Iqaalah is a recognised principle in Islamic commercial ethics: where a concluded sale is reversed by agreement, the buyer returns the goods and the seller returns the price. A hadith, meaning a recorded narration, reports that Nabi Muhammad, the Messenger, peace and blessings be upon him, encouraged accepting the cancellation of a sale for a regretful buyer. Sir Francis applies this as a serious buyer-protection standard, subject to product condition, food safety, lawful consumer rights, and the practical limits set out in this policy.
                     </div>
                     <p>For our customers, this simply means that our returns approach is not limited to technical defects only. Where a fair reversal is possible, we will consider the customer's dissatisfaction, the condition of the goods, the time since delivery, hygiene and perishability, and any applicable South African consumer-law protections.</p>
                     <div class="cb-policy-badges">
@@ -81,7 +81,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="eligible">
                     <h2>2. What can be returned</h2>
-                    <p>Please contact us within <?=$return_window?> of delivery or purchase. Because many CandyBird products are food items, we may not be able to accept quality-related returns where the product was opened long ago, stored incorrectly, exposed to heat, or kept beyond a reasonable freshness period.</p>
+                    <p>Please contact us within <?=$return_window?> of delivery or purchase. Because many Sir Francis products are food items, we may not be able to accept quality-related returns where the product was opened long ago, stored incorrectly, exposed to heat, or kept beyond a reasonable freshness period.</p>
                     <ul>
                         <li>Items must preferably be in original packaging where practical.</li>
                         <li>Damaged, incorrect, missing or defective items should be reported as soon as possible.</li>
@@ -113,7 +113,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="shipping">
                     <h2>6. Return shipping costs</h2>
-                    <p>If the return is due to an error, damage, wrong item or confirmed defect, CandyBird will help with reasonable return or replacement shipping. If the return is voluntary, such as a change of mind, the customer may be responsible for return shipping.</p>
+                    <p>If the return is due to an error, damage, wrong item or confirmed defect, Sir Francis will help with reasonable return or replacement shipping. If the return is voluntary, such as a change of mind, the customer may be responsible for return shipping.</p>
                     <p>For international returns, mark the parcel clearly as returned goods. Customs duties, taxes or import charges are generally the customer's responsibility unless otherwise agreed.</p>
                 </section>
 

@@ -1,11 +1,11 @@
 <?php
 include 'session_logins.php';
-$page_url_canonical = 'https://www.candybird.co.za/cookie_policy';
-$title_og = 'Cookie Policy | CandyBird';
+$page_url_canonical = 'https://www.fishgelatine.co.za/v2/cookie_policy';
+$title_og = 'Cookie Policy | Sir Francis';
 $page_url_og = $page_url_canonical;
-$description_meta = 'CandyBird cookie policy explaining how cookies support carts, checkout, login sessions, analytics, security and customer experience.';
+$description_meta = 'Sir Francis cookie policy explaining how cookies support carts, checkout, login sessions, analytics, security and customer experience.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 include 'header.php';
 ?>
@@ -47,7 +47,7 @@ include 'header.php';
         </section>
 
         <section class="cb-cookie-section">
-          <h2>2. How CandyBird uses cookies</h2>
+          <h2>2. How Sir Francis uses cookies</h2>
           <ul>
             <li>To keep your cart and checkout working correctly.</li>
             <li>To support customer login, remember-me sessions and account features.</li>

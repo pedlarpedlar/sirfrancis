@@ -84,17 +84,12 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
   text-decoration: none;
 }
 
-.homepage-info-link:hover .title,
-.homepage-info-link:focus .title {
-  color: #5b1178;
-}
-
 .homepage-seo-intro {
-  border-bottom: 1px solid #f0e8df;
+  border-bottom: 1px solid #ded6c6;
 }
 
 .homepage-seo-intro h1 {
-  color: #241716;
+  color: #28364B;
   font-family: "Hanken Grotesk", sans-serif;
   font-size: clamp(28px, 4vw, 46px);
   font-weight: 800;
@@ -104,7 +99,7 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 }
 
 .homepage-seo-intro p {
-  color: #5f504c;
+  color: #344359;
   font-size: 16px;
   line-height: 1.7;
   margin-bottom: 18px;
@@ -117,10 +112,10 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 }
 
 .homepage-seo-links a {
-  background: #fff7ef;
-  border: 1px solid #ead7c9;
+  background: #F1F0E8;
+  border: 1px solid #CEBD88;
   border-radius: 6px;
-  color: #4d2620;
+  color: #28364B;
   display: inline-flex;
   font-size: 14px;
   font-weight: 700;
@@ -130,8 +125,8 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 
 .homepage-seo-links a:hover,
 .homepage-seo-links a:focus {
-  background: #4d2620;
-  border-color: #4d2620;
+  background: #28364B;
+  border-color: #28364B;
   color: #fff;
 }
 
@@ -331,7 +326,7 @@ foreach ($slides as $index => $slide) {
             href="wholesale-pricelist"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/slider.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async" />
+            <img src="assets/img/ocean.jpg" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async" />
             <span class="home-pathway-copy">
               <h2>Buy Bulk</h2>
               <p>Marine collagen, fish gelatine and wellness ingredients for wholesale buyers and businesses.</p>
@@ -345,7 +340,7 @@ foreach ($slides as $index => $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/slide1.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/slider/1.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async" />
             <span class="home-pathway-copy">
               <h2>Retail Shop</h2>
               <p>Shop the retail range direct to the public.</p>
@@ -359,7 +354,7 @@ foreach ($slides as $index => $slide) {
             href="private_labelling"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/slide2.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/slider/2.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async" />
             <span class="home-pathway-copy">
               <h2>Private Labelling</h2>
               <p>Create your own supplement brand.</p>
@@ -373,7 +368,7 @@ foreach ($slides as $index => $slide) {
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/slide3.png" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/slider/3.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async" />
             <span class="home-pathway-copy">
               <h2>Become a Stockist</h2>
               <p>Apply to stock Sir Francis products and build a premium wellness income stream.</p>
@@ -1164,7 +1159,7 @@ $(document).ready(function () {
       // Handle the response and populate the product container
       if (response.success) {
         var products = response.products;
-        window.CANDYBIRD_PRODUCTS = products;
+        window.SIRFRANCIS_PRODUCTS = products;
         displayProducts(products);
       } else {
         console.error('Error fetching products: ' + response.message);

@@ -2,9 +2,9 @@
 date_default_timezone_set('Africa/Johannesburg');
 
 $root = dirname(__DIR__);
-$dbh = file_exists($root . '/dbh.inc.php') ? $root . '/dbh.inc.php' : $root . '/admin-cb/dbh.inc.php';
+$dbh = file_exists($root . '/dbh.inc.php') ? $root . '/dbh.inc.php' : $root . '/admin-sf/dbh.inc.php';
 include $dbh;
-require_once $root . '/admin-cb/business_ops_helpers.php';
+require_once $root . '/admin-sf/business_ops_helpers.php';
 require_once $root . '/candybird_mail_helpers.php';
 
 cbOpsEnsureTables($conn);
@@ -57,7 +57,7 @@ if (empty($focusAccounts)) {
     exit(0);
 }
 
-$subject = cbOpsCleanHeader($settings['subject'] ?: 'CandyBird social posting reminder');
+$subject = cbOpsCleanHeader($settings['subject'] ?: 'Sir Francis social posting reminder');
 $title = $isWeeklyDay ? 'Weekly social posting reminder' : 'Daily social posting reminder';
 $rowsHtml = '';
 foreach ($focusAccounts as $account) {
@@ -74,7 +74,7 @@ foreach ($focusAccounts as $account) {
         . '</tr>';
 }
 
-$adminLink = 'https://www.candybird.co.za/admin-cb/social_accounts';
+$adminLink = 'https://www.fishgelatine.co.za/v2/admin-sf/social_accounts';
 $body = '<div style="font-family:Arial,sans-serif;background:#fff7ec;padding:24px;color:#251810;">'
     . '<div style="max-width:760px;margin:0 auto;background:#fff;border:1px solid #eadfd2;border-radius:10px;overflow:hidden;">'
     . '<div style="background:#2d1739;color:#fff;padding:20px 24px;"><h1 style="margin:0;color:#fcb42f;font-size:24px;">' . cbOpsText($title) . '</h1><p style="margin:8px 0 0;color:#f7eafc;">Keep the business visible: post at least once a week everywhere, and daily on the platforms that bring the most attention.</p></div>'
@@ -84,13 +84,13 @@ $body = '<div style="font-family:Arial,sans-serif;background:#fff7ec;padding:24p
     . '<thead><tr style="background:#fff3d9;"><th align="left" style="padding:10px;">Platform</th><th align="left" style="padding:10px;">Rhythm</th><th align="left" style="padding:10px;">Last posted</th><th align="left" style="padding:10px;">Link</th></tr></thead>'
     . '<tbody>' . $rowsHtml . '</tbody></table>'
     . '<p style="margin:18px 0;"><a href="' . cbOpsText($adminLink) . '" style="background:#5b1178;color:#fff;text-decoration:none;padding:11px 16px;border-radius:6px;font-weight:700;">Open social accounts</a></p>'
-    . '<p style="color:#75675d;font-size:13px;margin-bottom:0;">This reminder was generated automatically by the CandyBird website cron.</p>'
+    . '<p style="color:#75675d;font-size:13px;margin-bottom:0;">This reminder was generated automatically by the Sir Francis website cron.</p>'
     . '</div></div></div>';
 
-$send = cbCandybirdSendMail($recipient, 'CandyBird Admin', $subject, $body, [
-    'from_name' => 'CandyBird Admin',
+$send = cbCandybirdSendMail($recipient, 'Sir Francis Admin', $subject, $body, [
+    'from_name' => 'Sir Francis Admin',
     'reply_to_email' => $GLOBALS['smtp_username1'] ?? '',
-    'reply_to_name' => 'CandyBird',
+    'reply_to_name' => 'Sir Francis',
 ]);
 
 if (empty($send['success'])) {

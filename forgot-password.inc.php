@@ -91,7 +91,7 @@ if (!mysqli_stmt_execute($stmtToken)) {
     ]);
 }
 
-$resetLink = 'https://www.candybird.co.za/reset-password?token=' . urlencode($resetToken);
+$resetLink = 'https://www.fishgelatine.co.za/v2/reset-password?token=' . urlencode($resetToken);
 logAction('User requested Password Reset email', 'Link: ' . $resetLink, $userId, null);
 
 $emailWarning = '';
@@ -105,9 +105,9 @@ if (isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port
         $mail->Password = $smtp_password5;
         $mail->SMTPSecure = $smtp_type;
         $mail->Port = $smtp_port;
-        $mail->setFrom($smtp_username5, 'CandyBird');
+        $mail->setFrom($smtp_username5, 'Sir Francis');
         $mail->addAddress($userEmail);
-        $mail->Subject = 'Password Reset Request | CandyBird';
+        $mail->Subject = 'Password Reset Request | Sir Francis';
         $emailBody = file_get_contents('emails/email_forgot_password.php');
         $emailBody = str_replace('{recipient_name}', htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8'), $emailBody);
         $emailBody = str_replace('{user_email_unsubscribe}', urlencode($userEmail), $emailBody);
@@ -129,9 +129,9 @@ if (isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port
         $adminMail->Password = $smtp_password5;
         $adminMail->SMTPSecure = $smtp_type;
         $adminMail->Port = $smtp_port;
-        $adminMail->setFrom($smtp_username5, 'CandyBird');
+        $adminMail->setFrom($smtp_username5, 'Sir Francis');
         $adminMail->addAddress($smtp_username1, 'Admin');
-        $adminMail->Subject = 'Password Reset Request | CandyBird';
+        $adminMail->Subject = 'Password Reset Request | Sir Francis';
         $adminBody = file_get_contents('emails/email_forgot_password_admin.php');
         $adminBody = str_replace('{recipient_name}', 'Admin', $adminBody);
         $adminBody = str_replace('{reset_link}', $resetLink, $adminBody);

@@ -62,7 +62,7 @@ function cbPolicyMoney($amount) {
         <div class="container">
             <span class="cb-policy-updated">Last updated: 19 April 2026</span>
             <h1>Delivery Policy</h1>
-            <p>How CandyBird calculates delivery, handles Pudo lockers, door-to-door courier, digital products, lead times and addresses outside South Africa.</p>
+            <p>How Sir Francis calculates delivery, handles Pudo lockers, door-to-door courier, digital products, lead times and addresses outside South Africa.</p>
         </div>
     </section>
 
@@ -106,7 +106,7 @@ function cbPolicyMoney($amount) {
 
                 <section class="cb-policy-section" id="free">
                     <h2>3. Free shipping</h2>
-                    <p>Free shipping can apply to qualifying Pudo locker orders over R<?=number_format((float) $free_shipping_amount, 2)?>. It does not apply to door-to-door delivery unless CandyBird specifically offers that promotion.</p>
+                    <p>Free shipping can apply to qualifying Pudo locker orders over R<?=number_format((float) $free_shipping_amount, 2)?>. It does not apply to door-to-door delivery unless Sir Francis specifically offers that promotion.</p>
                     <div class="cb-policy-callout">Coupon discounts are applied before shipping. If a coupon reduces the order below the free-shipping threshold, the order may no longer qualify for free shipping.</div>
                 </section>
 
@@ -123,7 +123,7 @@ function cbPolicyMoney($amount) {
 
                 <section class="cb-policy-section" id="outside-sa">
                     <h2>6. Addresses outside South Africa</h2>
-                    <p>If the delivery address is outside South Africa, checkout may set shipping to R0 and show that a special shipping quote is required. CandyBird will contact you by email, WhatsApp or phone before dispatch to confirm the international shipping cost and next steps.</p>
+                    <p>If the delivery address is outside South Africa, checkout may set shipping to R0 and show that a special shipping quote is required. Sir Francis will contact you by email, WhatsApp or phone before dispatch to confirm the international shipping cost and next steps.</p>
                 </section>
 
                 <section class="cb-policy-section" id="digital">

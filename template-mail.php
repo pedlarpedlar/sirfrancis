@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
-require_once('/home/rukbanor/configs_CandyBird/CandyBird_config.php');
+require_once('/home/rukbanor/configs_Candybird/Candybird_config.php');
 
 // Now, proceed to send the registration confirmation email
 
@@ -25,11 +25,11 @@ try {
     $fullName = $firstName . ' ' . $lastName;
 
     // Set sender and recipient(s)
-    $mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+    $mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
     $mail->addAddress($email, $fullName); // Recipient's email address and name
 
     // Set email subject
-    $mail->Subject = "Welcome to CandyBird - Registration Confirmation";
+    $mail->Subject = "Welcome to Sir Francis - Registration Confirmation";
 
     // Get the email body from the template file
     $email_body = file_get_contents('emails/email_register.php');
@@ -65,7 +65,7 @@ try {
     $admin_mail->Port = $smtp_port;
 
     // Set sender and recipient(s)
-    $admin_mail->setFrom($smtp_username5, 'CandyBird'); // Your email address and your name
+    $admin_mail->setFrom($smtp_username5, 'Sir Francis'); // Your email address and your name
     $admin_mail->addAddress($smtp_username1, 'Admin'); // Admin email address
 
     // Set email subject

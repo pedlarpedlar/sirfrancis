@@ -1,7 +1,7 @@
 User-agent: *
-Disallow: /admin-cb/
+Disallow: /admin-sf/
 Disallow: /shop/
 
 Allow: /
 
-Sitemap: https://www.candybird.co.za/sitemap.xml
+Sitemap: https://www.fishgelatine.co.za/v2/sitemap.xml

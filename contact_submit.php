@@ -178,7 +178,7 @@ if ($name === '' || !$email || $messagePlain === '') {
     exit;
 }
 
-$websiteCompanyName = 'CandyBird';
+$websiteCompanyName = 'Sir Francis';
 $primaryRecipient = '';
 $supportRecipient = '';
 $secondaryRecipient = '';
@@ -219,7 +219,7 @@ if ($recaptchaEnabled && $recaptchaSecretKey !== '') {
     }
 }
 
-$fallbackRecipient = !empty($smtp_username1) ? $smtp_username1 : 'sales@candybird.co.za';
+$fallbackRecipient = !empty($smtp_username1) ? $smtp_username1 : 'info@fishgelatine.co.za';
 $recipient = filter_var($supportRecipient, FILTER_VALIDATE_EMAIL)
     ?: (filter_var($primaryRecipient, FILTER_VALIDATE_EMAIL) ?: $fallbackRecipient);
 
@@ -232,7 +232,7 @@ if (empty($smtp_server) || empty($smtp_port) || empty($smtpUser) || empty($smtpP
     exit;
 }
 
-$consumerRecipient = 'consumer@candybird.co.za';
+$consumerRecipient = 'info@fishgelatine.co.za';
 $consumerKeywords = '/complaint|compliment|consumer|feedback|quality|refund|return|damaged|wrong|missing|unhappy|thank/i';
 $shouldRouteConsumer = preg_match($consumerKeywords, $subjectInput . ' ' . $messagePlain) === 1;
 $safeSubject = $subjectInput !== '' ? $subjectInput : 'Website contact message';
@@ -288,7 +288,7 @@ try {
     unset($_SESSION['contact_form_started_at']);
     echo 'Thank you. Your message has been sent.';
 } catch (Exception $e) {
-    error_log('CandyBird contact form email failed: ' . $e->getMessage());
+    error_log('Sir Francis contact form email failed: ' . $e->getMessage());
     cbContactLogAttempt($conn ?? null, $remoteIp, $emailForRateLimit, false, 'mailer');
     http_response_code(500);
     echo 'Message could not be sent right now. Please email us directly.';

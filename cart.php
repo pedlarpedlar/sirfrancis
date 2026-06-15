@@ -3,9 +3,9 @@ include 'session_logins.php';
 include 'header.php';
 ?>
 <?php
-$page_url_canonical = "https://www.candybird.co.za/cart";
-$title_og = 'Shopping Basket - CandyBird';
-$page_url_og = "https://www.candybird.co.za/cart"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/cart";
+$title_og = 'Shopping Basket - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/cart"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -21,7 +21,7 @@ $page_url_og = "https://www.candybird.co.za/cart"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>Shopping Basket - CandyBird</title>
+<title>Shopping Basket - Sir Francis</title>
 
 <?php
 include 'page_menues.php';
@@ -472,7 +472,7 @@ $default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $c
     cursor: pointer;
 }
 .cart-delivery-method-option.active {
-    border-color: #6b0099;
+    border-color: #28364B;
     box-shadow: 0 0 0 2px rgba(107, 0, 153, 0.12);
 }
 .cart-delivery-method-option strong,

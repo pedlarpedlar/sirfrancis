@@ -40,7 +40,7 @@
 
         // Set the recipient email address.
 
-        $recipient = "contact-form@candybird.co.za";
+        $recipient = "info@fishgelatine.co.za";
 
         // Set the email subject.
 

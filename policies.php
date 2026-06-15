@@ -1,15 +1,15 @@
 <?php
 include 'session_logins.php';
-$page_url_canonical = 'https://www.candybird.co.za/policies';
-$title_og = 'CandyBird Policies | Terms, Delivery, Privacy, CCTV and Buyer Protection';
+$page_url_canonical = 'https://www.fishgelatine.co.za/v2/policies';
+$title_og = 'Sir Francis Policies | Terms, Delivery, Privacy, CCTV and Buyer Protection';
 $page_url_og = $page_url_canonical;
-$description_meta = 'Find CandyBird policies in one place, including terms and conditions, delivery, privacy, CCTV, cookies, buyer protection and returns.';
+$description_meta = 'Find Sir Francis policies in one place, including terms and conditions, delivery, privacy, CCTV, cookies, buyer protection and returns.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/pricelist.jpg';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 include 'header.php';
 ?>
-<title>CandyBird Policies - <?=$website_company_name?></title>
+<title>Sir Francis Policies - <?=$website_company_name?></title>
 <?php include 'page_menues.php'; ?>
 
 <style>
@@ -42,7 +42,7 @@ include 'header.php';
     <div class="container">
       <span class="cb-policies-kicker">Policies and customer information</span>
       <h1>Everything important, in one place.</h1>
-      <p>These pages explain how CandyBird handles orders, delivery, payment, privacy, cookies, returns and customer support. We keep them clear so customers can shop with confidence and staff can answer questions consistently.</p>
+      <p>These pages explain how Sir Francis handles orders, delivery, payment, privacy, cookies, returns and customer support. We keep them clear so customers can shop with confidence and staff can answer questions consistently.</p>
     </div>
   </section>
 

@@ -2095,7 +2095,7 @@ button.close:hover {
 }
 
 .blog-ctry-menu li a.category-link.active {
-  color: #6e4cb2;
+  color: #28364B;
   font-weight: 700;
 }
 
@@ -2108,7 +2108,7 @@ button.close:hover {
   border: 0;
   border-radius: 50%;
   background: #f3f0f8;
-  color: #6e4cb2;
+  color: #28364B;
   line-height: 26px;
   text-align: center;
   cursor: pointer;

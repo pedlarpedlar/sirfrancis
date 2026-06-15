@@ -1,10 +1,10 @@
 <?php
 include 'session_logins.php';
 include 'header.php';
-$page_url_canonical = "https://www.candybird.co.za/private_labelling";
-$title_og = 'Private Labelling - CandyBird';
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/private_labelling";
+$title_og = 'Private Labelling - Sir Francis';
 $page_url_og = $page_url_canonical;
-$description_meta = 'Private labelling, custom snack packs, branded gifting, white-label retail supply and serious bulk packaging support from CandyBird.';
+$description_meta = 'Private labelling, custom snack packs, branded gifting, white-label retail supply and serious bulk packaging support from Sir Francis.';
 include 'page_menues.php';
 ?>
 
@@ -25,7 +25,7 @@ include 'page_menues.php';
     .cb-service-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
     .cb-service-actions a { border-radius: 6px; padding: 12px 16px; font-weight: 700; }
     .cb-service-actions .primary { background: #2a1b1b; color: #fff; }
-    .cb-service-actions .secondary { background: #FCB42F; color: #251d18; }
+    .cb-service-actions .secondary { background: #CEBD88; color: #251d18; }
     .cb-service-note { background: #2a1b1b; color: #fff; border-radius: 8px; padding: 22px; margin: 22px 0; }
     .cb-service-note h2 { color: #fff; margin: 0 0 8px; }
     .cb-service-note p { color: #f7e9db; margin: 0; line-height: 1.75; }
@@ -42,7 +42,7 @@ include 'page_menues.php';
     <section class="cb-service-hero">
         <div class="container">
             <h1>Private Labelling</h1>
-            <p>Build a branded snack, gifting or retail range with CandyBird support. We help serious buyers understand the right route: simple branded labels for smaller runs, or full custom packaging when the volume is large enough to justify it.</p>
+            <p>Build a branded snack, gifting or retail range with Sir Francis support. We help serious buyers understand the right route: simple branded labels for smaller runs, or full custom packaging when the volume is large enough to justify it.</p>
             <div class="cb-service-actions">
                 <a class="primary" href="contact">Start a private-label enquiry</a>
                 <a class="secondary" href="wholesale-pricelist">View wholesale pricelist</a>
@@ -59,7 +59,7 @@ include 'page_menues.php';
                 </div>
                 <div class="cb-service-card">
                     <h2>Branding routes</h2>
-                    <p>Choose between labelled CandyBird-packed goods, branded finishing, or full custom printed packaging for major volumes.</p>
+                    <p>Choose between labelled Sir Francis-packed goods, branded finishing, or full custom printed packaging for major volumes.</p>
                 </div>
                 <div class="cb-service-card">
                     <h2>Repeat supply</h2>

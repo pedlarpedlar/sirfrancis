@@ -60,9 +60,9 @@ if (!isset($_SESSION['user_id'])) {
           $data = array(
               'merchant_id' => '14090292', //'10000100', // Replace with your merchant ID
               'merchant_key' => '5ksggz4e5rru2', //'46f0cd694581a', // Replace with your merchant key
-              'return_url' => 'https://www.candybird.co.za/order_details?order_id=' . $row['order_id'] . '&thankyou',
-              'cancel_url' => 'https://www.candybird.co.za/checkout',
-              'notify_url' => 'https://www.candybird.co.za/notify?order_id=' . $row['order_id'] . '&user_id=' . $userId,
+              'return_url' => 'https://www.fishgelatine.co.za/v2/order_details?order_id=' . $row['order_id'] . '&thankyou',
+              'cancel_url' => 'https://www.fishgelatine.co.za/v2/checkout',
+              'notify_url' => 'https://www.fishgelatine.co.za/v2/notify?order_id=' . $row['order_id'] . '&user_id=' . $userId,
               'name_first' => $row['billing_first_name'],
               'name_last'  => $row['billing_last_name'],
               'email_address' => $row['billing_email_address'],
@@ -282,9 +282,9 @@ include 'header.php';
 ?>
 
 <?php
-$page_url_canonical = "https://www.candybird.co.za/profile";
-$title_og = 'My Account - CandyBird';
-$page_url_og = "https://www.candybird.co.za/profile"
+$page_url_canonical = "https://www.fishgelatine.co.za/v2/profile";
+$title_og = 'My Account - Sir Francis';
+$page_url_og = "https://www.fishgelatine.co.za/v2/profile"
 ?>
 
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -300,7 +300,7 @@ $page_url_og = "https://www.candybird.co.za/profile"
 <meta property="og:url" content="<?=$page_url_og?>">
 <meta property="og:type" content="website">
 
-<title>My Profile - CandyBird</title>
+<title>My Profile - Sir Francis</title>
 
 <?php
 include 'page_menues.php';
