@@ -1,6 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home2/rukbanor/public_html/fishgelatine.co.za/v2/
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/rsync -a --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
+    - /bin/mkdir -p /home2/rukbanor/public_html/fishgelatine.co.za/v2/
+    - /bin/rsync -a --exclude='.git' --exclude='.cpanel.yml' /home2/rukbanor/repositories/sirfrancis/ /home2/rukbanor/public_html/fishgelatine.co.za/v2/
