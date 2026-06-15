@@ -6,17 +6,17 @@ $defer_homepage_personalization = true;
 $load_shopping_nav = false;
 $page_preload_images = ['assets/img/slider/1.optimized.jpg'];
 include 'session_logins.php';
-$page_url_canonical = 'https://www.candybird.co.za/';
-$page_url_og = 'https://www.candybird.co.za/';
-$title_og = 'Premium Nut Packs, Dried Fruit & Unique Gifts in South Africa | CandyBird';
-$description_meta = 'Shop quality nuts, dried fruit, nut packs and unique gifting from CandyBird in Port Elizabeth. Secure checkout, delivery and collection across South Africa, ideal for overseas gifts to family and clients in SA.';
+$page_url_canonical = 'https://www.fishgelatine.co.za/v2/';
+$page_url_og = 'https://www.fishgelatine.co.za/v2/';
+$title_og = "Sir Francis | Marine Collagen, Fish Gelatine and Private Labelling";
+$description_meta = 'Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and supplement private labelling solutions in South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.candybird.co.za/assets/img/product/1.png';
+$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png';
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']);
 ?>
 
-<title>Premium Nut Packs, Dried Fruit & Unique Gifts South Africa | CandyBird</title>
+<title>Sir Francis | Marine Collagen, Fish Gelatine and Private Labelling</title>
 <style>
 
 .cinzel {
@@ -295,7 +295,7 @@ foreach ($slides as $index => $slide) {
             href="gifting"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/gifting.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird gifting" width="570" height="330" loading="eager" decoding="async" />
+            <img src="assets/img/gifting.jpg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis private labelling" width="570" height="330" loading="eager" decoding="async" />
           </a>
         </div>
       </div>
@@ -305,7 +305,7 @@ foreach ($slides as $index => $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird online shop" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis online shop" width="270" height="330" loading="lazy" decoding="async" />
           </a>
         </div>
       </div>
@@ -315,7 +315,7 @@ foreach ($slides as $index => $slide) {
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="CandyBird reseller packs" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="assets/img/reseller.jpeg" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Sir Francis stockist opportunity" width="270" height="330" loading="lazy" decoding="async" />
           </a>
         </div>
       </div>
@@ -328,19 +328,19 @@ foreach ($slides as $index => $slide) {
   <div class="container">
     <div class="row align-items-center">
       <div class="col-lg-8 mb-3 mb-lg-0">
-        <h1>Quality nuts, dried fruit and thoughtful gifting from Port Elizabeth</h1>
+        <h1>Marine collagen, fish gelatine and private labelling in South Africa</h1>
         <p>
-          CandyBird is a South African online shop for premium nut packs, dried fruit, sweets, corporate gifts and unique gifting. We serve Port Elizabeth and surrounding areas, deliver across South Africa, and make it simple for customers in Canada, Germany and abroad to send trusted gifts to family, friends or clients in South Africa.
+          Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and custom supplement solutions. We support wholesale buyers, private-label brands, stockists and retail customers across South Africa.
         </p>
       </div>
       <div class="col-lg-4">
         <div class="homepage-seo-links">
-          <a href="nuts">Shop nuts</a>
-          <a href="dried-fruit">Shop dried fruit</a>
-          <a href="gifting">Unique gifting</a>
+          <a href="products">Shop online</a>
+          <a href="pricelist">Pricelist</a>
+          <a href="resellers">Become a stockist</a>
           <a href="wholesale-pricelist">Wholesale pricelist</a>
           <a href="private_labelling">Private labelling</a>
-          <a href="delivery_policy">Delivery info</a>
+          <a href="contact">Contact us</a>
         </div>
       </div>
     </div>
@@ -354,7 +354,7 @@ foreach ($slides as $index => $slide) {
       <h2 class="title mb-3">What Our Customers Say</h2>
       <img class="pb-3" src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async">
       <p class="text">
-        Real feedback from customers who have experienced CandyBird quality.
+        Real feedback from customers who have experienced Sir Francis quality.
       </p>
     </div>
 
@@ -935,7 +935,7 @@ function displayProducts(products) {
     var salePercent = getSalePercent(product);
     var price = parseFloat(product.price || 0) || 0;
     var productPrice = getProductPrice(product);
-    var productTitle = escapeAttr([product.title, product.weight].filter(Boolean).join(' ') || 'CandyBird product');
+    var productTitle = escapeAttr([product.title, product.weight].filter(Boolean).join(' ') || 'Sir Francis product');
 
     html += `
       <div class="slider-item">

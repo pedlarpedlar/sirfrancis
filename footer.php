@@ -50,10 +50,10 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   <div class="social-network">
     <ul class="d-flex justify-content-center"> <!-- Added justify-content-center class -->
       <li>
-        <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" target="_blank" aria-label="CandyBird on Facebook"><span class="icon-social-facebook"></span></a>
+        <a class="social-link-click" href="https://www.facebook.com/fishgelatine" target="_blank" aria-label="Sir Francis on Facebook"><span class="icon-social-facebook"></span></a>
       </li>
       <li class="mr-0">
-        <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" target="_blank" aria-label="CandyBird on Instagram"><span class="icon-social-instagram"></span></a>
+        <a class="social-link-click" href="https://www.instagram.com/fishgelatine" target="_blank" aria-label="Sir Francis on Instagram"><span class="icon-social-instagram"></span></a>
       </li>
     </ul>
   </div>
@@ -68,7 +68,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <span>Buy now, pay later coming soon</span>
   </div>
   <p class="footer-quality-guarantee">
-    Price-match promise: for the same quality and pack size in South Africa, we aim to match and beat the price. If you find better value after buying, contact us for our money-back quality guarantee.
+    Premium marine collagen, fish gelatine and private labelling support from South Africa's trusted Sir Francis team.
   </p>
 
   <div class="footer-link-groups" aria-label="Footer links">
@@ -91,7 +91,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <div>
       <h3>Help</h3>
       <a href="<?=$home_directory?>contact">Contact Us</a>
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=18%20Babiana%20Rd%2C%20Malabar%2C%20Port%20Elizabeth%2C%20South%20Africa" target="_blank" rel="noopener noreferrer">Find us on Google Maps</a>
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Overport%2C%20Berea%204007%2C%20Durban%2C%20South%20Africa" target="_blank" rel="noopener noreferrer">Find us on Google Maps</a>
       <a href="<?=$home_directory?>delivery_policy">Delivery Policy</a>
       <a href="<?=$home_directory?>return_policy">Buyer Protection and Returns</a>
       <a href="<?=$home_directory?>terms">Terms and Conditions</a>
@@ -135,7 +135,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
               <div class="nletter-form mt-20">
                 <form
                   class="form-inline position-relative"
-                  action="https://www.candybird.co.za/subscribe.inc.php"
+                  action="<?=$home_directory?>subscribe.inc.php"
                   target="_blank"
                   method="post"
                   id="subscribe_form"
@@ -169,7 +169,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
       <div class="col-12">
         <div class="d-flex flex-column align-items-center text-center pt-3">
           <p>
-            Copyright &copy; <a href="./">CandyBird</a>.
+            Copyright &copy; <a href="./">Sir Francis</a>.
             All Rights Reserved
           </p>
           <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="img" width="150px" class="mt-2"/>
@@ -431,7 +431,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
         </button>
         <span class="offer-badge">R100 off</span>
         <h3 id="subscribe-offer-title">Save R100 on your first subscribed order</h3>
-        <p class="mb-0">Join the CandyBird mailing list and get R100 off your order over R500.</p>
+        <p class="mb-0">Join the Sir Francis mailing list for product updates, pricelists and special offers.</p>
       </div>
       <div class="offer-body">
         <form id="subscribe-offer-form">
@@ -503,7 +503,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 .global-search-item:hover,
 .global-search-all:hover {
   background: #fff8ed;
-  color: #6b0099;
+  color: #2f2f31;
 }
 .global-search-item img {
   width: 52px;
@@ -1177,7 +1177,7 @@ $(document).ready(function () {
         // AJAX Request using jQuery
         $.ajax({
             type: 'POST',
-            url: ' https://www.candybird.co.za/subscribe.inc.php',
+            url: '<?=$home_directory?>subscribe.inc.php',
             data: { email: email },
             dataType: 'json',
             success: function (response) {

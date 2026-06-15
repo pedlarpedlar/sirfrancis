@@ -223,7 +223,7 @@ $categories = buildSheetMenuCategories();
 ?>
 
 <li>
-    <a href="#"><span class="menu-text">Nuts & Things</span></a>
+    <a href="#"><span class="menu-text">Products</span></a>
     <?php echo generateMenu($categories); // Generate and display the menu ?>
 </li>
         <li>
@@ -237,9 +237,9 @@ $categories = buildSheetMenuCategories();
                 <li><a class="navmenu-click-mobile" href="policies">Policies</a></li>
             </ul>
         </li>
-        <li><a class="navmenu-click-mobile" href="recipes">Recipe Corner</a></li>
+        <li><a class="navmenu-click-mobile" href="recipes">Knowledge Centre</a></li>
         <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
-        <li><a class="navmenu-click-mobile" href="about">About CandyBird</a></li>
+        <li><a class="navmenu-click-mobile" href="about">About Sir Francis</a></li>
         <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
         <li><a class="navmenu-click-mobile" href="resellers">For Resellers</a></li>
         <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
@@ -248,10 +248,10 @@ $categories = buildSheetMenuCategories();
     <div class="offcanvas-social py-30">
       <ul>
         <li>
-          <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" aria-label="CandyBird on Facebook"><i class="icon-social-facebook"></i></a>
+          <a class="social-link-click" href="https://www.facebook.com/fishgelatine" aria-label="Sir Francis on Facebook"><i class="icon-social-facebook"></i></a>
         </li>
         <li>
-          <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" aria-label="CandyBird on Instagram"><i class="icon-social-instagram"></i></a>
+          <a class="social-link-click" href="https://www.instagram.com/fishgelatine" aria-label="Sir Francis on Instagram"><i class="icon-social-instagram"></i></a>
         </li>
       </ul>
     </div>
@@ -418,12 +418,12 @@ foreach ($offCanvasCartItems as $item) {
             <div class="social-network2">
               <ul class="d-flex">
                 <li>
-                  <a href="https://www.facebook.com/candybirdnuts" target="_blank" aria-label="CandyBird on Facebook"
+                  <a href="https://www.facebook.com/fishgelatine" target="_blank" aria-label="Sir Francis on Facebook"
                     ><span class="icon-social-facebook"></span
                   ></a>
                 </li>
                 <li class="mr-0">
-                  <a href="https://www.instagram.com/candybirdnuts" target="_blank" aria-label="CandyBird on Instagram"
+                  <a href="https://www.instagram.com/fishgelatine" target="_blank" aria-label="Sir Francis on Instagram"
                     ><span class="icon-social-instagram"></span
                   ></a>
                 </li>
@@ -477,7 +477,7 @@ foreach ($offCanvasCartItems as $item) {
         <div class="col-6 col-lg-2 col-xl-2">
           <div class="logo">
             <a href="./"
-              ><img src="<?=$home_directory?>assets/img/logo/logo.png" alt="CandyBird" width="4400" height="669"
+              ><img src="<?=$home_directory?>assets/img/logo/logo.png" alt="Sir Francis" width="4400" height="669"
             /></a>
           </div>
         </div>
@@ -488,7 +488,7 @@ foreach ($offCanvasCartItems as $item) {
 
             // Generate the "More" menu
             $more_menu_html = '<li>';
-            $more_menu_html .= '<a href="#">Nuts & Things <i class="ion-ios-arrow-down"></i></a>';
+            $more_menu_html .= '<a href="#">Products <i class="ion-ios-arrow-down"></i></a>';
             $more_menu_html .= generateMenuMain(NULL, $conn);
             $more_menu_html .= '</li>';
 

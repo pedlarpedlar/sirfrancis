@@ -12,11 +12,11 @@ $delayIncrement = 0.1;
 $slides = [
     [
         'bg_img' => 'bg-img1',
-        'title' => 'Ensuring Quality',
-        'subtitle' => 'Specialising in over 150 types of nuts, dried fruit & healthy mixes',
-        'description' => 'Our goal is simple: to make healthy snacking convenient and enjoyable for all. With a focus on quality and integrity, we invite you to join us on a journey to better health and wellness, one bite at a time.',
+        'title' => 'Collagen & Gelatine',
+        'subtitle' => 'Wholesaler',
+        'description' => 'Established in 2014, Sir Francis has been the foremost provider of premium fish gelatine, marine collagen, peptides and tripeptides in South Africa.',
         'button_text' => 'Read More',
-        'button_link' => 'https://www.candybird.co.za/about',
+        'button_link' => 'about',
         'animation' => [
             'text' => 'fadeInLeft',
             'title' => 'fadeInLeft',
@@ -31,11 +31,11 @@ $slides = [
     ],
     [
         'bg_img' => 'bg-img2',
-        'title' => 'Classy Gifting & Personalisation',
-        'subtitle' => 'Classy, Quality, Perfection',
-        'description' => 'We believe every gift should be as unique as the person receiving it. Our gifting and personalization service allows you to create memorable presents that stand out.',
-        'button_text' => 'Browse Gifting Range',
-        'button_link' => 'products?category=Gifting',
+        'title' => 'Create Your Own Brand',
+        'subtitle' => 'Private Labelling',
+        'description' => 'Whether it is collagen peptides, sea moss, gelatine, cosmetic tripeptides or a custom formulation, we help bring your supplement brand to life.',
+        'button_text' => 'Book a Consult',
+        'button_link' => 'private_labelling',
         'animation' => [
             'text' => 'fadeInRight',
             'title' => 'fadeInRight',
@@ -50,10 +50,10 @@ $slides = [
     ],
     [
         'bg_img' => 'bg-img3',
-        'title' => 'Free Shipping',
-        'subtitle' => 'Enjoy free shipping',
-        'description' => 'Enjoy free shipping on all orders over R'.$free_shipping_amount.'. Get your neighbours to order together and save on delivery costs!',
-        'button_text' => 'Shop Now',
+        'title' => 'Open to Retail',
+        'subtitle' => 'Shop Online',
+        'description' => 'Purchase our retail range direct to the public at wholesale prices, with delivery options across South Africa.',
+        'button_text' => 'Online Store',
         'button_link' => 'products',
         'animation' => [
             'text' => 'fadeInDown',
@@ -69,11 +69,11 @@ $slides = [
     ],
     [
         'bg_img' => 'bg-img4',
-        'title' => 'Bulk Orders',
-        'subtitle' => 'Special Reseller Packs available',
-        'description' => 'Order in bulk and get special discounts. Ideal for businesses, events, or large gatherings.',
-        'button_text' => 'View Reseller Options',
-        'button_link' => 'products?category=For%20Resellers',
+        'title' => 'Local Stockist',
+        'subtitle' => 'Become a Stockist',
+        'description' => 'Apply to become a local stockist and build your income with a premium Sir Francis product range.',
+        'button_text' => 'Boost Your Income',
+        'button_link' => 'resellers',
         'animation' => [
             'text' => 'fadeInUp',
             'title' => 'fadeInUp',
@@ -90,9 +90,9 @@ $slides = [
         'bg_img' => 'bg-img5',
         'title' => 'Wholesale',
         'subtitle' => 'Partner with Us',
-        'description' => 'Become a wholesaler and enjoy great rates on our full range of products. Partner with us for mutual success.',
+        'description' => 'Buy bulk marine collagen, fish gelatine and wellness ingredients for your business, clinic, brand or distribution network.',
         'button_text' => 'Join Us',
-        'button_link' => 'https://www.candybird.co.za/wholesale-pricelist',
+        'button_link' => 'wholesale-pricelist',
         'animation' => [
             'text' => 'fadeInLeft',
             'title' => 'fadeInLeft',
@@ -108,10 +108,10 @@ $slides = [
     [
         'bg_img' => 'bg-img6',
         'title' => 'Global Services',
-        'subtitle' => 'Worldwide Delivery',
-        'description' => 'We offer global shipping to ensure our products reach you no matter where you are. Shipping is available right to your door with our international services.',
+        'subtitle' => 'Custom Supply',
+        'description' => 'Speak to us about bulk supply, formulation support and private-label solutions for local and international projects.',
         'button_text' => 'Explore More',
-        'button_link' => 'https://www.candybird.co.za/global-services',
+        'button_link' => 'global-services',
         'animation' => [
             'text' => 'fadeInRight',
             'title' => 'fadeInRight',
@@ -127,8 +127,8 @@ $slides = [
     [
         'bg_img' => 'bg-img8',
         'title' => 'Live Pricelist',
-        'subtitle' => 'Competitive pricing on Quality items',
-        'description' => 'Our pricelist is updated and live on the website accessible at any time for your convenience',
+        'subtitle' => 'Current pricing',
+        'description' => 'Our pricelist is updated and available online for quick bulk and retail reference.',
         'button_text' => 'View Pricelist',
         'button_link' => 'pricelist',
         'animation' => [
@@ -149,7 +149,7 @@ $slides = [
         'subtitle' => 'We Are Here to Help',
         'description' => 'Have any questions? Reach out to us and we’ll be happy to assist you with anything you need.',
         'button_text' => 'Get in Touch',
-        'button_link' => 'https://www.candybird.co.za/contact',
+        'button_link' => 'contact',
         'animation' => [
             'text' => 'fadeInRight',
             'title' => 'fadeInRight',
