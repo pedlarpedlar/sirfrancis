@@ -100,6 +100,10 @@ if (!function_exists('cbPricelistFiltersFromRequest')) {
             $maxPrice = isset($rangeParts[1]) && $rangeParts[1] !== '' ? max(0, (float) $rangeParts[1]) : null;
         }
         $limit = isset($source['limit']) ? (int) $source['limit'] : 0;
+        $groupMode = strtolower(trim((string) ($source['group_mode'] ?? 'category')));
+        if (!in_array($groupMode, ['category', 'flat'], true)) {
+            $groupMode = 'category';
+        }
         return [
             'q' => trim((string) ($source['q'] ?? '')),
             'categories' => cbPricelistNormalizeArrayParam($source['categories'] ?? []),
@@ -109,6 +113,7 @@ if (!function_exists('cbPricelistFiltersFromRequest')) {
             'price_range' => $priceRange,
             'sale' => $sale,
             'limit' => $limit > 0 ? min($limit, 1000) : 0,
+            'group_mode' => $groupMode,
         ];
     }
 }
@@ -223,6 +228,41 @@ if (!function_exists('cbPricelistManualSortValue')) {
     }
 }
 
+if (!function_exists('cbPricelistCompareProducts')) {
+    function cbPricelistCompareProducts($a, $b, $sort = 'name', $direction = 'asc') {
+        switch ($sort) {
+            case 'custom':
+                $compare = cbPricelistManualSortValue($a) <=> cbPricelistManualSortValue($b);
+                break;
+            case 'id':
+                $compare = strnatcasecmp((string) ($a['id'] ?? ''), (string) ($b['id'] ?? ''));
+                break;
+            case 'price':
+                $compare = cbPricelistPricing($a)['sale_price'] <=> cbPricelistPricing($b)['sale_price'];
+                break;
+            case 'sale':
+                $compare = (int) cbPricelistPricing($b)['is_special'] <=> (int) cbPricelistPricing($a)['is_special'];
+                break;
+            case 'size':
+                $compare = cbPricelistSortValue($a['size'] ?? '') <=> cbPricelistSortValue($b['size'] ?? '');
+                if ($compare === 0) {
+                    $compare = strnatcasecmp((string) ($a['size'] ?? ''), (string) ($b['size'] ?? ''));
+                }
+                break;
+            case 'name':
+            default:
+                $compare = strnatcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
+                break;
+        }
+
+        if ($compare === 0 && $sort !== 'name') {
+            $compare = strnatcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
+        }
+
+        return strtolower((string) $direction) === 'desc' ? -$compare : $compare;
+    }
+}
+
 if (!function_exists('cbPricelistProductGroups')) {
     function cbPricelistProductGroups($products, $sort = 'name', $direction = 'asc') {
         $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
@@ -329,6 +369,7 @@ if (!function_exists('cbPricelistProductsByCategory')) {
             'max_price' => null,
             'sale' => 'all',
             'limit' => 0,
+            'group_mode' => 'category',
         ], is_array($filters) ? $filters : []);
         $categoryOrder = function_exists('getCandybirdCategoryDisplayOrder') ? getCandybirdCategoryDisplayOrder() : [];
         $customCategoryOrder = [];
@@ -352,6 +393,16 @@ if (!function_exists('cbPricelistProductsByCategory')) {
         $products = array_values(array_filter($products, function($product) use ($filters) {
             return cbPricelistProductMatchesFilters($product, $filters);
         }));
+
+        if (($filters['group_mode'] ?? 'category') === 'flat') {
+            usort($products, function($a, $b) use ($sort, $direction) {
+                return cbPricelistCompareProducts($a, $b, $sort, $direction);
+            });
+            if ((int) ($filters['limit'] ?? 0) > 0) {
+                $products = array_slice($products, 0, (int) $filters['limit']);
+            }
+            return empty($products) ? [] : ['All Products' => $products];
+        }
 
         $productsByCategory = [];
         foreach ($products as $product) {
@@ -377,36 +428,7 @@ if (!function_exists('cbPricelistProductsByCategory')) {
 
         foreach ($productsByCategory as &$categoryProducts) {
             usort($categoryProducts, function($a, $b) use ($sort, $direction) {
-                switch ($sort) {
-                    case 'custom':
-                        $compare = cbPricelistManualSortValue($a) <=> cbPricelistManualSortValue($b);
-                        break;
-                    case 'id':
-                        $compare = strnatcasecmp((string) ($a['id'] ?? ''), (string) ($b['id'] ?? ''));
-                        break;
-                    case 'price':
-                        $compare = cbPricelistPricing($a)['sale_price'] <=> cbPricelistPricing($b)['sale_price'];
-                        break;
-                    case 'sale':
-                        $compare = (int) cbPricelistPricing($b)['is_special'] <=> (int) cbPricelistPricing($a)['is_special'];
-                        break;
-                    case 'size':
-                        $compare = cbPricelistSortValue($a['size'] ?? '') <=> cbPricelistSortValue($b['size'] ?? '');
-                        if ($compare === 0) {
-                            $compare = strnatcasecmp((string) ($a['size'] ?? ''), (string) ($b['size'] ?? ''));
-                        }
-                        break;
-                    case 'name':
-                    default:
-                        $compare = strnatcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
-                        break;
-                }
-
-                if ($compare === 0 && $sort !== 'name') {
-                    $compare = strnatcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
-                }
-
-                return $direction === 'desc' ? -$compare : $compare;
+                return cbPricelistCompareProducts($a, $b, $sort, $direction);
             });
         }
         unset($categoryProducts);

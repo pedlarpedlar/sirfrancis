@@ -379,6 +379,10 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
           <option value="asc" <?= $direction === 'asc' ? 'selected' : '' ?>>Low to high / A-Z</option>
           <option value="desc" <?= $direction === 'desc' ? 'selected' : '' ?>>High to low / Z-A</option>
         </select>
+        <select class="form-control" name="group_mode" style="max-width:220px;">
+          <option value="category" <?= ($filters['group_mode'] ?? 'category') === 'category' ? 'selected' : '' ?>>Group by category</option>
+          <option value="flat" <?= ($filters['group_mode'] ?? 'category') === 'flat' ? 'selected' : '' ?>>Ignore categories</option>
+        </select>
         <button type="submit" class="btn btn-primary"><i class="fas fa-filter mr-1"></i> Apply filters</button>
         <a href="pricelist" class="btn btn-light">Clear</a>
         <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp text</a>
