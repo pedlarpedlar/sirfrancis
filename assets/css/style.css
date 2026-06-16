@@ -103,7 +103,7 @@ html {
 }
 
 body {
-  font-family: "Hanken Grotesk", Arial, sans-serif;
+  font-family: "Raleway", Arial, sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.75;
@@ -122,7 +122,7 @@ body {
 }
 
 .table {
-  font-family: "Hanken Grotesk", Arial, sans-serif;
+  font-family: "Raleway", Arial, sans-serif;
 }
 
 @media screen and (max-width: 1199px) {
@@ -137,7 +137,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Hanken Grotesk", Arial, sans-serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -151,7 +151,7 @@ h6 {
 }
 
 .theme1 .main-menu > li a {
-  font-family: "Hanken Grotesk", Arial, sans-serif;
+  font-family: "Raleway", Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 200;
   font-size: 1.1em;
@@ -1448,7 +1448,7 @@ button.close:hover {
  button style 
  ****************************/
 .btn {
-  font-family: "Hanken Grotesk", Arial, sans-serif;
+  font-family: "Raleway", Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
@@ -3675,8 +3675,8 @@ body.offcanvas-open {
 }
 
 .slider-content .title {
-  font-family: "Hanken Grotesk", "Montserrat", Arial, sans-serif;
-  font-weight: 800;
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
   font-size: 58px;
   text-transform: capitalize;
   color: #ffffff;
@@ -3724,7 +3724,7 @@ body.offcanvas-open {
 }
 
 .slider-content .text, .slider-content-absolute .text {
-  font-family: "Hanken Grotesk", "Montserrat", Arial, sans-serif !important;
+  font-family: "Raleway", Arial, sans-serif !important;
   font-size: 18px;
   font-weight: 700;
   color: #CEBD88;
@@ -3739,7 +3739,7 @@ body.offcanvas-open {
 }
 
 .slider-content .text-secondary, .slider-content-absolute .text-secondary {
-  font-family: "Hanken Grotesk", "Montserrat", Arial, sans-serif !important;
+  font-family: "Pinyon Script", cursive !important;
   font-size: 28px;
   color: #ffffff !important;
   opacity: 0;

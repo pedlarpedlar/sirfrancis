@@ -153,7 +153,7 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
     <?php if (empty($skip_google_fonts)): ?>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Hanken+Grotesk:wght@400;600;700;800&family=Montserrat:wght@400;600;700;800&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <?php endif; ?>
 
 <!-- Google tag (gtag.js) -->

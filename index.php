@@ -20,21 +20,21 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 <style>
 
 .cinzel {
-  font-family: "Cinzel", serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
 
 .dancing-script {
-  font-family: "Dancing Script", cursive !important;
+  font-family: "Pinyon Script", cursive !important;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
 
 .montserrat {
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Raleway", Arial, sans-serif !important;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
@@ -90,7 +90,7 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 
 .homepage-seo-intro h1 {
   color: #28364B;
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(28px, 4vw, 46px);
   font-weight: 800;
   letter-spacing: 0;
@@ -248,6 +248,26 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       }
     }
 
+    .hero-crest-logo {
+      display: block;
+      filter: drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
+      height: auto;
+      margin: 0 auto 18px;
+      max-width: min(420px, 86vw);
+      width: 420px;
+    }
+
+    .slider-content .hero-crest-logo + .text {
+      margin-top: 4px;
+    }
+
+    @media (max-width: 767px) {
+      .hero-crest-logo {
+        margin-bottom: 12px;
+        max-width: min(300px, 88vw);
+      }
+    }
+
   </style>
 
 <?php
@@ -273,6 +293,7 @@ foreach ($slides as $index => $slide) {
     echo '    <div class="row align-items-center slider-height">';
     echo '      <div class="col-12 text-center">';
     echo '        <div class="slider-content">';
+    echo '          <img class="hero-crest-logo animated" src="assets/img/logo/sir-francis-crest.png" alt="Sir Francis" width="420" height="345" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="0.200">';
     echo '          <p class="text animated cinzel" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="' . $slide['delay_in_title'] . '">';
     echo '            ' . $slide['title'];
     echo '          </p>';

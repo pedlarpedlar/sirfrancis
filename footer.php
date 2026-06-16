@@ -43,7 +43,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
           <div class="footer-widget mx-w-400">
 <div class="footer-logo mb-25">
     <a href="./">
-      <img src="<?=$home_directory?>assets/img/logo/logo-gold.png" alt="Sir Francis" class="footer-brand-logo" width="260" height="68" />
+      <img src="<?=$home_directory?>assets/img/logo/sir-francis-crest.png" alt="Sir Francis" class="footer-brand-logo" width="300" height="246" />
     </a>
   </div>
 
@@ -172,7 +172,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
             Copyright &copy; <a href="./">Sir Francis</a>.
             All Rights Reserved
           </p>
-          <img src="<?=$home_directory?>assets/img/logo/logo-gold.png" alt="Sir Francis" width="150px" class="mt-2"/>
+          <img src="<?=$home_directory?>assets/img/logo/sir-francis-crest.png" alt="Sir Francis" width="150" height="123" class="mt-2 footer-copyright-logo"/>
         </div>
       </div>
     </div>
@@ -219,9 +219,15 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   .footer-brand-logo {
     display: block;
     height: auto;
-    max-width: min(260px, 100%);
+    max-width: min(300px, 100%);
     object-fit: contain;
-    width: 260px;
+    width: 300px;
+  }
+
+  .footer-copyright-logo {
+    display: block;
+    height: auto;
+    object-fit: contain;
   }
 
   .footer-link-groups {

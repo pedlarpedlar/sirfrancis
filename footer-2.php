@@ -35,7 +35,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
           <div class="footer-widget mx-w-400">
 <div class="footer-logo mb-25">
     <a href="https://www.fishgelatine.co.za/v2">
-      <img src="<?=$home_directory?>assets/img/footer-image1.png" alt="footer logo" width="200px" />
+      <img src="<?=$home_directory?>assets/img/logo/sir-francis-crest.png" alt="Sir Francis" class="footer-brand-logo" width="300" height="246" />
     </a>
   </div>
 
@@ -116,7 +116,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
             Copyright &copy; <a href="https://www.fishgelatine.co.za/v2">Sir Francis</a>.
             All Rights Reserved
           </p>
-          <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="img" width="150px" class="mt-2"/>
+          <img src="<?=$home_directory?>assets/img/logo/sir-francis-crest.png" alt="Sir Francis" width="150" height="123" class="mt-2 footer-copyright-logo"/>
         </div>
       </div>
     </div>
@@ -158,6 +158,20 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
 
   ul.custom li a i {
     color: #CEBD88 !important;
+  }
+
+  .footer-brand-logo {
+    display: block;
+    height: auto;
+    max-width: min(300px, 100%);
+    object-fit: contain;
+    width: 300px;
+  }
+
+  .footer-copyright-logo {
+    display: block;
+    height: auto;
+    object-fit: contain;
   }
 
   
