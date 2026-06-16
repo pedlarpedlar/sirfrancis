@@ -113,8 +113,8 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
 
 .homepage-seo-links a {
   background: #F1F0E8;
-  border: 1px solid #CEBD88;
-  border-radius: 6px;
+  border: 3px double #CEBD88;
+  border-radius: 0;
   color: #28364B;
   display: inline-flex;
   font-size: 14px;
@@ -492,7 +492,8 @@ foreach ($slides as $index => $slide) {
   .carousel-control-prev-icon,
   .carousel-control-next-icon {
     background-color: #28364B;
-    border-radius: 50%;
+    border: 3px double #CEBD88;
+    border-radius: 0;
     padding: 20px;
   }
 

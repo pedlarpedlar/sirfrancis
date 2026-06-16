@@ -28,7 +28,8 @@
 .admin-sf .btn-secondary,
 .admin-sf .btn-dark {
   background: var(--sf-navy) !important;
-  border-color: var(--sf-navy) !important;
+  border: 3px double var(--sf-gold) !important;
+  border-radius: 0 !important;
   color: var(--sf-white) !important;
 }
 
@@ -37,6 +38,7 @@
 .admin-sf .btn-dark:hover {
   background: var(--sf-gold) !important;
   border-color: var(--sf-gold) !important;
+  border-radius: 0 !important;
   color: var(--sf-navy) !important;
 }
 

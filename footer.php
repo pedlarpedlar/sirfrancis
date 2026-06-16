@@ -434,13 +434,13 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   .subscribe-offer-modal .offer-head { background: #28364B; color: #fff; padding: 28px 30px 22px; position: relative; }
   .subscribe-offer-modal .offer-head h3 { color: #CEBD88; font-size: 28px; line-height: 1.15; margin-bottom: 8px; }
   .subscribe-offer-modal .offer-head p { color: #F1F0E8; font-size: 15px; line-height: 1.55; max-width: 360px; }
-  .subscribe-offer-modal .offer-badge { background: #CEBD88; color: #28364B; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .subscribe-offer-modal .offer-badge { background: #CEBD88; border: 3px double #28364B; border-radius: 0; color: #28364B; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; margin-bottom: 12px; }
   .subscribe-offer-modal .close { position: absolute; right: 14px; top: 10px; opacity: .9; }
   .subscribe-offer-modal .offer-body { background: #fffaf2; padding: 26px 30px 30px; }
   .subscribe-offer-modal label { color: #28364B; font-weight: 800; }
-  .subscribe-offer-modal .form-control { background: #fff; border: 1px solid #dfd2c4; border-radius: 6px; min-height: 46px; padding: 10px 12px; }
+  .subscribe-offer-modal .form-control { background: #fff; border: 1px solid #dfd2c4; border-radius: 0; min-height: 46px; padding: 10px 12px; }
   .subscribe-offer-modal .offer-fineprint { color: #6d6270; font-size: 12px; line-height: 1.45; margin: 12px 0 0; }
-  .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #28364B; border-radius: 8px; padding: 16px; margin-top: 16px; display: none; }
+  .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #28364B; border-radius: 0; padding: 16px; margin-top: 16px; display: none; }
   .subscribe-offer-modal .coupon-code { color: #28364B; font-size: 25px; font-weight: 900; letter-spacing: .04em; }
 </style>
 <div class="modal fade subscribe-offer-modal" id="subscribe-offer-modal" tabindex="-1" role="dialog" aria-labelledby="subscribe-offer-title" aria-hidden="true">

@@ -1453,8 +1453,8 @@ button.close:hover {
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase !important;
-  border-radius: 100px;
-/*  border: 3px double white;*/
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .btn:focus {
@@ -1505,15 +1505,13 @@ button.close:hover {
 .btn-primary {
   color: #28364B !important;
   background: #CEBD88 !important;
-  border-color: #28364B !important;
-/*  border: 3px double #28364B;*/
+  border-color: #CEBD88 !important;
 }
 
 .btn-primary:hover {
   background: #28364B !important;
   color: #ffffff !important;
-  border-color: #28364B !important;
-/*  border: 3px double white !important;*/
+  border-color: #CEBD88 !important;
 }
 
 .btn-primary:focus {
@@ -1525,13 +1523,13 @@ button.close:hover {
 .btn-dark {
   color: #ffffff;
   background: #28364B;
+  border-color: #CEBD88;
 }
 
 .btn-dark:hover {
-  color: #ffffff;
+  color: #28364B;
   border-color: #CEBD88;
   background: #CEBD88;
-/*  border: 3px double white;*/
 }
 
 .btn-dark:focus {
@@ -1559,11 +1557,11 @@ button.close:hover {
 
 /* border radius in rounded class*/
 .rounded {
-  border-radius: 3rem !important;
+  border-radius: 0 !important;
 }
 
 .btn-rounded {
-  border-radius: 0 5px 5px 0;
+  border-radius: 0;
 }
 
 /* custom button styles */
@@ -1758,7 +1756,8 @@ button.close:hover {
   left: 15px;
   padding: 0px;
   line-height: 18px;
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .theme1 .cbdg1 {
@@ -2105,8 +2104,8 @@ button.close:hover {
   right: 0;
   width: 26px;
   height: 26px;
-  border: 0;
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
   background: #f3f0f8;
   color: #28364B;
   line-height: 26px;
@@ -2627,9 +2626,9 @@ body.offcanvas-open {
   line-height: 40px;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 0;
   text-align: center;
-  border: 2px solid transparent;
+  border: 3px double #CEBD88;
   z-index: 1;
 }
 
@@ -3524,15 +3523,16 @@ body.offcanvas-open {
 }
 
 .dots-style .slick-dots li button {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   text-indent: 2000px;
   font-size: 0px;
   display: block;
   margin: 0 5px;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .dots-style .slick-dots li button:hover {
@@ -3978,7 +3978,8 @@ breadcrumb-section END
   text-align: center;
   -webkit-transform: scale3d(0, 0, 0);
           transform: scale3d(0, 0, 0);
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .actions li .action span {
@@ -4116,7 +4117,8 @@ img.second-img {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .pro-btn-right {
@@ -4517,8 +4519,8 @@ img.second-img {
   background: #f6f6f6 !important;
   font-size: 18px;
   text-align: center;
-  border: 0 !important;
-  border-radius: 50% !important;
+  border: 3px double #CEBD88 !important;
+  border-radius: 0 !important;
 }
 
 .page-item .page-link i {
@@ -5291,7 +5293,8 @@ img.second-img {
   height: 40px;
   text-align: center;
   font-size: 15px;
-  border-radius: 100px;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .theme1 .social-network li a:hover {
@@ -5466,8 +5469,8 @@ img.second-img {
   height: 46px;
   bottom: 50px;
   right: 50px;
-  border: 1px solid #CEBD88;
-  border-radius: 50%;
+  border: 3px double #CEBD88;
+  border-radius: 0;
   color: #CEBD88;
   text-align: center;
   font-size: 20px;
@@ -5498,6 +5501,58 @@ img.second-img {
 
 #scrollUp i.fa-anchor {
   transform: rotate(180deg);
+}
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-dark,
+.btn-outline-primary,
+.news-letter-btn,
+.search-btn,
+.blog-search-btn,
+.shop-now-btn,
+.banner-btn,
+.check-out-btn,
+.cart-content-btn,
+.product-count.style .count-btn,
+.actions li .action,
+.actions a,
+.actions button,
+.pro-btn,
+.social-network li a,
+.social-network2 li a,
+.cart-block-links li a,
+.offcanvas .btn,
+.modal .btn,
+.btn-close,
+#scrollUp {
+  border: 3px double #CEBD88 !important;
+  border-radius: 0 !important;
+}
+
+.btn:hover,
+.btn:focus,
+.news-letter-btn:hover,
+.search-btn:hover,
+.blog-search-btn:hover,
+.shop-now-btn:hover,
+.banner-btn:hover,
+.check-out-btn:hover,
+.cart-content-btn:hover,
+.product-count.style .count-btn:hover,
+.actions li .action:hover,
+.actions a:hover,
+.actions button:hover,
+.pro-btn:hover,
+.social-network li a:hover,
+.social-network2 li a:hover,
+.cart-block-links li a:hover,
+.offcanvas .btn:hover,
+.modal .btn:hover,
+#scrollUp:hover {
+  border-color: #CEBD88 !important;
+  border-radius: 0 !important;
 }
 /******************************** 
     scrollUp style End
@@ -7374,7 +7429,7 @@ span.required {
 .theme1 li:hover > a,
 .blog-link.theme-color,
 a.theme-color {
-  color: #4b0f65 !important;
+  color: #CEBD88 !important;
 }
 
 .onsale {
@@ -7393,13 +7448,13 @@ a.theme-color {
 }
 
 .news-letter-btn {
-  background: #4b0f65;
+  background: #28364B;
   color: #fff;
   min-height: 48px;
 }
 
 #subscribe-offer-dismiss {
-  color: #4b0f65;
+  color: #28364B;
   font-weight: 800;
 }
 
@@ -7407,6 +7462,8 @@ a.theme-color {
 .actions button,
 .slick-arrow,
 .pro-bt {
+  border: 3px double #CEBD88 !important;
+  border-radius: 0 !important;
   min-height: 44px;
   min-width: 44px;
 }
@@ -7463,9 +7520,9 @@ a.theme-color {
   width: 40px;
   height: 40px;
   line-height: 40px;
-  border: 1px solid #252525;
+  border: 3px double #CEBD88;
   text-align: center;
-  border-radius: 100%;
+  border-radius: 0;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
 }
@@ -7565,7 +7622,8 @@ a.theme-color {
   outline: none;
   -webkit-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
-  border-radius: 30px;
+  border: 3px double #CEBD88;
+  border-radius: 0;
 }
 
 .contact-form .contact-form-style button:hover {
