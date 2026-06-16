@@ -6,6 +6,11 @@ if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
 }
 
 $configCandidates = [
+    '/home2/rukbanor/configs_sirfrancis/sirfrancis_config.php',
+    '/home2/rukbanor/configs_candybird/candybird_config.php',
+    '/home2/rukbanor/configs_Candybird/Candybird_config.php',
+    '/home2/rukbanor/configs/candybird_config.php',
+    '/home2/rukbanor/fishgelatine.co.za/configs/candybird_config.php',
     '/home/candybirdco/configs_candybird/candybird_config.php',
     __DIR__ . '/../configs/candybird_config.php',
 ];
@@ -29,7 +34,7 @@ if (empty($DB_servername)) {
 }
 
 if (empty($DB_username) || empty($DB_dbname)) {
-    error_log('Sir Francis admin DB credentials missing. Check /home/candybirdco/configs_candybird/candybird_config.php');
+    error_log('Sir Francis admin DB credentials missing. Checked /home2/rukbanor config paths and repo configs/candybird_config.php');
     die('Database configuration is missing. Please check the Sir Francis server configuration.');
 }
 
