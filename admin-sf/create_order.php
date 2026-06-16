@@ -115,7 +115,7 @@ include 'page_menues.php';
 
 <style>
     .create-order-shell { padding: 30px 0 60px; }
-    .create-order-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 22px; }
+    .create-order-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 22px; }
     .create-order-panel h1 { color: #28364B; }
     .form-help { color: #6d6270; font-size: 13px; }
 </style>

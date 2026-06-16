@@ -110,10 +110,10 @@ include 'page_menues.php';
 
 <style>
     .backup-shell { padding: 34px 0 60px; }
-    .backup-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
-    .backup-hero h1 { color: #CEBD88; margin-bottom: 6px; }
-    .backup-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; }
-    .backup-note { background: #fffaf2; border: 1px solid #eadfd2; border-radius: 8px; padding: 12px 14px; color: #5f5366; margin-bottom: 16px; }
+    .backup-hero { background: var(--sf-navy); color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .backup-hero h1 { color: var(--sf-gold); margin-bottom: 6px; }
+    .backup-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; }
+    .backup-note { background: #fffaf2; border: 1px solid var(--sf-border); border-radius: 8px; padding: 12px 14px; color: #5f5366; margin-bottom: 16px; }
     .backup-location { color: #6d6270; font-size: 12px; word-break: break-all; }
 </style>
 

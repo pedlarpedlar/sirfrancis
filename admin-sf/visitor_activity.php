@@ -371,21 +371,21 @@ $topAbandonHour = $abandonHourStats ? key($abandonHourStats) : 'No data';
 
 <style>
     .visitor-wrap { padding: 28px 0 50px; }
-    .visitor-hero { background: #2d1739; color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
-    .visitor-hero h1 { color: #CEBD88; font-size: 26px; margin: 0 0 6px; }
+    .visitor-hero { background: var(--sf-navy); color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
+    .visitor-hero h1 { color: var(--sf-gold); font-size: 26px; margin: 0 0 6px; }
     .visitor-hero p { color: #f7e9ff; margin: 0; }
-    .visitor-filters, .visitor-card, .insight-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; }
+    .visitor-filters, .visitor-card, .insight-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; }
     .visitor-filters { align-items: end; display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 16px; padding: 14px; }
     .visitor-filters label { color: #4b3d46; font-size: 12px; font-weight: 800; text-transform: uppercase; }
     .visitor-filters .form-control { border-radius: 6px; min-height: 42px; }
     .insight-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 16px; }
     .insight-card { padding: 14px; }
     .insight-card span { color: #746979; display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; }
-    .insight-card strong { color: #2d1739; display: block; font-size: 22px; margin-top: 4px; }
+    .insight-card strong { color: var(--sf-navy); display: block; font-size: 22px; margin-top: 4px; }
     .visitor-list { display: grid; gap: 12px; }
     .visitor-card { padding: 16px; }
     .visitor-top { align-items: flex-start; display: flex; gap: 12px; justify-content: space-between; }
-    .visitor-name { color: #2d1739; font-size: 17px; font-weight: 900; }
+    .visitor-name { color: var(--sf-navy); font-size: 17px; font-weight: 900; }
     .visitor-meta { color: #6d6270; font-size: 13px; margin-top: 3px; }
     .visitor-story { color: #2f2924; font-size: 15px; line-height: 1.6; margin: 12px 0; }
     .status-pill { border-radius: 999px; display: inline-flex; font-size: 12px; font-weight: 800; padding: 4px 9px; white-space: nowrap; }
@@ -394,7 +394,7 @@ $topAbandonHour = $abandonHourStats ? key($abandonHourStats) : 'No data';
     .status-pill.warning { background: #fff3dc; color: #9b5a00; }
     .visitor-events { border-top: 1px solid #f0ebe4; display: grid; gap: 7px; margin-top: 12px; padding-top: 12px; }
     .visitor-event { color: #5e5361; font-size: 13px; }
-    .visitor-event strong { color: #2d1739; }
+    .visitor-event strong { color: var(--sf-navy); }
     .visitor-orders { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .visitor-orders a { background: #f7f0fb; border-radius: 999px; color: #28364B; font-weight: 800; padding: 5px 10px; }
     @media (max-width: 991px) {

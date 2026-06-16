@@ -596,8 +596,7 @@ $.scrollUp({
     animationSpeed: 400,
     scrollTrigger: false,
     scrollTarget: false,
-    scrollText: '<img src="https://www.fishgelatine.co.za/v2/assets/img/arrow.svg" width="20px"/>',
-    // Using a Font Awesome anchor icon
+    scrollText: '<i class="fas fa-anchor" aria-hidden="true"></i>',
     scrollTitle: false,
     scrollImg: false,
     activeOverlay: false,

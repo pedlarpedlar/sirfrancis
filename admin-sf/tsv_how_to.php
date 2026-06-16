@@ -47,20 +47,20 @@ $steps = [
 
 <style>
     .tsv-help-wrap { padding: 28px 0 70px; }
-    .tsv-help-hero { background:#2d1739; border-radius:8px; color:#fff; margin-bottom:18px; padding:24px; }
-    .tsv-help-hero h1 { color:#CEBD88; font-size:30px; margin:0 0 8px; }
-    .tsv-help-hero p { color:#f8ecff; line-height:1.65; margin:0; max-width:920px; }
+    .tsv-help-hero { background:var(--sf-navy); border-radius:8px; color:#fff; margin-bottom:18px; padding:24px; }
+    .tsv-help-hero h1 { color:var(--sf-gold); font-size:30px; margin:0 0 8px; }
+    .tsv-help-hero p { color:rgba(255,255,255,.86); line-height:1.65; margin:0; max-width:920px; }
     .tsv-help-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
     .tsv-help-grid { display:grid; gap:16px; grid-template-columns:repeat(2, minmax(0, 1fr)); }
-    .tsv-help-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; box-shadow:0 12px 30px rgba(45,23,57,.07); overflow:hidden; padding:14px; }
-    .tsv-help-shot { background:#f7f1e8; border:1px solid #eadfd2; border-radius:7px; margin-bottom:16px; overflow:hidden; padding:10px; }
+    .tsv-help-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; box-shadow:0 12px 30px rgba(45,23,57,.07); overflow:hidden; padding:14px; }
+    .tsv-help-shot { background:#f7f1e8; border:1px solid var(--sf-border); border-radius:7px; margin-bottom:16px; overflow:hidden; padding:10px; }
     .tsv-help-card img { background:#fff; border-radius:5px; display:block; height:auto; width:100%; }
     .tsv-help-shot-placeholder { background:#f7f1e8; border:1px dashed #d8c7b7; border-radius:7px; color:#6d6270; padding:40px 18px; text-align:center; }
     .tsv-help-card-body { border-top:1px solid #f0e7de; padding:16px 4px 2px; }
-    .tsv-help-card-body span { background:#CEBD88; border-radius:999px; color:#2d1739; display:inline-flex; font-size:12px; font-weight:900; margin-bottom:10px; padding:5px 9px; }
+    .tsv-help-card-body span { background:var(--sf-gold); border-radius:999px; color:var(--sf-navy); display:inline-flex; font-size:12px; font-weight:900; margin-bottom:10px; padding:5px 9px; }
     .tsv-help-card-body h2 { color:#28364B; font-size:20px; margin:0 0 8px; }
     .tsv-help-card-body p { color:#5d514b; line-height:1.6; margin:0; }
-    .tsv-help-note { background:#fff7ed; border:1px solid #eadfd2; border-radius:8px; color:#4b3528; margin:18px 0; padding:18px; }
+    .tsv-help-note { background:#fff7ed; border:1px solid var(--sf-border); border-radius:8px; color:#4b3528; margin:18px 0; padding:18px; }
     @media (max-width: 767px) {
         .tsv-help-grid { grid-template-columns:1fr; }
     }

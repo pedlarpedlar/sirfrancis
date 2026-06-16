@@ -289,18 +289,18 @@ if (!function_exists('cbAdminSheetPage')) {
         <title><?= cbAdminSheetText($title) ?></title>
         <style>
             .sheet-page { padding: 30px 0 70px; }
-            .sheet-hero { background:#2d1739; color:#fff; border-radius:8px; padding:24px; margin-bottom:18px; }
-            .sheet-hero h1 { color:#CEBD88; font-size:30px; margin-bottom:8px; }
-            .sheet-hero p, .sheet-hero li { color:#f8ecff; }
-            .sheet-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:20px; margin-bottom:18px; }
+            .sheet-hero { background:var(--sf-navy); color:#fff; border-radius:8px; padding:24px; margin-bottom:18px; }
+            .sheet-hero h1 { color:var(--sf-gold); font-size:30px; margin-bottom:8px; }
+            .sheet-hero p, .sheet-hero li { color:rgba(255,255,255,.86); }
+            .sheet-panel { background:#fff; border:1px solid var(--sf-border); border-radius:8px; padding:20px; margin-bottom:18px; }
             .sheet-panel h2 { color:#28364B; font-size:21px; margin-bottom:12px; }
             .sheet-badge { display:inline-block; border-radius:999px; padding:5px 10px; font-size:12px; font-weight:800; }
             .sheet-good { background:#e3f8e8; color:#186f33; }
             .sheet-bad { background:#ffe4e4; color:#9f1d1d; }
             .header-list { display:flex; flex-wrap:wrap; gap:6px; padding:0; margin:8px 0 0; list-style:none; }
-            .header-list li { background:#f6f1ea; border:1px solid #eadfd2; border-radius:999px; padding:4px 8px; font-size:12px; }
+            .header-list li { background:#f6f1ea; border:1px solid var(--sf-border); border-radius:999px; padding:4px 8px; font-size:12px; }
             .sheet-actions { display:flex; flex-wrap:wrap; gap:10px; }
-            .sheet-help-link { color:#CEBD88; font-weight:900; text-decoration:underline; }
+            .sheet-help-link { color:var(--sf-gold); font-weight:900; text-decoration:underline; }
         </style>
         <div class="container sheet-page">
             <div class="sheet-hero">

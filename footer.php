@@ -43,7 +43,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
           <div class="footer-widget mx-w-400">
 <div class="footer-logo mb-25">
     <a href="./">
-      <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="Sir Francis" class="footer-brand-logo" width="260" height="68" />
+      <img src="<?=$home_directory?>assets/img/logo/logo-gold.png" alt="Sir Francis" class="footer-brand-logo" width="260" height="68" />
     </a>
   </div>
 
@@ -115,7 +115,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
             
             <div class="mb-100">
                 <h2 class="">Contact Us</h2>
-                <img src="<?=$home_directory?>assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async" class="mt-2 mb-5">
+                <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               
                 <ul class="mt-2 custom">
                   <li><a href="contact"><i class="fas fa-envelope mr-2"></i> <?=$website_email?></a></li>
@@ -131,7 +131,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
             <div style="width:300px">
               <h2 >Subscribe</h2>
               <p>Enter your email below to never miss out on our flash sales & special coupons just for you.</p>
-                <img src="<?=$home_directory?>assets/img/break.svg" alt="wave" class="mt-2 mb-5">
+                <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               <div class="nletter-form mt-20">
                 <form
                   class="form-inline position-relative"
@@ -172,7 +172,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
             Copyright &copy; <a href="./">Sir Francis</a>.
             All Rights Reserved
           </p>
-          <img src="<?=$home_directory?>assets/img/logo/logo.png" alt="img" width="150px" class="mt-2"/>
+          <img src="<?=$home_directory?>assets/img/logo/logo-gold.png" alt="Sir Francis" width="150px" class="mt-2"/>
         </div>
       </div>
     </div>
@@ -417,14 +417,14 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 <?php if (!empty($showSubscribeOffer) && empty($_SESSION['user_id'])): ?>
 <style>
   .subscribe-offer-modal .modal-dialog { max-width: 460px; }
-  .subscribe-offer-modal .modal-content { border: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 22px 55px rgba(45, 23, 57, .28); }
-  .subscribe-offer-modal .offer-head { background: #2d1739; color: #fff; padding: 28px 30px 22px; position: relative; }
+  .subscribe-offer-modal .modal-content { border: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 22px 55px rgba(40, 54, 75, .28); }
+  .subscribe-offer-modal .offer-head { background: #28364B; color: #fff; padding: 28px 30px 22px; position: relative; }
   .subscribe-offer-modal .offer-head h3 { color: #CEBD88; font-size: 28px; line-height: 1.15; margin-bottom: 8px; }
-  .subscribe-offer-modal .offer-head p { color: #f8ecff; font-size: 15px; line-height: 1.55; max-width: 360px; }
-  .subscribe-offer-modal .offer-badge { background: #CEBD88; color: #2d1739; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
+  .subscribe-offer-modal .offer-head p { color: #F1F0E8; font-size: 15px; line-height: 1.55; max-width: 360px; }
+  .subscribe-offer-modal .offer-badge { background: #CEBD88; color: #28364B; display: inline-block; font-weight: 900; letter-spacing: .02em; padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
   .subscribe-offer-modal .close { position: absolute; right: 14px; top: 10px; opacity: .9; }
   .subscribe-offer-modal .offer-body { background: #fffaf2; padding: 26px 30px 30px; }
-  .subscribe-offer-modal label { color: #2d1739; font-weight: 800; }
+  .subscribe-offer-modal label { color: #28364B; font-weight: 800; }
   .subscribe-offer-modal .form-control { background: #fff; border: 1px solid #dfd2c4; border-radius: 6px; min-height: 46px; padding: 10px 12px; }
   .subscribe-offer-modal .offer-fineprint { color: #6d6270; font-size: 12px; line-height: 1.45; margin: 12px 0 0; }
   .subscribe-offer-modal .coupon-result { background: #fff; border: 1px dashed #28364B; border-radius: 8px; padding: 16px; margin-top: 16px; display: none; }
@@ -1101,19 +1101,19 @@ $(document).ready(function () {
       if (!$modal.length || !window.localStorage || !window.sessionStorage) return;
 
       var now = Date.now();
-      var dismissedUntil = parseInt(localStorage.getItem('cb_subscribe_offer_dismissed_until') || '0', 10);
-      var subscribedUntil = parseInt(localStorage.getItem('cb_subscribe_offer_subscribed_until') || '0', 10);
-      var seenThisSession = sessionStorage.getItem('cb_subscribe_offer_seen') === '1';
+      var dismissedUntil = parseInt(localStorage.getItem('sf_subscribe_offer_dismissed_until') || '0', 10);
+      var subscribedUntil = parseInt(localStorage.getItem('sf_subscribe_offer_subscribed_until') || '0', 10);
+      var seenThisSession = sessionStorage.getItem('sf_subscribe_offer_seen') === '1';
 
       if (seenThisSession || dismissedUntil > now || subscribedUntil > now) return;
 
       setTimeout(function(){
-        sessionStorage.setItem('cb_subscribe_offer_seen', '1');
+        sessionStorage.setItem('sf_subscribe_offer_seen', '1');
         $modal.modal('show');
       }, 4500);
 
       function dismissForDays(days) {
-        localStorage.setItem('cb_subscribe_offer_dismissed_until', String(now + (days * 24 * 60 * 60 * 1000)));
+        localStorage.setItem('sf_subscribe_offer_dismissed_until', String(now + (days * 24 * 60 * 60 * 1000)));
       }
 
       $('#subscribe-offer-dismiss').on('click', function(){
@@ -1122,7 +1122,7 @@ $(document).ready(function () {
       });
 
       $modal.on('hidden.bs.modal', function(){
-        if (!localStorage.getItem('cb_subscribe_offer_subscribed_until')) {
+        if (!localStorage.getItem('sf_subscribe_offer_subscribed_until')) {
           dismissForDays(7);
         }
       });
@@ -1144,7 +1144,7 @@ $(document).ready(function () {
             }
 
             if (response.success) {
-              localStorage.setItem('cb_subscribe_offer_subscribed_until', String(Date.now() + (180 * 24 * 60 * 60 * 1000)));
+              localStorage.setItem('sf_subscribe_offer_subscribed_until', String(Date.now() + (180 * 24 * 60 * 60 * 1000)));
               $('#subscribe-offer-message').text(response.coupon_message || response.message);
               $('#subscribe-offer-code').text(response.coupon_code || '');
               $('#subscribe-offer-copy').toggle(!!response.coupon_code);

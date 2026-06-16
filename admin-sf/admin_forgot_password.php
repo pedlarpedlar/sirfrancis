@@ -58,12 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Password Reset</title>
 </head>
-<body>
+<body class="admin-sf">
 <?php include 'header.php'; include 'page_menues.php'; ?>
 
 <style>
-    .admin-reset-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; box-shadow:0 12px 28px rgba(44,41,38,.08); margin:35px auto; max-width:440px; padding:28px; }
-    .admin-reset-card h2 { color:#2d1739; font-size:24px; margin-bottom:10px; }
+    .admin-reset-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; box-shadow:0 12px 28px rgba(44,41,38,.08); margin:35px auto; max-width:440px; padding:28px; }
+    .admin-reset-card h2 { color:var(--sf-navy); font-size:24px; margin-bottom:10px; }
     .admin-reset-alert { border-radius:6px; margin-bottom:16px; padding:10px 12px; }
     .admin-reset-alert.error { background:#fff0f0; color:#9b111e; }
     .admin-reset-alert.success { background:#eef9f0; color:#176b30; }

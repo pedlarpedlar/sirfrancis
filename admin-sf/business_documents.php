@@ -122,13 +122,13 @@ include 'page_menues.php';
 <title>Business Documents - Sir Francis Admin</title>
 
 <style>
-    .ops-hero { background:#2d1739; border-radius:8px; color:#fff; padding:22px; margin-bottom:18px; }
-    .ops-hero h1 { color:#CEBD88; font-size:28px; margin:0 0 6px; }
-    .ops-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:18px; margin-bottom:18px; }
+    .ops-hero { background:var(--sf-navy); border-radius:8px; color:#fff; padding:22px; margin-bottom:18px; }
+    .ops-hero h1 { color:var(--sf-gold); font-size:28px; margin:0 0 6px; }
+    .ops-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; padding:18px; margin-bottom:18px; }
     .ops-card h2 { color:#28364B; font-size:20px; margin-bottom:12px; }
     .ops-category-pills { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
-    .ops-category-pills a { border:1px solid #eadfd2; border-radius:999px; color:#2d1739; font-weight:800; padding:7px 12px; text-decoration:none; }
-    .ops-category-pills a.active { background:#2d1739; color:#fff; }
+    .ops-category-pills a { border:1px solid var(--sf-border); border-radius:999px; color:var(--sf-navy); font-weight:800; padding:7px 12px; text-decoration:none; }
+    .ops-category-pills a.active { background:var(--sf-navy); color:#fff; }
     .doc-grid { display:grid; gap:14px; grid-template-columns:repeat(3, minmax(0, 1fr)); }
     .doc-card { border:1px solid #eee0d2; border-radius:8px; padding:14px; }
     .doc-card h3 { color:#251810; font-size:16px; margin-bottom:5px; }

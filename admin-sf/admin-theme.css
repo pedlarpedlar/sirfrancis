@@ -1,0 +1,51 @@
+:root {
+  --sf-navy: #28364B;
+  --sf-navy-deep: #172235;
+  --sf-gold: #CEBD88;
+  --sf-gold-soft: #E7D8A6;
+  --sf-cream: #F1F0E8;
+  --sf-white: #ffffff;
+  --sf-ink: #243043;
+  --sf-muted: #6b7280;
+  --sf-border: #d8d2c4;
+}
+
+.admin-sf {
+  background: var(--sf-cream);
+  color: var(--sf-ink);
+}
+
+.admin-sf a {
+  color: var(--sf-navy);
+}
+
+.admin-sf a:hover,
+.admin-sf a:focus {
+  color: var(--sf-gold);
+}
+
+.admin-sf .btn-primary,
+.admin-sf .btn-secondary,
+.admin-sf .btn-dark {
+  background: var(--sf-navy) !important;
+  border-color: var(--sf-navy) !important;
+  color: var(--sf-white) !important;
+}
+
+.admin-sf .btn-primary:hover,
+.admin-sf .btn-secondary:hover,
+.admin-sf .btn-dark:hover {
+  background: var(--sf-gold) !important;
+  border-color: var(--sf-gold) !important;
+  color: var(--sf-navy) !important;
+}
+
+.admin-sf .text-primary,
+.admin-sf .theme-color {
+  color: var(--sf-gold) !important;
+}
+
+.admin-sf .bg-primary,
+.admin-sf .theme-bg {
+  background: var(--sf-navy) !important;
+}

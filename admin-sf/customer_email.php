@@ -96,7 +96,7 @@ include 'page_menues.php';
 
 <style>
     .customer-email-shell { padding: 28px 0 60px; }
-    .customer-email-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:20px; }
+    .customer-email-panel { background:#fff; border:1px solid var(--sf-border); border-radius:8px; padding:20px; }
     .customer-email-panel h1 { color:#28364B; }
     .customer-email-help { color:#6d6270; font-size:13px; }
     .preview-frame { background:#f5f2ea; border:1px solid #e0d7cc; min-height:420px; overflow:auto; padding:14px; }

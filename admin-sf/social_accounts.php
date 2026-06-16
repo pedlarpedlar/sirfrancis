@@ -125,14 +125,14 @@ include 'page_menues.php';
 
 <style>
   .ops-wrap { padding: 28px 0 70px; }
-  .ops-hero { background:#2d1739; color:#fff; border-radius:8px; padding:22px; margin-bottom:16px; }
-  .ops-hero h1 { color:#CEBD88; font-size:28px; margin:0 0 6px; }
-  .ops-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:18px; height:auto !important; min-height:0; overflow:visible; }
+  .ops-hero { background:var(--sf-navy); color:#fff; border-radius:8px; padding:22px; margin-bottom:16px; }
+  .ops-hero h1 { color:var(--sf-gold); font-size:28px; margin:0 0 6px; }
+  .ops-panel { background:#fff; border:1px solid var(--sf-border); border-radius:8px; padding:18px; height:auto !important; min-height:0; overflow:visible; }
   .ops-panel h2, .ops-panel h3 { color:#28364B; }
   .field-help { color:#6d6270; font-size:12px; margin-top:4px; }
   .ops-table th { background:#f0e8f4; color:#4b185f; font-size:12px; text-transform:uppercase; white-space:nowrap; }
   .ops-table td { vertical-align:top; }
-  .password-chip { background:#fbfaf7; border:1px solid #eadfd2; border-radius:6px; display:inline-block; font-family:monospace; padding:4px 7px; }
+  .password-chip { background:#fbfaf7; border:1px solid var(--sf-border); border-radius:6px; display:inline-block; font-family:monospace; padding:4px 7px; }
   .button-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
   .social-admin-grid { align-items:start; display:grid; gap:18px; grid-template-columns:minmax(320px, 460px) minmax(0, 1fr); }
   .social-admin-side { align-content:start; display:grid; gap:18px; min-width:0; }

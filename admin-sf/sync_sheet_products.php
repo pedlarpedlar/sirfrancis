@@ -58,10 +58,10 @@ function candybirdSendSheetSyncAdminEmail($summary, $sourceLabel) {
     $body = '<div style="font-family:Arial,sans-serif;color:#2c2926;line-height:1.55;">'
         . '<h2 style="margin:0 0 12px;color:#28364B;">Sir Francis Sheet Product Sync</h2>'
         . '<p>The product sheet sync finished with status: <strong>' . htmlspecialchars($statusText, ENT_QUOTES, 'UTF-8') . '</strong>.</p>'
-        . '<table cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:1px solid #eadfd2;width:100%;max-width:680px;">';
+        . '<table cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:1px solid #d8d2c4;width:100%;max-width:680px;">';
 
     foreach ($rows as $label => $value) {
-        $body .= '<tr><th align="left" style="border:1px solid #eadfd2;background:#fff7ed;">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</th><td style="border:1px solid #eadfd2;">' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '</td></tr>';
+        $body .= '<tr><th align="left" style="border:1px solid #d8d2c4;background:#fff7ed;">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</th><td style="border:1px solid #d8d2c4;">' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '</td></tr>';
     }
     $body .= '</table>';
 
@@ -164,11 +164,11 @@ function candybirdSendHighDiscountAlertEmail($alerts, $sourceLabel) {
     $rows = '';
     foreach ($alerts as $alert) {
         $rows .= '<tr>'
-            . '<td style="border:1px solid #eadfd2;padding:8px;">' . htmlspecialchars((string) $alert['id'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td style="border:1px solid #eadfd2;padding:8px;"><a href="https://www.fishgelatine.co.za/v2/product?id=' . urlencode((string) $alert['id']) . '">' . htmlspecialchars((string) $alert['title'], ENT_QUOTES, 'UTF-8') . '</a></td>'
-            . '<td style="border:1px solid #eadfd2;padding:8px;">R' . number_format((float) $alert['normal_price'], 2) . '</td>'
-            . '<td style="border:1px solid #eadfd2;padding:8px;">R' . number_format((float) $alert['discounted_price'], 2) . '</td>'
-            . '<td style="border:1px solid #eadfd2;padding:8px;color:#b42318;font-weight:700;">' . number_format((float) $alert['discount_percent'], 2) . '%</td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;">' . htmlspecialchars((string) $alert['id'], ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;"><a href="https://www.fishgelatine.co.za/v2/product?id=' . urlencode((string) $alert['id']) . '">' . htmlspecialchars((string) $alert['title'], ENT_QUOTES, 'UTF-8') . '</a></td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;">R' . number_format((float) $alert['normal_price'], 2) . '</td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;">R' . number_format((float) $alert['discounted_price'], 2) . '</td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;color:#b42318;font-weight:700;">' . number_format((float) $alert['discount_percent'], 2) . '%</td>'
             . '</tr>';
     }
 
@@ -176,8 +176,8 @@ function candybirdSendHighDiscountAlertEmail($alerts, $sourceLabel) {
         . '<h2 style="margin:0 0 12px;color:#b42318;">Sir Francis High Discount Alert</h2>'
         . '<p>The product sheet sync found product discounts higher than 35%. This email is sent once per product and discount value so accidental specials can be caught quickly.</p>'
         . '<p><strong>Source:</strong> ' . htmlspecialchars($sourceLabel, ENT_QUOTES, 'UTF-8') . '</p>'
-        . '<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #eadfd2;width:100%;max-width:780px;">'
-        . '<thead><tr style="background:#fff7ed;"><th style="border:1px solid #eadfd2;padding:8px;text-align:left;">ID</th><th style="border:1px solid #eadfd2;padding:8px;text-align:left;">Product</th><th style="border:1px solid #eadfd2;padding:8px;text-align:left;">Normal</th><th style="border:1px solid #eadfd2;padding:8px;text-align:left;">Discounted</th><th style="border:1px solid #eadfd2;padding:8px;text-align:left;">Discount</th></tr></thead>'
+        . '<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #d8d2c4;width:100%;max-width:780px;">'
+        . '<thead><tr style="background:#fff7ed;"><th style="border:1px solid #d8d2c4;padding:8px;text-align:left;">ID</th><th style="border:1px solid #d8d2c4;padding:8px;text-align:left;">Product</th><th style="border:1px solid #d8d2c4;padding:8px;text-align:left;">Normal</th><th style="border:1px solid #d8d2c4;padding:8px;text-align:left;">Discounted</th><th style="border:1px solid #d8d2c4;padding:8px;text-align:left;">Discount</th></tr></thead>'
         . '<tbody>' . $rows . '</tbody></table>'
         . '<p style="color:#6d6270;font-size:13px;">If this discount is intentional, no action is needed. The same product and discount will not alert again unless the discount changes.</p>'
         . '</div>';

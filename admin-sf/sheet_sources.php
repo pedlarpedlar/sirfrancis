@@ -210,15 +210,15 @@ include __DIR__ . '/page_menues.php';
 
 <style>
     .sheet-shell { padding: 30px 0 60px; }
-    .sheet-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 24px; margin-bottom: 18px; }
-    .sheet-hero h1 { color: #CEBD88; margin-bottom: 6px; }
-    .sheet-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 20px; margin-bottom: 18px; }
+    .sheet-hero { background: var(--sf-navy); color: #fff; border-radius: 8px; padding: 24px; margin-bottom: 18px; }
+    .sheet-hero h1 { color: var(--sf-gold); margin-bottom: 6px; }
+    .sheet-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 20px; margin-bottom: 18px; }
     .sheet-panel h2 { color: #28364B; font-size: 21px; margin-bottom: 12px; }
     .sheet-badge { display: inline-block; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; }
     .sheet-good { background: #e3f8e8; color: #186f33; }
     .sheet-bad { background: #ffe4e4; color: #9f1d1d; }
     .header-list { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 8px 0 0; list-style: none; }
-    .header-list li { background: #f6f1ea; border: 1px solid #eadfd2; border-radius: 999px; padding: 4px 8px; font-size: 12px; }
+    .header-list li { background: #f6f1ea; border: 1px solid var(--sf-border); border-radius: 999px; padding: 4px 8px; font-size: 12px; }
     .missing-list li { color: #9f1d1d; font-weight: 700; }
     .sheet-actions { display: flex; flex-wrap: wrap; gap: 10px; }
     .sheet-source-note { color: #6d6270; font-size: 13px; }

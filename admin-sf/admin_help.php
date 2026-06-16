@@ -106,11 +106,11 @@ $adminHelp = cbAdminHelpContent($adminHelpPage);
     }
     .admin-help-toggle {
         align-items: center;
-        background: #CEBD88;
+        background: var(--sf-gold);
         border: 0;
         border-radius: 999px;
         box-shadow: 0 12px 28px rgba(45,23,57,.24);
-        color: #2d1739;
+        color: var(--sf-navy);
         display: flex;
         font-weight: 900;
         gap: 8px;
@@ -118,7 +118,7 @@ $adminHelp = cbAdminHelpContent($adminHelpPage);
     }
     .admin-help-panel {
         background: #fff;
-        border: 1px solid #eadfd2;
+        border: 1px solid var(--sf-border);
         border-radius: 8px;
         box-shadow: 0 18px 42px rgba(45,23,57,.2);
         bottom: 54px;

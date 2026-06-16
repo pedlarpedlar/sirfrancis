@@ -42,10 +42,10 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
  <div class="social-network">
     <ul class="d-flex justify-content-center"> <!-- Added justify-content-center class -->
       <li>
-        <a class="social-link-click" href="https://www.facebook.com/candybirdnuts" target="_blank"><span class="icon-social-facebook"></span></a>
+        <a class="social-link-click" href="https://www.facebook.com/marinecollagenSA" target="_blank" aria-label="Sir Francis on Facebook"><span class="icon-social-facebook"></span></a>
       </li>
       <li class="mr-0">
-        <a class="social-link-click" href="https://www.instagram.com/candybirdnuts" target="_blank"><span class="icon-social-instagram"></span></a>
+        <a class="social-link-click" href="https://www.instagram.com/fishgelatine" target="_blank" aria-label="Sir Francis on Instagram"><span class="icon-social-instagram"></span></a>
       </li>
     </ul>
   </div>
@@ -63,7 +63,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
             
             <div class="mb-100">
                 <h2 class="">Contact Us</h2>
-                <img src="<?=$home_directory?>assets/img/break.svg" alt="wave" class="mt-2 mb-5">
+                <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               
                 <ul class="mt-2 custom">
                   <li><a href="contact"><i class="fas fa-envelope mr-2"></i> <?=$website_email?></a></li>
@@ -76,7 +76,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
             <div style="width:300px">
               <h2 >Subscribe</h2>
               <p>Enter your email below to never miss out on our flash sales & special coupons just for you.</p>
-                <img src="<?=$home_directory?>assets/img/break.svg" alt="wave" class="mt-2 mb-5">
+                <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               <div class="nletter-form mt-20">
                 <form
                   class="form-inline position-relative"

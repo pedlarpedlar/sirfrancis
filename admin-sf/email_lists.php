@@ -134,8 +134,8 @@ include 'page_menues.php';
 
 <style>
     .email-list-wrap { padding: 28px 0 70px; }
-    .email-list-hero { background: #2d1739; color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
-    .email-list-hero h1 { color: #CEBD88; font-size: 28px; margin: 0 0 6px; }
+    .email-list-hero { background: var(--sf-navy); color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
+    .email-list-hero h1 { color: var(--sf-gold); font-size: 28px; margin: 0 0 6px; }
     .email-list-panel { background: #fff; border: 1px solid #e9e2d8; border-radius: 8px; padding: 18px; height: 100%; }
     .email-list-panel h2, .email-list-panel h3 { color: #28364B; }
     .field-help { color: #6d6570; font-size: 13px; margin-top: 4px; }

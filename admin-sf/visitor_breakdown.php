@@ -163,15 +163,15 @@ foreach ($visitorRows as $visitorRow) {
 
 <style>
     .visitor-breakdown-wrap { padding: 28px 0 50px; }
-    .visitor-breakdown-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
-    .visitor-breakdown-hero h1 { color: #CEBD88; font-size: 26px; margin: 0 0 6px; }
+    .visitor-breakdown-hero { background: var(--sf-navy); color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .visitor-breakdown-hero h1 { color: var(--sf-gold); font-size: 26px; margin: 0 0 6px; }
     .visitor-breakdown-hero p { color: #f7e9ff; margin: 0; }
-    .visitor-toolbar { align-items: center; background: #fff; border: 1px solid #eadfd2; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 16px; padding: 14px; }
+    .visitor-toolbar { align-items: center; background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 16px; padding: 14px; }
     .visitor-toolbar .btn { border-radius: 6px; }
     .visitor-location-filter { align-items: center; display: inline-flex; gap: 8px; margin: 0 0 0 8px; vertical-align: middle; }
     .visitor-location-filter input { margin: 0; }
-    .visitor-count-pill { background: #f7f1e8; border: 1px solid #eadfd2; border-radius: 999px; color: #4b3528; display: inline-flex; font-size: 12px; font-weight: 800; padding: 6px 10px; }
-    .visitor-table-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; }
+    .visitor-count-pill { background: #f7f1e8; border: 1px solid var(--sf-border); border-radius: 999px; color: #4b3528; display: inline-flex; font-size: 12px; font-weight: 800; padding: 6px 10px; }
+    .visitor-table-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 14px; }
     .visitor-status { border-radius: 999px; display: inline-flex; font-size: 11px; font-weight: 800; padding: 5px 8px; white-space: nowrap; }
     .visitor-status.human { background: #edf8ed; color: #24713a; }
     .visitor-status.warning { background: #fff3cd; color: #7a5700; }

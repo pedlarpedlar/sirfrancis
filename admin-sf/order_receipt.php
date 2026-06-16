@@ -313,7 +313,7 @@ $grandTotal = (float) ($order['grand_total_amount'] ?? 0);
         }
     </style>
 </head>
-<body>
+<body class="admin-sf">
     <div class="screen-actions">
         <button type="button" onclick="window.print()">Print Receipt</button>
         <form method="get" action="order_receipt">

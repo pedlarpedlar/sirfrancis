@@ -347,9 +347,9 @@ include 'page_menues.php';
 
 <style>
     .customers-shell { padding: 30px 0 70px; }
-    .customers-hero { background:#2d1739; color:#fff; border-radius:8px; padding:24px; margin-bottom:18px; }
-    .customers-hero h1 { color:#CEBD88; margin-bottom:6px; }
-    .customers-panel { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:18px; margin-bottom:18px; }
+    .customers-hero { background:var(--sf-navy); color:#fff; border-radius:8px; padding:24px; margin-bottom:18px; }
+    .customers-hero h1 { color:var(--sf-gold); margin-bottom:6px; }
+    .customers-panel { background:#fff; border:1px solid var(--sf-border); border-radius:8px; padding:18px; margin-bottom:18px; }
     .customers-panel h2 { color:#28364B; font-size:21px; margin-bottom:12px; }
     .customer-actions { display:flex; flex-wrap:wrap; gap:8px; }
     .customer-table th { color:#28364B; font-size:12px; text-transform:uppercase; white-space:nowrap; }

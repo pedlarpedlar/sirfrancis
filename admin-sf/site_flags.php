@@ -143,15 +143,15 @@ include __DIR__ . '/page_menues.php';
 
 <style>
     .site-flags-wrap { padding: 28px 0 60px; }
-    .site-flags-hero { background: #2d1739; border-radius: 8px; color: #fff; margin-bottom: 18px; padding: 22px; }
-    .site-flags-hero h1 { color: #CEBD88; font-size: 28px; margin: 0 0 8px; }
+    .site-flags-hero { background: var(--sf-navy); border-radius: 8px; color: #fff; margin-bottom: 18px; padding: 22px; }
+    .site-flags-hero h1 { color: var(--sf-gold); font-size: 28px; margin: 0 0 8px; }
     .site-flags-hero p { color: rgba(255,255,255,.84); margin: 0; max-width: 850px; }
     .site-flags-grid { display: grid; gap: 18px; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); }
-    .site-flags-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; box-shadow: 0 14px 34px rgba(71,44,22,.08); padding: 18px; }
+    .site-flags-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; box-shadow: 0 14px 34px rgba(71,44,22,.08); padding: 18px; }
     .site-flags-card h2 { color: #281b14; font-size: 20px; margin-bottom: 12px; }
     .site-flags-help { color: #6a5c52; font-size: 13px; line-height: 1.55; }
     .site-flags-placements { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .site-flags-placements label { align-items: center; background: #faf7f2; border: 1px solid #eadfd2; border-radius: 6px; display: flex; gap: 8px; margin: 0; padding: 9px; }
+    .site-flags-placements label { align-items: center; background: #faf7f2; border: 1px solid var(--sf-border); border-radius: 6px; display: flex; gap: 8px; margin: 0; padding: 9px; }
     .site-flag-status { border-radius: 999px; display: inline-flex; font-size: 12px; font-weight: 800; padding: 5px 8px; }
     .site-flag-status.active { background: #eaf8ed; color: #216a34; }
     .site-flag-status.paused { background: #f1edf5; color: #594264; }

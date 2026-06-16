@@ -3727,7 +3727,7 @@ body.offcanvas-open {
   font-family: "Hanken Grotesk", "Montserrat", Arial, sans-serif !important;
   font-size: 18px;
   font-weight: 700;
-  color: #fcb42f;
+  color: #CEBD88;
   opacity: 0;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -5427,6 +5427,30 @@ img.second-img {
   text-decoration: underline;
 }
 
+.sf-anchor-divider {
+  align-items: center;
+  display: inline-flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 10px auto 30px;
+  min-width: 120px;
+}
+
+.sf-anchor-divider::before,
+.sf-anchor-divider::after {
+  background: #CEBD88;
+  content: "";
+  display: block;
+  height: 1px;
+  width: 46px;
+}
+
+.sf-anchor-divider i {
+  color: #CEBD88;
+  font-size: 18px;
+  transform: rotate(180deg);
+}
+
 /******************************** 
     footer section End
   ********************************/
@@ -5437,27 +5461,28 @@ img.second-img {
     scrollUp style
  ********************************/
 #scrollUp {
-  background: #CEBD88;
-  width: 60px; /* Increased width to fit the text and icon */
-  height: 70px; /* Increased height to fit the text and icon */
+  background: #28364B;
+  width: 46px;
+  height: 46px;
   bottom: 50px;
   right: 50px;
-  border-radius: 100px; /* You can adjust the border-radius to control the corner roundness */
-  color: #ffffff;
+  border: 1px solid #CEBD88;
+  border-radius: 50%;
+  color: #CEBD88;
   text-align: center;
-  font-size: 14px; /* Adjust font size as needed */
+  font-size: 20px;
   font-weight: 500;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s, color 0.3s, box-shadow 0.3s; /* Smooth transition effect */
-  box-shadow: 0 0 5px rgba(206, 189, 136, 0.5); /* Subtle box shadow for a glow effect with #CEBD88 color */
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 20px rgba(23, 34, 53, 0.22);
 }
 
 #scrollUp:hover {
-  background: #28364B; /* Change background color on hover */
-  box-shadow: 0 0 10px rgba(206, 189, 136, 0.8); /* Enhance box shadow on hover with #CEBD88 color */
+  background: #CEBD88;
+  color: #28364B;
+  box-shadow: 0 10px 24px rgba(23, 34, 53, 0.28);
 }
 
 #scrollUp:hover .text {
@@ -5472,7 +5497,7 @@ img.second-img {
 }
 
 #scrollUp i.fa-anchor {
-  transform: rotate(180deg); /* Rotate the anchor icon by 180 degrees */
+  transform: rotate(180deg);
 }
 /******************************** 
     scrollUp style End

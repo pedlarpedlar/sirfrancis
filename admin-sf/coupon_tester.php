@@ -137,10 +137,10 @@ include 'page_menues.php';
 
 <style>
     .coupon-tester-wrap { padding: 28px 0 50px; }
-    .coupon-tester-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
-    .coupon-tester-hero h1 { color: #CEBD88; font-size: 26px; margin: 0 0 6px; }
+    .coupon-tester-hero { background: var(--sf-navy); color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .coupon-tester-hero h1 { color: var(--sf-gold); font-size: 26px; margin: 0 0 6px; }
     .coupon-tester-hero p { color: #f7e9ff; margin: 0; }
-    .coupon-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+    .coupon-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; margin-bottom: 16px; }
     .coupon-product-row { display: grid; grid-template-columns: minmax(0, 1fr) 90px 42px; gap: 8px; margin-bottom: 8px; }
     .coupon-result { border-radius: 8px; padding: 16px; }
     .coupon-result.success { background: #eefaf1; border: 1px solid #b7e3c1; color: #1d6f36; }

@@ -63,8 +63,8 @@ include 'page_menues.php';
 
 <style>
     .broadcast-history-wrap { padding: 28px 0 70px; }
-    .broadcast-hero { background: #2d1739; color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
-    .broadcast-hero h1 { color: #CEBD88; font-size: 28px; margin: 0 0 6px; }
+    .broadcast-hero { background: var(--sf-navy); color: #fff; padding: 22px; border-radius: 8px; margin-bottom: 16px; }
+    .broadcast-hero h1 { color: var(--sf-gold); font-size: 28px; margin: 0 0 6px; }
     .broadcast-card { background: #fff; border: 1px solid #e8dfd2; border-radius: 8px; overflow: hidden; }
     .broadcast-table { margin-bottom: 0; }
     .broadcast-table th { background: #fbf7ed; border-top: 0; color: #4d2459; font-size: 12px; text-transform: uppercase; white-space: nowrap; }

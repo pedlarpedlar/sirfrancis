@@ -277,7 +277,7 @@ foreach ($slides as $index => $slide) {
     echo '            ' . $slide['title'];
     echo '          </p>';
     echo '          <h2 class="title animated pb-3 align-items-center">';
-    echo '            <span class="animated d-block" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="0.900"><img src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async" style="margin: 10px auto;"></span>';
+    echo '            <span class="sf-anchor-divider animated" aria-hidden="true" data-animation-in="' . $slide['animation']['title'] . '" data-delay-in="0.900"><i class="fas fa-anchor"></i></span>';
     echo '          </h2>';
     echo '          <p class="text text-secondary animated dancing-script" data-animation-in="' . $slide['animation']['description'] . '" data-delay-in="' . $slide['delay_in_description'] . '">';
     echo '            ' . $slide['subtitle'];
@@ -409,7 +409,7 @@ foreach ($slides as $index => $slide) {
   <div class="container">
     <div class="section-title text-center mb-4">
       <h2 class="title mb-3">What Our Customers Say</h2>
-      <img class="pb-3" src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async">
+      <span class="sf-anchor-divider pb-3" aria-hidden="true"><i class="fas fa-anchor"></i></span>
       <p class="text">
         Real feedback from customers who have experienced Sir Francis quality.
       </p>
@@ -578,7 +578,7 @@ foreach ($slides as $index => $slide) {
           <div class="section-title text-center">
             <!-- <h3 class="title-fancy">What we do</h2> -->
             <h2 class="title mb-3">Our products</h2>
-            <img class="pb-3" src="assets/img/break.svg" alt="wave">
+            <span class="sf-anchor-divider pb-3" aria-hidden="true"><i class="fas fa-anchor"></i></span>
             <p class="text">
               Browse Sir Francis marine collagen, fish gelatine, peptides, tripeptides, sea moss and private labelling options.
             </p>
@@ -745,7 +745,7 @@ foreach ($slides as $index => $slide) {
       <div class="col-12">
           <div class="section-title text-center">
             <h2 class="title mb-3">From our latest recipes</h2>
-            <img class="pb-3" src="assets/img/break.svg" alt="" width="120" height="24" loading="lazy" decoding="async">
+            <span class="sf-anchor-divider pb-3" aria-hidden="true"><i class="fas fa-anchor"></i></span>
             <p class="text">
               Check out these scrumptious, delicious recipes!
             </p>

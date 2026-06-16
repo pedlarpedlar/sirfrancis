@@ -68,7 +68,7 @@ function cbAdminResetSendOtpEmail($email, $username, $otp) {
     $mail->Body = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#2c2926;">'
         . '<h2 style="color:#28364B;">Admin password reset</h2>'
         . '<p>Use this one-time code to reset the Sir Francis admin password for <strong>' . cbAdminResetText($username) . '</strong>.</p>'
-        . '<div style="font-size:30px;letter-spacing:8px;font-weight:700;background:#f6f1e8;border:1px solid #eadfd2;padding:18px;text-align:center;">' . cbAdminResetText($otp) . '</div>'
+        . '<div style="font-size:30px;letter-spacing:8px;font-weight:700;background:#f6f1e8;border:1px solid #d8d2c4;padding:18px;text-align:center;">' . cbAdminResetText($otp) . '</div>'
         . '<p>This code expires in 15 minutes. If you did not request this, please ignore this email and check admin access.</p>'
         . '</div>';
     $mail->AltBody = "Sir Francis admin password reset OTP for {$username}: {$otp}. This code expires in 15 minutes.";

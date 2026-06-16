@@ -76,6 +76,7 @@ if ($resultWebsiteSettings) {
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/plugins.css" />
     <!-- <link rel="stylesheet" href="<?=$home_directory?>assets/css/plugins/aos.css" /> -->
     <link rel="stylesheet" href="<?=$home_directory?>assets/css/style.css" />
+    <link rel="stylesheet" href="admin-theme.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->

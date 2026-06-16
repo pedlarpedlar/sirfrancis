@@ -1,6 +1,6 @@
 </head>
 
-<body>
+<body class="admin-sf">
 
 <?php
 $adminCurrentPage = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php');
@@ -14,9 +14,9 @@ function cbAdminMenuActive($page, $currentPage) {
 
 <style>
   .admin-sidebar {
-    background: #2d1739;
+    background: var(--sf-navy);
     bottom: 0;
-    box-shadow: 10px 0 30px rgba(45, 23, 57, .16);
+    box-shadow: 10px 0 30px rgba(23, 34, 53, .18);
     color: #fff;
     left: 0;
     overflow-y: auto;
@@ -27,7 +27,7 @@ function cbAdminMenuActive($page, $currentPage) {
     z-index: 1040;
   }
   .admin-sidebar-logo {
-    background: #fff;
+    background: var(--sf-white);
     border-radius: 8px;
     display: block;
     margin-bottom: 18px;
@@ -35,7 +35,7 @@ function cbAdminMenuActive($page, $currentPage) {
   }
   .admin-sidebar-logo img { display: block; max-width: 165px; width: 100%; }
   .admin-sidebar-title {
-    color: #CEBD88;
+    color: var(--sf-gold);
     font-size: 12px;
     font-weight: 800;
     letter-spacing: .08em;
@@ -52,7 +52,7 @@ function cbAdminMenuActive($page, $currentPage) {
   .admin-sidebar-nav summary {
     align-items: center;
     border-radius: 8px;
-    color: #f8ecff;
+    color: rgba(255,255,255,.9);
     cursor: pointer;
     display: flex;
     font-size: 14px;
@@ -65,8 +65,8 @@ function cbAdminMenuActive($page, $currentPage) {
   .admin-sidebar-nav a:hover,
   .admin-sidebar-nav summary:hover,
   .admin-sidebar-nav a.active {
-    background: rgba(252, 180, 47, .14);
-    color: #CEBD88;
+    background: rgba(206, 189, 136, .16);
+    color: var(--sf-gold);
   }
   .admin-sidebar-nav details {
     margin: 3px 0;
@@ -74,19 +74,19 @@ function cbAdminMenuActive($page, $currentPage) {
   .admin-sidebar-nav summary::-webkit-details-marker { display: none; }
   .admin-sidebar-nav summary::after {
     content: "+";
-    color: #CEBD88;
+    color: var(--sf-gold);
     font-weight: 900;
   }
   .admin-sidebar-nav details[open] > summary::after {
     content: "-";
   }
   .admin-sidebar-nav details ul {
-    border-left: 1px solid rgba(252, 180, 47, .25);
+    border-left: 1px solid rgba(206, 189, 136, .32);
     margin: 4px 0 8px 12px;
     padding-left: 8px;
   }
   .admin-sidebar-nav details ul a {
-    color: #eadff1;
+    color: rgba(255,255,255,.78);
     font-size: 13px;
     padding: 8px 10px;
   }

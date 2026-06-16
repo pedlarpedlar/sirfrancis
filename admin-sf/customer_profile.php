@@ -97,10 +97,10 @@ include 'page_menues.php';
 
 <style>
     .customer-profile-shell { padding: 28px 0 60px; }
-    .customer-profile-hero { background: #2d1739; color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
-    .customer-profile-hero h1 { color: #CEBD88; margin-bottom: 6px; }
+    .customer-profile-hero { background: var(--sf-navy); color: #fff; border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .customer-profile-hero h1 { color: var(--sf-gold); margin-bottom: 6px; }
     .customer-profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 18px; }
-    .customer-profile-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; }
+    .customer-profile-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; }
     .customer-profile-card h2 { color: #28364B; font-size: 20px; margin-bottom: 12px; }
     .customer-profile-line { border-bottom: 1px solid #f0e7de; padding: 8px 0; }
     .customer-profile-line span { color: #75675d; display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; }

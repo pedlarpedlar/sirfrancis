@@ -769,23 +769,23 @@ $dashboardCronJobs = [
 
 <style>
     .admin-dashboard { padding: 28px 0 50px; }
-    .dashboard-hero { background: #2d1739; color: #fff; padding: 24px; border-radius: 8px; margin-bottom: 22px; }
-    .dashboard-hero h1 { color: #CEBD88; margin-bottom: 6px; }
+    .dashboard-hero { background: var(--sf-navy); color: #fff; padding: 24px; border-radius: 8px; margin-bottom: 22px; }
+    .dashboard-hero h1 { color: var(--sf-gold); margin-bottom: 6px; }
     .dashboard-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
-    .dash-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; min-height: 132px; box-shadow: 0 10px 28px rgba(45, 23, 57, .06); }
+    .dash-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; min-height: 132px; box-shadow: 0 10px 28px rgba(45, 23, 57, .06); }
     a.dash-card { color: inherit; display: block; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
     a.dash-card:hover { box-shadow: 0 14px 34px rgba(45, 23, 57, .1); color: inherit; transform: translateY(-2px); }
     .dash-card .label { color: #6d6270; font-size: 13px; font-weight: 700; text-transform: uppercase; }
     .dash-card .value { color: #28364B; font-size: 28px; font-weight: 800; line-height: 1.25; margin-top: 8px; }
     .dash-card .hint { color: #6d6270; font-size: 13px; margin-top: 8px; }
-    .dashboard-period-bar { align-items: center; background: #fff; border: 1px solid #eadfd2; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 14px; padding: 12px 14px; }
-    .dashboard-period-title { color: #2d1739; font-size: 15px; font-weight: 900; }
+    .dashboard-period-bar { align-items: center; background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-bottom: 14px; padding: 12px 14px; }
+    .dashboard-period-title { color: var(--sf-navy); font-size: 15px; font-weight: 900; }
     .dashboard-period-tabs { display: flex; flex-wrap: wrap; gap: 7px; }
     .dashboard-period-tabs a { border: 1px solid #d9c7b4; border-radius: 999px; color: #28364B; font-size: 13px; font-weight: 800; padding: 6px 12px; text-decoration: none; }
     .dashboard-period-tabs a.active { background: #28364B; border-color: #28364B; color: #fff; }
     .dashboard-now-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
-    .dashboard-now-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); min-height: 150px; padding: 14px; }
-    .dashboard-now-card h2 { color: #2d1739; font-size: 16px; font-weight: 900; margin: 0 0 10px; }
+    .dashboard-now-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); min-height: 150px; padding: 14px; }
+    .dashboard-now-card h2 { color: var(--sf-navy); font-size: 16px; font-weight: 900; margin: 0 0 10px; }
     .dashboard-now-list { display: grid; gap: 9px; margin: 0; padding: 0; }
     .dashboard-now-list li { border-top: 1px solid #f1e8df; display: block; list-style: none; padding-top: 8px; }
     .dashboard-now-list li:first-child { border-top: 0; padding-top: 0; }
@@ -796,27 +796,27 @@ $dashboardCronJobs = [
     .dashboard-state-pill.active { background: #e8f7ee; color: #17643a; }
     .dashboard-state-pill.scheduled { background: #fff4d8; color: #815700; }
     .dashboard-state-pill.warning { background: #fdecec; color: #a62626; }
-    .dash-panel { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 18px; height: 100%; }
+    .dash-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; height: 100%; }
     .dash-panel h2 { color: #28364B; font-size: 20px; margin-bottom: 15px; }
     .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
     .quick-actions form { margin: 0; }
-    .link-card { border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; height: 100%; background: #fffaf2; }
+    .link-card { border: 1px solid var(--sf-border); border-radius: 8px; padding: 14px; height: 100%; background: #fffaf2; }
     .link-card h3 { color: #28364B; font-size: 16px; margin-bottom: 6px; }
     .link-card p { color: #6d6270; font-size: 13px; min-height: 40px; margin-bottom: 12px; }
     .order-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-    .cron-card { border: 1px solid #eadfd2; border-radius: 8px; padding: 14px; background: #fffaf2; height: 100%; }
+    .cron-card { border: 1px solid var(--sf-border); border-radius: 8px; padding: 14px; background: #fffaf2; height: 100%; }
     .cron-card h3 { color: #28364B; font-size: 16px; margin-bottom: 6px; }
     .cron-card p { color: #6d6270; font-size: 13px; min-height: 40px; margin-bottom: 12px; }
     .cron-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .weekly-summary-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 22px; }
-    .weekly-summary-card { background: #fff; border: 1px solid #eadfd2; border-radius: 8px; padding: 16px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); }
+    .weekly-summary-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 16px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); }
     .weekly-summary-card h2, .weekly-summary-card h3 { color: #28364B; font-size: 17px; margin: 0 0 12px; }
     .weekly-visitors-list { display: grid; gap: 7px; }
     .weekly-visitors-row { align-items: center; display: grid; grid-template-columns: 84px 1fr 46px; gap: 8px; color: #4b3d46; font-size: 13px; }
     .weekly-visitors-bar { background: #f4ece3; border-radius: 999px; height: 8px; overflow: hidden; }
     .weekly-visitors-bar span { background: #28364B; display: block; height: 100%; min-width: 4px; }
     .weekly-metric-label { color: #6d6270; font-size: 12px; font-weight: 800; text-transform: uppercase; }
-    .weekly-metric-value { color: #2d1739; font-size: 17px; font-weight: 900; line-height: 1.35; margin-top: 8px; word-break: break-word; }
+    .weekly-metric-value { color: var(--sf-navy); font-size: 17px; font-weight: 900; line-height: 1.35; margin-top: 8px; word-break: break-word; }
     .weekly-metric-count { color: #6d6270; font-size: 13px; margin-top: 8px; }
     .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: #2aa85a; }
     .status-dot.warn { background: #e8a100; }

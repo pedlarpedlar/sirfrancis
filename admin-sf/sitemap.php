@@ -90,7 +90,7 @@ $linkGroups = [
     }
 
     .admin-sitemap-hero {
-        background: #2d1739;
+        background: var(--sf-navy);
         border-radius: 8px;
         color: #fff;
         margin-bottom: 18px;
@@ -98,7 +98,7 @@ $linkGroups = [
     }
 
     .admin-sitemap-hero h1 {
-        color: #CEBD88;
+        color: var(--sf-gold);
         font-size: 28px;
         margin-bottom: 6px;
     }
@@ -116,7 +116,7 @@ $linkGroups = [
 
     .admin-sitemap-card {
         background: #fff;
-        border: 1px solid #eadfd2;
+        border: 1px solid var(--sf-border);
         border-radius: 8px;
         padding: 16px;
     }
