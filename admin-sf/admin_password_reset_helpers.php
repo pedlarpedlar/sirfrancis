@@ -87,8 +87,15 @@ function cbAdminResetFindUserByUsername($conn, $username) {
     }
     $stmt->bind_param("s", $username);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result ? $result->fetch_assoc() : null;
+    $stmt->bind_result($id, $dbUsername, $email);
+    $row = null;
+    if ($stmt->fetch()) {
+        $row = [
+            'id' => $id,
+            'username' => $dbUsername,
+            'email' => $email,
+        ];
+    }
     $stmt->close();
     return $row ?: null;
 }

@@ -40,8 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $stmt->bind_param("s", $username);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $admin = $result ? $result->fetch_assoc() : null;
+            $stmt->bind_result($adminId, $dbUsername, $resetOtpHash, $resetOtpExpiresAt, $resetOtpAttempts);
+            $admin = null;
+            if ($stmt->fetch()) {
+                $admin = [
+                    'id' => $adminId,
+                    'username' => $dbUsername,
+                    'reset_otp_hash' => $resetOtpHash,
+                    'reset_otp_expires_at' => $resetOtpExpiresAt,
+                    'reset_otp_attempts' => $resetOtpAttempts,
+                ];
+            }
             $stmt->close();
 
             if (!$admin || empty($admin['reset_otp_hash']) || empty($admin['reset_otp_expires_at'])) {
