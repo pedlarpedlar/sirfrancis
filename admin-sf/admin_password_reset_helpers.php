@@ -1,6 +1,5 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 function cbAdminResetEnsureColumns($conn) {
     if (!($conn instanceof mysqli)) {
@@ -40,11 +39,11 @@ function cbAdminResetSendOtpEmail($email, $username, $otp, $mode = 'reset') {
     global $smtp_server, $smtp_port, $smtp_type, $smtp_username1, $smtp_username5, $smtp_password5, $website_company_name;
 
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        throw new Exception('This admin user does not have a valid recovery email address.');
+        throw new RuntimeException('This admin user does not have a valid recovery email address.');
     }
 
     if (empty($smtp_server) || empty($smtp_port) || empty($smtp_username5) || empty($smtp_password5)) {
-        throw new Exception('SMTP settings are missing. Please check the Sir Francis mail configuration.');
+        throw new RuntimeException('SMTP settings are missing. Please check the Sir Francis mail configuration.');
     }
 
     cbAdminResetLoadMailer();
@@ -96,7 +95,7 @@ function cbAdminResetFindUserByUsername($conn, $username) {
 
 function cbAdminResetIssueOtp($conn, $username, $mode = 'reset') {
     if (!cbAdminResetEnsureColumns($conn)) {
-        throw new Exception('Password access setup could not be prepared.');
+        throw new RuntimeException('Password access setup could not be prepared.');
     }
 
     $admin = cbAdminResetFindUserByUsername($conn, $username);
@@ -114,14 +113,14 @@ function cbAdminResetIssueOtp($conn, $username, $mode = 'reset') {
     $expiresAt = (new DateTime('+15 minutes', new DateTimeZone('Africa/Johannesburg')))->format('Y-m-d H:i:s');
     $stmt = $conn->prepare("UPDATE admin_users SET reset_otp_hash = ?, reset_otp_expires_at = ?, reset_otp_attempts = 0 WHERE id = ?");
     if (!$stmt) {
-        throw new Exception('Could not save the reset code.');
+        throw new RuntimeException('Could not save the reset code.');
     }
 
     $adminId = (int) $admin['id'];
     $stmt->bind_param("ssi", $otpHash, $expiresAt, $adminId);
     if (!$stmt->execute()) {
         $stmt->close();
-        throw new Exception('Could not save the reset code.');
+        throw new RuntimeException('Could not save the reset code.');
     }
     $stmt->close();
 

@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include 'dbh.inc.php';
+include __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/admin_password_reset_helpers.php';
 
 $error = '';

@@ -27,7 +27,7 @@ redirectLoggedInUser();
 // Check if the form is submitted
 if (($_SERVER["REQUEST_METHOD"] ?? '') == "POST") {
 
-    include 'dbh.inc.php';
+    include __DIR__ . '/db_connect.php';
 
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
