@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/admin_password_reset_helpers.php';
 
 $message = '';
@@ -16,6 +15,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         $error = 'Enter your admin username.';
     } else {
         try {
+            include __DIR__ . '/db_connect.php';
             $admin = cbAdminResetIssueOtp($conn, $username, 'first_time');
             if ($admin) {
                 $_SESSION['admin_reset_username'] = $admin['username'];

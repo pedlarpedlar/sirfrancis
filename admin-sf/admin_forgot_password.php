@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/admin_password_reset_helpers.php';
 
 $message = '';
@@ -16,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Enter your admin username.';
     } else {
         try {
+            include __DIR__ . '/db_connect.php';
             $admin = cbAdminResetIssueOtp($conn, $username, 'reset');
             if ($admin) {
                 $_SESSION['admin_reset_username'] = $admin['username'];
@@ -37,11 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Password Reset</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.png" />
+    <link rel="stylesheet" href="../assets/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="admin-theme.css" />
 </head>
 <body class="admin-sf">
-<?php include 'header.php'; include 'page_menues.php'; ?>
 
 <style>
+    body.admin-sf { align-items:center; background:var(--sf-cream); display:flex; justify-content:center; min-height:100vh; padding:24px; }
     .admin-reset-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; box-shadow:0 12px 28px rgba(44,41,38,.08); margin:35px auto; max-width:440px; padding:28px; }
     .admin-reset-card h2 { color:var(--sf-navy); font-size:24px; margin-bottom:10px; }
     .admin-reset-alert { border-radius:6px; margin-bottom:16px; padding:10px 12px; }
@@ -65,7 +69,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="admin_login" class="d-block mt-3">Back to admin login</a>
     </form>
 </div>
-
-<?php include 'footer.php'; ?>
 </body>
 </html>

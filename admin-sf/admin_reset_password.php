@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/admin_password_reset_helpers.php';
 
 $error = '';
@@ -18,6 +17,8 @@ $pageIntro = $isFirstTime
     : 'Enter the 6-digit code from the email, then choose a new password.';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include __DIR__ . '/db_connect.php';
+
     $otp = preg_replace('/\D+/', '', (string) ($_POST['otp'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     $passwordConfirm = (string) ($_POST['password_confirm'] ?? '');
@@ -84,11 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= cbAdminResetText($pageTitle) ?></title>
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.png" />
+    <link rel="stylesheet" href="../assets/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="admin-theme.css" />
 </head>
 <body class="admin-sf">
-<?php include 'header.php'; include 'page_menues.php'; ?>
 
 <style>
+    body.admin-sf { align-items:center; background:var(--sf-cream); display:flex; justify-content:center; min-height:100vh; padding:24px; }
     .admin-reset-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; box-shadow:0 12px 28px rgba(44,41,38,.08); margin:35px auto; max-width:460px; padding:28px; }
     .admin-reset-card h2 { color:var(--sf-navy); font-size:24px; margin-bottom:10px; }
     .admin-reset-alert { border-radius:6px; margin-bottom:16px; padding:10px 12px; }
@@ -130,7 +135,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     <?php endif; ?>
 </div>
-
-<?php include 'footer.php'; ?>
 </body>
 </html>
