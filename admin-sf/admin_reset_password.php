@@ -10,6 +10,12 @@ $error = '';
 $success = '';
 $sent = isset($_GET['sent']);
 $username = trim($_POST['username'] ?? ($_SESSION['admin_reset_username'] ?? ''));
+$resetMode = $_SESSION['admin_reset_mode'] ?? (($_GET['mode'] ?? '') === 'first-time' ? 'first_time' : 'reset');
+$isFirstTime = $resetMode === 'first_time';
+$pageTitle = $isFirstTime ? 'Create Admin Password' : 'Enter Admin OTP';
+$pageIntro = $isFirstTime
+    ? 'Enter the 6-digit code from the email, then create the admin password.'
+    : 'Enter the 6-digit code from the email, then choose a new password.';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $otp = preg_replace('/\D+/', '', (string) ($_POST['otp'] ?? ''));
@@ -57,7 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->bind_param("si", $passwordHash, $adminId);
                     if ($stmt->execute()) {
                         unset($_SESSION['admin_reset_username']);
-                        $success = 'Admin password updated. You can now log in with your username and new password.';
+                        unset($_SESSION['admin_reset_mode']);
+                        $success = $isFirstTime
+                            ? 'Admin password created. You can now log in with your username and password.'
+                            : 'Admin password updated. You can now log in with your username and new password.';
                         $username = '';
                     } else {
                         $error = 'Could not update the password. Please try again.';
@@ -74,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter Admin OTP</title>
+    <title><?= cbAdminResetText($pageTitle) ?></title>
 </head>
 <body class="admin-sf">
 <?php include 'header.php'; include 'page_menues.php'; ?>
@@ -89,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </style>
 
 <div class="admin-reset-card">
-    <h2>Enter Admin OTP</h2>
-    <p class="text-muted">Enter the 6-digit code from the email, then choose a new password.</p>
+    <h2><?= cbAdminResetText($pageTitle) ?></h2>
+    <p class="text-muted"><?= cbAdminResetText($pageIntro) ?></p>
 
-    <?php if ($sent): ?><div class="admin-reset-alert success">OTP sent. Please check the admin recovery email.</div><?php endif; ?>
+    <?php if ($sent): ?><div class="admin-reset-alert success"><?= $isFirstTime ? 'First-time OTP sent. Please check the admin recovery email.' : 'OTP sent. Please check the admin recovery email.' ?></div><?php endif; ?>
     <?php if ($error): ?><div class="admin-reset-alert error"><?= cbAdminResetText($error) ?></div><?php endif; ?>
     <?php if ($success): ?><div class="admin-reset-alert success"><?= cbAdminResetText($success) ?></div><?php endif; ?>
 
@@ -109,15 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" class="form-control otp-input" id="otp" name="otp" autocomplete="one-time-code" required>
             </div>
             <div class="form-group">
-                <label for="password">New password</label>
+                <label for="password"><?= $isFirstTime ? 'Create password' : 'New password' ?></label>
                 <input type="password" class="form-control" id="password" name="password" autocomplete="new-password" minlength="8" required>
             </div>
             <div class="form-group">
                 <label for="password_confirm">Confirm new password</label>
                 <input type="password" class="form-control" id="password_confirm" name="password_confirm" autocomplete="new-password" minlength="8" required>
             </div>
-            <button type="submit" class="btn btn-dark btn-block">Reset password</button>
-            <a href="admin_forgot_password" class="d-block mt-3">Request a new OTP</a>
+            <button type="submit" class="btn btn-dark btn-block"><?= $isFirstTime ? 'Create password' : 'Reset password' ?></button>
+            <a href="<?= $isFirstTime ? 'admin_first_time_access' : 'admin_forgot_password' ?>" class="d-block mt-3">Request a new OTP</a>
         </form>
     <?php endif; ?>
 </div>

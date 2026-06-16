@@ -36,7 +36,7 @@ function cbAdminResetLoadMailer() {
     require_once __DIR__ . '/../PHPMailer/PHPMailer/src/SMTP.php';
 }
 
-function cbAdminResetSendOtpEmail($email, $username, $otp) {
+function cbAdminResetSendOtpEmail($email, $username, $otp, $mode = 'reset') {
     global $smtp_server, $smtp_port, $smtp_type, $smtp_username1, $smtp_username5, $smtp_password5, $website_company_name;
 
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -48,6 +48,12 @@ function cbAdminResetSendOtpEmail($email, $username, $otp) {
     }
 
     cbAdminResetLoadMailer();
+    $isFirstTime = $mode === 'first_time';
+    $subject = $isFirstTime ? 'Sir Francis first-time admin access OTP' : 'Sir Francis admin password reset OTP';
+    $heading = $isFirstTime ? 'First-time admin access' : 'Admin password reset';
+    $intro = $isFirstTime
+        ? 'Use this one-time code to create the Sir Francis admin password for'
+        : 'Use this one-time code to reset the Sir Francis admin password for';
 
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -64,14 +70,14 @@ function cbAdminResetSendOtpEmail($email, $username, $otp) {
     }
     $mail->addAddress($email, $username);
     $mail->isHTML(true);
-    $mail->Subject = 'Sir Francis admin password reset OTP';
+    $mail->Subject = $subject;
     $mail->Body = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#2c2926;">'
-        . '<h2 style="color:#28364B;">Admin password reset</h2>'
-        . '<p>Use this one-time code to reset the Sir Francis admin password for <strong>' . cbAdminResetText($username) . '</strong>.</p>'
+        . '<h2 style="color:#28364B;">' . cbAdminResetText($heading) . '</h2>'
+        . '<p>' . cbAdminResetText($intro) . ' <strong>' . cbAdminResetText($username) . '</strong>.</p>'
         . '<div style="font-size:30px;letter-spacing:8px;font-weight:700;background:#f6f1e8;border:1px solid #d8d2c4;padding:18px;text-align:center;">' . cbAdminResetText($otp) . '</div>'
         . '<p>This code expires in 15 minutes. If you did not request this, please ignore this email and check admin access.</p>'
         . '</div>';
-    $mail->AltBody = "Sir Francis admin password reset OTP for {$username}: {$otp}. This code expires in 15 minutes.";
+    $mail->AltBody = "{$subject} for {$username}: {$otp}. This code expires in 15 minutes.";
     $mail->send();
 }
 
@@ -86,5 +92,40 @@ function cbAdminResetFindUserByUsername($conn, $username) {
     $row = $result ? $result->fetch_assoc() : null;
     $stmt->close();
     return $row ?: null;
+}
+
+function cbAdminResetIssueOtp($conn, $username, $mode = 'reset') {
+    if (!cbAdminResetEnsureColumns($conn)) {
+        throw new Exception('Password access setup could not be prepared.');
+    }
+
+    $admin = cbAdminResetFindUserByUsername($conn, $username);
+    if (!$admin) {
+        return null;
+    }
+
+    if (empty($admin['email']) || !filter_var($admin['email'], FILTER_VALIDATE_EMAIL)) {
+        error_log('Sir Francis admin OTP requested for admin without recovery email: ' . $admin['username']);
+        return null;
+    }
+
+    $otp = (string) random_int(100000, 999999);
+    $otpHash = password_hash($otp, PASSWORD_DEFAULT);
+    $expiresAt = (new DateTime('+15 minutes', new DateTimeZone('Africa/Johannesburg')))->format('Y-m-d H:i:s');
+    $stmt = $conn->prepare("UPDATE admin_users SET reset_otp_hash = ?, reset_otp_expires_at = ?, reset_otp_attempts = 0 WHERE id = ?");
+    if (!$stmt) {
+        throw new Exception('Could not save the reset code.');
+    }
+
+    $adminId = (int) $admin['id'];
+    $stmt->bind_param("ssi", $otpHash, $expiresAt, $adminId);
+    if (!$stmt->execute()) {
+        $stmt->close();
+        throw new Exception('Could not save the reset code.');
+    }
+    $stmt->close();
+
+    cbAdminResetSendOtpEmail($admin['email'], $admin['username'], $otp, $mode);
+    return $admin;
 }
 ?>

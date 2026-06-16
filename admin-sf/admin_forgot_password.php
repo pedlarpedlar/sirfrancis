@@ -14,39 +14,19 @@ $neutralMessage = 'If that admin username has a recovery email, an OTP will be s
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '') {
         $error = 'Enter your admin username.';
-    } elseif (!cbAdminResetEnsureColumns($conn)) {
-        $error = 'Password reset setup could not be prepared. Please try again.';
     } else {
-        $admin = cbAdminResetFindUserByUsername($conn, $username);
-        if (!$admin) {
-            $message = $neutralMessage;
-        } elseif (empty($admin['email']) || !filter_var($admin['email'], FILTER_VALIDATE_EMAIL)) {
-            error_log('Sir Francis admin password reset requested for admin without recovery email: ' . $admin['username']);
-            $message = $neutralMessage;
-        } else {
-            try {
-                $otp = (string) random_int(100000, 999999);
-                $otpHash = password_hash($otp, PASSWORD_DEFAULT);
-                $expiresAt = (new DateTime('+15 minutes', new DateTimeZone('Africa/Johannesburg')))->format('Y-m-d H:i:s');
-                $stmt = $conn->prepare("UPDATE admin_users SET reset_otp_hash = ?, reset_otp_expires_at = ?, reset_otp_attempts = 0 WHERE id = ?");
-                if (!$stmt) {
-                    throw new Exception('Could not save the reset code.');
-                }
-                $adminId = (int) $admin['id'];
-                $stmt->bind_param("ssi", $otpHash, $expiresAt, $adminId);
-                if (!$stmt->execute()) {
-                    throw new Exception('Could not save the reset code.');
-                }
-                $stmt->close();
-
-                cbAdminResetSendOtpEmail($admin['email'], $admin['username'], $otp);
+        try {
+            $admin = cbAdminResetIssueOtp($conn, $username, 'reset');
+            if ($admin) {
                 $_SESSION['admin_reset_username'] = $admin['username'];
+                $_SESSION['admin_reset_mode'] = 'reset';
                 header("Location: admin_reset_password?sent=1");
                 exit();
-            } catch (Exception $e) {
-                error_log('Sir Francis admin password reset email failed: ' . $e->getMessage());
-                $message = $neutralMessage;
             }
+            $message = $neutralMessage;
+        } catch (Exception $e) {
+            error_log('Sir Francis admin password reset email failed: ' . $e->getMessage());
+            $message = $neutralMessage;
         }
     }
 }

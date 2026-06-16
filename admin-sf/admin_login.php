@@ -185,7 +185,8 @@ if (($_SERVER["REQUEST_METHOD"] ?? '') == "POST") {
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Login</button>
-        <a href="admin_forgot_password" class="d-block mt-3">Forgot admin password?</a>
+        <a href="admin_first_time_access" class="d-block mt-3">First-time admin access by OTP</a>
+        <a href="admin_forgot_password" class="d-block mt-2">Forgot admin password?</a>
     </form>
 </div>
 
