@@ -792,10 +792,10 @@ $dashboardCronJobs = [
     .dashboard-now-title { color: #281b14; display: block; font-size: 13px; font-weight: 900; line-height: 1.25; }
     .dashboard-now-meta { color: #73665c; display: block; font-size: 12px; line-height: 1.35; margin-top: 2px; }
     .dashboard-now-empty { color: #73665c; font-size: 13px; margin: 0; }
-    .dashboard-state-pill { border-radius: 999px; display: inline-flex; font-size: 11px; font-weight: 900; margin-right: 5px; padding: 3px 7px; text-transform: uppercase; }
-    .dashboard-state-pill.active { background: #e8f7ee; color: #17643a; }
-    .dashboard-state-pill.scheduled { background: #fff4d8; color: #815700; }
-    .dashboard-state-pill.warning { background: #fdecec; color: #a62626; }
+    .dashboard-state-pill { background: var(--sf-navy); border: 1px solid var(--sf-gold); border-radius: 0; color: var(--sf-gold); display: inline-flex; font-size: 11px; font-weight: 900; margin-right: 5px; padding: 3px 7px; text-transform: uppercase; }
+    .dashboard-state-pill.active,
+    .dashboard-state-pill.scheduled,
+    .dashboard-state-pill.warning { background: var(--sf-navy); color: var(--sf-gold); }
     .dash-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 18px; height: 100%; }
     .dash-panel h2 { color: #28364B; font-size: 20px; margin-bottom: 15px; }
     .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
@@ -831,9 +831,9 @@ $dashboardCronJobs = [
         <h1>Admin Dashboard</h1>
         <p class="mb-0">Orders, payments, campaigns, reviews, sheet products, and recent website activity at a glance.</p>
         <div class="quick-actions">
-            <a href="products" class="btn btn-warning btn-sm">Products</a>
-            <a href="manage_orders" class="btn btn-warning btn-sm">Orders</a>
-            <a href="manage_users" class="btn btn-warning btn-sm">Customers</a>
+            <a href="products" class="btn btn-dark btn-sm">Products</a>
+            <a href="manage_orders" class="btn btn-dark btn-sm">Orders</a>
+            <a href="manage_users" class="btn btn-dark btn-sm">Customers</a>
             <a href="schedule_email" class="btn btn-light btn-sm">Subscribers</a>
             <a href="wholesale_pricelist" class="btn btn-light btn-sm">Wholesale Pricelist</a>
             <form method="post" action="sheets" class="m-0">

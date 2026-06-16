@@ -246,8 +246,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
         unlink($filename);
     }
 
-    $target_dir = '/home/candybirdco/public_html/admin-sf/csv_failed/';
+    $target_dir = __DIR__ . '/csv_failed/';
     $file_name = 'skipped_rows.csv';
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
 
     // Generate new CSV content
     $csv_content = '';

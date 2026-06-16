@@ -24,18 +24,60 @@
   color: var(--sf-gold);
 }
 
+.admin-sf .btn,
 .admin-sf .btn-primary,
 .admin-sf .btn-secondary,
-.admin-sf .btn-dark {
+.admin-sf .btn-dark,
+.admin-sf .btn-warning,
+.admin-sf .btn-light,
+.admin-sf .btn-success,
+.admin-sf .btn-danger,
+.admin-sf .btn-info,
+.admin-sf .btn-outline-primary,
+.admin-sf .btn-outline-secondary,
+.admin-sf .btn-outline-dark,
+.admin-sf .btn-outline-warning,
+.admin-sf .btn-outline-success,
+.admin-sf .btn-outline-danger,
+.admin-sf .btn-outline-light {
   background: var(--sf-navy) !important;
   border: 3px double var(--sf-gold) !important;
   border-radius: 0 !important;
   color: var(--sf-white) !important;
 }
 
+.admin-sf .btn:hover,
+.admin-sf .btn:focus,
 .admin-sf .btn-primary:hover,
+.admin-sf .btn-primary:focus,
 .admin-sf .btn-secondary:hover,
-.admin-sf .btn-dark:hover {
+.admin-sf .btn-secondary:focus,
+.admin-sf .btn-dark:hover,
+.admin-sf .btn-dark:focus,
+.admin-sf .btn-warning:hover,
+.admin-sf .btn-warning:focus,
+.admin-sf .btn-light:hover,
+.admin-sf .btn-light:focus,
+.admin-sf .btn-success:hover,
+.admin-sf .btn-success:focus,
+.admin-sf .btn-danger:hover,
+.admin-sf .btn-danger:focus,
+.admin-sf .btn-info:hover,
+.admin-sf .btn-info:focus,
+.admin-sf .btn-outline-primary:hover,
+.admin-sf .btn-outline-primary:focus,
+.admin-sf .btn-outline-secondary:hover,
+.admin-sf .btn-outline-secondary:focus,
+.admin-sf .btn-outline-dark:hover,
+.admin-sf .btn-outline-dark:focus,
+.admin-sf .btn-outline-warning:hover,
+.admin-sf .btn-outline-warning:focus,
+.admin-sf .btn-outline-success:hover,
+.admin-sf .btn-outline-success:focus,
+.admin-sf .btn-outline-danger:hover,
+.admin-sf .btn-outline-danger:focus,
+.admin-sf .btn-outline-light:hover,
+.admin-sf .btn-outline-light:focus {
   background: var(--sf-gold) !important;
   border-color: var(--sf-gold) !important;
   border-radius: 0 !important;
@@ -43,6 +85,7 @@
 }
 
 .admin-sf .text-primary,
+.admin-sf .text-warning,
 .admin-sf .theme-color {
   color: var(--sf-gold) !important;
 }
@@ -50,4 +93,12 @@
 .admin-sf .bg-primary,
 .admin-sf .theme-bg {
   background: var(--sf-navy) !important;
+}
+
+.admin-sf .dashboard-state-pill,
+.admin-sf .status-pending {
+  background: var(--sf-navy) !important;
+  border: 1px solid var(--sf-gold) !important;
+  border-radius: 0 !important;
+  color: var(--sf-gold) !important;
 }

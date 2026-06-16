@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-include 'dbh.inc.php';
+include __DIR__ . '/db_connect.php';
 
 function cbOrderText($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -28,9 +28,11 @@ function cbAdminListOrderHasSuccessfulPayfastPayment($conn, $orderId) {
         if ($stmt) {
             $stmt->bind_param("i", $orderId);
             $stmt->execute();
-            $row = $stmt->get_result()->fetch_assoc();
+            $payfastPaymentId = '';
+            $stmt->bind_result($payfastPaymentId);
+            $stmt->fetch();
             $stmt->close();
-            if (!empty($row['payfast_payment_id'])) {
+            if (!empty($payfastPaymentId)) {
                 return true;
             }
         }
@@ -42,7 +44,8 @@ function cbAdminListOrderHasSuccessfulPayfastPayment($conn, $orderId) {
         if ($stmt) {
             $stmt->bind_param("i", $orderId);
             $stmt->execute();
-            $hasPaidCheck = $stmt->get_result()->num_rows > 0;
+            $stmt->store_result();
+            $hasPaidCheck = $stmt->num_rows > 0;
             $stmt->close();
             if ($hasPaidCheck) {
                 return true;
@@ -58,9 +61,12 @@ function cbAdminListOrderHasSuccessfulPayfastPayment($conn, $orderId) {
         if ($stmt) {
             $stmt->bind_param("i", $orderId);
             $stmt->execute();
-            $row = $stmt->get_result()->fetch_assoc();
+            $failedChecks = 0;
+            $otherFailedChecks = 0;
+            $stmt->bind_result($failedChecks, $otherFailedChecks);
+            $stmt->fetch();
             $stmt->close();
-            return (int) ($row['failed_checks'] ?? 0) > 0 && (int) ($row['other_failed_checks'] ?? 0) === 0;
+            return (int) $failedChecks > 0 && (int) $otherFailedChecks === 0;
         }
     }
 
@@ -198,7 +204,7 @@ include 'page_menues.php';
     .orders-table th.sortable { cursor: pointer; user-select: none; }
     .orders-table th.sortable:hover { color: #28364B; }
     .status-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; }
-    .status-pending { background: #fff4d8; color: #7a4e00; }
+    .status-pending { background: var(--sf-navy); color: var(--sf-gold); }
     .status-processing { background: #ede2ff; color: #28364B; }
     .status-packing { background: #e5efff; color: #1f4f90; }
     .status-ready-to-collect { background: #fff0c7; color: #7b4b00; }
@@ -241,7 +247,7 @@ include 'page_menues.php';
         <h1>Order Control Center</h1>
         <p class="mb-0">Create orders for customers, edit order carts, update statuses, send friendly client updates, and delete orders when needed.</p>
         <div class="orders-actions">
-            <a href="create_order" class="btn btn-warning">Create order for customer</a>
+            <a href="create_order" class="btn btn-dark">Create order for customer</a>
             <a href="create_order" class="btn btn-light">New blank order</a>
             <a href="index" class="btn btn-light">Dashboard</a>
             <a href="../products" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">Shop as customer</a>
@@ -329,7 +335,7 @@ include 'page_menues.php';
                                 <?php if ((int) $order['payment_status'] === 0): ?>
                                     <button class="btn btn-success btn-sm mark-paid-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Mark Paid</button>
                                 <?php endif; ?>
-                                <button class="btn btn-warning btn-sm order-status-btn" type="button"
+                                <button class="btn btn-dark btn-sm order-status-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-current-status="<?= cbOrderText($status) ?>"
                                     data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
@@ -377,7 +383,7 @@ include 'page_menues.php';
                         <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
                         <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
                         <a class="btn btn-outline-secondary btn-sm" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');">Copy Order</a>
-                        <button class="btn btn-warning btn-sm order-status-btn" type="button"
+                        <button class="btn btn-dark btn-sm order-status-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-current-status="<?= cbOrderText($status) ?>"
                             data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
