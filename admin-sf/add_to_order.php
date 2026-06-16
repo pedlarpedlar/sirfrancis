@@ -7,7 +7,7 @@ require_once __DIR__ . '/admin_order_totals.php';
 
 // Retrieve product ID, quantity, and order ID from the AJAX request
 $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : null;
-$quantity = isset($_POST['quantity']) ? $_POST['quantity'] : 1;
+$quantity = max(1, (int) ($_POST['quantity'] ?? 1));
 $orderId = isset($_POST['orderId']) ? $_POST['orderId'] : null;
 
 $response = array('success' => false, 'message' => '');
@@ -28,6 +28,7 @@ if (!$sheetProduct) {
 
 syncSheetProductMirrorToDb($conn, $sheetProduct);
 ensureCandybirdOrderItemSnapshotColumns($conn);
+cbAdminEnsureOrderItemDiscountColumns($conn);
 
 $product_id = (int) $sheetProduct['id'];
 $product_title = getSheetProductDisplayTitle($sheetProduct);
@@ -93,8 +94,8 @@ if ($existing_item_id) {
     }
 
     // Insert new item if the product does not exist
-    $insertSql = "INSERT INTO order_items (order_id, product_id, product_title, product_image_url, product_weight, quantity, price, discount_amount, tax_amount) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insertSql = "INSERT INTO order_items (order_id, product_id, product_title, product_image_url, product_weight, quantity, price, discount_amount, tax_amount, admin_custom_discount_type, admin_custom_discount_value) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '', 0)";
     $insertStmt = mysqli_prepare($conn, $insertSql);
     if ($insertStmt) {
         mysqli_stmt_bind_param($insertStmt, "iisssiddd", $orderId, $product_id, $product_title, $product_image_url, $product_weight, $quantity, $product_price, $discount_amount, $product_tax);

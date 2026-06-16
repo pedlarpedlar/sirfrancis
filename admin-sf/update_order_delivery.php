@@ -13,7 +13,7 @@ require_once __DIR__ . '/admin_order_totals.php';
 $orderId = (int) ($_POST['orderId'] ?? 0);
 $deliveryMethod = $_POST['deliveryMethod'] ?? 'locker';
 
-if ($orderId <= 0 || !in_array($deliveryMethod, ['locker', 'door', 'digital'], true)) {
+if ($orderId <= 0 || !in_array($deliveryMethod, ['locker', 'door', 'collect', 'digital'], true)) {
     echo json_encode(['success' => false, 'message' => 'Choose a valid delivery method.']);
     exit();
 }

@@ -9,7 +9,7 @@ $response = array('success' => false, 'message' => '');
 
 // Retrieve product ID and quantity from the AJAX request
 $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : null;
-$quantity = isset($_POST['quantity']) ? $_POST['quantity'] : 1;
+$quantity = max(1, (int) ($_POST['quantity'] ?? 1));
 $order_id = isset($_POST['orderId']) ? $_POST['orderId'] : null;
 
 

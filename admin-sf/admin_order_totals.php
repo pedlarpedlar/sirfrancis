@@ -1,6 +1,65 @@
 <?php
 require_once __DIR__ . '/../product_sheet_helpers.php';
 
+if (!function_exists('cbAdminEnsureOrderDiscountColumns')) {
+    function cbAdminEnsureOrderDiscountColumns($conn) {
+        static $checked = false;
+        if ($checked || !($conn instanceof mysqli)) {
+            return $checked;
+        }
+
+        $columns = [
+            'admin_custom_discount_type' => "ALTER TABLE orders ADD COLUMN admin_custom_discount_type VARCHAR(20) NULL",
+            'admin_custom_discount_value' => "ALTER TABLE orders ADD COLUMN admin_custom_discount_value DECIMAL(10,2) NOT NULL DEFAULT 0",
+            'admin_custom_discount_amount' => "ALTER TABLE orders ADD COLUMN admin_custom_discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0",
+        ];
+
+        foreach ($columns as $column => $alterSql) {
+            $safeColumn = mysqli_real_escape_string($conn, $column);
+            $exists = $conn->query("SHOW COLUMNS FROM orders LIKE '{$safeColumn}'");
+            if ($exists && $exists->num_rows > 0) {
+                continue;
+            }
+            if (!$conn->query($alterSql)) {
+                error_log("Sir Francis could not add order discount column {$column}: " . $conn->error);
+                return false;
+            }
+        }
+
+        $checked = true;
+        return true;
+    }
+}
+
+if (!function_exists('cbAdminEnsureOrderItemDiscountColumns')) {
+    function cbAdminEnsureOrderItemDiscountColumns($conn) {
+        static $checked = false;
+        if ($checked || !($conn instanceof mysqli)) {
+            return $checked;
+        }
+
+        $columns = [
+            'admin_custom_discount_type' => "ALTER TABLE order_items ADD COLUMN admin_custom_discount_type VARCHAR(20) NULL",
+            'admin_custom_discount_value' => "ALTER TABLE order_items ADD COLUMN admin_custom_discount_value DECIMAL(10,2) NOT NULL DEFAULT 0",
+        ];
+
+        foreach ($columns as $column => $alterSql) {
+            $safeColumn = mysqli_real_escape_string($conn, $column);
+            $exists = $conn->query("SHOW COLUMNS FROM order_items LIKE '{$safeColumn}'");
+            if ($exists && $exists->num_rows > 0) {
+                continue;
+            }
+            if (!$conn->query($alterSql)) {
+                error_log("Sir Francis could not add order item discount column {$column}: " . $conn->error);
+                return false;
+            }
+        }
+
+        $checked = true;
+        return true;
+    }
+}
+
 if (!function_exists('cbAdminOrderItemsForCoupon')) {
     function cbAdminOrderItemsForCoupon($conn, $orderId) {
         $items = [];
@@ -114,6 +173,9 @@ if (!function_exists('cbAdminOrderCouponEmail')) {
 
 if (!function_exists('cbAdminRecalculateOrderTotals')) {
     function cbAdminRecalculateOrderTotals($conn, $orderId, $deliveryMethod = null, $couponCode = null) {
+        cbAdminEnsureOrderDiscountColumns($conn);
+        cbAdminEnsureOrderItemDiscountColumns($conn);
+
         $stmtOrder = mysqli_prepare($conn, "SELECT * FROM orders WHERE id = ?");
         if (!$stmtOrder) {
             return ['success' => false, 'message' => 'Could not read order.'];
@@ -137,7 +199,18 @@ if (!function_exists('cbAdminRecalculateOrderTotals')) {
         mysqli_stmt_close($stmtTotals);
 
         $subtotal = round((float) ($totals['subtotal'] ?? 0), 2);
-        $discount = round((float) ($totals['discount'] ?? 0), 2);
+        $itemDiscount = round((float) ($totals['discount'] ?? 0), 2);
+        $discountBase = max(0, $subtotal - $itemDiscount);
+        $customDiscountType = strtolower(trim((string) ($order['admin_custom_discount_type'] ?? '')));
+        $customDiscountValue = max(0, (float) ($order['admin_custom_discount_value'] ?? 0));
+        $customDiscountAmount = 0;
+        if ($customDiscountValue > 0 && in_array($customDiscountType, ['fixed', 'percentage'], true)) {
+            $customDiscountAmount = $customDiscountType === 'percentage'
+                ? round($discountBase * min(100, $customDiscountValue) / 100, 2)
+                : round($customDiscountValue, 2);
+            $customDiscountAmount = min($discountBase, max(0, $customDiscountAmount));
+        }
+        $discount = round($itemDiscount + $customDiscountAmount, 2);
         $couponAmount = (float) ($order['coupon_amount'] ?? 0);
         $couponEmail = cbAdminOrderCouponEmail($conn, $order);
 
@@ -180,6 +253,7 @@ if (!function_exists('cbAdminRecalculateOrderTotals')) {
         $stmtUpdate = mysqli_prepare($conn, "UPDATE orders SET
             subtotal_amount = ?,
             discount_amount = ?,
+            admin_custom_discount_amount = ?,
             coupon_amount = ?,
             shipping_amount = ?,
             shipping_discount_amount = ?,
@@ -190,7 +264,7 @@ if (!function_exists('cbAdminRecalculateOrderTotals')) {
             return ['success' => false, 'message' => 'Could not prepare order total update.'];
         }
 
-        mysqli_stmt_bind_param($stmtUpdate, 'ddddddsi', $subtotal, $discount, $couponAmount, $shippingAmount, $shippingDiscount, $grandTotal, $notes, $orderId);
+        mysqli_stmt_bind_param($stmtUpdate, 'dddddddsi', $subtotal, $discount, $customDiscountAmount, $couponAmount, $shippingAmount, $shippingDiscount, $grandTotal, $notes, $orderId);
         $ok = mysqli_stmt_execute($stmtUpdate);
         $message = $ok ? 'Order totals updated.' : mysqli_stmt_error($stmtUpdate);
         mysqli_stmt_close($stmtUpdate);
@@ -206,6 +280,8 @@ if (!function_exists('cbAdminRecalculateOrderTotals')) {
             'message' => $message,
             'subtotal' => $subtotal,
             'discount' => $discount,
+            'item_discount' => $itemDiscount,
+            'admin_custom_discount_amount' => $customDiscountAmount,
             'coupon_amount' => $couponAmount,
             'shipping_amount' => $shippingAmount,
             'shipping_discount_amount' => $shippingDiscount,

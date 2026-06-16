@@ -17,6 +17,8 @@ include 'dbh.inc.php';
 require_once __DIR__ . '/../product_sheet_helpers.php';
 require_once __DIR__ . '/admin_order_totals.php';
 ensureCandybirdOrderItemSnapshotColumns($conn);
+cbAdminEnsureOrderDiscountColumns($conn);
+cbAdminEnsureOrderItemDiscountColumns($conn);
 
 // Fetch order details
 $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;
@@ -45,6 +47,8 @@ $query = "
         oi.product_weight AS product_weight,
         oi.price AS price, 
         oi.discount_amount AS discount_amount, 
+        oi.admin_custom_discount_type,
+        oi.admin_custom_discount_value,
         (oi.price - oi.discount_amount) AS discounted_price, 
         oi.quantity AS quantity,
         o.user_id,
@@ -159,6 +163,17 @@ foreach ($orderItems as $item) {
 
 
     $cart_table .= '</td>';
+    $cart_table .= '<td class="text-center">';
+    $cart_table .= '<div class="admin-line-discount">';
+    $cart_table .= '<select class="form-control form-control-sm item-discount-type mb-1">';
+    $cart_table .= '<option value=""' . (empty($item['admin_custom_discount_type']) ? ' selected' : '') . '>No custom</option>';
+    $cart_table .= '<option value="fixed"' . (($item['admin_custom_discount_type'] ?? '') === 'fixed' ? ' selected' : '') . '>Fixed R</option>';
+    $cart_table .= '<option value="percentage"' . (($item['admin_custom_discount_type'] ?? '') === 'percentage' ? ' selected' : '') . '>% off</option>';
+    $cart_table .= '</select>';
+    $cart_table .= '<input type="number" min="0" step="0.01" class="form-control form-control-sm item-discount-value" value="' . htmlspecialchars((string) ((float) ($item['admin_custom_discount_value'] ?? 0) ?: ''), ENT_QUOTES, 'UTF-8') . '" placeholder="0">';
+    $cart_table .= '<button type="button" class="btn btn-outline-primary btn-sm mt-1 save-item-discount">Save</button>';
+    $cart_table .= '</div>';
+    $cart_table .= '</td>';
     // $cart_table .= '<td class="text-center">';
     // $cart_table .= '<span class="dynamic-tax">R' . number_format($tax, 2) . ' ('. $item['tax_rate'] .'%)</span>';
     // $cart_table .= '</td>';
@@ -202,7 +217,10 @@ foreach ($sheetProducts as $sheetProduct) {
     if (empty($sheetProduct['id'])) {
         continue;
     }
-    $label = trim(($sheetProduct['name'] ?? $sheetProduct['title'] ?? 'Product') . ' ' . ($sheetProduct['size'] ?? $sheetProduct['weight'] ?? '') . ' - R' . number_format(getSheetProductPrice($sheetProduct), 2));
+    $originalPrice = isset($sheetProduct['price']) ? candybirdParseSheetMoney($sheetProduct['price']) : getSheetProductPrice($sheetProduct);
+    $finalPrice = getSheetProductPrice($sheetProduct);
+    $priceLabel = $originalPrice > $finalPrice ? ' - R' . number_format($finalPrice, 2) . ' (was R' . number_format($originalPrice, 2) . ')' : ' - R' . number_format($finalPrice, 2);
+    $label = trim(($sheetProduct['name'] ?? $sheetProduct['title'] ?? 'Product') . ' ' . ($sheetProduct['size'] ?? $sheetProduct['weight'] ?? '') . $priceLabel);
     $productOptions .= '<option value="' . htmlspecialchars($sheetProduct['id'], ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</option>';
 }
 
@@ -221,6 +239,9 @@ if ($adminOrderWeightKg <= 0) {
 }
 $adminDeliveryOptions = getCandybirdDeliveryOptions();
 $adminShippingPayable = $orderSummary ? max(0, (float) $orderSummary['shipping_amount'] - (float) $orderSummary['shipping_discount_amount']) : 0;
+$adminCustomDiscountType = trim((string) ($orderSummary['admin_custom_discount_type'] ?? ''));
+$adminCustomDiscountValue = (float) ($orderSummary['admin_custom_discount_value'] ?? 0);
+$adminCustomDiscountAmount = (float) ($orderSummary['admin_custom_discount_amount'] ?? 0);
 ?>
 
 
@@ -254,18 +275,30 @@ include 'page_menues.php';
       width: 88px;
     }
     .admin-order-items-table thead th:nth-child(4),
-    .admin-order-items-table tbody td:nth-child(4),
+    .admin-order-items-table tbody td:nth-child(4) {
+      width: 92px;
+    }
     .admin-order-items-table thead th:nth-child(5),
     .admin-order-items-table tbody td:nth-child(5) {
-      width: 88px;
+      width: 132px;
     }
     .admin-order-items-table thead th:nth-child(6),
     .admin-order-items-table tbody td:nth-child(6) {
-      width: 48px;
+      width: 92px;
     }
     .admin-order-items-table thead th:nth-child(7),
     .admin-order-items-table tbody td:nth-child(7) {
+      width: 48px;
+    }
+    .admin-order-items-table thead th:nth-child(8),
+    .admin-order-items-table tbody td:nth-child(8) {
       width: 82px;
+    }
+    .admin-order-items-table .admin-line-discount select,
+    .admin-order-items-table .admin-line-discount input {
+      font-size: 12px;
+      height: 30px;
+      padding: 3px 6px;
     }
     .admin-order-items-table img {
       max-width: 50px;
@@ -343,6 +376,7 @@ include 'page_menues.php';
                   <th class="text-center" scope="col">Product Name</th>
                   <th class="text-center" scope="col">Qty</th>
                   <th class="text-center" scope="col">Price</th>
+                  <th class="text-center" scope="col">Custom discount</th>
                   <!-- <th class="text-center" scope="col">Tax</th> -->
                   <th class="text-center" scope="col">Subtotal</th>
                   <th class="text-center" scope="col">Remove</th>
@@ -367,7 +401,7 @@ include 'page_menues.php';
                     </div>
                     <div class="col-auto">
                       <label class="sr-only" for="quantity">Quantity</label>
-                      <input type="number" class="form-control mb-2" id="quantity" name="quantity" placeholder="Quantity" min="1" required>
+                      <input type="number" class="form-control mb-2" id="quantity" name="quantity" placeholder="Quantity" min="1" value="1">
                     </div>
                     <div class="col-auto">
                       <input type="hidden" name="orderId" value="'.$order_id.'">
@@ -416,7 +450,7 @@ include 'page_menues.php';
                         </div>
                         <div class="col-md-3">
                           <label for="quantity">Quantity</label>
-                          <input type="number" class="form-control mb-2" id="quantity" name="quantity" placeholder="Quantity" min="1" value="1" required>
+                          <input type="number" class="form-control mb-2" id="quantity" name="quantity" placeholder="Quantity" min="1" value="1">
                         </div>
                         <div class="col-md-3">
                           <input type="hidden" name="orderId" value="<?=$order_id?>">
@@ -449,6 +483,7 @@ include 'page_menues.php';
                 <select id="adminDeliveryMethod" class="form-control" <?=$adminDeliveryMethod === 'digital' ? 'disabled' : ''?>>
                   <option value="locker" <?=$adminDeliveryMethod === 'locker' ? 'selected' : ''?>>Pudo locker</option>
                   <option value="door" <?=$adminDeliveryMethod === 'door' ? 'selected' : ''?>>Door-to-door</option>
+                  <option value="collect" <?=$adminDeliveryMethod === 'collect' ? 'selected' : ''?>>Collection</option>
                   <?php if ($adminDeliveryMethod === 'digital'): ?>
                     <option value="digital" selected>Digital delivery</option>
                   <?php endif; ?>
@@ -476,6 +511,25 @@ include 'page_menues.php';
                 <a href="#" class="btn btn-outline-dark check-out-btn remove-order-coupon" data-order-id="<?=$order_id?>">remove coupon</a>
               </div>
               <div class="col-12"><div id="adminOrderTotalsMessage" class="small mt-2"></div></div>
+              <div class="col-12 mt-4">
+                <h3 class="coupon-title">Custom Order Discount</h3>
+              </div>
+              <div class="col-md-4">
+                <select id="orderCustomDiscountType" class="form-control mb-2">
+                  <option value="" <?=$adminCustomDiscountType === '' ? 'selected' : ''?>>No custom discount</option>
+                  <option value="fixed" <?=$adminCustomDiscountType === 'fixed' ? 'selected' : ''?>>Fixed rand amount</option>
+                  <option value="percentage" <?=$adminCustomDiscountType === 'percentage' ? 'selected' : ''?>>Percentage</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <input id="orderCustomDiscountValue" type="number" min="0" step="0.01" class="form-control mb-2" value="<?=htmlspecialchars((string) ($adminCustomDiscountValue ?: ''), ENT_QUOTES, 'UTF-8')?>" placeholder="0">
+              </div>
+              <div class="col-md-4">
+                <button type="button" id="saveOrderCustomDiscount" class="btn btn-outline-primary mb-2" data-order-id="<?=$order_id?>">Save discount</button>
+              </div>
+              <div class="col-12">
+                <small class="form-text text-muted">Applies to the order before shipping. Current custom order discount: R<?=number_format($adminCustomDiscountAmount, 2)?></small>
+              </div>
             </div>
         </div>
       </div>
@@ -497,6 +551,15 @@ include 'page_menues.php';
                   <li>-R<?=number_format($discounts, 2)?></li>
                 </ul>
               </div>
+
+<?php if ($adminCustomDiscountAmount > 0) : ?>
+              <div class="your-order-top">
+                <ul>
+                  <li>Custom order discount</li>
+                  <li>-R<?=number_format($adminCustomDiscountAmount, 2)?></li>
+                </ul>
+              </div>
+<?php endif; ?>
 
 <?php if (!empty($coupon_id)) : ?>
     <div class="your-order-top">
@@ -594,9 +657,14 @@ $(document).ready(function () {
 
 	$('#addToOrderForm').submit(function(event) {
         event.preventDefault(); // Prevent the default form submission
+        var qtyInput = $(this).find('input[name="quantity"]');
+        if (!qtyInput.val()) {
+            qtyInput.val(1);
+        }
 
         // Gather form data
         var formData = $(this).serialize();
+        $('#adminOrderTotalsMessage').removeClass('text-danger').addClass('text-success').text('Adding product...');
 
         // Send AJAX request
         $.ajax({
@@ -606,18 +674,67 @@ $(document).ready(function () {
             dataType: 'json',
             success: function(jsonResponse) {
                 if (jsonResponse.success) {
-                    alert(jsonResponse.message || 'Item added to order successfully.');
+                    $('#adminOrderTotalsMessage').removeClass('text-danger').addClass('text-success').text(jsonResponse.message || 'Item added to order successfully.');
                     window.location.reload();
                 } else {
-                    alert('Error: ' + jsonResponse.message);
+                    $('#adminOrderTotalsMessage').removeClass('text-success').addClass('text-danger').text(jsonResponse.message || 'Product could not be added.');
                 }
             },
             error: function(xhr, status, error) {
-                // Handle errors
-                alert('An error occurred: ' + error);
+                $('#adminOrderTotalsMessage').removeClass('text-success').addClass('text-danger').text('Product could not be added right now.');
             }
         });
     });
+
+  $('body').on('click', '.save-item-discount', function(e) {
+      e.preventDefault();
+      var row = $(this).closest('.product-row');
+      showRowStatus(row, 'Saving discount...', false);
+      $.ajax({
+          url: 'update_order_discount.php',
+          method: 'POST',
+          dataType: 'json',
+          data: {
+              mode: 'item',
+              orderId: <?=json_encode((int) $order_id)?>,
+              product_id: row.data('product-id'),
+              discountType: row.find('.item-discount-type').val(),
+              discountValue: row.find('.item-discount-value').val() || 0,
+              deliveryMethod: $('#adminDeliveryMethod').val() || 'locker'
+          },
+          success: function(response) {
+              showRowStatus(row, response.message || (response.success ? 'Discount saved.' : 'Discount could not be saved.'), !response.success);
+              if (response.success) window.location.reload();
+          },
+          error: function() {
+              showRowStatus(row, 'Discount could not be saved right now.', true);
+          }
+      });
+  });
+
+  $('#saveOrderCustomDiscount').on('click', function(e) {
+      e.preventDefault();
+      $('#adminOrderTotalsMessage').removeClass('text-danger').addClass('text-success').text('Saving order discount...');
+      $.ajax({
+          url: 'update_order_discount.php',
+          method: 'POST',
+          dataType: 'json',
+          data: {
+              mode: 'order',
+              orderId: $(this).data('order-id'),
+              discountType: $('#orderCustomDiscountType').val(),
+              discountValue: $('#orderCustomDiscountValue').val() || 0,
+              deliveryMethod: $('#adminDeliveryMethod').val() || 'locker'
+          },
+          success: function(response) {
+              $('#adminOrderTotalsMessage').toggleClass('text-success', !!response.success).toggleClass('text-danger', !response.success).text(response.message || 'Order discount checked.');
+              if (response.success) window.location.reload();
+          },
+          error: function() {
+              $('#adminOrderTotalsMessage').removeClass('text-success').addClass('text-danger').text('Order discount could not be saved right now.');
+          }
+      });
+  });
 
   $('.apply-coupon-btn').on('click', function (e) {
       e.preventDefault();
