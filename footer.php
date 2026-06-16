@@ -163,7 +163,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   </div>
   <!-- footer bottom end -->
   <!-- coppy-right start -->
-<div class="coppy-right bg-dark py-15 ">
+<div class="coppy-right py-15 ">
   <div class="container container1">
     <div class="row">
       <div class="col-12">
@@ -181,10 +181,17 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 
 <style>
   .coppy-right {
-    background-image: url('<?=$home_directory?>assets/img/footer.png'); /* Replace with the actual path to your image */
-    background-repeat: repeat-x;
-    background-position: bottom;
+    background: #172235 !important;
     border-spacing: 0;
+    border-top: 1px solid rgba(206, 189, 136, .28);
+  }
+
+  .coppy-right p {
+    color: #F1F0E8 !important;
+  }
+
+  .coppy-right a {
+    color: #CEBD88 !important;
   }
 
   .compass1 {
