@@ -9,11 +9,12 @@ $error = '';
 $success = '';
 $sent = isset($_GET['sent']);
 $username = trim($_POST['username'] ?? ($_SESSION['admin_reset_username'] ?? ''));
-$resetMode = $_SESSION['admin_reset_mode'] ?? (($_GET['mode'] ?? '') === 'first-time' ? 'first_time' : 'reset');
-$isFirstTime = $resetMode === 'first_time';
-$pageTitle = $isFirstTime ? 'Create Admin Password' : 'Enter Admin OTP';
+$resetMode = $_SESSION['admin_reset_mode'] ?? (in_array(($_GET['mode'] ?? ''), ['first-time', 'bootstrap'], true) ? (($_GET['mode'] ?? '') === 'bootstrap' ? 'bootstrap' : 'first_time') : 'reset');
+$isBootstrap = $resetMode === 'bootstrap';
+$isFirstTime = in_array($resetMode, ['first_time', 'bootstrap'], true);
+$pageTitle = $isFirstTime ? ($isBootstrap ? 'Create First Admin Account' : 'Create Admin Password') : 'Enter Admin OTP';
 $pageIntro = $isFirstTime
-    ? 'Enter the 6-digit code from the email, then create the admin password.'
+    ? ($isBootstrap ? 'Enter the 6-digit code from the email, then create the first admin password.' : 'Enter the 6-digit code from the email, then create the admin password.')
     : 'Enter the 6-digit code from the email, then choose a new password.';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -31,6 +32,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Use a password with at least 8 characters.';
     } elseif ($password !== $passwordConfirm) {
         $error = 'The two password fields do not match.';
+    } elseif ($isBootstrap) {
+        $bootstrapEmail = strtolower(trim((string) ($_SESSION['admin_bootstrap_email'] ?? $username)));
+        $bootstrapHash = (string) ($_SESSION['admin_bootstrap_otp_hash'] ?? '');
+        $bootstrapExpires = (int) ($_SESSION['admin_bootstrap_otp_expires_at'] ?? 0);
+        $bootstrapAttempts = (int) ($_SESSION['admin_bootstrap_otp_attempts'] ?? 0);
+
+        if ($bootstrapEmail === '' || $bootstrapHash === '' || $bootstrapExpires === 0) {
+            $error = 'No active first-time code was found. Please request a new OTP.';
+        } elseif ($bootstrapAttempts >= 5) {
+            $error = 'Too many incorrect attempts. Please request a new OTP.';
+        } elseif (time() > $bootstrapExpires) {
+            $error = 'This OTP has expired. Please request a new one.';
+        } elseif (!password_verify($otp, $bootstrapHash)) {
+            $_SESSION['admin_bootstrap_otp_attempts'] = $bootstrapAttempts + 1;
+            $error = 'That OTP is incorrect. Please check the code and try again.';
+        } else {
+            try {
+                cbAdminResetCreateBootstrapAdmin($conn, $bootstrapEmail, $password);
+                unset($_SESSION['admin_reset_username'], $_SESSION['admin_reset_mode']);
+                unset($_SESSION['admin_bootstrap_email'], $_SESSION['admin_bootstrap_otp_hash'], $_SESSION['admin_bootstrap_otp_expires_at'], $_SESSION['admin_bootstrap_otp_attempts']);
+                $success = 'First admin account created. You can now log in with your email address and password.';
+                $username = '';
+            } catch (Exception $e) {
+                error_log('Sir Francis bootstrap admin creation failed: ' . $e->getMessage());
+                $error = $e->getMessage();
+            }
+        }
     } elseif (!cbAdminResetEnsureColumns($conn)) {
         $error = 'Password reset setup could not be checked. Please try again.';
     } else {
@@ -115,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2><?= cbAdminResetText($pageTitle) ?></h2>
     <p class="text-muted"><?= cbAdminResetText($pageIntro) ?></p>
 
-    <?php if ($sent): ?><div class="admin-reset-alert success"><?= $isFirstTime ? 'First-time OTP sent. Please check the admin recovery email.' : 'OTP sent. Please check the admin recovery email.' ?></div><?php endif; ?>
+    <?php if ($sent): ?><div class="admin-reset-alert success"><?= $isBootstrap ? 'First admin OTP sent. Please check the email address you entered.' : ($isFirstTime ? 'First-time OTP sent. Please check the admin recovery email.' : 'OTP sent. Please check the admin recovery email.') ?></div><?php endif; ?>
     <?php if ($error): ?><div class="admin-reset-alert error"><?= cbAdminResetText($error) ?></div><?php endif; ?>
     <?php if ($success): ?><div class="admin-reset-alert success"><?= cbAdminResetText($success) ?></div><?php endif; ?>
 
@@ -124,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php else: ?>
         <form method="post" action="admin_reset_password" novalidate>
             <div class="form-group">
-                <label for="username">Admin username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?= cbAdminResetText($username) ?>" autocomplete="username" required>
+                <label for="username"><?= $isBootstrap ? 'Admin email' : 'Admin username' ?></label>
+                <input type="text" class="form-control" id="username" name="username" value="<?= cbAdminResetText($username) ?>" autocomplete="username" <?= $isBootstrap ? 'readonly' : 'required' ?>>
             </div>
             <div class="form-group">
                 <label for="otp">OTP code</label>

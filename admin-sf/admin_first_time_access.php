@@ -8,7 +8,7 @@ require_once __DIR__ . '/admin_password_reset_helpers.php';
 $message = '';
 $error = '';
 $username = trim($_POST['username'] ?? '');
-$neutralMessage = 'If that admin username has a recovery email, a first-time OTP will be sent shortly.';
+$neutralMessage = 'If an admin account exists, we will only send OTPs to saved recovery emails. If this is the first admin account, we will send the OTP to the email you entered.';
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     if ($username === '') {
@@ -16,6 +16,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     } else {
         try {
             include __DIR__ . '/db_connect.php';
+
+            if (cbAdminResetAdminCount($conn) === 0 || cbAdminResetRecoverableAdminCount($conn) === 0) {
+                cbAdminResetIssueBootstrapOtp($conn, $username);
+                $_SESSION['admin_reset_username'] = strtolower($username);
+                $_SESSION['admin_reset_mode'] = 'bootstrap';
+                header("Location: admin_reset_password?sent=1&mode=bootstrap");
+                exit();
+            }
+
             $admin = cbAdminResetIssueOtp($conn, $username, 'first_time');
             if ($admin) {
                 $_SESSION['admin_reset_username'] = $admin['username'];
@@ -86,14 +95,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 <div class="admin-access-card">
     <img src="../assets/img/logo/logo.png" alt="Sir Francis" class="admin-access-logo">
     <h2>First-Time Admin Access</h2>
-    <p class="text-muted text-center">Enter the admin username. If the account has a recovery email, we will send a one-time code so you can create the password.</p>
+    <p class="text-muted text-center">If no admin exists yet, enter your email address to create the first admin account. If an admin already exists, enter the saved admin username.</p>
 
     <?php if ($error): ?><div class="admin-access-alert error"><?= cbAdminResetText($error) ?></div><?php endif; ?>
     <?php if ($message): ?><div class="admin-access-alert success"><?= cbAdminResetText($message) ?></div><?php endif; ?>
 
     <form method="post" action="admin_first_time_access" novalidate>
         <div class="form-group">
-            <label for="username">Admin username</label>
+            <label for="username">Email or admin username</label>
             <input type="text" class="form-control" id="username" name="username" value="<?= cbAdminResetText($username) ?>" autocomplete="username" required>
         </div>
         <button type="submit" class="btn btn-dark btn-block">Send first-time OTP</button>
