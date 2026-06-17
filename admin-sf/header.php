@@ -1,10 +1,8 @@
 <?php
 date_default_timezone_set('Africa/Johannesburg');
 
-//<!-- Variables for localhost -->
+//<!-- Variables for admin assets -->
 $home_directory = '../';
-//<!-- Variables for live -->
-// $home_directory = 'https://www.fishgelatine.co.za/v2/';
 
 // Check if a session is not already started
 if (session_status() == PHP_SESSION_NONE) {

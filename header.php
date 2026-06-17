@@ -1,7 +1,10 @@
 <?php
 //<!-- Variables for localhost/live -->
 $is_localhost = isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1'], true);
-$home_directory = $is_localhost ? './' : 'https://www.fishgelatine.co.za/v2/';
+$requestHost = $_SERVER['HTTP_HOST'] ?? 'sirfrancis.co.za';
+$requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$site_base_url = $is_localhost ? './' : $requestScheme . '://' . $requestHost . '/';
+$home_directory = $site_base_url;
 
 date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 // Now PHP will use GMT+2 timezone for date and time functions
@@ -10,14 +13,14 @@ date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 // echo $currentTime;
 
 //Set defaults. Pages may define these before including the shared header.
-$page_url_canonical = $page_url_canonical ?? 'https://www.fishgelatine.co.za/v2/';
+$page_url_canonical = $page_url_canonical ?? $site_base_url;
 $title_og = $title_og ?? "Sir Francis | Marine Collagen, Fish Gelatine and Private Labelling";
-$image_url_og = $image_url_og ?? 'https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png';
+$image_url_og = $image_url_og ?? $site_base_url . 'assets/img/logo/logo.png';
 $image_type_og = $image_type_og ?? 'image/png';
 $image_width_og = $image_width_og ?? '1200';
 $image_height_og = $image_height_og ?? '630';
 $og_type = $og_type ?? 'website';
-$page_url_og = $page_url_og ?? 'https://www.fishgelatine.co.za/v2/';
+$page_url_og = $page_url_og ?? $site_base_url;
 $description_og = $description_og ?? "Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and private labelling solutions in South Africa.";
 $description_meta = $description_meta ?? "Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and private labelling solutions in South Africa.";
 
@@ -71,11 +74,11 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
         '@graph' => [
             [
                 '@type' => ['Organization', 'Store'],
-                '@id' => 'https://www.fishgelatine.co.za/v2/#organization',
+                '@id' => $site_base_url . '#organization',
                 'name' => 'Sir Francis',
-                'url' => 'https://www.fishgelatine.co.za/v2/',
-                'logo' => 'https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png',
-                'image' => 'https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png',
+                'url' => $site_base_url,
+                'logo' => $site_base_url . 'assets/img/logo/logo.png',
+                'image' => $site_base_url . 'assets/img/logo/logo.png',
                 'description' => 'Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and supplement private labelling solutions in South Africa.',
                 'email' => 'info@fishgelatine.co.za',
                 'telephone' => '+27824867685',
@@ -101,13 +104,13 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
             ],
             [
                 '@type' => 'WebSite',
-                '@id' => 'https://www.fishgelatine.co.za/v2/#website',
+                '@id' => $site_base_url . '#website',
                 'name' => 'Sir Francis',
-                'url' => 'https://www.fishgelatine.co.za/v2/',
-                'publisher' => ['@id' => 'https://www.fishgelatine.co.za/v2/#organization'],
+                'url' => $site_base_url,
+                'publisher' => ['@id' => $site_base_url . '#organization'],
                 'potentialAction' => [
                     '@type' => 'SearchAction',
-                    'target' => 'https://www.fishgelatine.co.za/v2/products?search={search_term_string}',
+                    'target' => $site_base_url . 'products?search={search_term_string}',
                     'query-input' => 'required name=search_term_string',
                 ],
             ],

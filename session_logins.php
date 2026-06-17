@@ -16,6 +16,10 @@ if (isset($_SESSION['cart_total'])) {
 include_once __DIR__ . "/dbh.inc.php";
 include_once __DIR__ . "/product_sheet_helpers.php";
 
+$requestHost = $_SERVER['HTTP_HOST'] ?? 'sirfrancis.co.za';
+$requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$site_base_url = in_array($requestHost, ['localhost', '127.0.0.1'], true) ? './' : $requestScheme . '://' . $requestHost . '/';
+
 $username = "Guest";
 $user_email = "";
 $userId = null;
@@ -32,7 +36,7 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
         global $wishlistCount, $cartCount, $compareCount, $cartItems, $wishlistItems, $compareItems;
         global $free_shipping_amount, $tel, $website_email, $website_email2, $website_address;
         global $headquarters, $hotline, $banking_details, $productIds, $support_email, $website_company_name;
-        global $return_window, $limitedDescription, $description_og, $description_meta, $title_og, $image_url_og, $page_url_og, $page_url_canonical;
+        global $return_window, $limitedDescription, $description_og, $description_meta, $title_og, $image_url_og, $page_url_og, $page_url_canonical, $site_base_url;
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
@@ -74,9 +78,9 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
         $description_og = $limitedDescription;
         $description_meta = $limitedDescription;
         $title_og = "Sir Francis";
-        $image_url_og = "https://www.fishgelatine.co.za/v2/assets/img/product/1.png";
-        $page_url_og = "https://www.fishgelatine.co.za/v2";
-        $page_url_canonical = "https://www.fishgelatine.co.za/v2";
+        $image_url_og = $site_base_url . "assets/img/product/1.png";
+        $page_url_og = $site_base_url;
+        $page_url_canonical = $site_base_url;
 
         $_SESSION['cart_total'] = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
         $_SESSION['cart_discounts'] = isset($_SESSION['cart_discounts']) ? $_SESSION['cart_discounts'] : 0;
@@ -637,9 +641,9 @@ $limitedDescription = $limitedDescription ?? "Sir Francis offers quality nuts, d
 $description_og = $description_og ?? $limitedDescription;
 $description_meta = $description_meta ?? $limitedDescription;
 $title_og = $title_og ?? "Sir Francis";
-$image_url_og = $image_url_og ?? "https://www.fishgelatine.co.za/v2/assets/img/product/1.png";
-$page_url_og = $page_url_og ?? "https://www.fishgelatine.co.za/v2";
-$page_url_canonical = $page_url_canonical ?? "https://www.fishgelatine.co.za/v2";
+$image_url_og = $image_url_og ?? $site_base_url . "assets/img/product/1.png";
+$page_url_og = $page_url_og ?? $site_base_url;
+$page_url_canonical = $page_url_canonical ?? $site_base_url;
 
 
 
