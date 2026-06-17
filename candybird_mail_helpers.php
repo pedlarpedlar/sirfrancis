@@ -3,13 +3,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 if (!function_exists('cbCandybirdLoadMailConfig')) {
     function cbCandybirdLoadMailConfig() {
-        $liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+        $liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
         if (file_exists($liveConfigPath)) {
             require_once $liveConfigPath;
         } elseif (file_exists(__DIR__ . '/configs/email_config.php')) {
             require_once __DIR__ . '/configs/email_config.php';
-        } elseif (file_exists(__DIR__ . '/configs/candybird_config.php')) {
-            require_once __DIR__ . '/configs/candybird_config.php';
         }
     }
 }

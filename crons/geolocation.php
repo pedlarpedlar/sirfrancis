@@ -2,7 +2,7 @@
 date_default_timezone_set('Africa/Johannesburg');
 
 // Include database connection
-include '/home/candybirdco/public_html/dbh.inc.php';
+include dirname(__DIR__) . '/dbh.inc.php';
 
 function isBot($userAgent) {
     $botPatterns = [

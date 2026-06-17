@@ -2,18 +2,11 @@
 header('Content-type: application/xml');
 
 $rootDir = dirname(__DIR__);
-$liveRoot = '/home/candybirdco/public_html';
 
-if (file_exists($rootDir . '/product_sheet_helpers.php')) {
-    require_once $rootDir . '/product_sheet_helpers.php';
-} else {
-    require_once $liveRoot . '/product_sheet_helpers.php';
-}
+require_once $rootDir . '/product_sheet_helpers.php';
 
 if (file_exists($rootDir . '/dbh.inc.php')) {
     include $rootDir . '/dbh.inc.php';
-} elseif (file_exists($liveRoot . '/dbh.inc.php')) {
-    include $liveRoot . '/dbh.inc.php';
 }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';

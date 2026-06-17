@@ -6,7 +6,7 @@ const SIRFRANCIS_DATABASES_EMAIL = 'databases@candybird.co.za';
 
 $rootDir = dirname(__DIR__);
 $accountRoot = dirname($rootDir);
-$liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: $accountRoot), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 $localConfigPath = $rootDir . '/dbh.inc.php';
 
 if (file_exists($liveConfigPath)) {
@@ -337,7 +337,7 @@ function cbBackupZipWebsite($zipFile, $rootDir, $backupDir, $sqlFile) {
         "Restore outline:\n" .
         "1. Upload website/ contents back to public_html.\n" .
         "2. Import database/database.sql into MySQL.\n" .
-        "3. Confirm configs_candybird/candybird_config.php database details.\n"
+        "3. Confirm ~/configs_sirfrancis/sirfrancis_config.php database details.\n"
     );
 
     $iterator = new RecursiveIteratorIterator(

@@ -15,7 +15,7 @@ require_once __DIR__ . '/../PHPMailer/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../PHPMailer/PHPMailer/src/Exception.php';
 require_once __DIR__ . '/../PHPMailer/PHPMailer/src/SMTP.php';
 
-$liveConfigPath = '/home2/rukbanor/configs_sirfrancis/sirfrancis_config.php';
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__, 2)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 if (file_exists($liveConfigPath)) {
     require_once $liveConfigPath;
 } elseif (file_exists(__DIR__ . '/../configs/email_config.php')) {

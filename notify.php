@@ -389,7 +389,7 @@ require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/candybird_mail_helpers.php';
-$liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 if (file_exists($liveConfigPath)) {
     require_once $liveConfigPath;
 } elseif (file_exists(__DIR__ . '/configs/email_config.php')) {

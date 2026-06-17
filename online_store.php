@@ -105,7 +105,10 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
-require_once('/home/candybirdco/configs_candybird/candybird_config.php');
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
+if (file_exists($liveConfigPath)) {
+    require_once $liveConfigPath;
+}
 
 // Fetch order details
 $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;

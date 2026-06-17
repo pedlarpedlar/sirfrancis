@@ -2,24 +2,14 @@
 date_default_timezone_set('Africa/Johannesburg');
 
 $rootDir = dirname(__DIR__);
-$liveRoot = '/home/candybirdco/public_html';
 
-if (file_exists($rootDir . '/product_sheet_helpers.php')) {
-    require_once $rootDir . '/product_sheet_helpers.php';
-} else {
-    require_once $liveRoot . '/product_sheet_helpers.php';
-}
+require_once $rootDir . '/product_sheet_helpers.php';
 
 if (file_exists($rootDir . '/dbh.inc.php')) {
     include $rootDir . '/dbh.inc.php';
-} elseif (file_exists($liveRoot . '/dbh.inc.php')) {
-    include $liveRoot . '/dbh.inc.php';
 }
 
 $feedDir = $rootDir . '/uploads/google_products';
-if (strpos($rootDir, 'xampp') === false && is_dir($liveRoot)) {
-    $feedDir = $liveRoot . '/uploads/google_products';
-}
 
 if (!is_dir($feedDir)) {
     @mkdir($feedDir, 0755, true);

@@ -6,7 +6,7 @@ if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
 }
 
 $configCandidates = [
-    '/home2/rukbanor/configs_sirfrancis/sirfrancis_config.php',
+    rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__, 2)), '/') . '/configs_sirfrancis/sirfrancis_config.php',
 ];
 
 foreach ($configCandidates as $configPath) {
@@ -28,7 +28,7 @@ if (empty($DB_servername)) {
 }
 
 if (empty($DB_username) || empty($DB_dbname)) {
-    error_log('Sir Francis admin DB credentials missing. Checked /home2/rukbanor/configs_sirfrancis/sirfrancis_config.php');
+    error_log('Sir Francis admin DB credentials missing. Checked ~/configs_sirfrancis/sirfrancis_config.php');
     die('Database configuration is missing. Please check the Sir Francis server configuration.');
 }
 

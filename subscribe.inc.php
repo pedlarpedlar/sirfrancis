@@ -12,7 +12,7 @@ if (file_exists(__DIR__ . '/PHPMailer/PHPMailer/src/PHPMailer.php')) {
     require_once __DIR__ . '/PHPMailer/PHPMailer/src/SMTP.php';
 }
 
-$liveConfig = '/home/candybirdco/configs_candybird/candybird_config.php';
+$liveConfig = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 if (file_exists($liveConfig)) {
     require_once $liveConfig;
 }

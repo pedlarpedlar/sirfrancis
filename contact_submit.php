@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $rootDir = __DIR__;
-$liveConfigPath = '/home/candybirdco/configs_candybird/candybird_config.php';
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 if (is_file($liveConfigPath)) {
     require_once $liveConfigPath;
 }

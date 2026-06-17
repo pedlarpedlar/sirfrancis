@@ -9,8 +9,9 @@ require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
 require_once __DIR__ . '/candybird_mail_helpers.php';
 require_once __DIR__ . '/ozow_helpers.php';
-if (file_exists('/home/candybirdco/configs_candybird/candybird_config.php')) {
-    require_once('/home/candybirdco/configs_candybird/candybird_config.php');
+$liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
+if (file_exists($liveConfigPath)) {
+    require_once $liveConfigPath;
 }
 
 $order_items = "
