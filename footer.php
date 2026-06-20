@@ -129,8 +129,8 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 
 
             <div style="width:300px">
-              <h2 >Subscribe</h2>
-              <p>Enter your email below to never miss out on our flash sales & special coupons just for you.</p>
+              <h2>Trade Updates</h2>
+              <p>Receive Sir Francis procurement updates, bulk availability notes, private labelling news and wholesale announcements.</p>
                 <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               <div class="nletter-form mt-20">
                 <form
