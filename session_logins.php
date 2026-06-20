@@ -64,7 +64,7 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
 
         $free_shipping_amount = getCandybirdFreeShippingAmount();
         $tel = "";
-        $website_email = "info@fishgelatine.co.za";
+        $website_email = "info@sirfrancis.co.za";
         $website_email2 = "";
         $website_address = "";
         $headquarters = "";

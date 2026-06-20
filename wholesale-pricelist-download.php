@@ -44,25 +44,25 @@ $downloadTitle = 'Sir Francis Wholesale Pricelist ' . date('F Y');
   <title><?= cbWholesaleText($downloadTitle) ?></title>
   <style>
     * { box-sizing:border-box; }
-    body { background:#f7f4ef; color:#2c2926; font-family:Arial, sans-serif; margin:18px; }
-    .topbar { align-items:flex-start; background:#2d1739; border-bottom:4px solid #fcb42f; color:#fff; display:flex; gap:16px; justify-content:space-between; margin-bottom:10px; padding:12px 14px; }
-    h1 { color:#fcb42f; font-size:22px; margin:0 0 4px; }
-    .meta { color:#f8ecff; font-size:11px; line-height:1.4; }
+    body { background:#f4eee2; color:#1d293c; font-family:Raleway, Arial, sans-serif; margin:18px; }
+    .topbar { align-items:flex-start; background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 3px #0b2341, inset 0 0 0 4px rgba(201,179,109,.75); color:#fff; display:flex; gap:16px; justify-content:space-between; margin-bottom:10px; padding:14px 16px; }
+    h1 { color:#d3bd75; font-family:"Playfair Display", Georgia, serif; font-size:22px; margin:0 0 4px; }
+    .meta { color:#f5ead3; font-size:11px; line-height:1.4; }
     .actions { display:flex; gap:8px; }
-    button, a.button { background:#fcb42f; border:0; color:#2d1739; cursor:pointer; display:inline-block; font-size:12px; font-weight:bold; padding:8px 10px; text-decoration:none; }
-    a.button.secondary { background:#fff; color:#5b1178; }
-    .note { background:#fff; border:1px solid #eadfd2; border-left:5px solid #fcb42f; display:grid; font-size:10px; gap:8px; grid-template-columns:1fr 1fr 1fr; margin-bottom:10px; padding:8px 10px; }
+    button, a.button { background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 2px #0b2341, inset 0 0 0 3px rgba(201,179,109,.85); color:#d3bd75; cursor:pointer; display:inline-block; font-size:12px; font-weight:bold; padding:8px 10px; text-decoration:none; text-transform:uppercase; }
+    a.button.secondary { background:#f4eee2; box-shadow:inset 0 0 0 2px #f4eee2, inset 0 0 0 3px rgba(201,179,109,.9); color:#0b2341; }
+    .note { background:#fffaf2; border:1px solid #d9c98a; border-left:5px solid #c9b36d; display:grid; font-size:10px; gap:8px; grid-template-columns:1fr 1fr 1fr; margin-bottom:10px; padding:8px 10px; }
     table { border-collapse:collapse; font-size:9px; width:100%; }
-    th, td { border:1px solid #e6dccf; padding:2px 4px; text-align:left; vertical-align:top; }
-    th { background:#f0e8f4; color:#4b185f; font-size:8px; text-transform:uppercase; }
+    th, td { border:1px solid #eadfbd; padding:2px 4px; text-align:left; vertical-align:top; }
+    th { background:#0b2341; color:#d3bd75; font-size:8px; text-transform:uppercase; }
     tbody tr:nth-child(even):not(.category) td { background:#fffdf8; }
-    .category td { background:#5b1178; color:#fcb42f; font-weight:bold; padding:4px 5px; }
-    .id { width:42px; color:#555; }
+    .category td { background:#102f52; color:#d3bd75; font-family:"Playfair Display", Georgia, serif; font-weight:bold; padding:4px 5px; }
+    .id { width:42px; color:#526071; }
     .size { width:72px; }
-    .price { color:#5b1178; width:150px; font-weight:bold; }
-    .details { color:#333; font-size:8px; }
-    .tag { background:#fff4d2; border:1px solid #f3d074; color:#5b1178; display:inline-block; font-size:7px; font-weight:bold; margin:1px 2px 1px 0; padding:1px 3px; }
-    .footer-note { color:#333; font-size:9px; line-height:1.4; margin-top:10px; }
+    .price { color:#0b2341; width:150px; font-weight:bold; }
+    .details { color:#344154; font-size:8px; }
+    .tag { background:#f4eee2; border:1px solid #c9b36d; color:#0b2341; display:inline-block; font-size:7px; font-weight:bold; margin:1px 2px 1px 0; padding:1px 3px; }
+    .footer-note { color:#344154; font-size:9px; line-height:1.4; margin-top:10px; }
     @media print {
       body { background:#fff; margin:8mm; }
       .actions { display:none; }
@@ -76,7 +76,7 @@ $downloadTitle = 'Sir Francis Wholesale Pricelist ' . date('F Y');
   <div class="topbar">
     <div>
       <h1>Sir Francis Wholesale Pricelist</h1>
-      <div class="meta"><?= number_format(count($rows)) ?> bulk lines | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?> | www.fishgelatine.co.za/wholesale-pricelist</div>
+      <div class="meta"><?= number_format(count($rows)) ?> bulk lines | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?> | sirfrancis.co.za/wholesale-pricelist</div>
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>

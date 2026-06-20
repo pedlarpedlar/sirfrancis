@@ -8,10 +8,10 @@ $rowCount = count($wholesaleRows);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $limitedDescription = 'Sir Francis wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
-$page_url_canonical = 'https://www.fishgelatine.co.za/v2/wholesale-pricelist';
+$page_url_canonical = 'https://sirfrancis.co.za/wholesale-pricelist';
 $title_og = 'Wholesale Pricelist - Sir Francis';
-$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/wholesale.jpg';
-$image_type_og = 'image/jpeg';
+$image_url_og = 'https://sirfrancis.co.za/assets/img/logo/main.png';
+$image_type_og = 'image/png';
 $image_width_og = '1200';
 $image_height_og = '630';
 $page_url_og = $page_url_canonical;
@@ -30,50 +30,55 @@ include 'page_menues.php';
 <title>Wholesale Pricelist - <?= cbWholesaleText($website_company_name ?? 'Sir Francis') ?></title>
 
 <style>
-  .wholesale-price-page { background:#f7f4ef; color:#2c2926; padding:28px 0 48px; }
-  .wholesale-hero { align-items:center; background:#2d1739; border-radius:8px; color:#fff; display:flex; gap:18px; justify-content:space-between; margin-bottom:14px; padding:22px; }
-  .wholesale-hero h1 { color:#fcb42f; font-size:30px; margin:0 0 5px; }
-  .wholesale-hero p { color:#f8ecff; font-size:14px; line-height:1.6; margin:0; max-width:760px; }
+  .wholesale-price-page { background:#f4eee2; color:#1d293c; padding:28px 0 48px; }
+  .wholesale-hero { align-items:center; background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 3px #0b2341, inset 0 0 0 4px rgba(201,179,109,.78); color:#fff; display:grid; gap:20px; grid-template-columns:minmax(0, 1fr) minmax(220px, 320px); margin-bottom:14px; padding:28px; }
+  .wholesale-hero h1 { color:#d3bd75; font-family:"Playfair Display", Georgia, serif; font-size:34px; font-weight:700; letter-spacing:0; margin:0 0 6px; }
+  .wholesale-hero p { color:#f5ead3; font-family:Raleway, Arial, sans-serif; font-size:14px; line-height:1.7; margin:0; max-width:760px; }
   .wholesale-hero-copy { min-width:0; }
-  .wholesale-hero-media { aspect-ratio:1.9 / 1; border-radius:8px; max-width:430px; object-fit:cover; width:min(430px, 38vw); }
-  .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+  .wholesale-hero-mark { align-items:center; align-self:stretch; background:rgba(244,238,226,.08); border:1px solid rgba(201,179,109,.65); box-shadow:inset 0 0 0 3px rgba(11,35,65,.9), inset 0 0 0 4px rgba(201,179,109,.36); display:flex; justify-content:center; min-height:180px; padding:20px; }
+  .wholesale-hero-logo { display:block; height:auto; max-height:170px; object-fit:contain; width:min(240px, 100%); }
+  .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .wholesale-btn { align-items:center; background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 2px #0b2341, inset 0 0 0 3px rgba(201,179,109,.8); color:#d3bd75 !important; display:inline-flex; font-family:Raleway, Arial, sans-serif; font-size:12px; font-weight:800; gap:6px; justify-content:center; min-height:38px; padding:9px 13px; text-decoration:none; text-transform:uppercase; }
+  .wholesale-btn:hover { background:#122f52; color:#f5ead3 !important; text-decoration:none; }
+  .wholesale-btn-light { background:#f4eee2; box-shadow:inset 0 0 0 2px #f4eee2, inset 0 0 0 3px rgba(201,179,109,.9); color:#0b2341 !important; }
+  .wholesale-btn-whatsapp { background:#173f35; box-shadow:inset 0 0 0 2px #173f35, inset 0 0 0 3px rgba(201,179,109,.85); }
   .wholesale-top-grid { display:grid; gap:14px; grid-template-columns:minmax(0, 1.4fr) minmax(320px, .8fr); margin-bottom:14px; }
   .wholesale-note { display:grid; gap:10px; }
-  .wholesale-note-card { background:#fff; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; line-height:1.55; padding:12px 14px; }
-  .wholesale-private-note { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; color:#51475a; font-size:13px; line-height:1.6; margin-top:14px; padding:12px 14px; }
-  .wholesale-calculator { background:#fff; border:1px solid #eadfd2; border-radius:8px; padding:14px; }
-  .wholesale-calculator h2 { color:#5b1178; font-size:17px; margin:0 0 5px; }
-  .wholesale-calculator p { color:#6d6270; font-size:12px; line-height:1.45; margin-bottom:10px; }
+  .wholesale-note-card { background:#fffaf2; border:1px solid #d9c98a; color:#344154; font-family:Raleway, Arial, sans-serif; font-size:13px; line-height:1.55; padding:12px 14px; }
+  .wholesale-note-card strong { color:#0b2341; }
+  .wholesale-private-note { background:#fffaf2; border:1px solid #d9c98a; color:#344154; font-size:13px; line-height:1.6; margin-top:14px; padding:12px 14px; }
+  .wholesale-calculator { background:#fffaf2; border:1px solid #d9c98a; padding:14px; }
+  .wholesale-calculator h2 { color:#0b2341; font-family:"Playfair Display", Georgia, serif; font-size:19px; margin:0 0 5px; }
+  .wholesale-calculator p { color:#526071; font-size:12px; line-height:1.45; margin-bottom:10px; }
   .wholesale-calc-grid { display:grid; gap:9px; grid-template-columns:1fr; }
-  .wholesale-calc-field label { color:#4b185f; display:block; font-size:12px; font-weight:800; margin-bottom:5px; text-transform:uppercase; }
+  .wholesale-calc-field label { color:#0b2341; display:block; font-size:12px; font-weight:800; margin-bottom:5px; text-transform:uppercase; }
   .wholesale-calc-field select,
-  .wholesale-calc-field input { border:1px solid #decbe7; border-radius:6px; height:38px; padding:7px 9px; width:100%; }
-  .wholesale-pack-table { border:1px solid #f0ebe4; border-radius:8px; margin-top:12px; overflow:hidden; }
+  .wholesale-calc-field input { background:#fff; border:1px solid #d9c98a; height:38px; padding:7px 9px; width:100%; }
+  .wholesale-pack-table { border:1px solid #d9c98a; margin-top:12px; overflow:hidden; }
   .wholesale-pack-row { align-items:end; display:grid; gap:8px; grid-template-columns:1fr 86px 36px; padding:9px; }
-  .wholesale-pack-row + .wholesale-pack-row { border-top:1px solid #f0ebe4; }
-  .wholesale-pack-row button { align-items:center; background:#f6f1ea; border:1px solid #eadfd2; border-radius:6px; color:#5b1178; display:flex; height:38px; justify-content:center; width:36px; }
+  .wholesale-pack-row + .wholesale-pack-row { border-top:1px solid #e3d7a9; }
+  .wholesale-pack-row button { align-items:center; background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 2px #0b2341, inset 0 0 0 3px rgba(201,179,109,.85); color:#d3bd75; display:flex; height:38px; justify-content:center; width:36px; }
   .wholesale-calc-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-  .wholesale-calc-result { background:#fffaf2; border:1px solid #eadfd2; border-radius:8px; display:grid; gap:8px; grid-template-columns:repeat(2, minmax(0, 1fr)); margin-top:12px; padding:10px; }
-  .wholesale-calc-result span { color:#6d6270; display:block; font-size:11px; font-weight:800; text-transform:uppercase; }
-  .wholesale-calc-result strong { color:#2c2926; display:block; font-size:16px; margin-top:2px; }
-  .wholesale-calc-message { color:#16713a; font-size:13px; font-weight:800; line-height:1.55; margin-top:10px; }
-  .wholesale-shell { background:#fff; border:1px solid #eadfd2; border-radius:8px; overflow:hidden; }
+  .wholesale-calc-result { background:#f4eee2; border:1px solid #d9c98a; display:grid; gap:8px; grid-template-columns:repeat(2, minmax(0, 1fr)); margin-top:12px; padding:10px; }
+  .wholesale-calc-result span { color:#526071; display:block; font-size:11px; font-weight:800; text-transform:uppercase; }
+  .wholesale-calc-result strong { color:#0b2341; display:block; font-size:16px; margin-top:2px; }
+  .wholesale-calc-message { color:#173f35; font-size:13px; font-weight:800; line-height:1.55; margin-top:10px; }
+  .wholesale-shell { background:#fffaf2; border:1px solid #d9c98a; overflow:hidden; }
   .wholesale-table { font-size:13px; margin:0; }
-  .wholesale-table th { background:#f0e8f4; border-bottom:1px solid #decbe7; color:#4b185f; font-size:11px; padding:8px 10px; text-transform:uppercase; white-space:nowrap; }
-  .wholesale-table td { border-top:1px solid #f0ebe4; padding:7px 10px; vertical-align:middle; }
-  .wholesale-category td { background:#5b1178 !important; color:#fcb42f; font-weight:800; padding:7px 10px; }
+  .wholesale-table th { background:#0b2341; border-bottom:1px solid #c9b36d; color:#d3bd75; font-size:11px; padding:8px 10px; text-transform:uppercase; white-space:nowrap; }
+  .wholesale-table td { border-top:1px solid #eadfbd; padding:8px 10px; vertical-align:middle; }
+  .wholesale-table tbody tr:not(.wholesale-category):nth-child(odd) td { background:#fffdf8; }
+  .wholesale-category td { background:#102f52 !important; color:#d3bd75; font-family:"Playfair Display", Georgia, serif; font-weight:800; padding:8px 10px; }
   .wholesale-product { min-width:220px; }
-  .wholesale-product-image { aspect-ratio:1; border:1px solid #eadfd2; border-radius:6px; object-fit:cover; width:52px; }
-  .wholesale-product a { color:#2c2926; font-weight:800; text-decoration:none; }
-  .wholesale-product a:hover { color:#28364B; }
-  .wholesale-price { color:#5b1178; font-size:16px; font-weight:900; min-width:145px; }
-  .wholesale-muted { color:#6d6270; font-size:12px; line-height:1.45; }
-  .wholesale-mini { color:#6d6270; display:block; font-size:11px; line-height:1.45; margin-top:3px; }
-  .wholesale-footnote { color:#6d6270; font-size:12px; line-height:1.65; margin-top:14px; }
+  .wholesale-product a { color:#0b2341; font-weight:800; text-decoration:none; }
+  .wholesale-product a:hover { color:#8b6f2b; }
+  .wholesale-price { color:#0b2341; font-size:16px; font-weight:900; min-width:145px; }
+  .wholesale-muted { color:#526071; font-size:12px; line-height:1.45; }
+  .wholesale-mini { color:#526071; display:block; font-size:11px; line-height:1.45; margin-top:3px; }
+  .wholesale-footnote { color:#526071; font-size:12px; line-height:1.65; margin-top:14px; }
   @media (max-width:767px) {
-    .wholesale-hero { align-items:flex-start; flex-direction:column; }
-    .wholesale-hero-media { max-width:100%; width:100%; }
-    .wholesale-actions { justify-content:flex-start; }
+    .wholesale-hero { grid-template-columns:1fr; padding:20px; }
+    .wholesale-hero-mark { min-height:150px; }
     .wholesale-top-grid { grid-template-columns:1fr; }
     .wholesale-calc-grid,
     .wholesale-calc-result { grid-template-columns:1fr; }
@@ -89,12 +94,14 @@ include 'page_menues.php';
       <div class="wholesale-hero-copy">
         <h1>Sir Francis Wholesale Pricelist</h1>
         <p><?= number_format($rowCount) ?> bulk line<?= $rowCount === 1 ? '' : 's' ?> | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?>. Wholesale prices are for bulk planning and confirmed by quote before invoicing.</p>
+        <div class="wholesale-actions">
+          <a href="wholesale-pricelist-download" class="wholesale-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
+          <a href="wholesale-pricelist-download?format=tsv" class="wholesale-btn wholesale-btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
+          <?php if ($whatsappDigits !== ''): ?><a href="https://wa.me/<?= cbWholesaleText($whatsappDigits) ?>?text=<?= $whatsappMessage ?>" class="wholesale-btn wholesale-btn-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Request quote</a><?php endif; ?>
+        </div>
       </div>
-      <img class="wholesale-hero-media" src="https://www.fishgelatine.co.za/v2/assets/img/wholesale.jpg" alt="Sir Francis wholesale and bulk pricelist" loading="lazy">
-      <div class="wholesale-actions">
-        <a href="wholesale-pricelist-download" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
-        <a href="wholesale-pricelist-download?format=tsv" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
-        <?php if ($whatsappDigits !== ''): ?><a href="https://wa.me/<?= cbWholesaleText($whatsappDigits) ?>?text=<?= $whatsappMessage ?>" class="btn btn-success" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Request quote</a><?php endif; ?>
+      <div class="wholesale-hero-mark">
+        <img class="wholesale-hero-logo" src="assets/img/logo/main.png" alt="Sir Francis" loading="lazy">
       </div>
     </div>
 
@@ -129,8 +136,8 @@ include 'page_menues.php';
         </div>
         <div class="wholesale-pack-table" id="wholesale-pack-table"></div>
         <div class="wholesale-calc-actions">
-          <button type="button" class="btn btn-light btn-sm" id="wholesale-add-pack">Add pack size</button>
-          <?php if ($whatsappDigits !== ''): ?><a href="#" class="btn btn-success btn-sm d-none" id="wholesale-calc-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Send estimate</a><?php endif; ?>
+          <button type="button" class="wholesale-btn wholesale-btn-light" id="wholesale-add-pack">Add pack size</button>
+          <?php if ($whatsappDigits !== ''): ?><a href="#" class="wholesale-btn wholesale-btn-whatsapp d-none" id="wholesale-calc-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Send estimate</a><?php endif; ?>
         </div>
         <div class="wholesale-calc-result" id="wholesale-calc-result">
           <div><span>Total requested</span><strong id="calc-total-kg">-</strong></div>
@@ -147,7 +154,6 @@ include 'page_menues.php';
         <table class="table wholesale-table">
           <thead>
             <tr>
-              <th>Pic</th>
               <th>Product</th>
               <th>Price / kg</th>
               <th>Pack-down</th>
@@ -156,10 +162,10 @@ include 'page_menues.php';
           </thead>
           <tbody>
             <?php if (empty($rowsByCategory)): ?>
-              <tr><td colspan="5">Wholesale prices are being updated. Please request the current list on WhatsApp.</td></tr>
+              <tr><td colspan="4">Wholesale prices are being updated. Please request the current list on WhatsApp.</td></tr>
             <?php endif; ?>
             <?php foreach ($rowsByCategory as $category => $rows): ?>
-              <tr class="wholesale-category"><td colspan="5"><?= cbWholesaleText(cbWholesaleDisplayCategoryPath($category)) ?></td></tr>
+              <tr class="wholesale-category"><td colspan="4"><?= cbWholesaleText(cbWholesaleDisplayCategoryPath($category)) ?></td></tr>
               <?php foreach ($rows as $row): ?>
                 <?php
                   $bulkKg = cbWholesaleSizeToKg($row['size'] ?? '');
@@ -171,9 +177,6 @@ include 'page_menues.php';
                   $packDownFee = (float) ($row['pack_down_fee'] ?? 0);
                 ?>
                 <tr>
-                  <td>
-                    <img class="wholesale-product-image" src="<?= cbWholesaleText($row['image'] ?: 'assets/img/product/1.png') ?>" alt="<?= cbWholesaleText($row['title']) ?>" onerror="this.src='assets/img/product/1.png'">
-                  </td>
                   <td class="wholesale-product">
                     <?php if (!empty($row['product_url'])): ?><a href="<?= cbWholesaleText($row['product_url']) ?>"><?= cbWholesaleText($row['title']) ?></a><?php else: ?><strong><?= cbWholesaleText($row['title']) ?></strong><?php endif; ?>
                     <span class="wholesale-mini"><?= cbWholesaleText($row['size']) ?> bulk line<?= !empty($row['description']) ? ' | ' . cbWholesaleText($row['description']) : '' ?></span>
