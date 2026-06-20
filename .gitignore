@@ -5,6 +5,8 @@
 .user.ini
 configs/
 dbh.inc.php
+!/dbh.inc.php
+!/admin-sf/dbh.inc.php
 admin-cb/dbh.inc.php
 
 # Logs/cache/backups
