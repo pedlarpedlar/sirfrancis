@@ -65,7 +65,7 @@ function sheetMenuCleanCategory($value) {
 
 function buildSheetMenuCategories() {
     $cacheDir = __DIR__ . '/sheet_cache';
-    $cacheFile = $cacheDir . '/menu_categories_v1.json';
+    $cacheFile = $cacheDir . '/menu_categories_v3.json';
     if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < 1800) {
         $cached = json_decode((string) file_get_contents($cacheFile), true);
         if (is_array($cached)) {
@@ -87,34 +87,42 @@ function buildSheetMenuCategories() {
             $specialCount++;
         }
 
-        $parent = sheetMenuCleanCategory($product['parent_category'] ?? '');
-        $child1 = sheetMenuCleanCategory($product['child_category_1'] ?? '');
-        $child2 = sheetMenuCleanCategory($product['child_category_2'] ?? '');
+        $paths = function_exists('getCandybirdProductCategoryPaths')
+            ? getCandybirdProductCategoryPaths($product)
+            : [[
+                $product['parent_category'] ?? '',
+                $product['child_category_1'] ?? '',
+                $product['child_category_2'] ?? '',
+            ]];
 
-        if ($parent === '') {
-            continue;
-        }
-        if (function_exists('isCandybirdCategoryVisible') && !isCandybirdCategoryVisible($parent)) {
-            continue;
-        }
-
-        if (!isset($tree[$parent])) {
-            $tree[$parent] = ['category_param' => $parent, 'display_name' => function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($parent) : $parent, 'count' => 0, 'children' => []];
-        }
-        $tree[$parent]['count']++;
-
-        if ($child1 !== '' && $child1 !== $parent) {
-            if (!isset($tree[$parent]['children'][$child1])) {
-                $tree[$parent]['children'][$child1] = ['category_param' => $child1, 'count' => 0, 'children' => []];
+        foreach ($paths as $path) {
+            $parts = array_values(array_filter(array_map('sheetMenuCleanCategory', (array) $path)));
+            if (empty($parts)) {
+                continue;
             }
-            $tree[$parent]['children'][$child1]['count']++;
+            $parent = $parts[0];
+            if (function_exists('isCandybirdCategoryVisible') && !isCandybirdCategoryVisible($parent)) {
+                continue;
+            }
 
-            if ($child2 !== '' && $child2 !== $parent && $child2 !== $child1) {
-                if (!isset($tree[$parent]['children'][$child1]['children'][$child2])) {
-                    $tree[$parent]['children'][$child1]['children'][$child2] = ['category_param' => $child2, 'count' => 0, 'children' => []];
+            if (!isset($tree[$parent])) {
+                $tree[$parent] = ['category_param' => $parent, 'display_name' => function_exists('getCandybirdCategoryDisplayLabel') ? getCandybirdCategoryDisplayLabel($parent) : $parent, 'count' => 0, 'children' => []];
+            }
+            $tree[$parent]['count']++;
+
+            $node =& $tree[$parent];
+            for ($i = 1; $i < count($parts); $i++) {
+                $part = $parts[$i];
+                if ($part === '' || in_array($part, array_slice($parts, 0, $i), true)) {
+                    continue;
                 }
-                $tree[$parent]['children'][$child1]['children'][$child2]['count']++;
+                if (!isset($node['children'][$part])) {
+                    $node['children'][$part] = ['category_param' => $part, 'count' => 0, 'children' => []];
+                }
+                $node['children'][$part]['count']++;
+                $node =& $node['children'][$part];
             }
+            unset($node);
         }
     }
     if ($specialCount > 0 && function_exists('isCandybirdCategoryVisible') && isCandybirdCategoryVisible('Specials')) {

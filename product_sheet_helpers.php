@@ -144,6 +144,105 @@ if (!function_exists('candybirdTsvDataLooksSafeToCache')) {
     }
 }
 
+if (!function_exists('getCandybirdProductPrimaryCategoryParts')) {
+    function getCandybirdProductPrimaryCategoryParts($product) {
+        $parts = [];
+        foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
+            $value = trim((string) ($product[$field] ?? ''));
+            if ($value !== '' && !in_array($value, $parts, true)) {
+                $parts[] = $value;
+            }
+        }
+        return $parts;
+    }
+}
+
+if (!function_exists('getCandybirdProductAdditionalCategoryPaths')) {
+    function getCandybirdProductAdditionalCategoryPaths($product) {
+        $raw = trim((string) ($product['additional_categories'] ?? ''));
+        if ($raw === '') {
+            return [];
+        }
+
+        $paths = [];
+        foreach (explode('|', $raw) as $pathText) {
+            $parts = [];
+            foreach (explode('>', (string) $pathText) as $part) {
+                $part = trim((string) $part);
+                if ($part !== '' && !in_array($part, $parts, true)) {
+                    $parts[] = $part;
+                }
+            }
+            if (!empty($parts)) {
+                $pathKey = implode(' > ', $parts);
+                $paths[$pathKey] = $parts;
+            }
+        }
+
+        return array_values($paths);
+    }
+}
+
+if (!function_exists('getCandybirdProductCategoryPaths')) {
+    function getCandybirdProductCategoryPaths($product, $includePrimary = true) {
+        $paths = [];
+        if ($includePrimary) {
+            $primary = getCandybirdProductPrimaryCategoryParts($product);
+            if (!empty($primary)) {
+                $paths[implode(' > ', $primary)] = $primary;
+            }
+        }
+        foreach (getCandybirdProductAdditionalCategoryPaths($product) as $path) {
+            $paths[implode(' > ', $path)] = $path;
+        }
+        return array_values($paths);
+    }
+}
+
+if (!function_exists('getCandybirdProductCategoryNames')) {
+    function getCandybirdProductCategoryNames($product) {
+        $names = [];
+        foreach (getCandybirdProductCategoryPaths($product) as $path) {
+            foreach ($path as $part) {
+                $part = trim((string) $part);
+                if ($part !== '' && !in_array($part, $names, true)) {
+                    $names[] = $part;
+                }
+            }
+        }
+        return $names;
+    }
+}
+
+if (!function_exists('isCandybirdProductInCategory')) {
+    function isCandybirdProductInCategory($product, $categoryName) {
+        $categoryToken = function_exists('getCandybirdCategorySlug')
+            ? getCandybirdCategorySlug($categoryName)
+            : strtolower(trim((string) $categoryName));
+        if ($categoryToken === '') {
+            return false;
+        }
+        foreach (getCandybirdProductCategoryNames($product) as $name) {
+            $nameToken = function_exists('getCandybirdCategorySlug')
+                ? getCandybirdCategorySlug($name)
+                : strtolower(trim((string) $name));
+            if ($nameToken !== '' && $nameToken === $categoryToken) {
+                return true;
+            }
+        }
+        foreach (getCandybirdProductCategoryPaths($product) as $path) {
+            $pathText = implode(' > ', $path);
+            $pathToken = function_exists('getCandybirdCategorySlug')
+                ? getCandybirdCategorySlug($pathText)
+                : strtolower(trim($pathText));
+            if ($pathToken !== '' && $pathToken === $categoryToken) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 if (!function_exists('getSheetProducts')) {
     function getSheetProducts($forceRefresh = false) {
         static $sheetProducts = null;
@@ -1106,14 +1205,23 @@ if (!function_exists('candybirdCouponCategoryParentMap')) {
             if (!is_array($product)) {
                 continue;
             }
-            $parent = trim((string) ($product['parent_category'] ?? ''));
-            $child1 = trim((string) ($product['child_category_1'] ?? ''));
-            $child2 = trim((string) ($product['child_category_2'] ?? ''));
+            $paths = function_exists('getCandybirdProductCategoryPaths')
+                ? getCandybirdProductCategoryPaths($product)
+                : [array_values(array_filter([
+                    trim((string) ($product['parent_category'] ?? '')),
+                    trim((string) ($product['child_category_1'] ?? '')),
+                    trim((string) ($product['child_category_2'] ?? '')),
+                ]))];
 
-            $addParent($child1, $parent);
-            $addParent($child2, $child1 !== '' ? $child1 : $parent);
-            if ($child1 !== '' && $parent !== '') {
-                $addParent($child2, $parent);
+            foreach ($paths as $parts) {
+                $parts = array_values(array_filter(array_map('trim', (array) $parts)));
+                $count = count($parts);
+                for ($i = 1; $i < $count; $i++) {
+                    $addParent($parts[$i], $parts[$i - 1]);
+                    for ($ancestor = 0; $ancestor < $i - 1; $ancestor++) {
+                        $addParent($parts[$i], $parts[$ancestor]);
+                    }
+                }
             }
         }
 
@@ -1158,11 +1266,15 @@ if (!function_exists('candybirdCouponItemMatchesCategoryRestriction')) {
         }
 
         $itemCategories = [];
-        foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
-            $category = trim((string) ($item[$field] ?? ''));
-            if ($category !== '') {
-                $itemCategories = array_merge($itemCategories, candybirdCouponCategoryAncestorTokens($category));
-            }
+        $categoryNames = function_exists('getCandybirdProductCategoryNames')
+            ? getCandybirdProductCategoryNames($item)
+            : array_filter([
+                trim((string) ($item['parent_category'] ?? '')),
+                trim((string) ($item['child_category_1'] ?? '')),
+                trim((string) ($item['child_category_2'] ?? '')),
+            ]);
+        foreach ($categoryNames as $category) {
+            $itemCategories = array_merge($itemCategories, candybirdCouponCategoryAncestorTokens($category));
         }
         $itemCategories = array_unique(array_filter($itemCategories));
 
@@ -1424,12 +1536,18 @@ if (!function_exists('getCandybirdCategoryBySlug')) {
         $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
         $categories = [];
         foreach ($products as $product) {
-            foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
-                $category = trim((string) ($product[$field] ?? ''));
-                if ($category === '') {
-                    continue;
+            $categoryNames = function_exists('getCandybirdProductCategoryNames')
+                ? getCandybirdProductCategoryNames($product)
+                : array_filter([
+                    trim((string) ($product['parent_category'] ?? '')),
+                    trim((string) ($product['child_category_1'] ?? '')),
+                    trim((string) ($product['child_category_2'] ?? '')),
+                ]);
+            foreach ($categoryNames as $category) {
+                $category = trim((string) $category);
+                if ($category !== '') {
+                    $categories[$category] = true;
                 }
-                $categories[$category] = true;
             }
         }
 
@@ -1543,6 +1661,7 @@ if (!function_exists('isSheetProductDigital')) {
             $product['parent_category'] ?? '',
             $product['child_category_1'] ?? '',
             $product['child_category_2'] ?? '',
+            $product['additional_categories'] ?? '',
             $product['name'] ?? '',
             $product['title'] ?? '',
         ])));
@@ -1596,7 +1715,7 @@ if (!function_exists('getSheetProductSearchText')) {
     function getSheetProductSearchText($product) {
         $fields = [
             'id', 'name', 'title', 'size', 'weight', 'price',
-            'parent_category', 'child_category_1', 'child_category_2',
+            'parent_category', 'child_category_1', 'child_category_2', 'additional_categories',
             'category', 'category_name', 'description', 'short_description',
             'flavour', 'flavor', 'label', 'tags'
         ];
@@ -1605,6 +1724,15 @@ if (!function_exists('getSheetProductSearchText')) {
         foreach ($fields as $field) {
             if (!empty($product[$field])) {
                 $parts[] = $product[$field];
+            }
+        }
+        if (function_exists('getCandybirdProductCategoryNames')) {
+            $parts = array_merge($parts, getCandybirdProductCategoryNames($product));
+        }
+        if (function_exists('getCandybirdProductCategoryPaths')) {
+            foreach (getCandybirdProductCategoryPaths($product) as $path) {
+                $parts[] = implode(' ', $path);
+                $parts[] = implode(' > ', $path);
             }
         }
 
@@ -2110,6 +2238,7 @@ if (!function_exists('buildSheetCartItem')) {
             'parent_category' => $product['parent_category'] ?? '',
             'child_category_1' => $product['child_category_1'] ?? '',
             'child_category_2' => $product['child_category_2'] ?? '',
+            'additional_categories' => $product['additional_categories'] ?? '',
             'product_type' => $product['product_type'] ?? '',
             'title' => getSheetProductDisplayTitle($product),
             'product_weight' => getSheetProductDisplaySize($product),
@@ -2266,7 +2395,8 @@ if (!function_exists('syncSheetProductMirrorToDb')) {
         $otherInfo = trim(implode(' | ', array_filter([
             $product['parent_category'] ?? '',
             $product['child_category_1'] ?? '',
-            $product['child_category_2'] ?? ''
+            $product['child_category_2'] ?? '',
+            $product['additional_categories'] ?? ''
         ])));
         $features = (string) ($product['features'] ?? '');
         $label = (string) ($product['label'] ?? '');

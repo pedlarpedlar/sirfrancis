@@ -10,6 +10,11 @@ if (!function_exists('cbPricelistCategoryName')) {
 
 if (!function_exists('cbPricelistCategoryParts')) {
     function cbPricelistCategoryParts($product) {
+        if (function_exists('getCandybirdProductPrimaryCategoryParts')) {
+            $parts = getCandybirdProductPrimaryCategoryParts($product);
+            return !empty($parts) ? $parts : ['Other Products'];
+        }
+
         $parts = [];
         foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
             $value = trim((string) ($product[$field] ?? ''));
@@ -21,9 +26,27 @@ if (!function_exists('cbPricelistCategoryParts')) {
     }
 }
 
+if (!function_exists('cbPricelistCategoryPaths')) {
+    function cbPricelistCategoryPaths($product) {
+        $paths = function_exists('getCandybirdProductCategoryPaths')
+            ? getCandybirdProductCategoryPaths($product)
+            : [cbPricelistCategoryParts($product)];
+
+        $cleanPaths = [];
+        foreach ($paths as $path) {
+            $parts = array_values(array_filter(array_map('trim', (array) $path)));
+            if (!empty($parts)) {
+                $cleanPaths[] = implode(' > ', $parts);
+            }
+        }
+        return !empty($cleanPaths) ? array_values(array_unique($cleanPaths)) : ['Other Products'];
+    }
+}
+
 if (!function_exists('cbPricelistCategoryPath')) {
     function cbPricelistCategoryPath($product) {
-        return implode(' > ', cbPricelistCategoryParts($product));
+        $paths = cbPricelistCategoryPaths($product);
+        return $paths[0] ?? 'Other Products';
     }
 }
 
@@ -149,8 +172,8 @@ if (!function_exists('cbPricelistProductMatchesFilters')) {
             return false;
         }
 
-        $categoryPath = cbPricelistCategoryPath($product);
-        if (!empty($filters['categories']) && !in_array($categoryPath, $filters['categories'], true)) {
+        $categoryPaths = cbPricelistCategoryPaths($product);
+        if (!empty($filters['categories']) && empty(array_intersect($categoryPaths, $filters['categories']))) {
             return false;
         }
 
@@ -161,10 +184,11 @@ if (!function_exists('cbPricelistProductMatchesFilters')) {
                 $product['name'] ?? '',
                 $product['title'] ?? '',
                 $size,
-                $categoryPath,
+                implode(' ', $categoryPaths),
                 $product['parent_category'] ?? '',
                 $product['child_category_1'] ?? '',
                 $product['child_category_2'] ?? '',
+                $product['additional_categories'] ?? '',
             ]));
             foreach (array_filter(explode(' ', $query)) as $token) {
                 if (strpos($haystack, $token) === false) {
@@ -384,11 +408,15 @@ if (!function_exists('cbPricelistProductsByCategory')) {
             $id = trim((string) ($product['id'] ?? ''));
             $name = trim((string) ($product['name'] ?? ''));
             $enabled = strtolower(trim((string) ($product['enabled'] ?? '1')));
-            $category = cbPricelistCategoryName($product);
-            $categoryPath = cbPricelistCategoryPath($product);
+            $categoryPaths = cbPricelistCategoryPaths($product);
+            $visiblePaths = array_filter($categoryPaths, static function($categoryPath) {
+                $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
+                $category = $parts[0] ?? 'Other Products';
+                return (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category))
+                    && (!function_exists('isCandybirdCategoryPathVisible') || isCandybirdCategoryPathVisible($categoryPath));
+            });
             return $id !== '' && $name !== '' && !in_array($enabled, ['0', 'false', 'no', 'disabled'], true)
-                && (!function_exists('isCandybirdCategoryVisible') || isCandybirdCategoryVisible($category))
-                && (!function_exists('isCandybirdCategoryPathVisible') || isCandybirdCategoryPathVisible($categoryPath));
+                && !empty($visiblePaths);
         });
         $products = array_values(array_filter($products, function($product) use ($filters) {
             return cbPricelistProductMatchesFilters($product, $filters);
@@ -406,7 +434,17 @@ if (!function_exists('cbPricelistProductsByCategory')) {
 
         $productsByCategory = [];
         foreach ($products as $product) {
-            $productsByCategory[cbPricelistCategoryPath($product)][] = $product;
+            foreach (cbPricelistCategoryPaths($product) as $categoryPath) {
+                $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
+                $category = $parts[0] ?? 'Other Products';
+                if (function_exists('isCandybirdCategoryVisible') && !isCandybirdCategoryVisible($category)) {
+                    continue;
+                }
+                if (function_exists('isCandybirdCategoryPathVisible') && !isCandybirdCategoryPathVisible($categoryPath)) {
+                    continue;
+                }
+                $productsByCategory[$categoryPath][] = $product;
+            }
         }
 
         uksort($productsByCategory, function($a, $b) use ($customCategoryOrder) {

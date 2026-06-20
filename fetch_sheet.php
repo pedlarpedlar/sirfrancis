@@ -419,16 +419,14 @@ function generateProductsBreadcrumbsFromSheet($products, $selectedCategory = nul
         $categoryPath = null;
 
         foreach ($products as $p) {
-            // Check all category columns
-            if ($p['parent_category'] === $selectedCategory) {
-                $categoryPath = [$p['parent_category']];
-                break;
-            } elseif ($p['child_category_1'] === $selectedCategory) {
-                $categoryPath = [$p['parent_category'], $p['child_category_1']];
-                break;
-            } elseif ($p['child_category_2'] === $selectedCategory) {
-                $categoryPath = [$p['parent_category'], $p['child_category_1'], $p['child_category_2']];
-                break;
+            $paths = function_exists('getCandybirdProductCategoryPaths')
+                ? getCandybirdProductCategoryPaths($p)
+                : [array_filter([$p['parent_category'] ?? '', $p['child_category_1'] ?? '', $p['child_category_2'] ?? ''])];
+            foreach ($paths as $path) {
+                if (in_array($selectedCategory, $path, true)) {
+                    $categoryPath = $path;
+                    break 2;
+                }
             }
         }
 
@@ -646,29 +644,80 @@ function cleanCategory(value) {
   return v;
 }
 
+function productPrimaryCategoryPath(product) {
+  return [
+    cleanCategory(product.parent_category),
+    cleanCategory(product.child_category_1),
+    cleanCategory(product.child_category_2)
+  ].filter(Boolean);
+}
+
+function productAdditionalCategoryPaths(product) {
+  return String(product.additional_categories || '')
+    .split('|')
+    .map(path => path.split('>').map(cleanCategory).filter(Boolean))
+    .filter(path => path.length);
+}
+
+function productCategoryPaths(product) {
+  const seen = new Set();
+  return [productPrimaryCategoryPath(product), ...productAdditionalCategoryPaths(product)]
+    .filter(path => path.length)
+    .filter(path => {
+      const key = path.map(part => part.toLowerCase()).join('>');
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function productCategoryNames(product) {
+  const seen = new Set();
+  const names = [];
+  productCategoryPaths(product).forEach(path => {
+    path.forEach(part => {
+      const key = part.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        names.push(part);
+      }
+    });
+  });
+  return names;
+}
+
+function productInCategory(product, category) {
+  const clean = cleanCategory(category);
+  if (!clean) return true;
+  const slug = slugifyCategory(clean);
+  return productCategoryNames(product).some(name => name === clean || slugifyCategory(name) === slug);
+}
+
 function extractCategories(products) {
   const categories = {};
 
   products.forEach(p => {
-    const parent = cleanCategory(p.parent_category);
-    if (!parent) return;
+    productCategoryPaths(p).forEach(path => {
+      const parent = path[0];
+      if (!parent) return;
 
-    const child1 = cleanCategory(p.child_category_1);
-    const child2 = cleanCategory(p.child_category_2);
+      const child1 = path[1];
+      const child2 = path[2];
 
-    if (!categories[parent]) {
-      categories[parent] = {};
-    }
-
-    if (child1 && child1 !== parent) {
-      if (!categories[parent][child1]) {
-        categories[parent][child1] = new Set();
+      if (!categories[parent]) {
+        categories[parent] = {};
       }
-    }
 
-    if (child1 && child2 && child2 !== parent && child2 !== child1) {
-      categories[parent][child1].add(child2);
-    }
+      if (child1 && child1 !== parent) {
+        if (!categories[parent][child1]) {
+          categories[parent][child1] = new Set();
+        }
+      }
+
+      if (child1 && child2 && child2 !== parent && child2 !== child1) {
+        categories[parent][child1].add(child2);
+      }
+    });
   });
 
   if (products.some(isProductOnSpecial)) {
@@ -849,6 +898,9 @@ function productSearchText(product) {
     product.parent_category,
     product.child_category_1,
     product.child_category_2,
+    product.additional_categories,
+    productCategoryNames(product).join(' '),
+    productCategoryPaths(product).map(path => path.join(' > ')).join(' '),
     product.category,
     product.category_name,
     product.description,
@@ -902,7 +954,7 @@ function getProductSearchScore(product, query) {
 function isDigitalProduct(product) {
   const size = String(product.size || product.weight || '').trim().toLowerCase();
   const type = String(product.product_type || product.type || product.delivery_type || '').trim().toLowerCase();
-  const text = [product.name, product.title, product.parent_category, product.child_category_1, product.child_category_2].join(' ').toLowerCase();
+  const text = [product.name, product.title, productCategoryNames(product).join(' ')].join(' ').toLowerCase();
   return size === '0' || size === '0g' || size === '0 g' || size === '0kg' || size === '0 kg' ||
     type.includes('digital') || type.includes('ebook') || type.includes('e-book') || type.includes('voucher') ||
     text.includes('voucher') || text.includes('ebook') || text.includes('e-book');
@@ -1449,11 +1501,7 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     categoryFiltered = ALL_PRODUCTS.filter(p => {
       if (!normalizedSelectedCategory) return true;
 
-      return [
-        cleanCategory(p.parent_category),
-        cleanCategory(p.child_category_1),
-        cleanCategory(p.child_category_2)
-      ].includes(normalizedSelectedCategory);
+      return productInCategory(p, normalizedSelectedCategory);
     });
   }
 
@@ -1470,20 +1518,18 @@ $.getJSON("fetch_sheet_data.php", function (data) {
     if (matchingParent) {
       const [parent, children] = matchingParent;
       categoryFiltered = data.filter(p => {
-        const parentCategory = cleanCategory(p.parent_category);
-        const child1 = cleanCategory(p.child_category_1);
-        const child2 = cleanCategory(p.child_category_2);
-
-        if (parent === normalizedSelectedCategory) {
-          return parentCategory === parent;
-        }
-
-        return Object.entries(children).some(([child, grandchildren]) => {
-          if (child !== normalizedSelectedCategory && ![...grandchildren].includes(normalizedSelectedCategory)) {
-            return false;
+        return productCategoryPaths(p).some(path => {
+          if (parent === normalizedSelectedCategory) {
+            return path[0] === parent;
           }
 
-          return child1 === child || child2 === normalizedSelectedCategory;
+          return Object.entries(children).some(([child, grandchildren]) => {
+            if (child !== normalizedSelectedCategory && ![...grandchildren].includes(normalizedSelectedCategory)) {
+              return false;
+            }
+
+            return path[1] === child || path.includes(normalizedSelectedCategory);
+          });
         });
       });
     } else {
@@ -1738,6 +1784,7 @@ function loadProductDetails(productId) {
         parent_category: product.parent_category,
         child_category_1: product.child_category_1,
         child_category_2: product.child_category_2,
+        additional_categories: product.additional_categories,
         is_clearance: product.is_clearance || '',
         clearance_id: product.clearance_id || '',
         stock_qty: product.stock_qty || product.qty_in_stock || product.stock || product.qty_available || product.quantity_available || product.available_qty || product.inventory || ''
@@ -1847,11 +1894,7 @@ function updateModal(productData) {
     var quickSoldOut = quickStockNumber !== null && quickStockNumber <= 0;
 
     // Dynamically collect all category levels
-    const categories = [
-        productData.parent_category,
-        productData.child_category_1,
-        productData.child_category_2
-    ].filter(Boolean); // remove empty/null
+    const categories = productCategoryPaths(productData)[0] || []; // remove empty/null
 
     // Generate breadcrumb HTML
     let categoryLinksHtml = categories.map(cat => {

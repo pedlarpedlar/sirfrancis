@@ -176,19 +176,22 @@ $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsW
 $sourceCategories = [];
 $sourceCategoryPaths = [];
 foreach ($products as $product) {
-    $parent = trim((string) ($product['parent_category'] ?? ''));
-    if ($parent !== '') {
-        $sourceCategories[$parent] = true;
-    }
-    $parts = [];
-    foreach (['parent_category', 'child_category_1', 'child_category_2'] as $field) {
-        $value = trim((string) ($product[$field] ?? ''));
-        if ($value !== '' && !in_array($value, $parts, true)) {
-            $parts[] = $value;
+    $paths = function_exists('getCandybirdProductCategoryPaths')
+        ? getCandybirdProductCategoryPaths($product)
+        : [array_filter([
+            $product['parent_category'] ?? '',
+            $product['child_category_1'] ?? '',
+            $product['child_category_2'] ?? '',
+        ])];
+
+    foreach ($paths as $path) {
+        $parts = array_values(array_filter(array_map('trim', (array) $path)));
+        if (!empty($parts[0])) {
+            $sourceCategories[$parts[0]] = true;
         }
-    }
-    if (!empty($parts)) {
-        $sourceCategoryPaths[implode(' > ', $parts)] = true;
+        if (!empty($parts)) {
+            $sourceCategoryPaths[implode(' > ', $parts)] = true;
+        }
     }
 }
 

@@ -30,7 +30,7 @@ if (!function_exists('cbAdminHelpContent')) {
             ],
             'products' => [
                 'title' => 'Products helper',
-                'body' => 'Download the product template, fill rows from line 3, publish the current Google Sheet as TSV, paste the TSV link here, then sync the product mirror.',
+                'body' => 'Download the product template, fill rows from line 3, publish the current Google Sheet as TSV, paste the TSV link here, then sync the product mirror. To show one product in more than one category, use the additional_categories column with paths like Gym & Fitness > Seeds. Separate multiple extra categories with |.',
                 'links' => [['TSV How-to', 'tsv_how_to'], ['Categories', 'category_order'], ['Mega Sync', 'sheets']],
             ],
             'coupons' => [
