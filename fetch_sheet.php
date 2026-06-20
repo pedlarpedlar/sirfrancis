@@ -29,7 +29,7 @@ if ($isGiftingCategoryPage) {
     $page_url_og = "https://www.fishgelatine.co.za/v2/gifting";
     $description_meta = 'Shop Sir Francis gifting packs, hampers and treat boxes for family, clients, staff and special occasions. Order online for collection or delivery across South Africa.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/gifting.jpg';
+    $image_url_og = 'assets/img/ocean.jpg';
     $image_type_og = 'image/jpeg';
 } elseif ($isResellerCategoryPage) {
     $page_url_canonical = 'https://www.fishgelatine.co.za/v2/resellers';
@@ -37,7 +37,7 @@ if ($isGiftingCategoryPage) {
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop Sir Francis reseller and wholesale-friendly packs for stores, gifting businesses, food service and repeat bulk buyers. Order online or request support for larger quantities.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/reseller.jpeg';
+    $image_url_og = 'assets/img/wholesale.jpg';
     $image_type_og = 'image/jpeg';
 } elseif ($isSpecialsCategoryPage) {
     $page_url_canonical = 'https://www.fishgelatine.co.za/v2/specials';
@@ -45,7 +45,7 @@ if ($isGiftingCategoryPage) {
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop current Sir Francis specials on nuts, dried fruit, sweets, gifting and pantry treats. These are normal sale items only, separate from clearance basket products.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg';
+    $image_url_og = 'assets/img/pricelist.jpg';
     $image_type_og = 'image/jpeg';
 } elseif ($isClearanceCategoryPage) {
     $page_url_canonical = 'https://www.fishgelatine.co.za/v2/clearance-basket';
@@ -53,7 +53,7 @@ if ($isGiftingCategoryPage) {
     $page_url_og = $page_url_canonical;
     $description_meta = 'Shop Sir Francis Clearance Basket for heavily reduced clearance stock, dated items and overstocked products. Separate from normal specials and promotions.';
     $description_og = $description_meta;
-    $image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg';
+    $image_url_og = 'assets/img/pricelist.jpg';
     $image_type_og = 'image/jpeg';
 }
 include 'header.php';
@@ -477,7 +477,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
 <section class="specials-clearance-banner">
   <div class="container">
-    <img src="https://www.fishgelatine.co.za/v2/assets/img/specials_banner.jpg" alt="Sir Francis specials and clearance basket explained" loading="eager">
+    <img src="assets/img/pricelist.jpg" alt="Sir Francis product range" loading="eager">
   </div>
 </section>
 <?php endif; ?>
@@ -495,7 +495,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <span>Corporate, event and family gifting support</span>
         </div>
       </div>
-      <img class="category-social-image" src="https://www.fishgelatine.co.za/v2/assets/img/gifting.jpg" alt="Sir Francis gifting packs and hampers" loading="lazy">
+      <img class="category-social-image" src="assets/img/ocean.jpg" alt="Sir Francis marine product range" loading="lazy">
     </div>
   </div>
 </section>
@@ -512,7 +512,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
           <span>Wholesale list available for larger bulk planning</span>
         </div>
       </div>
-      <img class="category-social-image" src="https://www.fishgelatine.co.za/v2/assets/img/reseller.jpeg" alt="Sir Francis reseller and wholesale packs" loading="lazy">
+      <img class="category-social-image" src="assets/img/wholesale.jpg" alt="Sir Francis wholesale and bulk packs" loading="lazy">
     </div>
   </div>
 </section>

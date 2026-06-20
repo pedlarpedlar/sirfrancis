@@ -428,7 +428,7 @@ body.open {
   visibility: hidden;
   width: 100%;
   z-index: 9999999;
-  background: rgba(107, 0, 153, 0.97);
+  background: rgba(23, 34, 53, 0.94);
   cursor: pointer;
 }
 
@@ -3369,8 +3369,8 @@ body.offcanvas-open {
   width: 60px; /* Adjusted width */
   top: 50%;
   border: 0;
-  background: rgba(107, 0, 153, 0.5); /* Translucent grey background */
-  color: #ffffff;
+  background: rgba(40, 54, 75, 0.82);
+  color: #CEBD88;
   text-align: center;
   z-index: 1;
   font-size: 28px; /* Adjusted font size */
@@ -3383,7 +3383,8 @@ body.offcanvas-open {
 
 .main-slider .slick-prev,
 .main-slider .slick-next {
-  background: rgba(107, 0, 153, 0.5);
+  background: rgba(40, 54, 75, 0.82);
+  color: #CEBD88;
   opacity: 0;
   visibility: hidden;
   transition: background 0.3s; /* Smooth transition for background color */
@@ -3523,16 +3524,16 @@ body.offcanvas-open {
 }
 
 .dots-style .slick-dots li button {
-  width: 18px;
-  height: 18px;
+  width: 10px;
+  height: 10px;
   text-indent: 2000px;
   font-size: 0px;
   display: block;
   margin: 0 5px;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-  border: 3px double #CEBD88;
-  border-radius: 0;
+  border: 0 !important;
+  border-radius: 50% !important;
 }
 
 .dots-style .slick-dots li button:hover {
@@ -3576,7 +3577,7 @@ body.offcanvas-open {
 .theme1 .popular-slider-init.dots-style .slick-dots li.slick-active button {
   width: 28px;
   background: #CEBD88;
-  border-radius: 8px;
+  border-radius: 999px !important;
 }
 
 /******************************** 
@@ -5514,18 +5515,9 @@ img.second-img {
 .shop-now-btn,
 .banner-btn,
 .check-out-btn,
-.cart-content-btn,
-.product-count.style .count-btn,
-.actions li .action,
-.actions a,
-.actions button,
 .pro-btn,
-.social-network li a,
-.social-network2 li a,
-.cart-block-links li a,
 .offcanvas .btn,
 .modal .btn,
-.btn-close,
 #scrollUp {
   border: 3px double #CEBD88 !important;
   border-radius: 0 !important;
@@ -5539,20 +5531,32 @@ img.second-img {
 .shop-now-btn:hover,
 .banner-btn:hover,
 .check-out-btn:hover,
-.cart-content-btn:hover,
-.product-count.style .count-btn:hover,
-.actions li .action:hover,
-.actions a:hover,
-.actions button:hover,
 .pro-btn:hover,
-.social-network li a:hover,
-.social-network2 li a:hover,
-.cart-block-links li a:hover,
 .offcanvas .btn:hover,
 .modal .btn:hover,
 #scrollUp:hover {
   border-color: #CEBD88 !important;
   border-radius: 0 !important;
+}
+
+.actions li .action,
+.actions a,
+.actions button,
+.cart-block-links li a,
+.social-network li a,
+.social-network2 li a,
+.btn-close,
+.cart-content-btn,
+.product-count.style .count-btn {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.theme1 .slick-arrow {
+  background: #28364B;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #CEBD88;
 }
 /******************************** 
     scrollUp style End

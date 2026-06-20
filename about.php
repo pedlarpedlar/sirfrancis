@@ -176,7 +176,7 @@ include 'page_menues.php';
 
   .section-label.light {
     background: #fff;
-    color: #6b2c91;
+    color: #28364B;
     margin-bottom: 20px;
   }
 
@@ -185,8 +185,8 @@ include 'page_menues.php';
     background: #ffffff;
     border-radius: 28px;
     padding: 45px;
-    box-shadow: 0 18px 45px rgba(59, 20, 95, 0.12);
-    border: 1px solid rgba(107, 44, 145, 0.08);
+    box-shadow: 0 18px 45px rgba(40, 54, 75, 0.12);
+    border: 1px solid rgba(40, 54, 75, 0.08);
   }
 
   .story-card {
@@ -255,7 +255,7 @@ include 'page_menues.php';
   }
 
   .closing-section h3 {
-    color: #6b2c91;
+    color: #28364B;
     font-weight: 700;
     max-width: 950px;
     margin: 30px auto 0;

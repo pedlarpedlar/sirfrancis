@@ -606,7 +606,7 @@ foreach ($paymentMethods as $paymentMethod) {
 
                 .delivery-method-option.active {
                     border-color: #28364B;
-                    box-shadow: 0 0 0 2px rgba(107, 0, 153, 0.12);
+                    box-shadow: 0 0 0 2px rgba(206, 189, 136, 0.34);
                     background: #fff;
                 }
 
