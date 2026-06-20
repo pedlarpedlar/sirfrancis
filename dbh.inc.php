@@ -1,23 +1,64 @@
 <?php
 date_default_timezone_set('Africa/Johannesburg');
 
-// Connect to the single Sir Francis database config.
-$configRoots = array_filter(array_unique([
-    $_SERVER['HOME'] ?? '',
-    getenv('HOME') ?: '',
-    dirname(__DIR__, 2),
-    dirname(__DIR__),
-]));
-$configCandidates = [];
-foreach ($configRoots as $configRoot) {
-    $configCandidates[] = rtrim((string) $configRoot, '/') . '/configs_sirfrancis/sirfrancis_config.php';
+if (!function_exists('sirFrancisDbConfigCandidates')) {
+    function sirFrancisDbConfigCandidates($baseDir) {
+        $paths = [];
+        $addPath = static function($path) use (&$paths) {
+            $path = str_replace('\\', '/', trim((string) $path));
+            if ($path !== '') {
+                $paths[$path] = true;
+            }
+        };
+        $addRoot = static function($root) use ($addPath) {
+            $root = rtrim(str_replace('\\', '/', trim((string) $root)), '/');
+            if ($root !== '') {
+                $addPath($root . '/configs_sirfrancis/sirfrancis_config.php');
+            }
+        };
+        $addParents = static function($path, $levels = 5) use ($addRoot) {
+            $path = str_replace('\\', '/', trim((string) $path));
+            if ($path === '') {
+                return;
+            }
+            if (is_file($path)) {
+                $path = dirname($path);
+            }
+            for ($i = 0; $i <= $levels; $i++) {
+                $addRoot($path);
+                $parent = dirname($path);
+                if ($parent === $path || $parent === '.' || $parent === '') {
+                    break;
+                }
+                $path = $parent;
+            }
+        };
+
+        $explicit = getenv('SIRFRANCIS_CONFIG') ?: '';
+        if ($explicit !== '') {
+            $addPath($explicit);
+        }
+
+        $addRoot($_SERVER['HOME'] ?? '');
+        $addRoot(getenv('HOME') ?: '');
+        $addParents($baseDir);
+        $addParents($_SERVER['DOCUMENT_ROOT'] ?? '');
+        $addParents($_SERVER['SCRIPT_FILENAME'] ?? '');
+
+        return array_keys($paths);
+    }
 }
 
+$configCandidates = sirFrancisDbConfigCandidates(__DIR__);
+$sirFrancisDbConfigCandidates = $configCandidates;
+
 foreach ($configCandidates as $configPath) {
-    if (file_exists($configPath)) {
+    if (is_readable($configPath)) {
         require_once($configPath);
     }
-    if (!empty($DB_username) && !empty($DB_dbname)) {
+    $candidateUser = $DB_username ?? $DB_user ?? $db_user ?? $username ?? null;
+    $candidateDb = $DB_dbname ?? $DB_name ?? $db_name ?? $dbname ?? null;
+    if (!empty($candidateUser) && !empty($candidateDb)) {
         break;
     }
 }
