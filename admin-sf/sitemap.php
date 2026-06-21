@@ -26,6 +26,7 @@ $linkGroups = [
         ['Customers', 'manage_users', 'Customer and account management'],
         ['Visitor Activity', 'visitor_activity', 'Human activity, carts, sessions and searches'],
         ['Email Broadcasts', 'schedule_email', 'Schedule and test campaign emails'],
+        ['Subscribers', 'subscribers', 'View subscribed and unsubscribed emails with recorded dates'],
         ['Email Lists', 'email_lists', 'Saved custom recipient groups for targeted broadcasts'],
         ['Broadcast History', 'broadcasts', 'Past and pending broadcasts, results, edit, copy and delete'],
         ['Social Accounts', 'social_accounts', 'Social handles, login notes and posting reminder settings'],

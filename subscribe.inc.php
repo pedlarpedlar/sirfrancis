@@ -38,8 +38,20 @@ function cbSubscribeEnsureTable($conn) {
             email VARCHAR(255) NOT NULL,
             is_subscribed TINYINT(1) DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            subscribed_at TIMESTAMP NULL DEFAULT NULL,
+            unsubscribed_at TIMESTAMP NULL DEFAULT NULL,
             UNIQUE KEY unique_subscriber_email (email)
         )");
+        foreach ([
+            'subscribed_at' => "ALTER TABLE subscribers ADD COLUMN subscribed_at TIMESTAMP NULL DEFAULT NULL",
+            'unsubscribed_at' => "ALTER TABLE subscribers ADD COLUMN unsubscribed_at TIMESTAMP NULL DEFAULT NULL",
+        ] as $column => $alterSql) {
+            $safeColumn = $conn->real_escape_string($column);
+            $check = $conn->query("SHOW COLUMNS FROM subscribers LIKE '{$safeColumn}'");
+            if ($check && $check->num_rows === 0) {
+                $conn->query($alterSql);
+            }
+        }
     }
 }
 
@@ -230,12 +242,12 @@ if ($existingSubscribed) {
 }
 
 if ($existingId) {
-    $stmt = $conn->prepare("UPDATE subscribers SET is_subscribed = 1 WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE subscribers SET is_subscribed = 1, subscribed_at = NOW(), unsubscribed_at = NULL WHERE id = ?");
     if ($stmt) {
         $stmt->bind_param('i', $existingId);
     }
 } else {
-    $stmt = $conn->prepare("INSERT INTO subscribers (email, is_subscribed) VALUES (?, 1)");
+    $stmt = $conn->prepare("INSERT INTO subscribers (email, is_subscribed, subscribed_at) VALUES (?, 1, NOW())");
     if ($stmt) {
         $stmt->bind_param('s', $email);
     }
