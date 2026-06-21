@@ -47,6 +47,40 @@ function cbContactHtml($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
+function cbContactFirstValidEmail(array $values) {
+    foreach ($values as $value) {
+        $email = trim((string) $value);
+        if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $email;
+        }
+    }
+    return '';
+}
+
+function cbContactFindSmtpAccount() {
+    foreach ([5, 1, 3, 4, 2] as $index) {
+        $userVar = 'smtp_username' . $index;
+        $passVar = 'smtp_password' . $index;
+        $email = trim((string) ($GLOBALS[$userVar] ?? ''));
+        $password = (string) ($GLOBALS[$passVar] ?? '');
+        if ($email !== '' && $password !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ['email' => $email, 'password' => $password];
+        }
+    }
+
+    $legacyEmail = cbContactFirstValidEmail([
+        $GLOBALS['smtp_username'] ?? '',
+        $GLOBALS['smtp_username5'] ?? '',
+        $GLOBALS['smtp_username1'] ?? '',
+    ]);
+    $legacyPassword = (string) ($GLOBALS['smtp_password'] ?? '');
+    if ($legacyEmail !== '' && $legacyPassword !== '') {
+        return ['email' => $legacyEmail, 'password' => $legacyPassword];
+    }
+
+    return null;
+}
+
 function cbContactEnsureAttemptsTable($conn) {
     if (!($conn instanceof mysqli) || $conn->connect_error) {
         return false;
@@ -219,22 +253,25 @@ if ($recaptchaEnabled && $recaptchaSecretKey !== '') {
     }
 }
 
-$fallbackRecipient = !empty($smtp_username1) ? $smtp_username1 : 'info@fishgelatine.co.za';
-$recipient = filter_var($supportRecipient, FILTER_VALIDATE_EMAIL)
-    ?: (filter_var($primaryRecipient, FILTER_VALIDATE_EMAIL) ?: $fallbackRecipient);
+$recipient = cbContactFirstValidEmail([
+    $supportRecipient,
+    $primaryRecipient,
+    $support_email ?? '',
+    $website_email ?? '',
+    $smtp_username1 ?? '',
+    'info@sirfrancis.co.za',
+]);
+$smtpAccount = cbContactFindSmtpAccount();
+$smtpHost = trim((string) ($smtp_server ?? ''));
+$smtpPort = (int) ($smtp_port ?? 0);
 
-$smtpUser = !empty($smtp_username5) ? $smtp_username5 : (!empty($smtp_username1) ? $smtp_username1 : '');
-$smtpPass = !empty($smtp_password5) ? $smtp_password5 : (!empty($smtp_password) ? $smtp_password : '');
-
-if (empty($smtp_server) || empty($smtp_port) || empty($smtpUser) || empty($smtpPass) || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+if ($smtpHost === '' || $smtpPort <= 0 || empty($smtpAccount) || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+    error_log('Sir Francis contact form email settings missing. host=' . ($smtpHost !== '' ? 'yes' : 'no') . '; port=' . ($smtpPort > 0 ? 'yes' : 'no') . '; account=' . (!empty($smtpAccount) ? 'yes' : 'no') . '; recipient=' . ($recipient !== '' ? $recipient : 'none'));
     http_response_code(500);
     echo 'Message could not be sent because email settings are not available. Please email us directly.';
     exit;
 }
 
-$consumerRecipient = 'info@fishgelatine.co.za';
-$consumerKeywords = '/complaint|compliment|consumer|feedback|quality|refund|return|damaged|wrong|missing|unhappy|thank/i';
-$shouldRouteConsumer = preg_match($consumerKeywords, $subjectInput . ' ' . $messagePlain) === 1;
 $safeSubject = $subjectInput !== '' ? $subjectInput : 'Website contact message';
 $pageUrl = $_SERVER['HTTP_REFERER'] ?? '';
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
@@ -243,20 +280,17 @@ $submittedAt = date('Y-m-d H:i:s');
 try {
     $mail = new PHPMailer(true);
     $mail->isSMTP();
-    $mail->Host = $smtp_server;
+    $mail->Host = $smtpHost;
     $mail->SMTPAuth = true;
-    $mail->Username = $smtpUser;
-    $mail->Password = $smtpPass;
+    $mail->Username = $smtpAccount['email'];
+    $mail->Password = $smtpAccount['password'];
     if (!empty($smtp_type)) {
         $mail->SMTPSecure = $smtp_type;
     }
-    $mail->Port = (int) $smtp_port;
+    $mail->Port = $smtpPort;
     $mail->CharSet = 'UTF-8';
-    $mail->setFrom($smtpUser, $websiteCompanyName . ' Website');
+    $mail->setFrom($smtpAccount['email'], $websiteCompanyName . ' Website');
     $mail->addAddress($recipient, $websiteCompanyName . ' Support');
-    if ($shouldRouteConsumer && strcasecmp($recipient, $consumerRecipient) !== 0) {
-        $mail->addAddress($consumerRecipient, $websiteCompanyName . ' Consumer Care');
-    }
     if (filter_var($secondaryRecipient, FILTER_VALIDATE_EMAIL) && strcasecmp($secondaryRecipient, $recipient) !== 0) {
         $mail->addCC($secondaryRecipient);
     }
