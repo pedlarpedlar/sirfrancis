@@ -106,7 +106,7 @@ function cbCampaignPayloadFromPost()
 {
     $ctaUrl = trim($_POST['cta_url'] ?? '');
     if ($ctaUrl === '') {
-        $ctaUrl = 'https://www.fishgelatine.co.za/v2/products';
+        $ctaUrl = 'https://sirfrancis.co.za/products';
     }
 
     $attachments = cbCampaignExistingAttachmentsFromPost();
@@ -140,7 +140,7 @@ function cbCampaignPayloadFromScheduledEmail($row)
             'manual_recipients' => '',
             'body_html' => cbCampaignCleanHtml($row['body'] ?? ''),
             'cta_label' => 'Shop now',
-            'cta_url' => 'https://www.fishgelatine.co.za/v2/products'
+            'cta_url' => 'https://sirfrancis.co.za/products'
         );
     }
 
@@ -165,7 +165,7 @@ function cbCampaignPostFromPayload($payload, $scheduledAt = '')
         'recipient_mode' => ($payload['recipient_mode'] ?? 'subscribers_plus_custom') === 'custom_only' ? 'custom_only' : 'subscribers_plus_custom',
         'body' => $payload['body_html'] ?? '',
         'cta_label' => $payload['cta_label'] ?? 'Shop now',
-        'cta_url' => $payload['cta_url'] ?? 'https://www.fishgelatine.co.za/v2/products',
+        'cta_url' => $payload['cta_url'] ?? 'https://sirfrancis.co.za/products',
         'manual_recipients' => $payload['manual_recipients'] ?? '',
         'exclude_unsubscribed_manual' => array_key_exists('exclude_unsubscribed_manual', $payload) ? (int) $payload['exclude_unsubscribed_manual'] : 1,
         'scheduled_at' => $timestamp ? date('Y-m-d\TH:i', $timestamp) : '',
@@ -422,6 +422,11 @@ function cbCampaignBuildRecipientList($subscriberRows, $manualRecipients, $unsub
             continue;
         }
         $key = cbCampaignNormalizeEmailKey($email);
+        if (!empty($unsubscribedEmailKeys[$key])) {
+            $stats['unsubscribed_count']++;
+            $stats['unsubscribed_emails'][] = $email;
+            continue;
+        }
         if (isset($recipients[$key])) {
             $stats['duplicate_count']++;
             $stats['duplicate_emails'][] = $email;

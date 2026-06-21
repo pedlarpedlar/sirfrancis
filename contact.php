@@ -121,7 +121,6 @@ include 'header.php';
           <div class="cb-contact-item">
             <h3><i class="fas fa-warehouse"></i>Operational address</h3>
             <p><?=htmlspecialchars($contactGoogleAddress, ENT_QUOTES, 'UTF-8')?></p>
-            <p class="cb-contact-highlight mb-0">Use this exact address in Google Maps for the Sir Francis location: <strong><?=htmlspecialchars($contactGoogleAddress, ENT_QUOTES, 'UTF-8')?></strong>.</p>
           </div>
 
           <div class="cb-contact-item">
@@ -133,7 +132,6 @@ include 'header.php';
           <div class="cb-contact-item">
             <h3><i class="fas fa-envelope"></i>Email addresses</h3>
             <p><a href="mailto:<?=$website_email?>">Sales and support: <?=$website_email?></a></p>
-            <?php if (!empty($website_email2)): ?><p><a href="mailto:<?=$website_email2?>">Secondary email: <?=$website_email2?></a></p><?php endif; ?>
             <p><a href="mailto:<?=$consumerEmail?>">Compliments or complaints: <?=$consumerEmail?></a></p>
           </div>
 

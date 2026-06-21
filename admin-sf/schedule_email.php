@@ -9,8 +9,14 @@ if (!isset($_SESSION['admin_id'])) {
 
 include 'dbh.inc.php';
 require_once 'campaign_email_helpers.php';
+require_once 'website_settings_helpers.php';
 
 cbCampaignEnsureTables($conn);
+$websiteSettings = cbWebsiteSettingsLoad($conn);
+$tinymceApiKey = trim((string) ($websiteSettings['tinymce_api_key'] ?? ''));
+if ($tinymceApiKey === '') {
+    $tinymceApiKey = SF_DEFAULT_TINYMCE_API_KEY;
+}
 
 $subscriberCount = 0;
 $countResult = $conn->query("SELECT COUNT(*) AS total FROM subscribers WHERE is_subscribed = 1");
@@ -281,7 +287,7 @@ include 'header.php';
                         </div>
                         <div class="form-group col-md-6">
                             <label for="cta_url">Button link</label>
-                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url', 'https://www.fishgelatine.co.za/v2/products') ?>">
+                            <input type="url" class="form-control" id="cta_url" name="cta_url" value="<?= $formValue('cta_url', 'https://sirfrancis.co.za/products') ?>">
                             <div class="field-help">Use a full link starting with https://. The default takes customers to the shop.</div>
                         </div>
                     </div>
@@ -367,7 +373,7 @@ include 'header.php';
                             <input type="checkbox" class="custom-control-input" id="exclude_unsubscribed_manual" name="exclude_unsubscribed_manual" value="1" <?= $excludeUnsubscribedChecked ? 'checked' : '' ?>>
                             <label class="custom-control-label" for="exclude_unsubscribed_manual">Exclude emails that previously unsubscribed</label>
                         </div>
-                        <div class="field-help">Recommended. If a custom email is pasted here but that person previously unsubscribed, they will be skipped unless you untick this for an urgent service update.</div>
+                        <div class="field-help">Recommended. When checked, any unsubscribed address is skipped even if it is pasted manually, imported from a saved list, or added from past orders.</div>
                     </div>
 
                     <div class="form-group">
@@ -396,7 +402,7 @@ include 'header.php';
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.tiny.cloud/1/krc3t31hewwxmxp9ymcfecueza73p98zly4l51k8zm5ngjy8/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/<?= htmlspecialchars($tinymceApiKey, ENT_QUOTES, 'UTF-8') ?>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     var pastOrderEmails = <?= json_encode($pastOrderEmailList, JSON_UNESCAPED_SLASHES) ?>;
     var savedEmailLists = <?= json_encode($savedEmailLists, JSON_UNESCAPED_SLASHES) ?>;
@@ -414,7 +420,7 @@ include 'header.php';
         var hero = $('#hero_image_url').val();
         var body = tinymce.get('body') ? tinymce.get('body').getContent() : $('#body').val();
         var ctaLabel = $('#cta_label').val() || 'Shop now';
-        var ctaUrl = $('#cta_url').val() || 'https://www.fishgelatine.co.za/v2/products';
+        var ctaUrl = $('#cta_url').val() || 'https://sirfrancis.co.za/products';
 
         body = body.split('{coupon_code}').join(escapeHtml(coupon));
 
