@@ -129,24 +129,14 @@ $receiptNotes = trim((string) $receiptNotes);
 $receiptRows = '';
 foreach ($items as $item) {
     $qty = (float) ($item['quantity'] ?? 0);
-    $unitPrice = (float) ($item['price'] ?? 0);
-    $discount = (float) ($item['discount_amount'] ?? 0);
+    $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $order['order_date'] ?? null);
+    $unitPrice = (float) $displaySnapshot['price'];
+    $discount = (float) $displaySnapshot['discount_amount'];
     $tax = (float) ($item['tax_amount'] ?? 0);
     $lineTotal = ($qty * $unitPrice) - ($qty * $discount) + $tax;
     $itemCount += $qty;
 
-    $sheetProduct = getSheetProductById($item['product_id']);
-    $title = trim((string) ($item['product_title'] ?? ''));
-    $weight = trim((string) ($item['product_weight'] ?? ''));
-    if ($title !== '' && $weight !== '' && stripos($title, $weight) === false) {
-        $title = trim($title . ' ' . $weight);
-    }
-    if ($title === '' && $sheetProduct) {
-        $title = getSheetProductDisplayTitle($sheetProduct);
-    }
-    if ($title === '') {
-        $title = 'Product #' . $item['product_id'];
-    }
+    $title = $displaySnapshot['title'];
 
     $receiptRows .= '<tr><td>' . cbReceiptText($title) . '</td><td class="right">' . cbReceiptText(number_format($qty, floor($qty) != $qty ? 2 : 0)) . ' @ ' . cbReceiptMoney($unitPrice) . '</td></tr>';
     if ($discount > 0) {

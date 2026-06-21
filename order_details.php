@@ -1,5 +1,6 @@
 <?php
 include 'session_logins.php';
+require_once __DIR__ . '/product_sheet_helpers.php';
 require_once __DIR__ . '/ozow_helpers.php';
 
 // Fetch order details
@@ -281,21 +282,16 @@ if (mysqli_num_rows($result) > 0) {
     $order_items = '';
     foreach ($order as $item) {
         $productId = htmlspecialchars($item['product_id']);
-        $savedTitle = trim((string) ($item['product_title'] ?? ''));
-        $savedWeight = trim((string) ($item['product_weight'] ?? ''));
-        if ($savedTitle !== '' && $savedWeight !== '' && stripos($savedTitle, $savedWeight) === false) {
-            $savedTitle = trim($savedTitle . ' ' . $savedWeight);
-        }
-        $savedImage = trim((string) ($item['product_image_url'] ?? ''));
+        $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $fetched_order_date ?? null);
         $sheetProduct = getSheetProductById($item['product_id']);
         if ($sheetProduct) {
             $fetched_weight_kg += getSheetProductWeightKg($sheetProduct) * (float) ($item['quantity'] ?? 0);
         }
-        $image_url = htmlspecialchars($savedImage !== '' ? $savedImage : ($sheetProduct ? getSheetProductImage($sheetProduct) : 'assets/img/product/1.png'));
-        $product_title = htmlspecialchars($savedTitle !== '' ? $savedTitle : ($sheetProduct ? getSheetProductDisplayTitle($sheetProduct) : 'Product #' . $item['product_id']));
+        $image_url = htmlspecialchars($displaySnapshot['image_url']);
+        $product_title = htmlspecialchars($displaySnapshot['title']);
         $quantity = (float)$item['quantity'];
-        $product_price = (float)$item['product_price'];
-        $discount_amount = (float)$item['product_discount_amount'];
+        $product_price = (float)$displaySnapshot['price'];
+        $discount_amount = (float)$displaySnapshot['discount_amount'];
         $tax_amount = (float)$item['product_tax_amount'];
 
         $discounted_unit_price = max(0, $product_price - $discount_amount);

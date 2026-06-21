@@ -10,6 +10,10 @@ if (!defined('SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE')) {
     define('SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE', 'assets/img/product/1.png');
 }
 
+if (!defined('SIRFRANCIS_LEGACY_ORDER_CUTOFF_DATE')) {
+    define('SIRFRANCIS_LEGACY_ORDER_CUTOFF_DATE', '2026-06-20');
+}
+
 if (!function_exists('sirFrancisSiteUrl')) {
     function sirFrancisSiteUrl($path = '') {
         $path = trim((string) $path);
@@ -2385,6 +2389,176 @@ if (!function_exists('ensureCandybirdOrderItemSnapshotColumns')) {
 
         $checked = true;
         return true;
+    }
+}
+
+if (!function_exists('isSirFrancisLegacyOrderDate')) {
+    function isSirFrancisLegacyOrderDate($orderDate) {
+        $orderTimestamp = strtotime((string) $orderDate);
+        $cutoffTimestamp = strtotime(SIRFRANCIS_LEGACY_ORDER_CUTOFF_DATE . ' 00:00:00');
+        return $orderTimestamp !== false && $cutoffTimestamp !== false && $orderTimestamp < $cutoffTimestamp;
+    }
+}
+
+if (!function_exists('getCandybirdLegacyDbProductSnapshot')) {
+    function getCandybirdLegacyDbProductSnapshot($conn, $productId) {
+        static $cache = [];
+
+        $productId = (int) $productId;
+        if (!($conn instanceof mysqli) || $productId <= 0) {
+            return null;
+        }
+
+        if (array_key_exists($productId, $cache)) {
+            return $cache[$productId];
+        }
+
+        $tableCheck = $conn->query("SHOW TABLES LIKE 'product'");
+        if (!$tableCheck || $tableCheck->num_rows === 0) {
+            $cache[$productId] = null;
+            return null;
+        }
+
+        $imageTableCheck = $conn->query("SHOW TABLES LIKE 'images'");
+        $hasImagesTable = $imageTableCheck && $imageTableCheck->num_rows > 0;
+        $stmt = $conn->prepare($hasImagesTable ? "
+            SELECT
+                p.id,
+                p.title,
+                p.price,
+                p.discount_rate,
+                p.discount_amount,
+                p.weight,
+                MIN(i.image_url) AS image_url
+            FROM product p
+            LEFT JOIN images i ON i.product_id = p.id
+            WHERE p.id = ?
+            GROUP BY p.id, p.title, p.price, p.discount_rate, p.discount_amount, p.weight
+            LIMIT 1
+        " : "
+            SELECT
+                p.id,
+                p.title,
+                p.price,
+                p.discount_rate,
+                p.discount_amount,
+                p.weight,
+                '' AS image_url
+            FROM product p
+            WHERE p.id = ?
+            LIMIT 1
+        ");
+        if (!$stmt) {
+            $cache[$productId] = null;
+            return null;
+        }
+
+        $stmt->bind_param('i', $productId);
+        $stmt->execute();
+        $snapshot = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$snapshot) {
+            $cache[$productId] = null;
+            return null;
+        }
+
+        $snapshot['title'] = trim((string) ($snapshot['title'] ?? ''));
+        $snapshot['weight'] = trim((string) ($snapshot['weight'] ?? ''));
+        $snapshot['image_url'] = trim((string) ($snapshot['image_url'] ?? ''));
+        $snapshot['price'] = (float) ($snapshot['price'] ?? 0);
+        $snapshot['discount_amount'] = (float) ($snapshot['discount_amount'] ?? 0);
+        $snapshot['discount_rate'] = (float) ($snapshot['discount_rate'] ?? 0);
+
+        $cache[$productId] = $snapshot;
+        return $snapshot;
+    }
+}
+
+if (!function_exists('getCandybirdOrderItemDisplaySnapshot')) {
+    function getCandybirdOrderItemDisplaySnapshot($conn, $item, $orderDate = null, $options = []) {
+        $item = is_array($item) ? $item : [];
+        $productId = (int) ($item['product_id'] ?? $item['id'] ?? 0);
+        $isLegacyOrder = isSirFrancisLegacyOrderDate($orderDate);
+        $legacyProduct = $isLegacyOrder ? getCandybirdLegacyDbProductSnapshot($conn, $productId) : null;
+        $sheetProduct = null;
+        $allowSheetFallback = array_key_exists('allow_sheet_fallback', $options) ? (bool) $options['allow_sheet_fallback'] : true;
+
+        $title = trim((string) ($item['product_title'] ?? $item['title'] ?? ''));
+        $weight = trim((string) ($item['product_weight'] ?? $item['weight'] ?? ''));
+        $imageUrl = trim((string) ($item['product_image_url'] ?? $item['image_url'] ?? ''));
+
+        if ($title === '' && $legacyProduct && !empty($legacyProduct['title'])) {
+            $title = $legacyProduct['title'];
+        }
+        if ($weight === '' && $legacyProduct && !empty($legacyProduct['weight'])) {
+            $weight = $legacyProduct['weight'];
+        }
+        if ($imageUrl === '' && $legacyProduct && !empty($legacyProduct['image_url'])) {
+            $imageUrl = $legacyProduct['image_url'];
+        }
+
+        if ($allowSheetFallback && ($title === '' || $imageUrl === '' || $weight === '') && $productId > 0) {
+            $sheetProduct = getSheetProductById($productId);
+            if ($sheetProduct) {
+                if ($title === '') {
+                    $title = getSheetProductDisplayTitle($sheetProduct);
+                }
+                if ($weight === '') {
+                    $weight = getSheetProductDisplaySize($sheetProduct);
+                }
+                if ($imageUrl === '') {
+                    $imageUrl = getSheetProductImage($sheetProduct);
+                }
+            }
+        }
+
+        if ($title !== '' && $weight !== '' && stripos($title, $weight) === false) {
+            $title = trim($title . ' ' . $weight);
+        }
+        if ($title === '') {
+            $title = 'Product #' . $productId;
+        }
+        if ($imageUrl === '') {
+            $imageUrl = SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE;
+        }
+
+        $price = array_key_exists('price', $item)
+            ? (float) $item['price']
+            : (array_key_exists('product_price', $item) ? (float) $item['product_price'] : null);
+        if (($price === null || $price <= 0) && $legacyProduct && (float) ($legacyProduct['price'] ?? 0) > 0) {
+            $price = (float) $legacyProduct['price'];
+        }
+        if ($price === null) {
+            $price = 0;
+        }
+
+        $discount = array_key_exists('discount_amount', $item)
+            ? (float) $item['discount_amount']
+            : (array_key_exists('product_discount_amount', $item) ? (float) $item['product_discount_amount'] : null);
+        if (($discount === null || $discount <= 0) && $legacyProduct) {
+            $legacyDiscount = (float) ($legacyProduct['discount_amount'] ?? 0);
+            if ($legacyDiscount <= 0 && $price > 0 && (float) ($legacyProduct['discount_rate'] ?? 0) > 0) {
+                $legacyDiscount = round($price * min(100, (float) $legacyProduct['discount_rate']) / 100, 2);
+            }
+            if ($legacyDiscount > 0) {
+                $discount = $legacyDiscount;
+            }
+        }
+        if ($discount === null) {
+            $discount = 0;
+        }
+
+        return [
+            'product_id' => $productId,
+            'title' => $title,
+            'weight' => $weight,
+            'image_url' => $imageUrl,
+            'price' => $price,
+            'discount_amount' => $discount,
+            'legacy_order' => $isLegacyOrder,
+            'source' => $legacyProduct ? 'legacy_product_table' : ($sheetProduct ? 'sheet' : 'order_item'),
+        ];
     }
 }
 

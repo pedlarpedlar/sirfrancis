@@ -201,19 +201,13 @@ if (mysqli_num_rows($result) > 0) {
     
     $order_items = '';
     foreach ($order as $item) {
-        $savedTitle = trim((string) ($item['product_title'] ?? ''));
-        $savedWeight = trim((string) ($item['product_weight'] ?? ''));
-        if ($savedTitle !== '' && $savedWeight !== '' && stripos($savedTitle, $savedWeight) === false) {
-            $savedTitle = trim($savedTitle . ' ' . $savedWeight);
-        }
-        $savedImage = trim((string) ($item['product_image_url'] ?? ''));
-        $sheetProduct = getSheetProductById($item['product_id']);
-        $image_url = htmlspecialchars($savedImage !== '' ? $savedImage : ($sheetProduct ? getSheetProductImage($sheetProduct) : '../assets/img/product/1.png'));
+        $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $order[0]['order_date'] ?? null);
+        $image_url = htmlspecialchars($displaySnapshot['image_url']);
         $productId = htmlspecialchars($item['product_id']);
-        $product_title = htmlspecialchars($savedTitle !== '' ? $savedTitle : ($sheetProduct ? getSheetProductDisplayTitle($sheetProduct) : 'Product #' . $item['product_id']));
+        $product_title = htmlspecialchars($displaySnapshot['title']);
         $quantity = (float)$item['quantity'];
-        $product_price = (float)$item['product_price'];
-        $discount_amount = (float)$item['product_discount_amount'];
+        $product_price = (float)$displaySnapshot['price'];
+        $discount_amount = (float)$displaySnapshot['discount_amount'];
         $tax_amount = (float)$item['product_tax_amount'];
 
         $subtotal = ($quantity * $product_price) - $discount_amount + $tax_amount;

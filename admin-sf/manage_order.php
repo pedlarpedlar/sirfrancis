@@ -53,6 +53,7 @@ $query = "
         oi.quantity AS quantity,
         o.user_id,
         o.guest_identifier,
+        o.order_date,
         o.coupon_id AS coupon_id,
 		o.coupon_amount AS coupon_amount
     FROM 
@@ -85,19 +86,13 @@ foreach ($orderItems as $item) {
 	$user_id = $item['user_id'];
 	$guest_identifier = $item['guest_identifier'];
 
-    $sheetProduct = getSheetProductById($item['id']);
-    $savedImage = trim((string) ($item['product_image_url'] ?? ''));
-    $savedTitle = trim((string) ($item['title'] ?? ''));
-    $savedWeight = trim((string) ($item['product_weight'] ?? ''));
-    if ($savedTitle !== '' && $savedWeight !== '' && stripos($savedTitle, $savedWeight) === false) {
-        $savedTitle = trim($savedTitle . ' ' . $savedWeight);
-    }
-    $image_url = $savedImage !== '' ? $savedImage : ($sheetProduct ? getSheetProductImage($sheetProduct) : '../assets/img/product/1.png');
-    $displayTitle = $savedTitle !== '' ? $savedTitle : ($sheetProduct ? getSheetProductDisplayTitle($sheetProduct) : 'Product #' . $item['id']);
+    $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $item['order_date'] ?? null);
+    $image_url = $displaySnapshot['image_url'];
+    $displayTitle = $displaySnapshot['title'];
 
-    $price = $item['price'];
+    $price = $displaySnapshot['price'];
     $quantity = $item['quantity'];
-    $discount = $item['discount_amount'];
+    $discount = $displaySnapshot['discount_amount'];
     $tax = !empty($item['tax_amount']) ? $item['tax_amount'] : 0;
     $coupon_amount = $item['coupon_amount'];
     $coupon_id = $item['coupon_id'];

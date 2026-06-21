@@ -58,7 +58,7 @@ function cbResendOrderEmailFetch($conn, $orderId) {
     return $order ?: null;
 }
 
-function cbResendOrderEmailItemsHtml($conn, $orderId) {
+function cbResendOrderEmailItemsHtml($conn, $orderId, $orderDate = null) {
     ensureCandybirdOrderItemSnapshotColumns($conn);
     $stmt = $conn->prepare("
         SELECT product_id, clearance_id, product_title, product_image_url, product_weight, clearance_note, quantity, price, discount_amount, tax_amount
@@ -88,27 +88,18 @@ function cbResendOrderEmailItemsHtml($conn, $orderId) {
             $sheetProduct = getSheetProductById($productId);
         }
 
-        $title = trim((string) ($item['product_title'] ?? ''));
-        $weight = trim((string) ($item['product_weight'] ?? ''));
-        if ($title === '' && $sheetProduct) {
-            $title = getSheetProductDisplayTitle($sheetProduct);
-        } elseif ($title !== '' && $weight !== '' && stripos($title, $weight) === false) {
-            $title .= ' ' . $weight;
-        }
-        if ($title === '') {
-            $title = 'Product #' . $productId;
-        }
-
-        $imageUrl = trim((string) ($item['product_image_url'] ?? ''));
-        if ($imageUrl === '' && $sheetProduct) {
+        $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $orderDate, ['allow_sheet_fallback' => false]);
+        $title = $displaySnapshot['title'];
+        $imageUrl = trim((string) $displaySnapshot['image_url']);
+        if ($imageUrl === SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE && $sheetProduct) {
             $imageUrl = getSheetProductEmailImage($sheetProduct);
         }
         $imageUrl = getCandybirdAbsoluteImageUrl($imageUrl);
 
-        $productUrl = $sheetProduct ? getSheetProductUrl($sheetProduct, true) : ('https://www.fishgelatine.co.za/v2/product?id=' . rawurlencode($clearanceId !== '' ? 'CLR:' . $clearanceId : (string) $productId));
+        $productUrl = $sheetProduct ? getSheetProductUrl($sheetProduct, true) : sirFrancisSiteUrl('product?id=' . rawurlencode($clearanceId !== '' ? 'CLR:' . $clearanceId : (string) $productId));
         $quantity = max(1, (int) ($item['quantity'] ?? 1));
-        $price = (float) ($item['price'] ?? 0);
-        $discount = (float) ($item['discount_amount'] ?? 0);
+        $price = (float) $displaySnapshot['price'];
+        $discount = (float) $displaySnapshot['discount_amount'];
         $tax = (float) ($item['tax_amount'] ?? 0);
         $unitPayable = max(0, $price - $discount + $tax);
         $fullLineTotal = $price * $quantity;
@@ -162,7 +153,7 @@ if (!filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-$items = cbResendOrderEmailItemsHtml($conn, $orderId);
+$items = cbResendOrderEmailItemsHtml($conn, $orderId, $order['order_date'] ?? null);
 if (trim($items['html']) === '') {
     echo json_encode(['success' => false, 'message' => 'This order has no items to email.']);
     exit;

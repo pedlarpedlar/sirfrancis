@@ -273,16 +273,21 @@ $orderWeightKg = 0;
 foreach ($order as $item) {
     $productId = $item['product_id'];
     $sheetProduct = getSheetProductById($productId);
-    $product_title = htmlspecialchars($sheetProduct ? getSheetProductDisplayTitle($sheetProduct) : $item['product_title'], ENT_QUOTES, 'UTF-8');
-    $product_weight = '';
+    $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, [
+        'product_id' => $productId,
+        'product_title' => $item['product_title'] ?? '',
+        'price' => $item['price'] ?? 0,
+        'discount_amount' => $item['item_discount_amount'] ?? 0,
+    ], $item['order_date'] ?? null);
+    $product_title = htmlspecialchars($displaySnapshot['title'], ENT_QUOTES, 'UTF-8');
     $quantity = $item['quantity'];
     if ($sheetProduct) {
         $orderWeightKg += getSheetProductWeightKg($sheetProduct) * (float) $quantity;
     }
-    $productFullPrice = (float) $item['price'];
-    $productDiscountAmount = (float) $item['item_discount_amount'];
+    $productFullPrice = (float) $displaySnapshot['price'];
+    $productDiscountAmount = (float) $displaySnapshot['discount_amount'];
     $productDiscountedPrice = max(0, $productFullPrice - $productDiscountAmount);
-    $image_url = $sheetProduct ? getSheetProductEmailImage($sheetProduct) : getCandybirdAbsoluteImageUrl('assets/img/product/1.png');
+    $image_url = getCandybirdAbsoluteImageUrl($displaySnapshot['image_url']);
     $image_url = htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8');
     $fullLineTotal = $productFullPrice * (float) $quantity;
     $discountedLineTotal = $productDiscountedPrice * (float) $quantity;
@@ -301,7 +306,7 @@ foreach ($order as $item) {
                 <img src="' . $image_url . '" width="50px" alt="item image"/>
             </td>
             <td style="width:50%; padding: 10px; border: 1px solid #ccc;">
-                <a href="https://www.fishgelatine.co.za/v2/product?id=' . $productId . '">' . $product_title . ' ' . $product_weight . '</a>
+                <a href="' . htmlspecialchars(sirFrancisSiteUrl('product?id=' . rawurlencode((string) $productId)), ENT_QUOTES, 'UTF-8') . '">' . $product_title . '</a>
             </td>
             <td style="width:10%; padding: 10px; border: 1px solid #ccc;">' . $quantity . '</td>
             <td style="width:25%; padding: 10px; border: 1px solid #ccc;">' . $emailPriceHtml . '</td>
