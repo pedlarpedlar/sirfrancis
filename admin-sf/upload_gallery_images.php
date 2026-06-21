@@ -245,6 +245,146 @@ function gallery_image_payload($path)
     ];
 }
 
+function gallery_cleanup_protected_folder($relativePath)
+{
+    $relativePath = trim(str_replace('\\', '/', (string)$relativePath), '/');
+    $firstFolder = strtolower(strtok($relativePath, '/') ?: $relativePath);
+    return in_array($firstFolder, ['product', 'products', 'product_images', 'product-images'], true);
+}
+
+function gallery_cleanup_scan_extensions()
+{
+    return ['php', 'js', 'css', 'html', 'htm', 'json', 'txt', 'csv', 'tsv', 'xml', 'yml', 'yaml', 'md', 'map'];
+}
+
+function gallery_cleanup_reference_haystack()
+{
+    $siteRoot = realpath(__DIR__ . '/..');
+    $assetsRoot = gallery_root();
+    if (!$siteRoot || !is_dir($siteRoot)) {
+        return '';
+    }
+
+    $chunks = [];
+    $skipDirs = ['.git', 'node_modules', 'vendor', 'PHPMailer'];
+    $extensions = gallery_cleanup_scan_extensions();
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($siteRoot, FilesystemIterator::SKIP_DOTS)
+    );
+
+    foreach ($iterator as $item) {
+        if (!$item->isFile()) {
+            continue;
+        }
+
+        $path = $item->getPathname();
+        $normalizedPath = str_replace('\\', '/', $path);
+        foreach ($skipDirs as $skipDir) {
+            if (stripos($normalizedPath, '/' . $skipDir . '/') !== false) {
+                continue 2;
+            }
+        }
+
+        $realPath = realpath($path);
+        if ($realPath && strpos($realPath, $assetsRoot . DIRECTORY_SEPARATOR) === 0) {
+            continue;
+        }
+
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $basename = strtolower(basename($path));
+        if (!in_array($extension, $extensions, true) && !in_array($basename, ['.htaccess'], true)) {
+            continue;
+        }
+
+        if ($item->getSize() > 5 * 1024 * 1024) {
+            continue;
+        }
+
+        $contents = @file_get_contents($path);
+        if (is_string($contents) && $contents !== '') {
+            $chunks[] = strtolower(rawurldecode($contents));
+        }
+    }
+
+    return implode("\n", $chunks);
+}
+
+function gallery_cleanup_reference_variants($relativePath)
+{
+    $relativePath = trim(str_replace('\\', '/', (string)$relativePath), '/');
+    $encodedPath = implode('/', array_map('rawurlencode', explode('/', $relativePath)));
+    return array_values(array_unique([
+        strtolower($relativePath),
+        strtolower($encodedPath),
+        strtolower('assets/img/' . $relativePath),
+        strtolower('/assets/img/' . $relativePath),
+        strtolower('../assets/img/' . $relativePath),
+        strtolower('assets/img/' . $encodedPath),
+        strtolower('/assets/img/' . $encodedPath),
+        strtolower('https://sirfrancis.co.za/assets/img/' . $relativePath),
+        strtolower('https://www.sirfrancis.co.za/assets/img/' . $relativePath),
+        strtolower('https://sirfrancis.co.za/assets/img/' . $encodedPath),
+        strtolower('https://www.sirfrancis.co.za/assets/img/' . $encodedPath),
+    ]));
+}
+
+function gallery_cleanup_image_is_referenced($relativePath, $haystack)
+{
+    $relativePath = trim(str_replace('\\', '/', (string)$relativePath), '/');
+    $haystack = (string)$haystack;
+    foreach (gallery_cleanup_reference_variants($relativePath) as $needle) {
+        if ($needle !== '' && strpos($haystack, $needle) !== false) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function gallery_cleanup_candidates()
+{
+    $root = gallery_root();
+    $haystack = gallery_cleanup_reference_haystack();
+    $candidates = [];
+    $protectedCount = 0;
+    $referencedCount = 0;
+    $scannedCount = 0;
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS)
+    );
+
+    foreach ($iterator as $item) {
+        if (!$item->isFile() || !gallery_is_image($item->getPathname())) {
+            continue;
+        }
+
+        $scannedCount++;
+        $relativePath = gallery_relative($item->getPathname());
+        if (gallery_cleanup_protected_folder($relativePath)) {
+            $protectedCount++;
+            continue;
+        }
+
+        if (gallery_cleanup_image_is_referenced($relativePath, $haystack)) {
+            $referencedCount++;
+            continue;
+        }
+
+        $candidates[] = gallery_image_payload($item->getPathname());
+    }
+
+    usort($candidates, function ($a, $b) {
+        return ($b['modified'] ?? 0) <=> ($a['modified'] ?? 0);
+    });
+
+    return [
+        'images' => $candidates,
+        'scanned' => $scannedCount,
+        'protected' => $protectedCount,
+        'referenced' => $referencedCount,
+    ];
+}
+
 function gallery_folders()
 {
     $root = gallery_root();
@@ -327,6 +467,10 @@ if ($action === 'list') {
     $offset = max(0, (int)($_GET['offset'] ?? 0));
     $limit = min(60, max(12, (int)($_GET['limit'] ?? 24)));
     gallery_response(['success' => true] + gallery_list_images($_GET['folder'] ?? '__all__', $offset, $limit, $_GET['q'] ?? ''));
+}
+
+if ($action === 'cleanup_preview') {
+    gallery_response(['success' => true] + gallery_cleanup_candidates());
 }
 
 if ($action === 'upload') {
@@ -451,6 +595,43 @@ if ($action === 'delete') {
         gallery_response(['success' => false, 'message' => 'Image could not be deleted.'], 500);
     }
     gallery_response(['success' => true, 'message' => 'Image deleted.']);
+}
+
+if ($action === 'cleanup_delete') {
+    $requestedPaths = $_POST['paths'] ?? [];
+    if (!is_array($requestedPaths) || empty($requestedPaths)) {
+        gallery_response(['success' => false, 'message' => 'No cleanup images were selected.'], 400);
+    }
+
+    $candidateMap = [];
+    foreach (gallery_cleanup_candidates()['images'] as $image) {
+        $candidateMap[$image['relative_path']] = true;
+    }
+
+    $deleted = [];
+    $skipped = [];
+    foreach ($requestedPaths as $requestedPath) {
+        $relativePath = trim(str_replace('\\', '/', (string)$requestedPath), '/');
+        if ($relativePath === '' || empty($candidateMap[$relativePath])) {
+            $skipped[] = $relativePath;
+            continue;
+        }
+
+        $path = gallery_file_path($relativePath);
+        if (@unlink($path)) {
+            $deleted[] = $relativePath;
+        } else {
+            $skipped[] = $relativePath;
+        }
+    }
+
+    gallery_response([
+        'success' => true,
+        'message' => count($deleted) . ' unused image(s) deleted.',
+        'deleted' => $deleted,
+        'skipped' => $skipped,
+        'folders' => gallery_folders(),
+    ]);
 }
 
 gallery_response(['success' => false, 'message' => 'Unknown gallery action.'], 400);

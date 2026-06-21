@@ -308,6 +308,44 @@ include 'header.php';
         border: 1px dashed var(--sf-border);
         border-radius: 8px;
     }
+    .gallery-cleanup-head {
+        align-items: center;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .gallery-cleanup-head p {
+        color: var(--sf-muted);
+        margin: 6px 0 0;
+        max-width: 780px;
+    }
+    .gallery-cleanup-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+    }
+    .gallery-cleanup-card {
+        background: #fbfaf5;
+        border: 1px solid var(--sf-border);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .gallery-cleanup-card img {
+        aspect-ratio: 1 / 1;
+        display: block;
+        object-fit: cover;
+        width: 100%;
+    }
+    .gallery-cleanup-card div {
+        color: var(--sf-muted);
+        font-size: 12px;
+        overflow: hidden;
+        padding: 9px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     @media (max-width: 900px) {
         .gallery-upload-options,
         .gallery-browse-layout,
@@ -378,6 +416,21 @@ include 'header.php';
         </section>
 
         <section class="gallery-panel">
+            <div class="gallery-cleanup-head">
+                <div>
+                    <h2 class="h5 mb-0">Clean Up Unused Images</h2>
+                    <p>This scans website files and settings for image links, then lists unused images outside product folders. Product folders are protected and will not be cleaned here.</p>
+                </div>
+                <div class="gallery-actions" style="margin-top:0;">
+                    <button id="galleryCleanupScanBtn" class="gallery-btn secondary" type="button">Scan unused</button>
+                    <button id="galleryCleanupDeleteBtn" class="gallery-btn danger" type="button" style="display:none;">Delete listed unused</button>
+                </div>
+            </div>
+            <div id="galleryCleanupStatus" class="gallery-status"></div>
+            <div id="galleryCleanupGrid" class="gallery-cleanup-grid"></div>
+        </section>
+
+        <section class="gallery-panel">
             <h2 class="h5 mb-3">Gallery Images</h2>
             <div class="gallery-browse-layout">
                 <div>
@@ -445,7 +498,12 @@ include 'header.php';
     var folderDrop = document.getElementById('galleryFolderDrop');
     var compressImages = document.getElementById('galleryCompressImages');
     var compressTarget = document.getElementById('galleryCompressTarget');
+    var cleanupScanBtn = document.getElementById('galleryCleanupScanBtn');
+    var cleanupDeleteBtn = document.getElementById('galleryCleanupDeleteBtn');
+    var cleanupStatus = document.getElementById('galleryCleanupStatus');
+    var cleanupGrid = document.getElementById('galleryCleanupGrid');
     var canCompress = true;
+    var cleanupImages = [];
 
     function folderLabel(folder) {
         if (folder === '__all__') return 'All assets/img folders';
@@ -594,6 +652,77 @@ include 'header.php';
         }).join('');
     }
 
+    function renderCleanupImages(images) {
+        cleanupImages = images || [];
+        cleanupDeleteBtn.style.display = cleanupImages.length ? 'inline-block' : 'none';
+        if (!cleanupImages.length) {
+            cleanupGrid.innerHTML = '';
+            return;
+        }
+        cleanupGrid.innerHTML = cleanupImages.map(function (image) {
+            return [
+                '<article class="gallery-cleanup-card">',
+                    '<img src="' + escapeHtml(image.url) + '" alt="' + escapeHtml(image.name) + '" loading="lazy">',
+                    '<div title="' + escapeHtml(image.relative_path) + '">' + escapeHtml(image.relative_path) + '</div>',
+                '</article>'
+            ].join('');
+        }).join('');
+    }
+
+    function scanUnusedImages() {
+        cleanupStatus.classList.remove('warning');
+        cleanupStatus.textContent = 'Scanning website references...';
+        cleanupGrid.innerHTML = '';
+        cleanupDeleteBtn.style.display = 'none';
+        cleanupImages = [];
+        return fetch(apiUrl + '?action=cleanup_preview')
+            .then(function (response) { return response.json(); })
+            .then(function (json) {
+                if (!json.success) throw new Error(json.message || 'Cleanup scan failed.');
+                renderCleanupImages(json.images || []);
+                cleanupStatus.textContent = (json.images || []).length
+                    + ' unused image(s) found. Scanned ' + (json.scanned || 0)
+                    + ', protected ' + (json.protected || 0)
+                    + ' product-folder image(s), found ' + (json.referenced || 0) + ' linked image(s).';
+                if (!(json.images || []).length) {
+                    cleanupStatus.textContent += ' Nothing to delete.';
+                }
+            })
+            .catch(function (error) {
+                cleanupStatus.classList.add('warning');
+                cleanupStatus.textContent = error.message;
+            });
+    }
+
+    function deleteUnusedImages() {
+        if (!cleanupImages.length) {
+            cleanupStatus.textContent = 'Run a scan first.';
+            return;
+        }
+        if (!confirm('Delete the ' + cleanupImages.length + ' listed unused image(s)? Product folders are protected.')) {
+            return;
+        }
+        var data = new FormData();
+        cleanupImages.forEach(function (image) {
+            data.append('paths[]', image.relative_path);
+        });
+        cleanupStatus.classList.remove('warning');
+        cleanupStatus.textContent = 'Deleting unused images...';
+        postAction('cleanup_delete', data)
+            .then(function (json) {
+                cleanupStatus.textContent = json.message || 'Cleanup complete.';
+                renderCleanupImages([]);
+                return loadFolders();
+            })
+            .then(function () {
+                return loadImages(true);
+            })
+            .catch(function (error) {
+                cleanupStatus.classList.add('warning');
+                cleanupStatus.textContent = error.message;
+            });
+    }
+
     function loadImages(reset) {
         if (loading) return Promise.resolve();
         loading = true;
@@ -721,6 +850,8 @@ include 'header.php';
     document.getElementById('galleryRefreshBtn').addEventListener('click', function () {
         loadFolders().then(function () { loadImages(true); });
     });
+    cleanupScanBtn.addEventListener('click', scanUnusedImages);
+    cleanupDeleteBtn.addEventListener('click', deleteUnusedImages);
     browseFolder.addEventListener('change', function () {
         currentFolder = browseFolder.value;
         loadImages(true);
