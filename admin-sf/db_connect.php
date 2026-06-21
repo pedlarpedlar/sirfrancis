@@ -5,10 +5,13 @@ if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
     return;
 }
 
-require_once dirname(__DIR__) . '/dbh.inc.php';
+require dirname(__DIR__) . '/dbh.inc.php';
 
 if (!isset($conn) || !($conn instanceof mysqli) || $conn->connect_error) {
-    $checked = isset($sirFrancisDbConfigCandidates) && is_array($sirFrancisDbConfigCandidates)
+    if ((!isset($sirFrancisDbConfigCandidates) || !is_array($sirFrancisDbConfigCandidates)) && function_exists('sirFrancisDbConfigCandidates')) {
+        $sirFrancisDbConfigCandidates = sirFrancisDbConfigCandidates(dirname(__DIR__));
+    }
+    $checked = !empty($sirFrancisDbConfigCandidates) && is_array($sirFrancisDbConfigCandidates)
         ? implode(', ', $sirFrancisDbConfigCandidates)
         : 'No config candidates recorded.';
     error_log('Sir Francis admin DB connection unavailable. Checked: ' . $checked);

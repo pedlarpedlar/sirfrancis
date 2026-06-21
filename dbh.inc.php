@@ -1,6 +1,11 @@
 <?php
 date_default_timezone_set('Africa/Johannesburg');
 
+if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
+    $dbAvailable = true;
+    return;
+}
+
 if (!function_exists('sirFrancisDbConfigCandidates')) {
     function sirFrancisDbConfigCandidates($baseDir) {
         $paths = [];
