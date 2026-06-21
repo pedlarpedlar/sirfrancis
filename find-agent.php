@@ -3,22 +3,11 @@ $use_corporate_nav = true;
 $load_shopping_nav = false;
 include 'session_logins.php';
 require_once __DIR__ . '/find_agent_helpers.php';
+require_once __DIR__ . '/google_integrations_helpers.php';
 
 $sf_is_admin = !empty($_SESSION['admin_id']);
 $sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions($conn ?? null) : [];
-$sf_google_maps_api_key = '';
-if (isset($conn) && $conn instanceof mysqli) {
-    $sf_maps_column_check = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
-    if ($sf_maps_column_check && $sf_maps_column_check->num_rows > 0) {
-        $sf_maps_result = $conn->query("SELECT google_maps_api_key FROM admin_website_settings LIMIT 1");
-        if ($sf_maps_result && ($sf_maps_row = $sf_maps_result->fetch_assoc())) {
-            $sf_google_maps_api_key = trim((string) ($sf_maps_row['google_maps_api_key'] ?? ''));
-        }
-    }
-}
-if ($sf_google_maps_api_key === '') {
-    $sf_google_maps_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
-}
+$sf_google_maps_api_key = sfGoogleIntegrationSettings($conn ?? null)['google_maps_api_key'] ?? '';
 
 $page_url_canonical = 'https://sirfrancis.co.za/find-agent';
 $page_url_og = $page_url_canonical;

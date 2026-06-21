@@ -11,14 +11,12 @@ if (!isset($_SESSION['admin_id'])) {
 include 'dbh.inc.php';
 require_once __DIR__ . '/../find_agent_helpers.php';
 require_once __DIR__ . '/website_settings_helpers.php';
+require_once __DIR__ . '/../google_integrations_helpers.php';
 
 sfAgentEnsureTable($conn);
 
 $settings = cbWebsiteSettingsLoad($conn);
-$googlePlacesApiKey = trim((string) ($settings['google_places_api_key'] ?? ''));
-if ($googlePlacesApiKey === '') {
-    $googlePlacesApiKey = trim((string) ($settings['google_maps_api_key'] ?? getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY')));
-}
+$googlePlacesApiKey = sfGooglePlacesBrowserKey($conn);
 $regions = sfAgentRegionsBase();
 $flash = null;
 

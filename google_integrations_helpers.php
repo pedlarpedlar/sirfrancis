@@ -1,4 +1,17 @@
 <?php
+if (!defined('SF_DEFAULT_GOOGLE_MAPS_API_KEY')) {
+    define('SF_DEFAULT_GOOGLE_MAPS_API_KEY', 'AIzaSyDv_kbN3lexH5uDzhuUJccnqIMimC5OBE4');
+}
+if (!defined('SF_DEFAULT_GOOGLE_PLACES_API_KEY')) {
+    define('SF_DEFAULT_GOOGLE_PLACES_API_KEY', SF_DEFAULT_GOOGLE_MAPS_API_KEY);
+}
+if (!defined('SF_DEFAULT_GOOGLE_BUSINESS_PLACE_ID')) {
+    define('SF_DEFAULT_GOOGLE_BUSINESS_PLACE_ID', 'ChIJ_8dRaiwH9x4RqDnwIhjh7GI');
+}
+if (!defined('SF_DEFAULT_GOOGLE_CUSTOMER_REVIEWS_MERCHANT_ID')) {
+    define('SF_DEFAULT_GOOGLE_CUSTOMER_REVIEWS_MERCHANT_ID', '518700294');
+}
+
 if (!function_exists('sfGoogleIntegrationSettings')) {
     function sfGoogleIntegrationSettings($conn) {
         static $settingsCache = null;
@@ -7,10 +20,10 @@ if (!function_exists('sfGoogleIntegrationSettings')) {
         }
 
         $settingsCache = [
-            'google_maps_api_key' => '',
-            'google_places_api_key' => '',
-            'google_business_place_id' => '',
-            'google_customer_reviews_merchant_id' => '',
+            'google_maps_api_key' => SF_DEFAULT_GOOGLE_MAPS_API_KEY,
+            'google_places_api_key' => SF_DEFAULT_GOOGLE_PLACES_API_KEY,
+            'google_business_place_id' => SF_DEFAULT_GOOGLE_BUSINESS_PLACE_ID,
+            'google_customer_reviews_merchant_id' => SF_DEFAULT_GOOGLE_CUSTOMER_REVIEWS_MERCHANT_ID,
         ];
 
         if (!($conn instanceof mysqli) || $conn->connect_error) {
@@ -42,7 +55,7 @@ if (!function_exists('sfGoogleIntegrationSettings')) {
         $result = $conn->query("SELECT {$selectColumns} FROM admin_website_settings ORDER BY id ASC LIMIT 1");
         if ($result && ($row = $result->fetch_assoc())) {
             foreach ($settingsCache as $key => $value) {
-                if (array_key_exists($key, $row)) {
+                if (array_key_exists($key, $row) && trim((string) $row[$key]) !== '') {
                     $settingsCache[$key] = trim((string) $row[$key]);
                 }
             }

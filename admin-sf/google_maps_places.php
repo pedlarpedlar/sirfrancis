@@ -9,8 +9,10 @@ if (!isset($_SESSION['admin_id'])) {
 include 'header.php';
 include 'dbh.inc.php';
 require_once __DIR__ . '/website_settings_helpers.php';
+require_once __DIR__ . '/../google_integrations_helpers.php';
 
 $row = cbWebsiteSettingsLoad($conn);
+$googleDefaults = sfGoogleIntegrationSettings($conn);
 $settingsFlash = cbWebsiteSettingsFlash();
 
 include 'page_menues.php';
@@ -41,12 +43,12 @@ include 'page_menues.php';
             <h4>API Keys</h4>
             <div class="form-group">
                 <label for="google_maps_api_key">Google Maps JavaScript API Key</label>
-                <input type="text" class="form-control" id="google_maps_api_key" name="google_maps_api_key" value="<?= cbWebsiteSettingsText($row['google_maps_api_key'] ?? '') ?>" autocomplete="off">
+                <input type="text" class="form-control" id="google_maps_api_key" name="google_maps_api_key" value="<?= cbWebsiteSettingsText(($row['google_maps_api_key'] ?? '') ?: ($googleDefaults['google_maps_api_key'] ?? '')) ?>" autocomplete="off">
                 <small class="form-text text-muted">Used for live Google Maps displays such as the Find an Agent map.</small>
             </div>
             <div class="form-group mb-0">
                 <label for="google_places_api_key">Google Places API Key</label>
-                <input type="text" class="form-control" id="google_places_api_key" name="google_places_api_key" value="<?= cbWebsiteSettingsText($row['google_places_api_key'] ?? '') ?>" autocomplete="off">
+                <input type="text" class="form-control" id="google_places_api_key" name="google_places_api_key" value="<?= cbWebsiteSettingsText(($row['google_places_api_key'] ?? '') ?: ($googleDefaults['google_places_api_key'] ?? '')) ?>" autocomplete="off">
                 <small class="form-text text-muted">Used for address autocomplete on checkout and admin order creation. If left blank, the Maps key will be used as the fallback.</small>
             </div>
         </div>
@@ -55,12 +57,12 @@ include 'page_menues.php';
             <h4>Google Reviews & Customer Badge</h4>
             <div class="form-group">
                 <label for="google_business_place_id">Sir Francis Google Business Place ID</label>
-                <input type="text" class="form-control" id="google_business_place_id" name="google_business_place_id" value="<?= cbWebsiteSettingsText($row['google_business_place_id'] ?? '') ?>" autocomplete="off">
+                <input type="text" class="form-control" id="google_business_place_id" name="google_business_place_id" value="<?= cbWebsiteSettingsText(($row['google_business_place_id'] ?? '') ?: ($googleDefaults['google_business_place_id'] ?? '')) ?>" autocomplete="off">
                 <small class="form-text text-muted">Used to show Sir Francis Google reviews on the homepage and about page. Get this from Google's Place ID Finder for the Sir Francis Business Profile.</small>
             </div>
             <div class="form-group mb-0">
                 <label for="google_customer_reviews_merchant_id">Google Customer Reviews Merchant ID</label>
-                <input type="text" class="form-control" id="google_customer_reviews_merchant_id" name="google_customer_reviews_merchant_id" value="<?= cbWebsiteSettingsText($row['google_customer_reviews_merchant_id'] ?? '') ?>" autocomplete="off">
+                <input type="text" class="form-control" id="google_customer_reviews_merchant_id" name="google_customer_reviews_merchant_id" value="<?= cbWebsiteSettingsText(($row['google_customer_reviews_merchant_id'] ?? '') ?: ($googleDefaults['google_customer_reviews_merchant_id'] ?? '')) ?>" autocomplete="off">
                 <small class="form-text text-muted">Used for the Google Customer Reviews badge and post-order opt-in. This is your numeric Google Merchant Center ID.</small>
             </div>
         </div>
