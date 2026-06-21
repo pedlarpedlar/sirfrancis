@@ -1,7 +1,11 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include_once __DIR__ . '/dbh.inc.php';
 include_once __DIR__ . '/log_action_function.php';
 require_once __DIR__ . '/product_sheet_helpers.php';
+require_once __DIR__ . '/candybird_mail_helpers.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -82,65 +86,104 @@ function cbSubscribeCouponOfferText($coupon, $couponCode) {
     return $offer . '.';
 }
 
-function cbSubscribeSendEmails($email, $couponCode = '', $coupon = null) {
-    global $smtp_server, $smtp_username1, $smtp_username5, $smtp_password5, $smtp_password, $smtp_type, $smtp_port;
+function cbSubscribeTemplate($file, $fallback) {
+    $path = __DIR__ . '/emails/' . $file;
+    return is_file($path) ? (string) file_get_contents($path) : $fallback;
+}
 
-    if (!class_exists(PHPMailer::class) || empty($smtp_server) || empty($smtp_username5) || (empty($smtp_password5) && empty($smtp_password))) {
-        return;
+function cbSubscribeReplaceTokens($body, $email, $couponCode = '', $coupon = null) {
+    $couponOffer = cbSubscribeCouponOfferText($coupon, $couponCode);
+    $couponValidity = cbSubscribeCouponValidityText($coupon);
+    if ($couponCode === '') {
+        $couponOffer = 'Your subscription is confirmed. We will send procurement updates, product news and wholesale announcements as they become available.';
+        $couponValidity = '';
     }
 
-    try {
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = $smtp_server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $smtp_username5;
-        $mail->Password = $smtp_password5 ?? $smtp_password;
-        if (!empty($smtp_type)) {
-            $mail->SMTPSecure = $smtp_type;
+    return str_replace(
+        ['{user_email_unsubscribe}', '{coupon_code}', '{coupon_offer}', '{coupon_validity}', '{recipient_name}', '{user_email}'],
+        [urlencode($email), htmlspecialchars($couponCode, ENT_QUOTES, 'UTF-8'), htmlspecialchars($couponOffer, ENT_QUOTES, 'UTF-8'), htmlspecialchars($couponValidity, ENT_QUOTES, 'UTF-8'), 'Admin', htmlspecialchars($email, ENT_QUOTES, 'UTF-8')],
+        $body
+    );
+}
+
+function cbSubscribeAdminRecipient() {
+    global $conn, $support_email, $smtp_username1, $website_email;
+
+    $recipient = $support_email ?: ($smtp_username1 ?? ($website_email ?? ''));
+    if ($conn instanceof mysqli) {
+        $result = $conn->query("SELECT support_email, email_1 FROM admin_website_settings LIMIT 1");
+        if ($result && ($row = $result->fetch_assoc())) {
+            $recipient = trim((string) ($row['support_email'] ?: $row['email_1'] ?: $recipient));
         }
-        $mail->Port = (int) ($smtp_port ?? 587);
-        $mail->setFrom($smtp_username5, 'Sir Francis');
-        $mail->addAddress($email);
-        $mail->Subject = "Hooray! You've just subscribed to Sir Francis's mailing list";
-        $body = is_file(__DIR__ . '/emails/email_subscribe.php') ? file_get_contents(__DIR__ . '/emails/email_subscribe.php') : 'Thank you for subscribing to Sir Francis.';
-        $body = str_replace('{user_email_unsubscribe}', urlencode($email), $body);
-        $body = str_replace('{coupon_code}', htmlspecialchars($couponCode, ENT_QUOTES, 'UTF-8'), $body);
-        $body = str_replace('{coupon_offer}', htmlspecialchars(cbSubscribeCouponOfferText($coupon, $couponCode), ENT_QUOTES, 'UTF-8'), $body);
-        $body = str_replace('{coupon_validity}', htmlspecialchars(cbSubscribeCouponValidityText($coupon), ENT_QUOTES, 'UTF-8'), $body);
-        $mail->Body = $body;
-        $mail->isHTML(true);
-        $mail->send();
-    } catch (Throwable $e) {
-        error_log('Subscriber email failed: ' . $e->getMessage());
     }
 
-    try {
-        if (empty($smtp_username1)) {
-            return;
-        }
-        $adminMail = new PHPMailer(true);
-        $adminMail->isSMTP();
-        $adminMail->Host = $smtp_server;
-        $adminMail->SMTPAuth = true;
-        $adminMail->Username = $smtp_username5;
-        $adminMail->Password = $smtp_password5 ?? $smtp_password;
-        if (!empty($smtp_type)) {
-            $adminMail->SMTPSecure = $smtp_type;
-        }
-        $adminMail->Port = (int) ($smtp_port ?? 587);
-        $adminMail->setFrom($smtp_username5, 'Sir Francis');
-        $adminMail->addAddress($smtp_username1, 'Admin');
-        $adminMail->Subject = 'New Sir Francis subscriber';
-        $body = is_file(__DIR__ . '/emails/email_subscribe_admin.php') ? file_get_contents(__DIR__ . '/emails/email_subscribe_admin.php') : 'A user subscribed: {user_email}';
-        $body = str_replace('{recipient_name}', 'Admin', $body);
-        $body = str_replace('{user_email}', $email, $body);
-        $adminMail->Body = $body;
-        $adminMail->isHTML(true);
-        $adminMail->send();
-    } catch (Throwable $e) {
-        error_log('Subscriber admin email failed: ' . $e->getMessage());
+    return filter_var($recipient, FILTER_VALIDATE_EMAIL) ? $recipient : '';
+}
+
+function cbSubscribeSendEmails($email, $couponCode = '', $coupon = null, $alreadySubscribed = false) {
+    $customerBody = cbSubscribeReplaceTokens(
+        cbSubscribeTemplate('email_subscribe.php', '<p>Thank you for subscribing to Sir Francis.</p>'),
+        $email,
+        $couponCode,
+        $coupon
+    );
+    $adminBody = cbSubscribeReplaceTokens(
+        cbSubscribeTemplate('email_subscribe_admin.php', '<p>A user subscribed: {user_email}</p>'),
+        $email,
+        $couponCode,
+        $coupon
+    );
+
+    $customerResult = cbCandybirdSendMail(
+        $email,
+        $email,
+        $alreadySubscribed ? 'Your Sir Francis subscription is active' : 'Welcome to Sir Francis updates',
+        $customerBody,
+        ['from_name' => 'Sir Francis', 'prefer_mail_transport' => true]
+    );
+
+    if (empty($customerResult['success'])) {
+        error_log('Sir Francis subscriber customer email failed for ' . $email . ': ' . ($customerResult['error'] ?? 'unknown error'));
     }
+
+    $adminRecipient = cbSubscribeAdminRecipient();
+    $adminResult = ['success' => false, 'error' => 'No admin recipient configured.'];
+    if ($adminRecipient !== '') {
+        $adminResult = cbCandybirdSendMail(
+            $adminRecipient,
+            'Sir Francis Admin',
+            $alreadySubscribed ? 'Existing Sir Francis subscriber requested confirmation' : 'New Sir Francis subscriber',
+            $adminBody,
+            ['from_name' => 'Sir Francis Website', 'reply_to_email' => $email, 'reply_to_name' => $email, 'prefer_mail_transport' => true]
+        );
+        if (empty($adminResult['success'])) {
+            error_log('Sir Francis subscriber admin email failed for ' . $email . ': ' . ($adminResult['error'] ?? 'unknown error'));
+        }
+    } else {
+        error_log('Sir Francis subscriber admin email skipped: no admin/support recipient configured.');
+    }
+
+    return [
+        'customer' => $customerResult,
+        'admin' => $adminResult,
+    ];
+}
+
+function cbSubscribeAdminMailDebug($mailResults) {
+    if (empty($_SESSION['admin_id'])) {
+        return [];
+    }
+
+    return [
+        'mail_debug' => [
+            'customer_sent' => !empty($mailResults['customer']['success']),
+            'customer_error' => $mailResults['customer']['error'] ?? '',
+            'customer_sender' => $mailResults['customer']['sender'] ?? '',
+            'admin_sent' => !empty($mailResults['admin']['success']),
+            'admin_error' => $mailResults['admin']['error'] ?? '',
+            'admin_sender' => $mailResults['admin']['sender'] ?? '',
+        ],
+    ];
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -167,27 +210,35 @@ $stmt = $conn->prepare("SELECT id, is_subscribed FROM subscribers WHERE email = 
 if ($stmt) {
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        $existingId = (int) $row['id'];
-        $existingSubscribed = (int) $row['is_subscribed'] === 1;
+    $stmt->bind_result($subscriberId, $subscriberIsSubscribed);
+    if ($stmt->fetch()) {
+        $existingId = (int) $subscriberId;
+        $existingSubscribed = (int) $subscriberIsSubscribed === 1;
     }
     $stmt->close();
 }
 
 if ($existingSubscribed) {
+    $coupon = getSheetCouponByCode($couponCode);
+    $couponValid = $coupon ? validateSheetCoupon($coupon, true) : ['valid' => false];
+    $couponIsValid = !empty($couponValid['valid']);
+    $mailResults = cbSubscribeSendEmails($email, $couponIsValid ? $couponCode : '', $couponIsValid ? $coupon : null, true);
     cbSubscribeJson(true, 'You are already subscribed. Thank you!', [
         'already_subscribed' => true,
         'coupon_available' => false,
-    ]);
+    ] + cbSubscribeAdminMailDebug($mailResults));
 }
 
 if ($existingId) {
     $stmt = $conn->prepare("UPDATE subscribers SET is_subscribed = 1 WHERE id = ?");
-    $stmt->bind_param('i', $existingId);
+    if ($stmt) {
+        $stmt->bind_param('i', $existingId);
+    }
 } else {
     $stmt = $conn->prepare("INSERT INTO subscribers (email, is_subscribed) VALUES (?, 1)");
-    $stmt->bind_param('s', $email);
+    if ($stmt) {
+        $stmt->bind_param('s', $email);
+    }
 }
 
 if (!$stmt || !$stmt->execute()) {
@@ -203,12 +254,12 @@ $coupon = getSheetCouponByCode($couponCode);
 $couponValid = $coupon ? validateSheetCoupon($coupon, true) : ['valid' => false];
 $couponIsValid = !empty($couponValid['valid']);
 
-cbSubscribeSendEmails($email, $couponIsValid ? $couponCode : '', $couponIsValid ? $coupon : null);
+$mailResults = cbSubscribeSendEmails($email, $couponIsValid ? $couponCode : '', $couponIsValid ? $coupon : null);
 
 cbSubscribeJson(true, 'Thank you for subscribing!', [
     'already_subscribed' => false,
     'coupon_available' => $couponIsValid,
     'coupon_code' => $couponIsValid ? $couponCode : '',
     'coupon_message' => $couponIsValid ? cbSubscribeCouponOfferText($coupon, $couponCode) . ' ' . cbSubscribeCouponValidityText($coupon) : 'Your subscription is saved. The welcome coupon is not active yet.',
-]);
+] + cbSubscribeAdminMailDebug($mailResults));
 ?>
