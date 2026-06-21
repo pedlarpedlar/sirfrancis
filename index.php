@@ -250,7 +250,7 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       position: absolute;
       bottom: -50px;
       right: 60px;
-      background-image: url('assets/img/anchor-main.png');
+      background-image: url('assets/img/anchor-main.svg');
       background-repeat: no-repeat;
       background-position: bottom right;
       background-size: contain;

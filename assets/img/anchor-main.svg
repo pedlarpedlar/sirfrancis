@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 235 320" role="img" aria-label="Sir Francis anchor">
+  <defs>
+    <linearGradient id="sfAnchorGold" x1="40" y1="18" x2="190" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3e1a2"/>
+      <stop offset=".45" stop-color="#cebd88"/>
+      <stop offset="1" stop-color="#9c8242"/>
+    </linearGradient>
+    <linearGradient id="sfAnchorEdge" x1="64" y1="30" x2="170" y2="292" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff3bd"/>
+      <stop offset=".55" stop-color="#c0a363"/>
+      <stop offset="1" stop-color="#70592c"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="117.5" cy="42" r="24" stroke="url(#sfAnchorEdge)" stroke-width="10"/>
+    <circle cx="117.5" cy="42" r="12" stroke="#f7e8b0" stroke-width="4"/>
+    <path d="M117.5 69v144" stroke="url(#sfAnchorGold)" stroke-width="18"/>
+    <path d="M82 96h71" stroke="url(#sfAnchorGold)" stroke-width="15"/>
+    <path d="M66 209c8 44 27 70 51.5 78 24.5-8 43.5-34 51.5-78" stroke="url(#sfAnchorGold)" stroke-width="18"/>
+    <path d="M55 191l12 48 33-29" stroke="url(#sfAnchorGold)" stroke-width="17"/>
+    <path d="M180 191l-12 48-33-29" stroke="url(#sfAnchorGold)" stroke-width="17"/>
+    <path d="M117.5 213v76" stroke="url(#sfAnchorGold)" stroke-width="15"/>
+    <path d="M91 292h53" stroke="url(#sfAnchorGold)" stroke-width="13"/>
+    <path d="M117.5 78v132" stroke="#fff0b7" stroke-width="4" opacity=".55"/>
+    <path d="M71 211c8 34 22 54 46.5 65 24.5-11 38.5-31 46.5-65" stroke="#fff0b7" stroke-width="4" opacity=".42"/>
+  </g>
+</svg>
