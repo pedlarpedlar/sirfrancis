@@ -179,6 +179,7 @@ function cbAdminMenuActive($page, $currentPage) {
               </ul>
             </details>
           </li>
+          <li><a href="manage_gallery">Image Gallery</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'tsv_how_to', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
               <summary>Products & Sheets</summary>
@@ -262,6 +263,7 @@ function cbAdminMenuActive($page, $currentPage) {
           </ul>
         </details>
       </li>
+      <li><a href="manage_gallery"<?= cbAdminMenuActive('manage_gallery', $adminCurrentPage) ?>>Image Gallery</a></li>
       <li>
         <details<?= cbAdminMenuOpen(['products', 'coupons', 'coupon_tester', 'clearance', 'wholesale_pricelist', 'sheets', 'sheet_sources', 'tsv_how_to', 'manage_products', 'sync_sheet_products'], $adminCurrentPage) ?>>
           <summary>Products & Sheets</summary>
