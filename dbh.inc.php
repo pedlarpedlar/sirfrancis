@@ -59,7 +59,7 @@ $sirFrancisDbConfigCandidates = $configCandidates;
 
 foreach ($configCandidates as $configPath) {
     if (is_readable($configPath)) {
-        require_once($configPath);
+        require($configPath);
     }
     $candidateUser = $DB_username ?? $DB_user ?? $db_user ?? $username ?? null;
     $candidateDb = $DB_dbname ?? $DB_name ?? $db_name ?? $dbname ?? null;
