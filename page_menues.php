@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/product_sheet_helpers.php';
+$useSimpleCorporateNav = !empty($is_homepage) || !empty($is_contact_page);
 ?>
 </head>
 
@@ -22,6 +23,7 @@ if (function_exists('renderCandybirdSiteFlags')) {
     </div>
     <div class="offcanvas-head mb-4">
       <nav class="offcanvas-top-nav">
+        <?php if (!$useSimpleCorporateNav): ?>
         <ul class="d-flex flex-wrap">
           <li class="my-2 mx-2">
             <a href="cart">
@@ -45,6 +47,7 @@ if (function_exists('renderCandybirdSiteFlags')) {
             >
           </li>
         </ul>
+        <?php endif; ?>
       </nav>
     </div>
     <nav class="offcanvas-menu">
@@ -230,10 +233,12 @@ function generateMenuMain($parent_id, $conn) {
 $categories = buildSheetMenuCategories();
 ?>
 
-        <li>
-            <a href="products"><span class="menu-text">Categories</span></a>
-            <?= generateMenu($categories) ?>
-        </li>
+        <?php if (!$useSimpleCorporateNav): ?>
+            <li>
+                <a href="products"><span class="menu-text">Categories</span></a>
+                <?= generateMenu($categories) ?>
+            </li>
+        <?php endif; ?>
         <li><a href="wholesale-pricelist">Buy Bulk</a></li>
         <li>
             <a href="#"><span class="menu-text">More</span></a>
@@ -267,6 +272,7 @@ $categories = buildSheetMenuCategories();
 <!-- offcanvas-mobile-menu end -->
 
 <?php
+if (!$useSimpleCorporateNav):
 // Fetch wishlist items based on user or guest
 $offCanvasWishlistItems = getWishlistItems($userId, $guestIdentifier);
 
@@ -411,6 +417,7 @@ foreach ($offCanvasCartItems as $item) {
   </div>
 </div>
 <!-- OffCanvas Cart End -->
+<?php endif; ?>
 
 <!-- header start -->
 <header class="no-print">
@@ -497,12 +504,14 @@ foreach ($offCanvasCartItems as $item) {
             <li class="ml-0">
               <a class="navmenu-click" href="products">Retail Shop</a>
             </li>
-            <li>
-              <a class="navmenu-click" href="products"
-                >Categories <i class="ion-ios-arrow-down"></i
-              ></a>
-              <?= generateMenuMainNodes($categories) ?>
-            </li>
+            <?php if (!$useSimpleCorporateNav): ?>
+              <li>
+                <a class="navmenu-click" href="products"
+                  >Categories <i class="ion-ios-arrow-down"></i
+                ></a>
+                <?= generateMenuMainNodes($categories) ?>
+              </li>
+            <?php endif; ?>
             <li>
               <a class="navmenu-click" href="wholesale-pricelist">Buy Bulk</a>
             </li>
@@ -541,6 +550,7 @@ foreach ($offCanvasCartItems as $item) {
           <!-- search-form end -->
           <div class="d-flex align-items-center justify-content-end">
             <!-- static-media end -->
+            <?php if (!$useSimpleCorporateNav): ?>
             <div class="cart-block-links theme1 d-none d-sm-block">
               <ul class="d-flex">
                 <li>
@@ -575,6 +585,7 @@ foreach ($offCanvasCartItems as $item) {
                 <!-- cart block end -->
               </ul>
             </div>
+            <?php endif; ?>
             <div class="mobile-menu-toggle theme1 d-lg-none">
               <a href="#offcanvas-mobile-menu" class="offcanvas-toggle">
                 <svg viewbox="0 0 700 550">

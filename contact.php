@@ -1,4 +1,6 @@
 <?php
+$is_contact_page = true;
+$load_shopping_nav = false;
 include 'session_logins.php';
 
 $contactWhatsappNumber = trim((string) ($hotline ?? ''));
