@@ -165,7 +165,7 @@ function candybirdSendHighDiscountAlertEmail($alerts, $sourceLabel) {
     foreach ($alerts as $alert) {
         $rows .= '<tr>'
             . '<td style="border:1px solid #d8d2c4;padding:8px;">' . htmlspecialchars((string) $alert['id'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td style="border:1px solid #d8d2c4;padding:8px;"><a href="https://www.fishgelatine.co.za/v2/product?id=' . urlencode((string) $alert['id']) . '">' . htmlspecialchars((string) $alert['title'], ENT_QUOTES, 'UTF-8') . '</a></td>'
+            . '<td style="border:1px solid #d8d2c4;padding:8px;"><a href="https://sirfrancis.co.za/product?id=' . urlencode((string) $alert['id']) . '">' . htmlspecialchars((string) $alert['title'], ENT_QUOTES, 'UTF-8') . '</a></td>'
             . '<td style="border:1px solid #d8d2c4;padding:8px;">R' . number_format((float) $alert['normal_price'], 2) . '</td>'
             . '<td style="border:1px solid #d8d2c4;padding:8px;">R' . number_format((float) $alert['discounted_price'], 2) . '</td>'
             . '<td style="border:1px solid #d8d2c4;padding:8px;color:#b42318;font-weight:700;">' . number_format((float) $alert['discount_percent'], 2) . '%</td>'

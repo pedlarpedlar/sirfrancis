@@ -4,6 +4,7 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
     $userId = null;
     $guestIdentifier = null;
 }
+$showPublicAdminSync = !empty($_SESSION['admin_id']) && strpos($_SERVER['PHP_SELF'] ?? '', '/admin-sf/') === false;
 $footerWhatsappNumber = trim((string) ($hotline ?? ''));
 if ($footerWhatsappNumber === '') {
     $footerWhatsappNumber = trim((string) ($tel ?? ''));
@@ -28,6 +29,69 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     }
 
 </style>
+
+<?php if ($showPublicAdminSync): ?>
+<style>
+  .public-admin-sheet-sync {
+    bottom: 18px;
+    left: 18px;
+    max-width: min(320px, calc(100vw - 36px));
+    position: fixed;
+    z-index: 1080;
+  }
+
+  .public-admin-sheet-sync button {
+    background: #172235;
+    border: 1px solid #CEBD88;
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px #172235, inset 0 0 0 3px rgba(206, 189, 136, .82), 0 12px 28px rgba(0, 0, 0, .24);
+    color: #CEBD88;
+    cursor: pointer;
+    display: block;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.25;
+    padding: 10px 14px;
+    text-align: left;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  .public-admin-sheet-sync button:disabled {
+    cursor: wait;
+    opacity: .82;
+  }
+
+  .public-admin-sheet-sync-status {
+    background: rgba(23, 34, 53, .96);
+    border: 1px solid rgba(206, 189, 136, .72);
+    color: #F1F0E8;
+    display: none;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-top: 6px;
+    padding: 7px 9px;
+  }
+
+  .public-admin-sheet-sync-status.is-visible {
+    display: block;
+  }
+
+  @media (max-width: 575px) {
+    .public-admin-sheet-sync {
+      bottom: 12px;
+      left: 12px;
+      max-width: calc(100vw - 24px);
+    }
+  }
+</style>
+<div class="public-admin-sheet-sync no-print" data-public-admin-sheet-sync>
+  <button type="button" id="public-admin-sheet-sync-button">Sync products from Google Sheet to website</button>
+  <span class="public-admin-sheet-sync-status" id="public-admin-sheet-sync-status" aria-live="polite"></span>
+</div>
+<?php endif; ?>
 
 
 <div class="footer-rope"></div>
@@ -601,6 +665,48 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <!-- <script src="<?=$home_directory?>assets/js/plugins/aos.js"></script> -->
     <script src="<?=$home_directory?>assets/js/main.js"></script>
 
+<?php if ($showPublicAdminSync): ?>
+<script>
+(function () {
+  var button = document.getElementById('public-admin-sheet-sync-button');
+  var status = document.getElementById('public-admin-sheet-sync-status');
+  if (!button || !status) return;
+
+  function setStatus(message, visible) {
+    status.textContent = message || '';
+    status.classList.toggle('is-visible', !!visible);
+  }
+
+  button.addEventListener('click', function () {
+    button.disabled = true;
+    setStatus('Syncing all sheets...', true);
+
+    fetch('<?=$home_directory?>admin_public_sheet_sync.php', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+      .then(function (response) {
+        return response.json().catch(function () {
+          return { success: false, message: 'The server returned an invalid sync response.' };
+        });
+      })
+      .then(function (data) {
+        setStatus(data.message || (data.success ? 'Sheets synced.' : 'Sync needs attention.'), true);
+      })
+      .catch(function () {
+        setStatus('Sync failed. Please check the server error log.', true);
+      })
+      .finally(function () {
+        button.disabled = false;
+      });
+  });
+})();
+</script>
+<?php endif; ?>
+
 
 
 <script>
@@ -694,7 +800,14 @@ function getSheetProductImages(product) {
     var imageValue = product.img_url || product.image_url || product.image_urls || product.image || '';
     var images = String(imageValue).split(',').map(function(image) {
         return image.trim();
-    }).filter(Boolean);
+    }).filter(function(image) {
+        var lower = image.toLowerCase();
+        return image
+            && lower.indexOf('candybird') === -1
+            && lower.indexOf('fishgelatine.co.za/v2/assets/img/wholesale.jpg') === -1
+            && lower.indexOf('fishgelatine.co.za/v2/assets/img/pricelist.jpg') === -1
+            && lower.indexOf('fishgelatine.co.za/v2/assets/img/reseller.jpeg') === -1;
+    });
 
     return images.length ? images : ['<?=$home_directory?>assets/img/product/1.png'];
 }

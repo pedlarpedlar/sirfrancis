@@ -74,7 +74,7 @@ if (!function_exists('setSessionDefaultsWithoutDatabase')) {
         $support_email = $website_email;
         $website_company_name = "Sir Francis";
         $return_window = "14 days";
-        $limitedDescription = "Sir Francis offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
+        $limitedDescription = "Sir Francis supplies marine collagen, fish gelatine, private labelling support, wholesale packs and delivery services.";
         $description_og = $limitedDescription;
         $description_meta = $limitedDescription;
         $title_og = "Sir Francis";
@@ -637,7 +637,7 @@ if ($resultWebsiteSettings) {
 // $return_window = "48 hours";
 $return_window = "14 days";
 
-$limitedDescription = $limitedDescription ?? "Sir Francis offers quality nuts, dried fruit, snacks, candy, gifting, wholesale and delivery services.";
+$limitedDescription = $limitedDescription ?? "Sir Francis supplies marine collagen, fish gelatine, private labelling support, wholesale packs and delivery services.";
 $description_og = $description_og ?? $limitedDescription;
 $description_meta = $description_meta ?? $limitedDescription;
 $title_og = $title_og ?? "Sir Francis";

@@ -33,13 +33,13 @@ function cbProductMetaText($value, $limit = 180) {
 
 function cbProductAbsoluteUrl($url) {
     $url = trim((string) $url);
-    if ($url === '') {
-        return 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png';
+    if ($url === '' || (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($url))) {
+        return 'https://sirfrancis.co.za/assets/img/product/1.png';
     }
     if (preg_match('#^https?://#i', $url)) {
         return $url;
     }
-    return 'https://www.fishgelatine.co.za/v2/' . ltrim($url, '/');
+    return 'https://sirfrancis.co.za/' . ltrim($url, '/');
 }
 
 function cbProductSocialImageUrl($product) {
@@ -52,11 +52,14 @@ function cbProductSocialImageUrl($product) {
     ));
     $productId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($product['id'] ?? 'product'));
 
-    if ($rawImage === '') {
-        return 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png?v=' . rawurlencode($productId);
+    if ($rawImage === '' || (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($rawImage))) {
+        return 'https://sirfrancis.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
     }
 
     $firstImage = trim(explode(',', $rawImage)[0] ?? '');
+    if (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($firstImage)) {
+        return 'https://sirfrancis.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
+    }
     $absolute = cbProductAbsoluteUrl($firstImage);
     if (strpos($absolute, 'candybird.co.za/') !== false && strpos($absolute, '?') === false) {
         $absolute .= '?v=' . rawurlencode($productId);
@@ -77,6 +80,9 @@ function cbProductSocialImageUrls($product) {
     $urls = [];
 
     foreach (array_filter(array_map('trim', explode(',', $rawImage))) as $image) {
+        if (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($image)) {
+            continue;
+        }
         $absolute = cbProductAbsoluteUrl($image);
         if (strpos($absolute, 'candybird.co.za/') !== false && strpos($absolute, '?') === false) {
             $absolute .= '?v=' . rawurlencode($productId);
@@ -84,7 +90,7 @@ function cbProductSocialImageUrls($product) {
         $urls[] = $absolute;
     }
 
-    $urls[] = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png?v=' . rawurlencode($productId);
+    $urls[] = 'https://sirfrancis.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
     return array_values(array_unique(array_filter($urls)));
 }
 
@@ -98,10 +104,10 @@ function cbProductSocialImageType($url) {
 }
 
 $metaTitle = 'Product - Sir Francis';
-$metaDescription = 'Shop premium nuts, dried fruit, sweets and healthy snacks from Sir Francis.';
-$metaImage = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png';
+$metaDescription = 'Shop Sir Francis marine collagen, fish gelatine and selected wellness products.';
+$metaImage = 'https://sirfrancis.co.za/assets/img/product/1.png';
 $metaImages = [$metaImage];
-$metaUrl = $metaProduct ? getSheetProductUrl($metaProduct, true) : 'https://www.fishgelatine.co.za/v2/product';
+$metaUrl = $metaProduct ? getSheetProductUrl($metaProduct, true) : 'https://sirfrancis.co.za/product';
 
 if ($metaProduct) {
     $metaProductTitle = getSheetProductDisplayTitle($metaProduct);
@@ -172,7 +178,7 @@ include 'header.php';
             'availability' => $productStockQty === 0 ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
             'itemCondition' => 'https://schema.org/NewCondition',
             'seller' => [
-                '@id' => 'https://www.fishgelatine.co.za/v2/#organization',
+                '@id' => 'https://sirfrancis.co.za/#organization',
             ],
         ],
     ];
@@ -1128,9 +1134,9 @@ $(function() {
       return item.id === String(productId);
     });
     if (product && product.slug) {
-      return 'https://www.fishgelatine.co.za/v2/' + encodeURIComponent(product.slug);
+      return 'https://sirfrancis.co.za/' + encodeURIComponent(product.slug);
     }
-    return 'https://www.fishgelatine.co.za/v2/product?id=' + encodeURIComponent(productId);
+    return 'https://sirfrancis.co.za/product?id=' + encodeURIComponent(productId);
   }
 
   function getProductPath(product) {
@@ -1185,7 +1191,7 @@ $(function() {
 
   function renderBreadcrumb(product) {
     const crumbs = [
-      '<li class="breadcrumb-item"><a href="https://www.fishgelatine.co.za/v2">Home</a></li>',
+      '<li class="breadcrumb-item"><a href="https://sirfrancis.co.za">Home</a></li>',
       '<li class="breadcrumb-item"><a href="products">All Products</a></li>'
     ];
 

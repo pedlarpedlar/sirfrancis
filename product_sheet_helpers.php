@@ -2,6 +2,47 @@
 date_default_timezone_set('Africa/Johannesburg');
 require_once __DIR__ . '/product_sheet_sources.php';
 
+if (!defined('SIRFRANCIS_SITE_BASE_URL')) {
+    define('SIRFRANCIS_SITE_BASE_URL', 'https://sirfrancis.co.za');
+}
+
+if (!defined('SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE')) {
+    define('SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE', 'assets/img/product/1.png');
+}
+
+if (!function_exists('sirFrancisSiteUrl')) {
+    function sirFrancisSiteUrl($path = '') {
+        $path = trim((string) $path);
+        if ($path === '') {
+            return SIRFRANCIS_SITE_BASE_URL;
+        }
+        return rtrim(SIRFRANCIS_SITE_BASE_URL, '/') . '/' . ltrim($path, '/');
+    }
+}
+
+if (!function_exists('isSirFrancisLegacyCandybirdAsset')) {
+    function isSirFrancisLegacyCandybirdAsset($url) {
+        $url = strtolower(trim((string) $url));
+        if ($url === '') {
+            return false;
+        }
+
+        foreach ([
+            'candybird.co.za',
+            'candybird',
+            'fishgelatine.co.za/v2/assets/img/wholesale.jpg',
+            'fishgelatine.co.za/v2/assets/img/pricelist.jpg',
+            'fishgelatine.co.za/v2/assets/img/reseller.jpeg',
+        ] as $legacyNeedle) {
+            if (strpos($url, $legacyNeedle) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('parseCandybirdTsvRows')) {
     function parseCandybirdTsvRows($tsvData) {
         $rows = [];
@@ -1519,7 +1560,7 @@ if (!function_exists('getCandybirdCategoryUrl')) {
             $slug = getCandybirdCategorySlug($categoryName);
         }
         $path = $slug !== '' ? '/' . rawurlencode($slug) : '/products?category=' . rawurlencode((string) $categoryName);
-        return $absolute ? 'https://www.fishgelatine.co.za/v2' . $path : ltrim($path, '/');
+        return $absolute ? sirFrancisSiteUrl($path) : ltrim($path, '/');
     }
 }
 
@@ -1568,7 +1609,7 @@ if (!function_exists('getSheetProductUrl')) {
         $path = $slug !== ''
             ? '/' . rawurlencode($slug)
             : '/product?id=' . rawurlencode((string) ($product['id'] ?? ''));
-        return $absolute ? 'https://www.fishgelatine.co.za/v2' . $path : ltrim($path, '/');
+        return $absolute ? sirFrancisSiteUrl($path) : ltrim($path, '/');
     }
 }
 
@@ -2122,7 +2163,7 @@ if (!function_exists('getSheetProductImage')) {
         $imageValue = $product['img_url'] ?? $product['image_url'] ?? $product['image_urls'] ?? $product['image'] ?? '';
         $images = array_filter(array_map('trim', explode(',', (string) $imageValue)));
         foreach ($images as $image) {
-            if ($image === '' || $image === '#') {
+            if ($image === '' || $image === '#' || isSirFrancisLegacyCandybirdAsset($image)) {
                 continue;
             }
 
@@ -2142,15 +2183,16 @@ if (!function_exists('getSheetProductImage')) {
             return $image;
         }
 
-        return 'assets/img/product/1.png';
+        return SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE;
     }
 }
 
 if (!function_exists('getCandybirdAbsoluteImageUrl')) {
-    function getCandybirdAbsoluteImageUrl($imageUrl, $fallback = 'https://www.fishgelatine.co.za/v2/assets/img/product/1.png') {
+    function getCandybirdAbsoluteImageUrl($imageUrl, $fallback = null) {
+        $fallback = $fallback ?: sirFrancisSiteUrl(SIRFRANCIS_PRODUCT_PLACEHOLDER_IMAGE);
         $imageUrl = trim((string) $imageUrl);
 
-        if ($imageUrl === '' || $imageUrl === '#') {
+        if ($imageUrl === '' || $imageUrl === '#' || isSirFrancisLegacyCandybirdAsset($imageUrl)) {
             return $fallback;
         }
 
@@ -2163,7 +2205,7 @@ if (!function_exists('getCandybirdAbsoluteImageUrl')) {
         }
 
         $imageUrl = ltrim($imageUrl, '/');
-        return 'https://www.fishgelatine.co.za/v2/' . str_replace(' ', '%20', $imageUrl);
+        return sirFrancisSiteUrl(str_replace(' ', '%20', $imageUrl));
     }
 }
 
@@ -2866,9 +2908,9 @@ if (!function_exists('getCandybirdCategoryDisplayOrder')) {
         }
 
         $order = [
-            'Gifting', 'Travel Treats', 'Nuts', 'Peanuts', 'Dried Fruit',
-            'Sweets', 'Ingredients', 'For Resellers', 'Resellers & Wholesale',
-            'Specials', 'Clearance Basket'
+            'Marine Collagen', 'Fish Gelatine', 'Hydrolysed Collagen',
+            'Sea Moss', 'Retail Packs', 'Bulk Supply',
+            'Private Labelling', 'For Resellers', 'Specials', 'Clearance Basket'
         ];
 
         if (function_exists('mysqli_connect')) {
