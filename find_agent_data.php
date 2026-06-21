@@ -183,3 +183,58 @@ function sfFindAgentRegions()
         ],
     ];
 }
+
+if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
+    $regions = sfFindAgentRegions();
+    header('Content-Type: text/html; charset=UTF-8');
+    ?>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Sir Francis Agent Data</title>
+        <style>
+            body { background:#f8f5ee; color:#172235; font-family:Arial, sans-serif; line-height:1.5; margin:0; padding:28px; }
+            main { background:#fff; border:1px solid #d8c895; max-width:920px; padding:24px; }
+            h1 { color:#172235; margin-top:0; }
+            code { background:#f2ead9; padding:2px 5px; }
+            table { border-collapse:collapse; margin-top:16px; width:100%; }
+            th, td { border:1px solid #e3d6bd; padding:9px; text-align:left; vertical-align:top; }
+            th { background:#172235; color:#CEBD88; }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Sir Francis Agent Data</h1>
+            <p>This file feeds the public Find an Agent page. Edit agent regions and city agents in <code>find_agent_data.php</code>.</p>
+            <p>For each city agent, update <code>city</code>, <code>name</code>, <code>details</code>, <code>query</code>, <code>lat</code>, <code>lng</code> and <code>contact_subject</code>.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Cities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($regions as $region): ?>
+                        <tr>
+                            <td><?= htmlspecialchars((string) ($region['label'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                            <td>
+                                <?php
+                                $cities = $region['city_agents'] ?? [];
+                                echo htmlspecialchars(implode(', ', array_map(static function($city) {
+                                    return (string) ($city['city'] ?? $city['name'] ?? '');
+                                }, is_array($cities) ? $cities : [])), ENT_QUOTES, 'UTF-8');
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </main>
+    </body>
+    </html>
+    <?php
+    exit;
+}

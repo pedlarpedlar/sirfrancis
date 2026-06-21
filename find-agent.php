@@ -46,32 +46,30 @@ include 'header.php';
     color: #172235;
   }
 
-  .sf-agent-hero {
-    background:
-      linear-gradient(90deg, rgba(10, 17, 29, .98), rgba(23, 34, 53, .94)),
-      #111b2d;
-    color: #fffaf0;
+  .sf-agent-page .sf-agent-hero {
+    background: #172235 !important;
+    color: #fffaf0 !important;
     padding: 54px 0 34px;
   }
 
-  .sf-agent-hero h1 {
-    color: #fffaf0;
+  .sf-agent-page .sf-agent-hero h1 {
+    color: #fffaf0 !important;
     font-family: "Playfair Display", Georgia, serif;
     font-size: clamp(2.35rem, 5vw, 4.4rem);
     line-height: 1.05;
     margin: 0 0 12px;
   }
 
-  .sf-agent-hero p {
-    color: #fff7e4;
+  .sf-agent-page .sf-agent-hero p {
+    color: #fffaf0 !important;
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.7;
     max-width: 780px;
   }
 
-  .sf-agent-hero .sf-agent-kicker {
-    color: #CEBD88;
+  .sf-agent-page .sf-agent-hero .sf-agent-kicker {
+    color: #CEBD88 !important;
   }
 
   .sf-agent-shell {
@@ -330,7 +328,7 @@ include 'header.php';
 </style>
 
 <main class="sf-agent-page">
-  <section class="sf-agent-hero">
+  <section class="sf-agent-hero" style="background:#172235;color:#fffaf0;">
     <div class="container">
       <span class="sf-agent-kicker">Regional supply support</span>
       <h1>Find an agent</h1>
