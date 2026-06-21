@@ -738,24 +738,24 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     color: #f5ead3;
   }
 
-  .sf-editable-image-wrap:hover .sf-edit-image-button::after,
-  .sf-edit-image-button:focus::after {
+  .sf-edit-image-tooltip {
     background: #172235;
     border: 1px solid #CEBD88;
     box-shadow: 0 8px 20px rgba(0,0,0,.24);
     color: #f5ead3;
-    content: attr(data-sf-tooltip);
+    display: none;
     font-family: "Raleway", Arial, sans-serif;
     font-size: 12px;
     font-weight: 600;
     line-height: 1.35;
-    min-width: 190px;
+    max-width: min(280px, calc(100vw - 24px));
+    min-width: 210px;
     padding: 8px 10px;
-    position: absolute;
-    right: 0;
+    pointer-events: none;
+    position: fixed;
     text-align: left;
-    top: calc(100% + 8px);
     white-space: normal;
+    z-index: 99999;
   }
 </style>
 <script>
@@ -769,7 +769,32 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
   input.style.display = 'none';
   document.body.appendChild(input);
 
+  var tooltip = document.createElement('div');
+  tooltip.className = 'sf-edit-image-tooltip no-print';
+  document.body.appendChild(tooltip);
+
   var activeTarget = null;
+
+  function hideTooltip() {
+    tooltip.style.display = 'none';
+  }
+
+  function showTooltip(button) {
+    var text = button.getAttribute('data-sf-tooltip') || '';
+    if (!text) return;
+    tooltip.textContent = text;
+    tooltip.style.display = 'block';
+
+    var buttonRect = button.getBoundingClientRect();
+    var tooltipRect = tooltip.getBoundingClientRect();
+    var left = Math.min(window.innerWidth - tooltipRect.width - 12, Math.max(12, buttonRect.right - tooltipRect.width));
+    var top = buttonRect.bottom + 8;
+    if (top + tooltipRect.height > window.innerHeight - 12) {
+      top = Math.max(12, buttonRect.top - tooltipRect.height - 8);
+    }
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  }
 
   function ensureWrapped(element) {
     if (element.classList.contains('sf-editable-image-wrap')) {
@@ -814,12 +839,20 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     button.addEventListener('click', function (event) {
       event.preventDefault();
       event.stopPropagation();
+      hideTooltip();
       activeTarget = item;
       input.value = '';
       input.click();
     });
+    button.addEventListener('mouseenter', function () { showTooltip(button); });
+    button.addEventListener('focus', function () { showTooltip(button); });
+    button.addEventListener('mouseleave', hideTooltip);
+    button.addEventListener('blur', hideTooltip);
     host.appendChild(button);
   });
+
+  window.addEventListener('scroll', hideTooltip, true);
+  window.addEventListener('resize', hideTooltip);
 
   input.addEventListener('change', function () {
     if (!activeTarget || !input.files || !input.files[0]) return;
