@@ -50,11 +50,7 @@ if (function_exists('renderCandybirdSiteFlags')) {
     <nav class="offcanvas-menu">
       <ul>
         <li><a href="./">Home</a></li>
-        <li><a href="wholesale-pricelist">Buy Bulk</a></li>
         <li><a href="products">Retail Shop</a></li>
-        <li><a href="private_labelling">Private Labelling</a></li>
-        <li><a href="resellers">Become a Stockist</a></li>
-        <li><a href="contact">Contact Us</a></li>
 
 
 <?php
@@ -235,8 +231,18 @@ $categories = buildSheetMenuCategories();
 ?>
 
         <li>
+            <a href="products"><span class="menu-text">Categories</span></a>
+            <?= generateMenu($categories) ?>
+        </li>
+        <li><a href="wholesale-pricelist">Buy Bulk</a></li>
+        <li>
             <a href="#"><span class="menu-text">More</span></a>
             <ul class="offcanvas-submenu">
+                <li><a class="navmenu-click-mobile" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click-mobile" href="resellers">Become a Stockist</a></li>
+                <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
+                <li><a class="navmenu-click-mobile" href="recipes">Knowledge Centre</a></li>
+                <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
                 <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
                 <li><a class="navmenu-click-mobile" href="return_policy">Buyer Protection</a></li>
@@ -244,8 +250,6 @@ $categories = buildSheetMenuCategories();
                 <li><a class="navmenu-click-mobile" href="policies">Policies</a></li>
             </ul>
         </li>
-        <li><a class="navmenu-click-mobile" href="recipes">Knowledge Centre</a></li>
-        <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
       </ul>
     </nav>
     <div class="offcanvas-social py-30">
@@ -491,22 +495,27 @@ foreach ($offCanvasCartItems as $item) {
               <a class="navmenu-click" href="./">Home</a>
             </li>
             <li class="ml-0">
+              <a class="navmenu-click" href="products">Retail Shop</a>
+            </li>
+            <li>
+              <a class="navmenu-click" href="products"
+                >Categories <i class="ion-ios-arrow-down"></i
+              ></a>
+              <?= generateMenuMainNodes($categories) ?>
+            </li>
+            <li>
               <a class="navmenu-click" href="wholesale-pricelist">Buy Bulk</a>
             </li>
-            <li class="position-static">
-              <a class="navmenu-click" href="products"
-                >Retail Shop <!-- <i class="ion-ios-arrow-down"> --></i
-              ></a>
-              </li>
-            <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
-            <li><a class="navmenu-click" href="resellers">Become a Stockist</a></li>
-            <li><a class="navmenu-click" href="contact">Contact Us</a></li>
 
             <li>
               <a href="#"
                 >More <i class="ion-ios-arrow-down"></i
               ></a>
               <ul class="sub-menu">
+                <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
+                <li><a class="navmenu-click" href="resellers">Become a Stockist</a></li>
+                <li><a class="navmenu-click" href="contact">Contact Us</a></li>
+                <li><a class="navmenu-click" href="recipes">Knowledge Centre</a></li>
                 <li><a class="navmenu-click" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click" href="wholesale-pricelist">Wholesale Pricelist</a></li>
                 <li>
@@ -515,7 +524,7 @@ foreach ($offCanvasCartItems as $item) {
                 <li>
                   <a class="navmenu-click" href="about">About Sir Francis</a>
                 </li>
-                <li><a class="navmenu-click" href="recipes">Knowledge Centre</a></li>
+                <li><a class="navmenu-click" href="global-services">Global Services</a></li>
                 <li><a class="navmenu-click" href="policies">Policies</a></li>
               </ul>
             </li>
