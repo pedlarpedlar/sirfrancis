@@ -670,7 +670,7 @@ if (!function_exists('getSheetCoupons')) {
 }
 
 if (!function_exists('parseCandybirdCouponDate')) {
-    function parseCandybirdCouponDate($dateValue) {
+    function parseCandybirdCouponDate($dateValue, $endOfDay = false) {
         $dateValue = trim((string) $dateValue);
         if ($dateValue === '') {
             return null;
@@ -680,6 +680,9 @@ if (!function_exists('parseCandybirdCouponDate')) {
         foreach ($formats as $format) {
             $date = DateTime::createFromFormat($format . ' H:i:s', $dateValue . ' 00:00:00', new DateTimeZone('Africa/Johannesburg'));
             if ($date instanceof DateTime) {
+                if ($endOfDay) {
+                    $date->modify('+1 day');
+                }
                 return $date;
             }
         }
@@ -1090,7 +1093,7 @@ if (!function_exists('validateSheetCoupon')) {
             }
         }
         $validFrom = parseCandybirdCouponDate($coupon['valid_from'] ?? '');
-        $validUntil = parseCandybirdCouponDate($coupon['valid_until'] ?? '');
+        $validUntil = parseCandybirdCouponDate($coupon['valid_until'] ?? '', true);
 
         if ($validFrom && $now < $validFrom) {
             return ['valid' => false, 'message' => 'This coupon is not active yet.'];
