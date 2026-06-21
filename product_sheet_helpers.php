@@ -1374,6 +1374,26 @@ if (!function_exists('candybirdCouponItemMatchesProductTypeRestriction')) {
 
 if (!function_exists('candybirdCouponItemMatchesProductIdRestriction')) {
     function candybirdCouponItemMatchesProductIdRestriction($coupon, $item) {
+        $itemIds = array_filter([
+            trim((string) ($item['id'] ?? '')),
+            trim((string) ($item['product_id'] ?? '')),
+            trim((string) ($item['source_product_id'] ?? '')),
+        ]);
+
+        $exclusionValue = candybirdCouponFieldValue($coupon, [
+            'product_id_exclusion',
+            'product_id_exclusions',
+            'excluded_product_ids',
+            'exclude_product_id',
+            'exclude_product_ids',
+        ]);
+        $excludedIds = candybirdCouponListValues($exclusionValue);
+        foreach ($excludedIds as $excludedId) {
+            if (in_array(trim((string) $excludedId), $itemIds, true)) {
+                return false;
+            }
+        }
+
         $restrictionValue = candybirdCouponFieldValue($coupon, [
             'product_id_restriction',
             'product_id_restrictions',
@@ -1386,11 +1406,6 @@ if (!function_exists('candybirdCouponItemMatchesProductIdRestriction')) {
             return true;
         }
 
-        $itemIds = array_filter([
-            trim((string) ($item['id'] ?? '')),
-            trim((string) ($item['product_id'] ?? '')),
-            trim((string) ($item['source_product_id'] ?? '')),
-        ]);
         foreach ($allowedIds as $allowedId) {
             if (in_array(trim((string) $allowedId), $itemIds, true)) {
                 return true;
@@ -1413,12 +1428,20 @@ if (!function_exists('candybirdCouponRestrictionMessage')) {
     function candybirdCouponRestrictionMessage($coupon) {
         $categoryValue = candybirdCouponFieldValue($coupon, ['category_restriction', 'category_restrictions', 'valid_categories', 'eligible_categories', 'applies_to_categories', 'category']);
         $typeExclusion = candybirdCouponFieldValue($coupon, ['product_type_exclusion', 'product_type_exclusions', 'excluded_product_types', 'exclude_product_type', 'exclude_product_types']);
+        $productIdRestriction = candybirdCouponFieldValue($coupon, ['product_id_restriction', 'product_id_restrictions', 'valid_product_ids', 'eligible_product_ids', 'applies_to_product_ids']);
+        $productIdExclusion = candybirdCouponFieldValue($coupon, ['product_id_exclusion', 'product_id_exclusions', 'excluded_product_ids', 'exclude_product_id', 'exclude_product_ids']);
         $parts = [];
         if (trim($categoryValue) !== '') {
             $parts[] = 'selected ' . trim($categoryValue) . ' products';
         }
+        if (trim($productIdRestriction) !== '') {
+            $parts[] = 'only product IDs ' . trim($productIdRestriction);
+        }
         if (trim($typeExclusion) !== '') {
             $parts[] = 'excluding ' . trim($typeExclusion) . ' items';
+        }
+        if (trim($productIdExclusion) !== '') {
+            $parts[] = 'excluding product IDs ' . trim($productIdExclusion);
         }
         return $parts ? 'This coupon is valid on ' . implode(', ', $parts) . '.' : 'This coupon is not valid on the products currently in your cart.';
     }

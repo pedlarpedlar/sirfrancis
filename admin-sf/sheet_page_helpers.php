@@ -106,6 +106,8 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                 'phone_restriction',
                 'category_restriction',
                 'product_type_exclusion',
+                'product_id_restriction',
+                'product_id_exclusion',
             ],
         ];
         $headers = $templateHeaders[$key] ?? array_values(array_unique(array_merge(
@@ -151,7 +153,8 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'phone_restriction' => 'Optional allowed phone number. Use this to give a coupon to one specific customer and make them feel extra special. They must use this same phone number when checking out.',
             'category_restriction' => 'Optional eligible categories, comma separated. Parent categories include their children.',
             'product_type_exclusion' => 'Optional excluded product types, e.g. digital or voucher.',
-            'product_id_restriction' => 'Optional eligible product IDs, comma separated.',
+            'product_id_restriction' => 'Optional eligible product IDs, comma separated. If filled, the coupon applies only to these product IDs.',
+            'product_id_exclusion' => 'Optional excluded product IDs, comma separated. If filled, the coupon will not apply to these product IDs.',
             'clearance_id' => 'Unique clearance item ID, e.g. CLR-001.',
             'product_id' => 'Original product sheet ID used for image/details fallback.',
             'clearance_price' => 'Clearance selling price.',
@@ -224,6 +227,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                     'category_restriction' => 'Marine Collagen',
                     'product_type_exclusion' => 'digital,voucher',
                     'product_id_restriction' => '',
+                    'product_id_exclusion' => '',
                 ];
             } elseif ($key === 'clearance') {
                 $examples = [

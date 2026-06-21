@@ -64,6 +64,7 @@ $_SESSION['coupon'] = [
     'category_restriction' => $coupon['category_restriction'] ?? $coupon['category_restrictions'] ?? $coupon['valid_categories'] ?? '',
     'product_type_exclusion' => $coupon['product_type_exclusion'] ?? $coupon['product_type_exclusions'] ?? $coupon['excluded_product_types'] ?? '',
     'product_id_restriction' => $coupon['product_id_restriction'] ?? $coupon['product_id_restrictions'] ?? $coupon['valid_product_ids'] ?? '',
+    'product_id_exclusion' => $coupon['product_id_exclusion'] ?? $coupon['product_id_exclusions'] ?? $coupon['excluded_product_ids'] ?? '',
     'coupon_savings' => $discountDetails['coupon_savings'],
     'original_amount' => $discountDetails['eligible_amount'],
     'total_after_coupon' => $discountDetails['total_after_coupon'],

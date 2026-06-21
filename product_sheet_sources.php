@@ -15,7 +15,7 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS6OtaChjDDrYCGBfpSaK8nnixhqpoZpJwPKRnA0MmuTCHrIIYSoksqoFkB8syrlxfOjn27rOY0wvll/pub?gid=0&single=true&output=tsv',
                 'edit_url' => 'https://docs.google.com/spreadsheets/d/1aofJluANxsJ-jtEIh9w1DDRzVuArtJVG32nFndX6bqw/edit?gid=0#gid=0',
                 'required_headers' => ['id', 'coupon_code', 'discount_type', 'discount_value', 'min_order_value', 'valid_from', 'valid_until', 'valid_on_sale_items', 'subscriber_only', 'valid_count', 'multi_user', 'email_restriction', 'phone_restriction', 'category_restriction', 'product_type_exclusion'],
-                'optional_headers' => ['product_id_restriction'],
+                'optional_headers' => ['product_id_restriction', 'product_id_exclusion'],
             ],
             'clearance' => [
                 'label' => 'Clearance Basket',
