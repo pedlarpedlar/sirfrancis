@@ -314,7 +314,7 @@ if (!function_exists('cbAdminSheetPage')) {
         $sources = getCandybirdSheetSources();
         $source = $sources[$key];
         $syncLabel = $key === 'products' ? 'Sync Products' : 'Sync ' . ($source['label'] ?? $title);
-        $health = checkCandybirdSheetHealth($key);
+        $health = $key === 'products' ? [] : checkCandybirdSheetHealth($key);
         $adminHelpOverride = [
             'title' => $title . ' helper',
             'body' => trim(preg_replace('/\s+/', ' ', strip_tags(str_replace(['</p>', '<br>', '<br/>', '<br />'], ' ', (string) $introHtml)))),
@@ -343,12 +343,29 @@ if (!function_exists('cbAdminSheetPage')) {
             .header-list { display:flex; flex-wrap:wrap; gap:6px; padding:0; margin:8px 0 0; list-style:none; }
             .header-list li { background:#f6f1ea; border:1px solid var(--sf-border); border-radius:999px; padding:4px 8px; font-size:12px; }
             .sheet-actions { display:flex; flex-wrap:wrap; gap:10px; }
+            .sheet-start-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; margin-bottom:18px; overflow:hidden; }
+            .sheet-start-header { background:#f8f5ee; padding:22px; }
+            .sheet-start-header h2 { color:#28364B; font-size:28px; margin-bottom:8px; }
+            .sheet-start-header p { color:#574f45; font-size:16px; margin:0; }
+            .sheet-start-steps { display:grid; gap:0; grid-template-columns:repeat(3, minmax(0, 1fr)); }
+            .sheet-start-step { border-top:1px solid var(--sf-border); padding:20px; }
+            .sheet-start-step + .sheet-start-step { border-left:1px solid var(--sf-border); }
+            .sheet-start-step span { align-items:center; background:#28364B; color:#CEBD88; display:inline-flex; font-weight:900; height:34px; justify-content:center; margin-bottom:12px; width:34px; }
+            .sheet-start-step h3 { color:#28364B; font-size:18px; margin-bottom:8px; }
+            .sheet-start-step p { color:#574f45; min-height:54px; }
+            @media (max-width: 991px) {
+                .sheet-start-steps { grid-template-columns:1fr; }
+                .sheet-start-step + .sheet-start-step { border-left:0; }
+            }
         </style>
         <div class="container sheet-page">
             <div class="sheet-hero">
                 <h1><?= cbAdminSheetText($title) ?></h1>
+                <div><?= $introHtml ?></div>
                 <div class="sheet-actions mt-3">
-                    <a class="btn btn-light" href="download_sheet_template?type=<?= cbAdminSheetText($key) ?>">Download template</a>
+                    <?php if ($key !== 'products'): ?>
+                        <a class="btn btn-light" href="download_sheet_template?type=<?= cbAdminSheetText($key) ?>">Download template</a>
+                    <?php endif; ?>
                     <form method="post" class="m-0"><input type="hidden" name="sheet_action" value="refresh_source"><button class="btn btn-warning" type="submit"><?= cbAdminSheetText($syncLabel) ?></button></form>
                     <form method="post" class="m-0"><input type="hidden" name="sheet_action" value="refresh_all"><button class="btn btn-outline-light" type="submit">Mega Sync All Sheets</button></form>
                     <a class="btn btn-outline-light" href="../products" target="_blank" rel="noopener noreferrer">View Shop</a>
@@ -357,8 +374,40 @@ if (!function_exists('cbAdminSheetPage')) {
 
             <?php if ($message): ?><div class="alert <?= $success ? 'alert-success' : 'alert-danger' ?>"><?= cbAdminSheetText($message) ?></div><?php endif; ?>
 
-            <div class="sheet-panel">
-                <h2>Editable Sheet Links</h2>
+            <?php if ($key === 'products'): ?>
+                <section class="sheet-start-card" aria-labelledby="product-sheet-start-title">
+                    <div class="sheet-start-header">
+                        <h2 id="product-sheet-start-title">Where To Start?</h2>
+                        <p>Use this page in order: add images, prepare your product sheet, then save the two Google Sheet links here.</p>
+                    </div>
+                    <div class="sheet-start-steps">
+                        <div class="sheet-start-step">
+                            <span>1</span>
+                            <h3>Add Product Images</h3>
+                            <p>Upload your product images to the gallery first. Copy each image URL from the gallery and paste it into the sheet's image column.</p>
+                            <a class="btn btn-primary" href="manage_gallery">Open Image Gallery</a>
+                        </div>
+                        <div class="sheet-start-step">
+                            <span>2</span>
+                            <h3>Download Template</h3>
+                            <p>Use the template so the columns are already correct. Add your real products from line 3 onward.</p>
+                            <a class="btn btn-primary" href="download_sheet_template?type=products">Download Product Template</a>
+                        </div>
+                        <div class="sheet-start-step">
+                            <span>3</span>
+                            <h3>Save Links Here</h3>
+                            <p>After publishing your Google Sheet as TSV, paste the published TSV link and editable sheet link below.</p>
+                            <a class="btn btn-primary" href="#sheet-links">Save Product Sheet Links</a>
+                        </div>
+                    </div>
+                </section>
+            <?php endif; ?>
+
+            <div class="sheet-panel" id="sheet-links">
+                <h2><?= $key === 'products' ? 'Save Product Sheet Links Here' : 'Editable Sheet Links' ?></h2>
+                <?php if ($key === 'products'): ?>
+                    <p class="text-muted">Paste the published TSV URL and the editable Google Sheet URL here. Once saved, use Sync Products when you want the website to refresh immediately.</p>
+                <?php endif; ?>
                 <form method="post">
                     <input type="hidden" name="sheet_action" value="save_source">
                     <div class="form-group">
@@ -377,25 +426,27 @@ if (!function_exists('cbAdminSheetPage')) {
                 </form>
             </div>
 
-            <div class="sheet-panel">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h2><?= cbAdminSheetText($source['label']) ?> Health</h2>
-                    <span class="sheet-badge <?= !empty($health['ok']) ? 'sheet-good' : 'sheet-bad' ?>"><?= !empty($health['ok']) ? 'Healthy' : 'Needs attention' ?></span>
+            <?php if ($key !== 'products'): ?>
+                <div class="sheet-panel">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h2><?= cbAdminSheetText($source['label']) ?> Health</h2>
+                        <span class="sheet-badge <?= !empty($health['ok']) ? 'sheet-good' : 'sheet-bad' ?>"><?= !empty($health['ok']) ? 'Healthy' : 'Needs attention' ?></span>
+                    </div>
+                    <p><?= cbAdminSheetText($health['message'] ?? '') ?></p>
+                    <p><strong>Valid rows:</strong> <?= number_format((int) ($health['row_count'] ?? 0)) ?> | <strong>Rows scanned:</strong> <?= number_format((int) ($health['scanned_row_count'] ?? 0)) ?></p>
+                    <?php if (!empty($health['missing_headers'])): ?>
+                        <p class="text-danger"><strong>Missing headers:</strong> <?= cbAdminSheetText(implode(', ', $health['missing_headers'])) ?></p>
+                    <?php endif; ?>
+                    <p class="mb-1"><strong>Required headers:</strong></p>
+                    <ul class="header-list"><?php foreach ($source['required_headers'] as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
+                    <?php if (!empty($source['optional_headers'])): ?>
+                        <p class="mb-1 mt-3"><strong>Supported optional headers:</strong></p>
+                        <ul class="header-list"><?php foreach ($source['optional_headers'] as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
+                    <?php endif; ?>
+                    <p class="mb-1 mt-3"><strong>Detected headers:</strong></p>
+                    <ul class="header-list"><?php foreach (($health['headers'] ?? []) as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
                 </div>
-                <p><?= cbAdminSheetText($health['message'] ?? '') ?></p>
-                <p><strong>Valid rows:</strong> <?= number_format((int) ($health['row_count'] ?? 0)) ?> | <strong>Rows scanned:</strong> <?= number_format((int) ($health['scanned_row_count'] ?? 0)) ?></p>
-                <?php if (!empty($health['missing_headers'])): ?>
-                    <p class="text-danger"><strong>Missing headers:</strong> <?= cbAdminSheetText(implode(', ', $health['missing_headers'])) ?></p>
-                <?php endif; ?>
-                <p class="mb-1"><strong>Required headers:</strong></p>
-                <ul class="header-list"><?php foreach ($source['required_headers'] as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
-                <?php if (!empty($source['optional_headers'])): ?>
-                    <p class="mb-1 mt-3"><strong>Supported optional headers:</strong></p>
-                    <ul class="header-list"><?php foreach ($source['optional_headers'] as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
-                <?php endif; ?>
-                <p class="mb-1 mt-3"><strong>Detected headers:</strong></p>
-                <ul class="header-list"><?php foreach (($health['headers'] ?? []) as $header): ?><li><?= cbAdminSheetText($header) ?></li><?php endforeach; ?></ul>
-            </div>
+            <?php endif; ?>
         </div>
         <?php
         include __DIR__ . '/../footer.php';
