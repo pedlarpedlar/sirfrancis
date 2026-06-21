@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/product_sheet_helpers.php';
-$useSimpleCorporateNav = !empty($is_homepage) || !empty($is_contact_page);
+$useSimpleCorporateNav = !empty($is_homepage) || !empty($is_contact_page) || !empty($use_corporate_nav);
 ?>
 </head>
 
@@ -53,6 +53,7 @@ if (function_exists('renderCandybirdSiteFlags')) {
     <nav class="offcanvas-menu">
       <ul>
         <li><a href="./">Home</a></li>
+        <li><a href="find-agent">Find an agent</a></li>
         <li><a href="products">Retail Shop</a></li>
 
 
@@ -500,6 +501,9 @@ foreach ($offCanvasCartItems as $item) {
 
             <li class="active ml-0">
               <a class="navmenu-click" href="./">Home</a>
+            </li>
+            <li class="ml-0">
+              <a class="navmenu-click" href="find-agent">Find an agent</a>
             </li>
             <li class="ml-0">
               <a class="navmenu-click" href="products">Retail Shop</a>
