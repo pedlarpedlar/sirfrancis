@@ -12,9 +12,27 @@ include 'dbh.inc.php';
 $message = '';
 $success = false;
 $old = $_POST;
+$googleMapsApiKey = '';
 
 function cbCreateOrderText($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+if ($conn instanceof mysqli) {
+    $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
+    if ($mapsColumnCheck && $mapsColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL");
+    }
+    $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
+    if ($mapsColumnCheck && $mapsColumnCheck->num_rows > 0) {
+        $mapsResult = $conn->query("SELECT google_maps_api_key FROM admin_website_settings LIMIT 1");
+        if ($mapsResult && ($mapsRow = $mapsResult->fetch_assoc())) {
+            $googleMapsApiKey = trim((string) ($mapsRow['google_maps_api_key'] ?? ''));
+        }
+    }
+}
+if ($googleMapsApiKey === '') {
+    $googleMapsApiKey = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -118,6 +136,19 @@ include 'page_menues.php';
     .create-order-panel { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 22px; }
     .create-order-panel h1 { color: #28364B; }
     .form-help { color: #6d6270; font-size: 13px; }
+    .manual-address-fields { display: none; }
+    .manual-address-fields.is-open { display: block; }
+    .admin-address-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .admin-address-toggle {
+        background: #fff;
+        border: 3px double #CEBD88;
+        border-radius: 0;
+        color: #28364B;
+        font-weight: 800;
+        padding: 7px 12px;
+    }
+    .admin-address-toggle:hover,
+    .admin-address-toggle:focus { background: #28364B; color: #CEBD88; }
 </style>
 
 <div class="container create-order-shell">
@@ -156,39 +187,51 @@ include 'page_menues.php';
                 </div>
             </div>
             <div class="form-group">
-                <label>Street address</label>
-                <input type="text" name="billing_street_address_1" class="form-control" value="<?= cbCreateOrderText($old['billing_street_address_1'] ?? '') ?>">
+                <label>Delivery address</label>
+                <input
+                    type="text"
+                    name="billing_street_address_1"
+                    id="billing_street_address_1"
+                    class="form-control"
+                    value="<?= cbCreateOrderText($old['billing_street_address_1'] ?? '') ?>"
+                    placeholder="Start typing the customer address"
+                    autocomplete="off"
+                >
+                <div class="admin-address-actions">
+                    <button type="button" class="admin-address-toggle" id="manual-address-toggle">Enter address manually</button>
+                    <span class="form-help">Google Maps will fill city, province, country and postal code when available.</span>
+                </div>
+            </div>
+            <div class="manual-address-fields<?= !empty($old['billing_street_address_2']) || !empty($old['billing_city']) || !empty($old['billing_province']) || !empty($old['billing_post_code']) ? ' is-open' : '' ?>" id="manual-address-fields">
+                <div class="form-group">
+                    <label>Apartment, unit, company, locker details</label>
+                    <input type="text" name="billing_street_address_2" id="billing_street_address_2" class="form-control" value="<?= cbCreateOrderText($old['billing_street_address_2'] ?? '') ?>">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>City</label>
+                        <input type="text" name="billing_city" id="billing_city" class="form-control" value="<?= cbCreateOrderText($old['billing_city'] ?? '') ?>">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Province</label>
+                        <input type="text" name="billing_province" id="billing_province" class="form-control" value="<?= cbCreateOrderText($old['billing_province'] ?? '') ?>">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Postal code</label>
+                        <input type="text" name="billing_post_code" id="billing_post_code" class="form-control" value="<?= cbCreateOrderText($old['billing_post_code'] ?? '') ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" name="billing_country" id="billing_country" class="form-control" value="<?= cbCreateOrderText($old['billing_country'] ?? 'South Africa') ?>">
+                </div>
             </div>
             <div class="form-group">
-                <label>Apartment, unit, company, locker details</label>
-                <input type="text" name="billing_street_address_2" class="form-control" value="<?= cbCreateOrderText($old['billing_street_address_2'] ?? '') ?>">
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label>City</label>
-                    <input type="text" name="billing_city" class="form-control" value="<?= cbCreateOrderText($old['billing_city'] ?? '') ?>">
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Province</label>
-                    <input type="text" name="billing_province" class="form-control" value="<?= cbCreateOrderText($old['billing_province'] ?? '') ?>">
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Postal code</label>
-                    <input type="text" name="billing_post_code" class="form-control" value="<?= cbCreateOrderText($old['billing_post_code'] ?? '') ?>">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Country</label>
-                    <input type="text" name="billing_country" class="form-control" value="<?= cbCreateOrderText($old['billing_country'] ?? 'South Africa') ?>">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Payment status</label>
-                    <select name="payment_status" class="form-control">
-                        <option value="0">Unpaid / waiting</option>
-                        <option value="1" <?= (isset($old['payment_status']) && (int) $old['payment_status'] === 1) ? 'selected' : '' ?>>Paid</option>
-                    </select>
-                </div>
+                <label>Payment status</label>
+                <select name="payment_status" class="form-control">
+                    <option value="0">Unpaid / waiting</option>
+                    <option value="1" <?= (isset($old['payment_status']) && (int) $old['payment_status'] === 1) ? 'selected' : '' ?>>Paid</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Internal order notes</label>
@@ -198,5 +241,94 @@ include 'page_menues.php';
         </form>
     </div>
 </div>
+
+<script>
+(function() {
+    var manualFields = document.getElementById('manual-address-fields');
+    var manualToggle = document.getElementById('manual-address-toggle');
+
+    function showManualFields() {
+        if (!manualFields) return;
+        manualFields.classList.add('is-open');
+        if (manualToggle) manualToggle.textContent = 'Manual address shown';
+    }
+
+    window.initSirFrancisAdminOrderAddressAutocomplete = function() {
+        if (!window.google || !google.maps || !google.maps.places) {
+            showManualFields();
+            return;
+        }
+
+        var input = document.getElementById('billing_street_address_1');
+        if (!input || input.dataset.mapsReady === '1') return;
+        input.dataset.mapsReady = '1';
+
+        function setField(id, value, overwrite) {
+            var field = document.getElementById(id);
+            if (!field || (!overwrite && field.value)) return;
+            field.value = value || field.value;
+            field.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        var autocomplete = new google.maps.places.Autocomplete(input, {
+            fields: ['address_components', 'formatted_address'],
+            types: ['address']
+        });
+
+        autocomplete.addListener('place_changed', function() {
+            var place = autocomplete.getPlace();
+            var fields = {
+                street_number: '',
+                route: '',
+                locality: '',
+                postal_town: '',
+                administrative_area_level_1: '',
+                sublocality: '',
+                sublocality_level_1: '',
+                neighborhood: '',
+                country: '',
+                postal_code: ''
+            };
+
+            (place.address_components || []).forEach(function(component) {
+                (component.types || []).forEach(function(type) {
+                    if (Object.prototype.hasOwnProperty.call(fields, type)) {
+                        fields[type] = component.long_name;
+                    }
+                });
+            });
+
+            var street = ((fields.street_number + ' ' + fields.route).replace(/\s+/g, ' ')).trim();
+            var suburb = fields.sublocality_level_1 || fields.sublocality || fields.neighborhood || '';
+            if (street) setField('billing_street_address_1', street, true);
+            if (suburb) setField('billing_street_address_2', suburb, false);
+            setField('billing_city', fields.locality || fields.postal_town, false);
+            setField('billing_province', fields.administrative_area_level_1, false);
+            setField('billing_country', fields.country, false);
+            setField('billing_post_code', fields.postal_code, false);
+            showManualFields();
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        manualFields = document.getElementById('manual-address-fields');
+        manualToggle = document.getElementById('manual-address-toggle');
+        if (manualToggle) {
+            manualToggle.addEventListener('click', showManualFields);
+        }
+
+        if (window.google && google.maps && google.maps.places) {
+            window.initSirFrancisAdminOrderAddressAutocomplete();
+        }
+
+        <?php if ($googleMapsApiKey === ''): ?>
+        showManualFields();
+        <?php endif; ?>
+    });
+})();
+</script>
+<?php if ($googleMapsApiKey !== ''): ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=cbCreateOrderText($googleMapsApiKey)?>&libraries=places&callback=initSirFrancisAdminOrderAddressAutocomplete"></script>
+<?php endif; ?>
 
 <?php include '../footer.php'; ?>

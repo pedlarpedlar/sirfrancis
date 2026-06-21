@@ -253,7 +253,6 @@ if ($resultCountries && mysqli_num_rows($resultCountries) > 0) {
 }
 
 $payment_methods = '';
-require_once __DIR__ . '/ozow_helpers.php';
 
 // Fetch payment methods from the database
 // Initialize variables
@@ -261,7 +260,6 @@ $paymentMethods = array();
 $isFirstIteration = true; // Variable to track the first iteration
 
 if ($conn instanceof mysqli) {
-    candybirdEnsureOzowPaymentMethod($conn);
     $sql = "SELECT * FROM payment_methods";
     $result = mysqli_query($conn, $sql);
 } else {
@@ -271,11 +269,16 @@ if ($conn instanceof mysqli) {
 // Check if there are results
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
+        $paymentLabel = (string) ($row['label'] ?? '');
+        $paymentDescription = (string) ($row['description'] ?? '');
+        if (stripos($paymentLabel, 'ozow') !== false || stripos($paymentDescription, 'ozow') !== false) {
+            continue;
+        }
         // Store label and description in an associative array
         $paymentMethods[] = array(
             'id' => $row['id'],
-            'label' => $row['label'],
-            'description' => $row['description']
+            'label' => $paymentLabel,
+            'description' => $paymentDescription
         );
     }
 }
@@ -830,7 +833,6 @@ foreach ($paymentMethods as $paymentMethod) {
                 <span><i class="fab fa-cc-mastercard"></i> Mastercard</span>
                 <span>PayFast</span>
                 <span>EFT</span>
-                <span>Ozow Instant EFT</span>
               </div>
               <div class="payment-accordion element-mrg">
                   <div class="panel-group" id="accordion">

@@ -75,7 +75,7 @@ include 'header.php';
 
                 <section class="cb-policy-section" id="payments">
                     <h2>3. Payments</h2>
-                    <p>Orders can be paid using the payment methods available at checkout, including PayFast where enabled, EFT where offered, and EFT via Ozow if that option is enabled. PayFast and Ozow payments are processed securely by their payment platforms. Normal EFT payments, while still offered, are manually verified by our team before being marked as paid.</p>
+                    <p>Orders can be paid using the payment methods available at checkout, including PayFast where enabled and EFT where offered. PayFast payments are processed securely by its payment platform. Normal EFT payments, while still offered, are manually verified by our team before being marked as paid.</p>
                     <p>An order record may still be created even if payment is not completed immediately, so the customer can return to the order details page and complete payment or request help.</p>
                     <div class="cb-policy-callout">Please use your order number as reference when paying by normal EFT. Orders are only released for packing once payment is confirmed or otherwise approved by Sir Francis.</div>
                 </section>
