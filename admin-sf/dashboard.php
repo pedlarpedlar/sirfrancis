@@ -381,8 +381,7 @@ $todayPageViews = ($hasPageViews && $hasSessions) ? cbAdminScalar($conn, "SELECT
 $recentOrders = $hasOrders ? cbAdminRows($conn, "SELECT id, order_status, payment_status, grand_total_amount, payment_method, order_date FROM orders ORDER BY order_date DESC LIMIT 8") : [];
 $topProducts = ($hasOrderItems ? cbAdminRows($conn, "SELECT product_id, product_title, SUM(quantity) AS qty, SUM((price - COALESCE(discount_amount, 0)) * quantity) AS total FROM order_items GROUP BY product_id, product_title ORDER BY qty DESC LIMIT 6") : []);
 $recentReviews = $hasReviews ? cbAdminRows($conn, "SELECT product_id, u_name, rating, comment FROM reviews ORDER BY id DESC LIMIT 5") : [];
-$recentCampaigns = $hasScheduledEmails ? cbAdminRows($conn, "SELECT id, subject, scheduled_at, sent FROM scheduled_emails ORDER BY scheduled_at DESC LIMIT 5") : [];
-$pendingBroadcasts = $hasScheduledEmails ? cbAdminRows($conn, "SELECT id, subject, scheduled_at, email_heading FROM scheduled_emails WHERE COALESCE(sent, 0) = 0 ORDER BY scheduled_at ASC, id ASC LIMIT 6") : [];
+$pendingBroadcasts = $hasScheduledEmails ? cbAdminRows($conn, "SELECT id, subject, scheduled_at, email_heading FROM scheduled_emails WHERE COALESCE(sent, 0) = 0 ORDER BY scheduled_at ASC, id ASC LIMIT 3") : [];
 $recentCronjobs = $hasCronjobs ? cbAdminRows($conn, "SELECT job_name, description, execution_time FROM cronjobs ORDER BY id DESC LIMIT 12") : [];
 $dashboardCoupons = [];
 if (function_exists('getSheetCoupons')) {
@@ -408,7 +407,7 @@ if (function_exists('getSheetCoupons')) {
         $bDate = strtotime((string) ($b['valid_from'] ?? '')) ?: 0;
         return $aDate <=> $bDate;
     });
-    $dashboardCoupons = array_slice($dashboardCoupons, 0, 6);
+    $dashboardCoupons = array_slice($dashboardCoupons, 0, 3);
 }
 $dashboardSiteFlags = [];
 if ($hasSiteFlags = cbAdminTableExists($conn, 'candybird_site_flags')) {
@@ -420,7 +419,7 @@ if ($hasSiteFlags = cbAdminTableExists($conn, 'candybird_site_flags')) {
             $dashboardSiteFlags[] = $flagRow;
         }
     }
-    $dashboardSiteFlags = array_slice($dashboardSiteFlags, 0, 6);
+    $dashboardSiteFlags = array_slice($dashboardSiteFlags, 0, 3);
 }
 if ($loadDashboardReports) {
 $emailLinkedVisitors = ($hasPageViews && $hasSessions) ? cbAdminRows($conn, "SELECT pv.url, pv.referrer_url, pv.timestamp, s.user_id, s.session_id, s.ip_address, COALESCE(u.username, 'Guest') AS visitor_name, u.email
@@ -666,103 +665,6 @@ $liveVisitorRows = $hasSessions ? cbAdminRows($conn, "SELECT
         ['label' => 'Top add-to-cart source', 'kind' => 'add_to_cart', 'row' => null],
     ];
 }
-$importantLinks = [
-    [
-        'label' => 'Products',
-        'description' => 'Manage product sheet links, health checks, template and product mirror sync.',
-        'url' => 'products',
-        'button' => 'Open products'
-    ],
-    [
-        'label' => 'Orders',
-        'description' => 'View, edit, print, update and message customer orders.',
-        'url' => 'manage_orders',
-        'button' => 'Open orders'
-    ],
-    [
-        'label' => 'Customers',
-        'description' => 'Registered customers plus guest checkout customers and copyable email lists.',
-        'url' => 'manage_users',
-        'button' => 'Open customers'
-    ],
-    [
-        'label' => 'Subscribers',
-        'description' => 'Create tests, schedule campaigns and send broadcasts to active subscribers.',
-        'url' => 'schedule_email',
-        'button' => 'Open subscribers'
-    ],
-    [
-        'label' => 'Coupon Tester',
-        'description' => 'Test coupon dates, restrictions and basket calculations before customers use a code.',
-        'url' => 'coupon_tester',
-        'button' => 'Test coupon'
-    ],
-    [
-        'label' => 'Mega Sync All Sheets',
-        'description' => 'Force refresh products, coupons, clearance and wholesale caches after sheet edits.',
-        'url' => 'sheets',
-        'button' => 'Mega sync'
-    ],
-    [
-        'label' => 'View Shop',
-        'description' => 'Open the public storefront in a new tab.',
-        'url' => '../products',
-        'button' => 'View shop'
-    ],
-    [
-        'label' => 'Social Accounts',
-        'description' => 'Keep social handles, login details and posting reminders in one place.',
-        'url' => 'social_accounts',
-        'button' => 'Open socials'
-    ],
-    [
-        'label' => 'Business Documents',
-        'description' => 'Open the admin-only document vault for CIPC, SARS, contracts and records.',
-        'url' => 'business_documents',
-        'button' => 'Open documents'
-    ],
-];
-
-$sheetSample = [];
-if (is_file($sheetCacheFile) && function_exists('parseCandybirdTsvRows')) {
-    $cachedSheetData = file_get_contents($sheetCacheFile);
-    if (is_string($cachedSheetData) && $cachedSheetData !== '') {
-        $sheetSample = array_slice(parseCandybirdTsvRows($cachedSheetData), 0, 5);
-    }
-}
-
-$dashboardCronJobs = [
-    [
-        'file' => 'generate_google_shopping_items.php',
-        'label' => 'Google Shopping Feed',
-        'description' => 'Creates the Merchant Center feed file from the product sheet.',
-        'result_url' => '../uploads/google_products/google_shopping_feed.txt',
-    ],
-    [
-        'file' => 'generate_sitemap.php',
-        'label' => 'Sitemap',
-        'description' => 'Refreshes sitemap output from products, categories, and recipes.',
-        'result_url' => '../crons/generate_sitemap.php',
-    ],
-    [
-        'file' => 'geolocation.php',
-        'label' => 'Geolocation',
-        'description' => 'Updates visitor location data for UX intelligence.',
-        'result_url' => '',
-    ],
-    [
-        'file' => 'db_backup_and_email.php',
-        'label' => 'Full Website Backup',
-        'description' => 'Creates a restorable zip with website files and database SQL.',
-        'result_url' => '',
-    ],
-    [
-        'file' => 'social_posting_reminder.php',
-        'label' => 'Social Posting Reminder',
-        'description' => 'Emails the weekly/daily posting nudge when due.',
-        'result_url' => '',
-    ],
-];
 ?>
 
 <title>Admin Dashboard - Sir Francis</title>
@@ -786,6 +688,10 @@ $dashboardCronJobs = [
     .dashboard-now-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
     .dashboard-now-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); min-height: 150px; padding: 14px; }
     .dashboard-now-card h2 { color: var(--sf-navy); font-size: 16px; font-weight: 900; margin: 0 0 10px; }
+    .dashboard-now-head { align-items: center; display: flex; gap: 8px; justify-content: space-between; margin-bottom: 10px; }
+    .dashboard-now-head h2 { margin: 0; }
+    .dashboard-now-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dashboard-now-actions .btn { white-space: nowrap; }
     .dashboard-now-list { display: grid; gap: 9px; margin: 0; padding: 0; }
     .dashboard-now-list li { border-top: 1px solid #f1e8df; display: block; list-style: none; padding-top: 8px; }
     .dashboard-now-list li:first-child { border-top: 0; padding-top: 0; }
@@ -800,14 +706,7 @@ $dashboardCronJobs = [
     .dash-panel h2 { color: #28364B; font-size: 20px; margin-bottom: 15px; }
     .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
     .quick-actions form { margin: 0; }
-    .link-card { border: 1px solid var(--sf-border); border-radius: 8px; padding: 14px; height: 100%; background: #fffaf2; }
-    .link-card h3 { color: #28364B; font-size: 16px; margin-bottom: 6px; }
-    .link-card p { color: #6d6270; font-size: 13px; min-height: 40px; margin-bottom: 12px; }
     .order-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-    .cron-card { border: 1px solid var(--sf-border); border-radius: 8px; padding: 14px; background: #fffaf2; height: 100%; }
-    .cron-card h3 { color: #28364B; font-size: 16px; margin-bottom: 6px; }
-    .cron-card p { color: #6d6270; font-size: 13px; min-height: 40px; margin-bottom: 12px; }
-    .cron-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .weekly-summary-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 22px; }
     .weekly-summary-card { background: #fff; border: 1px solid var(--sf-border); border-radius: 8px; padding: 16px; box-shadow: 0 10px 28px rgba(45, 23, 57, .05); }
     .weekly-summary-card h2, .weekly-summary-card h3 { color: #28364B; font-size: 17px; margin: 0 0 12px; }
@@ -880,7 +779,13 @@ $dashboardCronJobs = [
         </section>
 
         <section class="dashboard-now-card">
-            <h2>Scheduled Broadcasts</h2>
+            <div class="dashboard-now-head">
+                <h2>Scheduled Broadcasts</h2>
+                <div class="dashboard-now-actions">
+                    <a href="schedule_email" class="btn btn-sm btn-primary">Add</a>
+                    <a href="broadcasts" class="btn btn-sm btn-outline-primary">More</a>
+                </div>
+            </div>
             <?php if (empty($pendingBroadcasts)): ?>
                 <p class="dashboard-now-empty">No pending broadcasts.</p>
             <?php else: ?>
@@ -896,12 +801,17 @@ $dashboardCronJobs = [
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <a href="broadcasts" class="btn btn-sm btn-outline-primary mt-3">Open broadcasts</a>
             <?php endif; ?>
         </section>
 
         <section class="dashboard-now-card">
-            <h2>Site Notices</h2>
+            <div class="dashboard-now-head">
+                <h2>Site Notices</h2>
+                <div class="dashboard-now-actions">
+                    <a href="site_flags" class="btn btn-sm btn-primary">Add</a>
+                    <a href="site_flags" class="btn btn-sm btn-outline-primary">More</a>
+                </div>
+            </div>
             <?php if (empty($dashboardSiteFlags)): ?>
                 <p class="dashboard-now-empty">No active or scheduled site notices.</p>
             <?php else: ?>
@@ -920,7 +830,6 @@ $dashboardCronJobs = [
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <a href="site_flags" class="btn btn-sm btn-outline-primary mt-3">Manage notices</a>
             <?php endif; ?>
         </section>
 
@@ -1071,49 +980,6 @@ $dashboardCronJobs = [
     <?php endif; ?>
 
     <div class="row">
-        <div class="col-12 mb-4">
-            <div class="dash-panel">
-                <h2>Important Links</h2>
-                <div class="row">
-                    <?php foreach ($importantLinks as $link): ?>
-                        <div class="col-md-6 col-xl-4 mb-3">
-                            <div class="link-card">
-                                <h3><?= htmlspecialchars($link['label']) ?></h3>
-                                <p><?= htmlspecialchars($link['description']) ?></p>
-                                <a href="<?= htmlspecialchars($link['url']) ?>" class="btn btn-primary btn-sm" <?= strpos($link['url'], 'http') === 0 ? 'target="_blank" rel="noopener noreferrer"' : '' ?>><?= htmlspecialchars($link['button']) ?></a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 mb-4">
-            <div class="dash-panel">
-                <h2>Run Cron Jobs</h2>
-                <p class="text-muted">Trigger approved maintenance jobs manually without opening cPanel. The normal cPanel schedule can still stay active.</p>
-                <div class="row">
-                    <?php foreach ($dashboardCronJobs as $cronJob): ?>
-                        <div class="col-md-6 col-xl-3 mb-3">
-                            <div class="cron-card">
-                                <h3><?= htmlspecialchars($cronJob['label']) ?></h3>
-                                <p><?= htmlspecialchars($cronJob['description']) ?></p>
-                                <div class="cron-actions">
-                                    <form method="post" action="run_cron" onsubmit="return confirm('Run <?= htmlspecialchars($cronJob['label'], ENT_QUOTES, 'UTF-8') ?> now?');">
-                                        <input type="hidden" name="job" value="<?= htmlspecialchars($cronJob['file'], ENT_QUOTES, 'UTF-8') ?>">
-                                        <button type="submit" class="btn btn-primary btn-sm">Run now</button>
-                                    </form>
-                                    <?php if (!empty($cronJob['result_url'])): ?>
-                                        <a class="btn btn-outline-dark btn-sm" href="<?= htmlspecialchars($cronJob['result_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener noreferrer">View result</a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-
         <div class="col-lg-7 mb-4">
             <div class="dash-panel">
                 <h2>Latest Orders</h2>
@@ -1170,39 +1036,7 @@ $dashboardCronJobs = [
             </div>
         </div>
 
-        <div class="col-lg-4 mb-4">
-            <div class="dash-panel">
-                <h2>Sheet Health</h2>
-                <p><span class="status-dot <?= $sheetProductCount ? '' : 'bad' ?>"></span><?= $sheetProductCount ? 'Products loaded from Google Sheet.' : 'No sheet products loaded.' ?></p>
-                <ul class="pl-3">
-                    <?php foreach ($sheetSample as $product): ?>
-                        <li><a href="../product?id=<?= urlencode($product['id']) ?>" target="_blank"><?= htmlspecialchars(($product['name'] ?? 'Product') . ' ' . ($product['size'] ?? '')) ?></a></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-lg-4 mb-4">
-            <div class="dash-panel">
-                <h2>Email Broadcasts</h2>
-                <div class="table-responsive">
-                    <table class="table table-sm">
-                        <tbody>
-                        <?php if (empty($recentCampaigns)): ?>
-                            <tr><td>No campaigns found.</td></tr>
-                        <?php else: foreach ($recentCampaigns as $campaign): ?>
-                            <tr>
-                                <td><?= ((int) $campaign['sent'] === 1) ? '<span class="status-dot"></span>' : '<span class="status-dot warn"></span>' ?><?= htmlspecialchars($campaign['subject']) ?><br><small><?= htmlspecialchars($campaign['scheduled_at']) ?></small></td>
-                            </tr>
-                        <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <a href="schedule_email" class="btn btn-primary btn-sm">Create broadcast</a>
-            </div>
-        </div>
-
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-4 mb-4 d-none">
             <div class="dash-panel">
                 <h2>Latest Reviews</h2>
                 <?php if (empty($recentReviews)): ?>
