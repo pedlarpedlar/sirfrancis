@@ -25,6 +25,11 @@ function gallery_root()
     return $root;
 }
 
+function gallery_default_product_folder()
+{
+    return 'product';
+}
+
 function gallery_clean_folder($folder)
 {
     $folder = trim(str_replace('\\', '/', (string)$folder), '/');
@@ -310,6 +315,7 @@ function gallery_list_images($folder, $offset, $limit, $query = '')
 $action = $_POST['action'] ?? $_GET['action'] ?? 'list';
 
 if ($action === 'folders') {
+    gallery_folder_path(gallery_default_product_folder(), true);
     gallery_response([
         'success' => true,
         'folders' => gallery_folders(),
@@ -325,7 +331,7 @@ if ($action === 'list') {
 
 if ($action === 'upload') {
     $newFolder = trim((string)($_POST['new_folder'] ?? ''));
-    $folder = $newFolder !== '' ? $newFolder : ($_POST['folder'] ?? '');
+    $folder = $newFolder !== '' ? $newFolder : ($_POST['folder'] ?? gallery_default_product_folder());
     $folderPath = gallery_folder_path($folder, true);
     $files = $_FILES['images'] ?? null;
     if (!$files || empty($files['name'])) {

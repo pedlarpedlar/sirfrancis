@@ -329,7 +329,7 @@ include 'header.php';
         <section class="gallery-hero">
             <div>
                 <h1>Image Gallery</h1>
-                <p>Upload website images into <strong>assets/img</strong>, copy their live URLs, rename files, and move them between image folders without opening cPanel.</p>
+                <p>Upload product-page images into <strong>assets/img/product</strong> by default, then copy the live URL into the product sheet <strong>img_url</strong> column. You can still choose another image folder when needed.</p>
             </div>
         </section>
 
@@ -418,7 +418,7 @@ include 'header.php';
 <script>
 (function () {
     var apiUrl = 'upload_gallery_images.php';
-    var defaultUploadFolder = 'product_images';
+    var defaultUploadFolder = 'product';
     var folders = [];
     var currentFolder = defaultUploadFolder;
     var offset = 0;
