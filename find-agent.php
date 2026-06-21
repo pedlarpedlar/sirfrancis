@@ -447,7 +447,7 @@ include 'header.php';
     <div class="container" style="background:#172235;color:#fffaf0;">
       <span class="sf-agent-kicker">Regional supply support</span>
       <h1>Find an agent</h1>
-      <p>Start with Durban as the default Sir Francis region, choose your province on the map, or allow location access so we can suggest the closest available region.</p>
+      <p>Connect with a Sir Francis agent in your region for product guidance, trade supply support and local service.</p>
       <div class="sf-agent-actions">
         <a class="sf-agent-btn secondary" href="#suggest-agent">Suggest an agent</a>
       </div>
@@ -457,7 +457,7 @@ include 'header.php';
   <section class="sf-agent-shell">
     <div class="container sf-agent-layout">
       <div class="sf-agent-panel">
-        <span class="sf-agent-kicker">Clickable region map</span>
+        <span class="sf-agent-kicker">Regional agent network</span>
         <h2>Select your region</h2>
         <p>Click a region to see the current Sir Francis agent details. Regions without a local agent will route you to the nearest available support point and invite you to suggest a supplier.</p>
         <div class="sf-agent-map-tools">
@@ -635,7 +635,10 @@ include 'header.php';
   function setCityAgent(regionAgent, cityAgent) {
     document.getElementById('sf-agent-name').textContent = cityAgent.name || regionAgent.name;
     document.getElementById('sf-agent-details').textContent = cityAgent.details || regionAgent.details;
-    document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + regionAgent.label));
+    var contactButton = document.getElementById('sf-agent-contact');
+    var phoneHref = agentPhoneLink(cityAgent.phone);
+    contactButton.href = phoneHref ? ('tel:' + encodeURIComponent(phoneHref)) : ('contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + regionAgent.label)));
+    contactButton.textContent = phoneHref ? 'Call this agent' : 'Contact Sir Francis';
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(cityAgent.query || regionAgent.query);
   }
 
