@@ -5,6 +5,19 @@ include 'session_logins.php';
 require_once __DIR__ . '/find_agent_data.php';
 
 $sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions() : [];
+$sf_google_maps_api_key = '';
+if (isset($conn) && $conn instanceof mysqli) {
+    $sf_maps_column_check = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
+    if ($sf_maps_column_check && $sf_maps_column_check->num_rows > 0) {
+        $sf_maps_result = $conn->query("SELECT google_maps_api_key FROM admin_website_settings LIMIT 1");
+        if ($sf_maps_result && ($sf_maps_row = $sf_maps_result->fetch_assoc())) {
+            $sf_google_maps_api_key = trim((string) ($sf_maps_row['google_maps_api_key'] ?? ''));
+        }
+    }
+}
+if ($sf_google_maps_api_key === '') {
+    $sf_google_maps_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
+}
 
 $page_url_canonical = 'https://sirfrancis.co.za/find-agent';
 $page_url_og = $page_url_canonical;
@@ -47,7 +60,6 @@ include 'header.php';
     font-size: clamp(2.35rem, 5vw, 4.4rem);
     line-height: 1.05;
     margin: 0 0 12px;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, .45);
   }
 
   .sf-agent-hero p {
@@ -56,12 +68,10 @@ include 'header.php';
     font-weight: 600;
     line-height: 1.7;
     max-width: 780px;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, .34);
   }
 
   .sf-agent-hero .sf-agent-kicker {
     color: #CEBD88;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, .38);
   }
 
   .sf-agent-shell {
@@ -151,6 +161,24 @@ include 'header.php';
     border: 1px solid #d8c895;
     min-height: 420px;
     padding: 14px;
+  }
+
+  .sf-agent-google-map {
+    display: none;
+    min-height: 420px;
+    width: 100%;
+  }
+
+  .sf-agent-map.is-google-ready {
+    padding: 0;
+  }
+
+  .sf-agent-map.is-google-ready .sf-agent-static-map {
+    display: none;
+  }
+
+  .sf-agent-map.is-google-ready .sf-agent-google-map {
+    display: block;
   }
 
   .sf-agent-map svg {
@@ -324,7 +352,8 @@ include 'header.php';
 
         <div class="sf-agent-map-wrap">
           <div class="sf-agent-map" aria-label="South African regions">
-            <svg viewBox="0 0 620 520" role="img" aria-labelledby="sf-agent-map-title">
+            <div class="sf-agent-google-map" id="sf-agent-google-map" aria-label="Google map of Sir Francis agents"></div>
+            <svg class="sf-agent-static-map" viewBox="0 0 620 520" role="img" aria-labelledby="sf-agent-map-title">
               <title id="sf-agent-map-title">Clickable map of South African regions</title>
               <path class="sf-region" tabindex="0" data-region="western-cape" d="M102 362 L222 326 L306 376 L292 468 L178 488 L90 446 Z"></path>
               <path class="sf-region" tabindex="0" data-region="northern-cape" d="M86 124 L264 72 L374 166 L306 376 L222 326 L102 362 L54 252 Z"></path>
@@ -392,6 +421,9 @@ include 'header.php';
 <script>
 (function() {
   var agents = <?=json_encode($sf_agent_regions, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)?>;
+  var googleMap = null;
+  var agentMarkers = [];
+  var activeRegion = 'kwazulu-natal';
 
   function provinceFromCoordinates(lat, lng) {
     if (lat <= -26.8 && lng <= 24.8) return 'western-cape';
@@ -405,9 +437,10 @@ include 'header.php';
     return 'northern-cape';
   }
 
-  function setActiveRegion(region) {
+  function setActiveRegion(region, selectedCityName) {
     var agent = agents[region] || agents['kwazulu-natal'];
     if (!agent) return;
+    activeRegion = region;
     document.querySelectorAll('[data-region]').forEach(function(item) {
       item.classList.toggle('is-active', item.getAttribute('data-region') === region);
     });
@@ -420,10 +453,11 @@ include 'header.php';
     document.getElementById('sf-agent-details').textContent = agent.details;
     document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent('Agent enquiry - ' + agent.label);
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(agent.query);
-    renderCityAgents(agent);
+    renderCityAgents(agent, selectedCityName);
+    focusMapOnRegion(region);
   }
 
-  function renderCityAgents(agent) {
+  function renderCityAgents(agent, selectedCityName) {
     var cityList = document.getElementById('sf-agent-city-list');
     var cities = Array.isArray(agent.city_agents) ? agent.city_agents : [];
     if (!cityList) return;
@@ -435,10 +469,13 @@ include 'header.php';
 
     cityList.innerHTML = '<strong>City view</strong><div class="sf-agent-city-buttons"></div>';
     var buttonWrap = cityList.querySelector('.sf-agent-city-buttons');
+    var selectedCity = cities[0];
     cities.forEach(function(cityAgent, index) {
+      var isSelected = selectedCityName && cityAgent.city === selectedCityName;
+      if (isSelected) selectedCity = cityAgent;
       var button = document.createElement('button');
       button.type = 'button';
-      button.className = 'sf-agent-city-button' + (index === 0 ? ' is-active' : '');
+      button.className = 'sf-agent-city-button' + ((isSelected || (!selectedCityName && index === 0)) ? ' is-active' : '');
       button.textContent = cityAgent.city || cityAgent.name || 'City agent';
       button.addEventListener('click', function() {
         buttonWrap.querySelectorAll('.sf-agent-city-button').forEach(function(item) {
@@ -446,10 +483,11 @@ include 'header.php';
         });
         button.classList.add('is-active');
         setCityAgent(agent, cityAgent);
+        focusMapOnCity(cityAgent);
       });
       buttonWrap.appendChild(button);
     });
-    setCityAgent(agent, cities[0]);
+    setCityAgent(agent, selectedCity);
   }
 
   function setCityAgent(regionAgent, cityAgent) {
@@ -458,6 +496,63 @@ include 'header.php';
     document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + regionAgent.label));
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(cityAgent.query || regionAgent.query);
   }
+
+  function hasCoordinates(cityAgent) {
+    return cityAgent && isFinite(Number(cityAgent.lat)) && isFinite(Number(cityAgent.lng));
+  }
+
+  function focusMapOnCity(cityAgent) {
+    if (!googleMap || !hasCoordinates(cityAgent)) return;
+    googleMap.panTo({ lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) });
+    googleMap.setZoom(10);
+  }
+
+  function focusMapOnRegion(region) {
+    if (!googleMap || !window.google || !google.maps) return;
+    var agent = agents[region];
+    var cities = agent && Array.isArray(agent.city_agents) ? agent.city_agents.filter(hasCoordinates) : [];
+    if (!cities.length) return;
+    if (cities.length === 1) {
+      focusMapOnCity(cities[0]);
+      return;
+    }
+    var bounds = new google.maps.LatLngBounds();
+    cities.forEach(function(cityAgent) {
+      bounds.extend({ lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) });
+    });
+    googleMap.fitBounds(bounds);
+  }
+
+  window.initSirFrancisAgentMap = function() {
+    var mapNode = document.getElementById('sf-agent-google-map');
+    if (!mapNode || !window.google || !google.maps) return;
+    googleMap = new google.maps.Map(mapNode, {
+      center: { lat: -29.8587, lng: 31.0218 },
+      zoom: 6,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true
+    });
+    mapNode.parentElement.classList.add('is-google-ready');
+    Object.keys(agents).forEach(function(region) {
+      var agent = agents[region];
+      var cities = Array.isArray(agent.city_agents) ? agent.city_agents : [];
+      cities.forEach(function(cityAgent) {
+        if (!hasCoordinates(cityAgent)) return;
+        var marker = new google.maps.Marker({
+          map: googleMap,
+          position: { lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) },
+          title: cityAgent.city || agent.label
+        });
+        marker.addListener('click', function() {
+          setActiveRegion(region, cityAgent.city);
+          focusMapOnCity(cityAgent);
+        });
+        agentMarkers.push(marker);
+      });
+    });
+    focusMapOnRegion(activeRegion);
+  };
 
   document.querySelectorAll('[data-region]').forEach(function(item) {
     item.addEventListener('click', function() {
@@ -502,5 +597,9 @@ include 'header.php';
   setActiveRegion('kwazulu-natal');
 })();
 </script>
+
+<?php if ($sf_google_maps_api_key !== ''): ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=htmlspecialchars($sf_google_maps_api_key, ENT_QUOTES, 'UTF-8')?>&callback=initSirFrancisAgentMap&loading=async"></script>
+<?php endif; ?>
 
 <?php include 'footer.php'; ?>
