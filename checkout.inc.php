@@ -904,7 +904,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $emailItemImage = htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8');
                 $emailItemUrl = $rowCart1['product_url'] ?? ('product?id=' . urlencode($clearanceId !== '' ? ('CLR:' . $clearanceId) : (string) $productId));
                 if (!preg_match('#^https?://#i', $emailItemUrl)) {
-                    $emailItemUrl = 'https://www.fishgelatine.co.za/v2/' . ltrim($emailItemUrl, '/');
+                    $emailItemUrl = 'https://sirfrancis.co.za/' . ltrim($emailItemUrl, '/');
                 }
                 $emailFullLineTotal = (float) $productPrice * (int) $quantity;
                 $emailDiscountedLineTotal = $productDiscountedPrice * (int) $quantity;
@@ -920,7 +920,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $order_items .=
                     '<tr>
                         <td style="width:64px;padding:12px 10px;border-bottom:1px solid #e8e1d7;vertical-align:top;"><img src="' . $emailItemImage . '" width="54" height="54" alt="" style="display:block;width:54px;height:54px;object-fit:cover;border:1px solid #eee;"></td>
-                        <td style="padding:12px 10px;border-bottom:1px solid #e8e1d7;vertical-align:top;"><a href="' . $emailItemUrl . '" style="color:#5b1178;text-decoration:none;font-weight:700;">' . $emailItemTitle . '</a></td>
+                        <td style="padding:12px 10px;border-bottom:1px solid #e8e1d7;vertical-align:top;"><a href="' . $emailItemUrl . '" style="color:#28364B;text-decoration:none;font-weight:700;">' . $emailItemTitle . '</a></td>
                         <td align="center" style="width:48px;padding:12px 10px;border-bottom:1px solid #e8e1d7;vertical-align:top;color:#555555;">x' . (int) $quantity . '</td>
                         <td align="right" style="width:120px;padding:12px 0 12px 10px;border-bottom:1px solid #e8e1d7;vertical-align:top;font-weight:700;">' . $emailPriceHtml . '</td>
                     </tr>';
@@ -1198,8 +1198,8 @@ $productDiscountAmount = max((float) $order_discount, (float) $discountAmount);
 $totalSavingsAmount = $productDiscountAmount + (float) $couponAmount + (float) $shippingDiscountAmount;
 $orderDiscountTotal = '-' . candybirdEmailMoney($totalSavingsAmount);
 $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
-$orderDetailsUrl = 'https://www.fishgelatine.co.za/v2/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
-$adminOrderUrl = 'https://www.fishgelatine.co.za/v2/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
+$orderDetailsUrl = 'https://sirfrancis.co.za/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
+$adminOrderUrl = 'https://sirfrancis.co.za/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
 $couponLabel = $couponCode !== '' ? 'Coupon (' . candybirdEmailText($couponCode) . ')' : 'Coupon';
 
 $productDiscountRow = '';

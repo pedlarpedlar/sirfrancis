@@ -65,7 +65,7 @@ foreach ($products as $product) {
 
     $link = function_exists('getSheetProductUrl')
         ? getSheetProductUrl($product, true)
-        : 'https://www.fishgelatine.co.za/v2/' . rawurlencode(getSheetProductSlug($product));
+        : 'https://sirfrancis.co.za/' . rawurlencode(getSheetProductSlug($product));
     $itemGroupId = preg_replace('/[^a-z0-9]+/i', '-', strtolower($name));
 
     $values = [

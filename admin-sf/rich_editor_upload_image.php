@@ -34,7 +34,7 @@ $check = getimagesize($_FILES["file"]["tmp_name"]);
 if($check !== false) {
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
         // Image uploaded successfully, prepare response
-        $response['location'] = 'https://www.fishgelatine.co.za/v2/admin-sf/uploads/email_scheduler_images/' . $target_filename;
+        $response['location'] = 'https://sirfrancis.co.za/admin-sf/uploads/email_scheduler_images/' . $target_filename;
 
         // Optionally, insert the image URL into the database
 

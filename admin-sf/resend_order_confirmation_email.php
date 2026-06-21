@@ -206,8 +206,8 @@ $resendNotice = $includeEditNote
     : '';
 
 $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
-$orderDetailsUrl = 'https://www.fishgelatine.co.za/v2/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
-$adminOrderUrl = 'https://www.fishgelatine.co.za/v2/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
+$orderDetailsUrl = 'https://sirfrancis.co.za/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
+$adminOrderUrl = 'https://sirfrancis.co.za/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
 $replacements = [
     '{year}' => date('Y'),
     '{order_id}' => $orderPadded,

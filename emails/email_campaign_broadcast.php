@@ -15,7 +15,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="left">
-                                        <img src="https://sirfrancis.co.za/assets/img/logo/logo.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
+                                        <img src="https://sirfrancis.co.za/assets/img/logo/logo-gold.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
                                     </td>
                                     <td align="right" style="color:#CEBD88;font-size:21px;font-weight:700;">{email_heading}</td>
                                 </tr>
@@ -39,7 +39,7 @@
                                 <a href="https://sirfrancis.co.za/privacypolicy" style="color:#28364B;text-decoration:none;">Privacy policy</a>
                             </p>
                             <p style="margin:0;">Copyright &copy; {year} Sir Francis. All rights reserved.</p>
-                            <p style="margin:10px 0 0;font-size:11px;">You are receiving this because you subscribed to Sir Francis emails. <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe</a></p>
+                            <p style="margin:10px 0 0;font-size:11px;">Please add <a href="mailto:info@sirfrancis.co.za" style="color:#28364B;text-decoration:none;">info@sirfrancis.co.za</a> and <a href="https://sirfrancis.co.za" style="color:#28364B;text-decoration:none;">sirfrancis.co.za</a> to your safe senders list so our updates reach you. Prefer fewer updates? <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe from marketing emails here</a>. Essential order, payment, account and security emails will still be sent when needed.</p>
                         </td>
                     </tr>
                 </table>

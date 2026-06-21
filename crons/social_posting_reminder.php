@@ -63,7 +63,7 @@ $rowsHtml = '';
 foreach ($focusAccounts as $account) {
     $profile = trim((string) ($account['profile_url'] ?? ''));
     $profileHtml = $profile !== ''
-        ? '<a href="' . cbOpsText($profile) . '" style="color:#5b1178;font-weight:700;">Open profile</a>'
+        ? '<a href="' . cbOpsText($profile) . '" style="color:#28364B;font-weight:700;">Open profile</a>'
         : '<span style="color:#867b73;">No profile link saved</span>';
     $lastPosted = !empty($account['last_posted_at']) ? date('d M Y H:i', strtotime((string) $account['last_posted_at'])) : 'Not recorded';
     $rowsHtml .= '<tr>'
@@ -74,7 +74,7 @@ foreach ($focusAccounts as $account) {
         . '</tr>';
 }
 
-$adminLink = 'https://www.fishgelatine.co.za/v2/admin-sf/social_accounts';
+$adminLink = 'https://sirfrancis.co.za/admin-sf/social_accounts';
 $body = '<div style="font-family:Arial,sans-serif;background:#fff7ec;padding:24px;color:#251810;">'
     . '<div style="max-width:760px;margin:0 auto;background:#fff;border:1px solid #eadfd2;border-radius:10px;overflow:hidden;">'
     . '<div style="background:#2d1739;color:#fff;padding:20px 24px;"><h1 style="margin:0;color:#fcb42f;font-size:24px;">' . cbOpsText($title) . '</h1><p style="margin:8px 0 0;color:#f7eafc;">Keep the business visible: post at least once a week everywhere, and daily on the platforms that bring the most attention.</p></div>'

@@ -19,7 +19,7 @@
 <table width="100%" style="background-color: #28364B; color: #ffffff;" cellpadding="20">
     <tr>
         <td align="left" style="padding-left: 20px;">
-            <img src="https://sirfrancis.co.za/assets/img/logo/logo.png" alt="Sir Francis" width="150" style="max-width: 150px;">
+            <img src="https://sirfrancis.co.za/assets/img/logo/logo-gold.png" alt="Sir Francis" width="150" style="max-width: 150px;">
         </td>
         <td align="right" style="padding-right: 20px;">
             <h3 style="font-size: 30px; font-weight: bold; color: #CEBD88; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">Subscribed</h3>
@@ -108,9 +108,9 @@
             <p style="font-size: 12px; line-height: 1.5; color: #28364B; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">
                 Copyright &copy; <?php echo date("Y"); ?> Sir Francis. All rights reserved.
                 <br>
-                This email was sent to you because you subscribed at <a href="https://sirfrancis.co.za" style="color: #28364B; text-decoration: none; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">sirfrancis.co.za</a>. We hope you find our updates helpful and stay connected with us.
+                Please add <a href="mailto:info@sirfrancis.co.za" style="color: #28364B; text-decoration: none; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">info@sirfrancis.co.za</a> and <a href="https://sirfrancis.co.za" style="color: #28364B; text-decoration: none; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">sirfrancis.co.za</a> to your safe senders list so order, account and trade updates reach you.
                 <br>
-                If you no longer wish to receive our emails, you can <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color: #28364B; text-decoration: none; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">unsubscribe here</a>.
+                Prefer fewer updates? You can <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color: #28364B; text-decoration: none; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">unsubscribe from marketing emails here</a>. Essential order, payment, account and security emails will still be sent when needed.
             </p>
         </td>
     </tr>

@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $response = [
         "success" => true,
         "message" => "Registration successful. You can now log in.",
-        "redirect_url" => "https://www.fishgelatine.co.za/v2/login"
+        "redirect_url" => "https://sirfrancis.co.za/login"
     ];
     header('Content-Type: application/json');
     echo json_encode($response);

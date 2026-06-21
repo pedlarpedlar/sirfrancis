@@ -91,7 +91,7 @@ if (!mysqli_stmt_execute($stmtToken)) {
     ]);
 }
 
-$resetLink = 'https://www.fishgelatine.co.za/v2/reset-password?token=' . urlencode($resetToken);
+$resetLink = 'https://sirfrancis.co.za/reset-password?token=' . urlencode($resetToken);
 logAction('User requested Password Reset email', 'Link: ' . $resetLink, $userId, null);
 
 $emailWarning = '';

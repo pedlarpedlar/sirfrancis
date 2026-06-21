@@ -15,7 +15,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="left">
-                                        <img src="https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
+                                        <img src="https://sirfrancis.co.za/assets/img/logo/logo-gold.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
                                     </td>
                                     <td align="right" style="color:#CEBD88;font-size:22px;font-weight:700;">Order confirmed</td>
                                 </tr>
@@ -111,14 +111,14 @@
                     </tr>
                     <tr>
                         <td align="center" style="background:#f5f2ea;padding:24px 18px;color:#28364B;font-size:12px;line-height:1.7;">
-                            <p style="margin:0 0 10px;">Need help? <a href="mailto:info@fishgelatine.co.za" style="color:#28364B;text-decoration:none;font-weight:700;">info@fishgelatine.co.za</a></p>
+                            <p style="margin:0 0 10px;">Need help? <a href="mailto:info@sirfrancis.co.za" style="color:#28364B;text-decoration:none;font-weight:700;">info@sirfrancis.co.za</a></p>
                             <p style="margin:0 0 10px;">
-                                <a href="https://www.fishgelatine.co.za/v2/contact" style="color:#28364B;text-decoration:none;">Help</a> |
-                                <a href="https://www.fishgelatine.co.za/v2/privacypolicy" style="color:#28364B;text-decoration:none;">Privacy policy</a> |
-                                <a href="https://www.fishgelatine.co.za/v2/recipes" style="color:#28364B;text-decoration:none;">Recipe Corner</a>
+                                <a href="https://sirfrancis.co.za/contact" style="color:#28364B;text-decoration:none;">Help</a> |
+                                <a href="https://sirfrancis.co.za/privacypolicy" style="color:#28364B;text-decoration:none;">Privacy policy</a> |
+                                <a href="https://sirfrancis.co.za/recipes" style="color:#28364B;text-decoration:none;">Recipe Corner</a>
                             </p>
                             <p style="margin:0;">Copyright &copy; {year} Sir Francis. All rights reserved.</p>
-                            <p style="margin:10px 0 0;font-size:11px;">This email was sent because an order was placed at <a href="https://www.fishgelatine.co.za/v2" style="color:#28364B;text-decoration:none;">www.fishgelatine.co.za</a>. <a href="https://www.fishgelatine.co.za/v2/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe</a></p>
+                            <p style="margin:10px 0 0;font-size:11px;">Please add <a href="mailto:info@sirfrancis.co.za" style="color:#28364B;text-decoration:none;">info@sirfrancis.co.za</a> and <a href="https://sirfrancis.co.za" style="color:#28364B;text-decoration:none;">sirfrancis.co.za</a> to your safe senders list so order updates reach you. Prefer fewer updates? <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe from marketing emails here</a>. Essential order, payment, account and security emails will still be sent when needed.</p>
                         </td>
                     </tr>
                 </table>

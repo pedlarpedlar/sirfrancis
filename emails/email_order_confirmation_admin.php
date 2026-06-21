@@ -15,7 +15,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td align="left">
-                                        <img src="https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
+                                        <img src="https://sirfrancis.co.za/assets/img/logo/logo-gold.png" alt="Sir Francis" width="142" style="display:block;max-width:142px;border:0;">
                                     </td>
                                     <td align="right" style="color:#CEBD88;font-size:22px;font-weight:700;">Order received</td>
                                 </tr>

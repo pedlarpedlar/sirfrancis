@@ -141,7 +141,7 @@ if (isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port
         $emailBody = file_get_contents('emails/email_changed_password.php');
         $emailBody = str_replace('{recipient_name}', htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8'), $emailBody);
         $emailBody = str_replace('{user_email_unsubscribe}', urlencode($userEmail), $emailBody);
-        $emailBody = str_replace('{reset_link}', 'https://www.fishgelatine.co.za/v2/forgot-password', $emailBody);
+        $emailBody = str_replace('{reset_link}', 'https://sirfrancis.co.za/forgot-password', $emailBody);
         $mail->Body = $emailBody;
         $mail->isHTML(true);
         $mail->send();
@@ -164,7 +164,7 @@ if (isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port
         $adminMail->Subject = 'User Successfully Changed Password | Sir Francis';
         $adminBody = file_get_contents('emails/email_changed_password_admin.php');
         $adminBody = str_replace('{recipient_name}', 'Admin', $adminBody);
-        $adminBody = str_replace('{reset_link}', 'https://www.fishgelatine.co.za/v2/admin-sf/', $adminBody);
+        $adminBody = str_replace('{reset_link}', 'https://sirfrancis.co.za/admin-sf/', $adminBody);
         $adminBody = str_replace('{user_id}', (string) $userId, $adminBody);
         $adminBody = str_replace('{special_code}', 'Password was reset by the user.', $adminBody);
         $adminMail->Body = $adminBody;

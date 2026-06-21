@@ -18,7 +18,7 @@
 <table width="100%" style="background-color: #28364B; color: #ffffff;" cellpadding="20">
     <tr>
         <td align="left" style="padding-left: 20px;">
-            <img src="https://sirfrancis.co.za/assets/img/logo/logo.png" alt="Sir Francis" width="150" style="max-width: 150px;">
+            <img src="https://sirfrancis.co.za/assets/img/logo/logo-gold.png" alt="Sir Francis" width="150" style="max-width: 150px;">
         </td>
         <td align="right" style="padding-right: 20px;">
             <h3 style="font-size: 30px; font-weight: bold; color: #CEBD88; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">User Subscribed</h3>
