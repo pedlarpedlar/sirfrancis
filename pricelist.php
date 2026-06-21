@@ -4,18 +4,19 @@ require_once __DIR__ . '/pricelist_helpers.php';
 
 date_default_timezone_set('Africa/Johannesburg');
 
-$sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
+$isAdminPricelist = !empty($_SESSION['admin_id']);
+$sort = $isAdminPricelist && isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
 $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
-$direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
-$filters = cbPricelistFiltersFromRequest($_GET);
-$filterOptions = cbPricelistFilterOptions();
+$direction = $isAdminPricelist && isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
+$filters = $isAdminPricelist ? cbPricelistFiltersFromRequest($_GET) : cbPricelistFiltersFromRequest([]);
+$filterOptions = $isAdminPricelist ? cbPricelistFilterOptions() : ['sizes' => [], 'categories' => []];
 $productsByCategory = cbPricelistProductsByCategory($sort, $direction, $filters);
 $productCount = cbPricelistProductCount($productsByCategory);
 $currentQuery = $_GET;
 $currentQuery['sort'] = $sort;
 $currentQuery['dir'] = $direction;
 $whatsappPricelistUrl = 'whatsapp-pricelist?' . http_build_query($currentQuery);
-$printPricelistUrl = 'pricelist-download?' . http_build_query($currentQuery);
+$printPricelistUrl = 'pricelist-download' . ($isAdminPricelist ? '?' . http_build_query($currentQuery) : '');
 $tsvQuery = $currentQuery;
 $tsvQuery['format'] = 'tsv';
 $tsvPricelistUrl = 'pricelist-download?' . http_build_query($tsvQuery);
@@ -37,7 +38,10 @@ include 'header.php';
 
 include 'page_menues.php';
 
-function cbPricelistSortLink($key, $label, $currentSort, $currentDirection) {
+function cbPricelistSortLink($key, $label, $currentSort, $currentDirection, $enabled = true) {
+    if (!$enabled) {
+        return cbPricelistText($label);
+    }
     $nextDirection = ($currentSort === $key && $currentDirection === 'asc') ? 'desc' : 'asc';
     $icon = $currentSort === $key ? ($currentDirection === 'asc' ? ' ^' : ' v') : '';
     $query = $_GET;
@@ -87,6 +91,25 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     width: min(420px, 38vw);
   }
   .pricelist-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .pricelist-admin-tools {
+    align-items: center;
+    background: #fffaf2;
+    border: 1px solid #d9c98a;
+    color: #344154;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+    padding: 8px 10px;
+  }
+  .pricelist-admin-tools span {
+    color: #0b2341;
+    font-size: 12px;
+    font-weight: 800;
+    margin-right: auto;
+    text-transform: uppercase;
+  }
   .pricelist-note {
     background: #fffaf2;
     border: 1px solid #d9c98a;
@@ -272,7 +295,8 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   @media (max-width: 767px) {
     .pricelist-hero { align-items: flex-start; flex-direction: column; }
     .pricelist-hero-media { max-width: 100%; width: 100%; }
-    .pricelist-actions { justify-content: flex-start; }
+    .pricelist-actions, .pricelist-admin-tools { justify-content: flex-start; }
+    .pricelist-admin-tools span { width: 100%; }
     .pricelist-note { grid-template-columns: 1fr; }
     .pricelist-filter-grid { grid-template-columns: 1fr; }
     .pricelist-search { align-items: stretch; flex-direction: column; }
@@ -307,12 +331,22 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       </div>
       <img class="pricelist-hero-media no-print" src="<?= cbPricelistText($pricelistHeroImage) ?>" alt="Sir Francis pricelist product range" loading="lazy"<?= sfSiteEditableImageAttrs('pricelist.hero') ?>>
       <div class="pricelist-actions no-print">
-        <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp pricelist</a>
         <a href="<?= cbPricelistText($printPricelistUrl) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
-        <a href="<?= cbPricelistText($tsvPricelistUrl) ?>" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
-        <a href="products" class="btn btn-light"><i class="fas fa-shopping-basket mr-1"></i> Shop online</a>
+        <?php if ($isAdminPricelist): ?>
+          <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-light"><i class="fab fa-whatsapp mr-1"></i> WhatsApp text</a>
+          <a href="<?= cbPricelistText($tsvPricelistUrl) ?>" class="btn btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
+        <?php endif; ?>
       </div>
     </div>
+
+    <?php if ($isAdminPricelist): ?>
+      <div class="pricelist-admin-tools no-print">
+        <span>Admin shortcuts</span>
+        <a href="admin-sf/products" class="btn btn-light btn-sm"><i class="fas fa-table mr-1"></i> Edit product sheet</a>
+        <a href="admin-sf/manage_categories" class="btn btn-light btn-sm"><i class="fas fa-list mr-1"></i> Edit categories</a>
+        <a href="admin-sf/sheets" class="btn btn-light btn-sm"><i class="fas fa-sync-alt mr-1"></i> Sheet sources</a>
+      </div>
+    <?php endif; ?>
 
     <div class="pricelist-note">
       <div><strong>Delivery:</strong> checkout online for live shipping and free-shipping qualification.</div>
@@ -321,6 +355,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       <div><strong>Latest prices:</strong> the live website pricelist is always the final reference.</div>
     </div>
 
+    <?php if ($isAdminPricelist): ?>
     <form class="pricelist-filter-panel no-print" method="get" action="pricelist">
       <div class="pricelist-filter-grid">
         <div>
@@ -391,20 +426,20 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
         </select>
         <button type="submit" class="btn btn-primary"><i class="fas fa-filter mr-1"></i> Apply filters</button>
         <a href="pricelist" class="btn btn-light">Clear</a>
-        <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp text</a>
         <span class="pricelist-search-count" id="pricelist-search-count"><?= number_format($productCount) ?> matching options</span>
       </div>
     </form>
+    <?php endif; ?>
 
     <div class="pricelist-shell">
       <div class="table-responsive">
         <table class="table pricelist-table">
           <thead>
             <tr>
-              <th class="id-cell"><?= cbPricelistSortLink('id', 'ID', $sort, $direction) ?></th>
-              <th><?= cbPricelistSortLink('name', 'Product', $sort, $direction) ?></th>
-              <th class="size-cell"><?= cbPricelistSortLink('size', 'Size', $sort, $direction) ?></th>
-              <th><?= cbPricelistSortLink('price', 'Price', $sort, $direction) ?></th>
+              <th class="id-cell"><?= cbPricelistSortLink('id', 'ID', $sort, $direction, $isAdminPricelist) ?></th>
+              <th><?= cbPricelistSortLink('name', 'Product', $sort, $direction, $isAdminPricelist) ?></th>
+              <th class="size-cell"><?= cbPricelistSortLink('size', 'Size', $sort, $direction, $isAdminPricelist) ?></th>
+              <th><?= cbPricelistSortLink('price', 'Price', $sort, $direction, $isAdminPricelist) ?></th>
               <th class="valid-cell">Special Ends</th>
               <th class="cart-cell no-print">Cart</th>
             </tr>
@@ -419,7 +454,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
                 <td colspan="6">
                   <div class="pricelist-category-bar">
                     <span><?= cbPricelistText(cbPricelistDisplayCategoryPath($categoryName)) ?></span>
-                    <?= cbPricelistCategorySortControls($sort, $direction) ?>
+                    <?= $isAdminPricelist ? cbPricelistCategorySortControls($sort, $direction) : '' ?>
                   </div>
                 </td>
               </tr>
@@ -484,7 +519,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     </div>
 
     <p class="pricelist-footnote">
-      WhatsApp or email your order for an invoice, or checkout online for specials and convenience.
+      Email your order for a formal invoice, or checkout online for current retail availability.
       Stock is subject to availability. Personalized/custom orders usually require 3-7 days.
       Prices are intended for <?= cbPricelistText($validMonth) ?>, but may change without notice due to stock refills, supplier changes, and seasonal availability.
       View the latest list at sirfrancis.co.za/pricelist.

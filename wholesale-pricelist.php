@@ -5,6 +5,7 @@ require_once __DIR__ . '/wholesale_pricelist_helpers.php';
 $wholesaleRows = getCandybirdWholesaleRows();
 $rowsByCategory = getCandybirdWholesaleRowsByCategory();
 $rowCount = count($wholesaleRows);
+$isAdminPricelist = !empty($_SESSION['admin_id']);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $limitedDescription = 'Sir Francis wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
@@ -39,6 +40,8 @@ include 'page_menues.php';
   .wholesale-hero-mark { align-items:center; align-self:stretch; background:rgba(244,238,226,.08); border:1px solid rgba(201,179,109,.65); box-shadow:inset 0 0 0 3px rgba(11,35,65,.9), inset 0 0 0 4px rgba(201,179,109,.36); display:flex; justify-content:center; min-height:180px; padding:20px; }
   .wholesale-hero-logo { display:block; height:auto; max-height:170px; object-fit:contain; width:min(240px, 100%); }
   .wholesale-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .wholesale-admin-tools { align-items:center; background:#fffaf2; border:1px solid #d9c98a; color:#344154; display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; margin-bottom:14px; padding:8px 10px; }
+  .wholesale-admin-tools span { color:#0b2341; font-size:12px; font-weight:800; margin-right:auto; text-transform:uppercase; }
   .wholesale-btn { align-items:center; background:#0b2341; border:1px solid #c9b36d; box-shadow:inset 0 0 0 2px #0b2341, inset 0 0 0 3px rgba(201,179,109,.8); color:#d3bd75 !important; display:inline-flex; font-family:Raleway, Arial, sans-serif; font-size:12px; font-weight:800; gap:6px; justify-content:center; min-height:38px; padding:9px 13px; text-decoration:none; text-transform:uppercase; }
   .wholesale-btn:hover { background:#122f52; color:#f5ead3 !important; text-decoration:none; }
   .wholesale-btn-light { background:#f4eee2; box-shadow:inset 0 0 0 2px #f4eee2, inset 0 0 0 3px rgba(201,179,109,.9); color:#0b2341 !important; }
@@ -97,14 +100,24 @@ include 'page_menues.php';
         <p><?= number_format($rowCount) ?> bulk line<?= $rowCount === 1 ? '' : 's' ?> | Valid for <?= cbWholesaleText($validMonth) ?> | Updated <?= cbWholesaleText($updatedAt) ?>. Wholesale prices are for bulk planning and confirmed by quote before invoicing.</p>
         <div class="wholesale-actions">
           <a href="wholesale-pricelist-download" class="wholesale-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
-          <a href="wholesale-pricelist-download?format=tsv" class="wholesale-btn wholesale-btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
-          <?php if ($whatsappDigits !== ''): ?><a href="https://wa.me/<?= cbWholesaleText($whatsappDigits) ?>?text=<?= $whatsappMessage ?>" class="wholesale-btn wholesale-btn-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-1"></i> Request quote</a><?php endif; ?>
+          <?php if ($isAdminPricelist): ?>
+            <a href="wholesale-pricelist-download?format=tsv" class="wholesale-btn wholesale-btn-light"><i class="fas fa-file-download mr-1"></i> TSV export</a>
+          <?php endif; ?>
         </div>
       </div>
       <div class="wholesale-hero-mark">
         <img class="wholesale-hero-logo" src="<?= cbWholesaleText($wholesaleHeroImage) ?>" alt="Sir Francis" loading="lazy"<?= sfSiteEditableImageAttrs('wholesale_pricelist.hero') ?>>
       </div>
     </div>
+
+    <?php if ($isAdminPricelist): ?>
+      <div class="wholesale-admin-tools no-print">
+        <span>Admin shortcuts</span>
+        <a href="admin-sf/wholesale_pricelist" class="btn btn-light btn-sm"><i class="fas fa-table mr-1"></i> Edit wholesale sheet</a>
+        <a href="admin-sf/manage_categories" class="btn btn-light btn-sm"><i class="fas fa-list mr-1"></i> Edit categories</a>
+        <a href="admin-sf/sheets" class="btn btn-light btn-sm"><i class="fas fa-sync-alt mr-1"></i> Sheet sources</a>
+      </div>
+    <?php endif; ?>
 
     <div class="wholesale-top-grid">
       <div class="wholesale-note">

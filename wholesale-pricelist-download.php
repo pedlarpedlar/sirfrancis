@@ -7,8 +7,14 @@ $rowsByCategory = getCandybirdWholesaleRowsByCategory();
 $validMonth = date('F Y');
 $updatedAt = date('d M Y');
 $format = strtolower(trim((string) ($_GET['format'] ?? 'html')));
+$isAdminPricelist = !empty($_SESSION['admin_id']);
 
 if ($format === 'tsv') {
+    if (!$isAdminPricelist) {
+        http_response_code(403);
+        echo 'TSV export is available to admin users only.';
+        exit;
+    }
     $filename = 'Sir Francis-Wholesale-Pricelist-' . date('F-Y') . '.tsv';
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -80,7 +86,7 @@ $downloadTitle = 'Sir Francis Wholesale Pricelist ' . date('F Y');
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>
-      <a class="button secondary" href="wholesale-pricelist-download?format=tsv">TSV export</a>
+      <?php if ($isAdminPricelist): ?><a class="button secondary" href="wholesale-pricelist-download?format=tsv">TSV export</a><?php endif; ?>
       <a class="button secondary" href="wholesale-pricelist">Back</a>
     </div>
   </div>

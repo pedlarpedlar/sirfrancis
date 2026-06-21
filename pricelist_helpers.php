@@ -434,17 +434,16 @@ if (!function_exists('cbPricelistProductsByCategory')) {
 
         $productsByCategory = [];
         foreach ($products as $product) {
-            foreach (cbPricelistCategoryPaths($product) as $categoryPath) {
-                $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
-                $category = $parts[0] ?? 'Other Products';
-                if (function_exists('isCandybirdCategoryVisible') && !isCandybirdCategoryVisible($category)) {
-                    continue;
-                }
-                if (function_exists('isCandybirdCategoryPathVisible') && !isCandybirdCategoryPathVisible($categoryPath)) {
-                    continue;
-                }
-                $productsByCategory[$categoryPath][] = $product;
+            $categoryPath = cbPricelistCategoryPath($product);
+            $parts = array_filter(array_map('trim', explode('>', (string) $categoryPath)));
+            $category = $parts[0] ?? 'Other Products';
+            if (function_exists('isCandybirdCategoryVisible') && !isCandybirdCategoryVisible($category)) {
+                continue;
             }
+            if (function_exists('isCandybirdCategoryPathVisible') && !isCandybirdCategoryPathVisible($categoryPath)) {
+                continue;
+            }
+            $productsByCategory[$categoryPath][] = $product;
         }
 
         uksort($productsByCategory, function($a, $b) use ($customCategoryOrder) {

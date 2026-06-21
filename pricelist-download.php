@@ -2,6 +2,7 @@
 include 'session_logins.php';
 require_once __DIR__ . '/pricelist_helpers.php';
 
+$isAdminPricelist = !empty($_SESSION['admin_id']);
 $sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
 $sort = in_array($sort, ['custom', 'id', 'name', 'size', 'price', 'sale'], true) ? $sort : 'custom';
 $direction = isset($_GET['dir']) && strtolower((string) $_GET['dir']) === 'desc' ? 'desc' : 'asc';
@@ -14,6 +15,11 @@ $downloadTitle = 'Sir Francis Pricelist ' . date('F Y');
 $format = strtolower(trim((string) ($_GET['format'] ?? 'html')));
 
 if ($format === 'tsv') {
+    if (!$isAdminPricelist) {
+        http_response_code(403);
+        echo 'TSV export is available to admin users only.';
+        exit;
+    }
     $filename = 'Sir Francis-Pricelist-' . date('F-Y') . '.tsv';
     header('Content-Type: text/tab-separated-values; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -48,18 +54,18 @@ if ($format === 'tsv') {
   <style>
     * { box-sizing: border-box; }
     body { background: #f7f4ef; color: #2c2926; font-family: Arial, sans-serif; margin: 18px; }
-    .topbar { align-items: flex-start; background: #2d1739; border-bottom: 4px solid #fcb42f; color: #fff; display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; margin-bottom: 10px; }
-    h1 { color: #fcb42f; font-size: 22px; margin: 0 0 4px; }
-    .meta { color: #f8ecff; font-size: 11px; line-height: 1.4; }
+    .topbar { align-items: flex-start; background: #0b2341; border-bottom: 4px solid #c9b36d; color: #fff; display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; margin-bottom: 10px; }
+    h1 { color: #d3bd75; font-size: 22px; margin: 0 0 4px; }
+    .meta { color: #f5ead3; font-size: 11px; line-height: 1.4; }
     .actions { display: flex; gap: 8px; }
-    button, a.button { background: #fcb42f; border: 0; color: #2d1739; cursor: pointer; display: inline-block; font-size: 12px; font-weight: bold; padding: 8px 10px; text-decoration: none; }
-    a.button.secondary { background: #fff; color: #5b1178; }
-    .note { background: #fff; border: 1px solid #eadfd2; border-left: 5px solid #fcb42f; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 10px; font-size: 10px; margin-bottom: 10px; }
+    button, a.button { background: #c9b36d; border: 0; color: #0b2341; cursor: pointer; display: inline-block; font-size: 12px; font-weight: bold; padding: 8px 10px; text-decoration: none; }
+    a.button.secondary { background: #fff; color: #0b2341; }
+    .note { background: #fff; border: 1px solid #d9c98a; border-left: 5px solid #c9b36d; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 10px; font-size: 10px; margin-bottom: 10px; }
     table { border-collapse: collapse; font-size: 9px; width: 100%; }
     th, td { border: 1px solid #e6dccf; padding: 2px 4px; text-align: left; vertical-align: top; }
-    th { background: #f0e8f4; color: #4b185f; font-size: 8px; text-transform: uppercase; }
+    th { background: #f4eee2; color: #0b2341; font-size: 8px; text-transform: uppercase; }
     tbody tr:nth-child(even):not(.category) td { background: #fffdf8; }
-    .category td { background: #5b1178; color: #fcb42f; font-weight: bold; padding: 4px 5px; }
+    .category td { background: #102f52; color: #d3bd75; font-weight: bold; padding: 4px 5px; }
     .id { width: 42px; color: #555; }
     .size { width: 60px; color: #333; }
     .price { width: 92px; font-weight: bold; white-space: nowrap; }
@@ -82,11 +88,11 @@ if ($format === 'tsv') {
   <div class="topbar">
     <div>
       <h1>Sir Francis Pricelist</h1>
-      <div class="meta"><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?> | www.fishgelatine.co.za/pricelist</div>
+      <div class="meta"><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?> | sirfrancis.co.za/pricelist</div>
     </div>
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save PDF</button>
-      <a class="button secondary" href="pricelist-download?format=tsv">TSV export</a>
+      <?php if ($isAdminPricelist): ?><a class="button secondary" href="pricelist-download?format=tsv">TSV export</a><?php endif; ?>
       <a class="button secondary" href="pricelist">Back</a>
     </div>
   </div>

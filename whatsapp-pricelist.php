@@ -2,6 +2,11 @@
 include 'session_logins.php';
 require_once __DIR__ . '/pricelist_helpers.php';
 
+if (empty($_SESSION['admin_id'])) {
+    header('Location: pricelist');
+    exit;
+}
+
 date_default_timezone_set('Africa/Johannesburg');
 
 $sort = isset($_GET['sort']) ? strtolower((string) $_GET['sort']) : 'custom';
@@ -36,18 +41,18 @@ if ($singleFilteredSize !== '') {
 }
 $lines[] = '';
 $lines[] = 'WhatsApp your order to ' . $displayPhone . ' and collect in Malabar, or:';
-$lines[] = 'Shop securely online www.fishgelatine.co.za';
+$lines[] = 'Shop securely online sirfrancis.co.za';
 $lines[] = '';
 $lines[] = '_Delivery available from only R55! Free delivery options also available_';
 $whatsappText = implode("\n", $lines);
 
 $limitedDescription = 'Copy-ready Sir Francis WhatsApp pricelist text.';
-$page_url_canonical = "https://www.fishgelatine.co.za/v2/whatsapp-pricelist";
+$page_url_canonical = "https://sirfrancis.co.za/whatsapp-pricelist";
 $title_og = 'WhatsApp Pricelist - Sir Francis';
-$page_url_og = "https://www.fishgelatine.co.za/v2/whatsapp-pricelist";
+$page_url_og = "https://sirfrancis.co.za/whatsapp-pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
-$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
+$image_url_og = 'https://sirfrancis.co.za/assets/img/pricelist.jpg';
 $image_type_og = 'image/jpeg';
 $image_width_og = '1200';
 $image_height_og = '630';
@@ -57,26 +62,28 @@ include 'page_menues.php';
 ?>
 
 <style>
-  .whatsapp-pricelist-page { background: #f7f4ef; padding: 28px 0 50px; }
+  .whatsapp-pricelist-page { background: #f4eee2; padding: 28px 0 50px; }
   .whatsapp-pricelist-hero {
-    background: #2d1739;
-    border-radius: 8px;
+    background: #0b2341;
+    border: 1px solid #c9b36d;
+    border-radius: 0;
+    box-shadow: inset 0 0 0 3px #0b2341, inset 0 0 0 4px rgba(201,179,109,.78);
     color: #fff;
     margin-bottom: 14px;
     padding: 20px;
   }
-  .whatsapp-pricelist-hero h1 { color: #fcb42f; font-size: 30px; margin: 0 0 6px; }
-  .whatsapp-pricelist-hero p { color: #f8ecff; margin: 0; }
+  .whatsapp-pricelist-hero h1 { color: #d3bd75; font-family:"Playfair Display", Georgia, serif; font-size: 30px; margin: 0 0 6px; }
+  .whatsapp-pricelist-hero p { color: #f5ead3; margin: 0; }
   .whatsapp-pricelist-card {
-    background: #fff;
-    border: 1px solid #eadfd2;
-    border-radius: 8px;
+    background: #fffaf2;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     padding: 16px;
   }
   .whatsapp-pricelist-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
   .whatsapp-pricelist-text {
-    border: 1px solid #decbe7;
-    border-radius: 8px;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     color: #241b14;
     font-family: Consolas, Monaco, monospace;
     font-size: 14px;
