@@ -52,6 +52,11 @@ include 'header.php';
     padding: 54px 0 34px;
   }
 
+  .sf-agent-page .sf-agent-hero > .container {
+    background: #172235 !important;
+    color: #fffaf0 !important;
+  }
+
   .sf-agent-page .sf-agent-hero h1 {
     color: #fffaf0 !important;
     font-family: "Playfair Display", Georgia, serif;
@@ -329,7 +334,7 @@ include 'header.php';
 
 <main class="sf-agent-page">
   <section class="sf-agent-hero" style="background:#172235;color:#fffaf0;">
-    <div class="container">
+    <div class="container" style="background:#172235;color:#fffaf0;">
       <span class="sf-agent-kicker">Regional supply support</span>
       <h1>Find an agent</h1>
       <p>Start with Durban as the default Sir Francis region, choose your province on the map, or allow location access so we can suggest the closest available region.</p>
