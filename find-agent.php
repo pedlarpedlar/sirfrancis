@@ -2,6 +2,9 @@
 $use_corporate_nav = true;
 $load_shopping_nav = false;
 include 'session_logins.php';
+require_once __DIR__ . '/find_agent_data.php';
+
+$sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions() : [];
 
 $page_url_canonical = 'https://sirfrancis.co.za/find-agent';
 $page_url_og = $page_url_canonical;
@@ -31,24 +34,34 @@ include 'header.php';
   }
 
   .sf-agent-hero {
-    background: #172235;
-    color: #f7f1df;
+    background:
+      linear-gradient(90deg, rgba(10, 17, 29, .98), rgba(23, 34, 53, .94)),
+      #111b2d;
+    color: #fffaf0;
     padding: 54px 0 34px;
   }
 
   .sf-agent-hero h1 {
-    color: #CEBD88;
+    color: #fffaf0;
     font-family: "Playfair Display", Georgia, serif;
     font-size: clamp(2.35rem, 5vw, 4.4rem);
     line-height: 1.05;
     margin: 0 0 12px;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, .45);
   }
 
   .sf-agent-hero p {
-    color: rgba(247, 241, 223, .86);
+    color: #fff7e4;
     font-size: 1.05rem;
+    font-weight: 600;
     line-height: 1.7;
     max-width: 780px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, .34);
+  }
+
+  .sf-agent-hero .sf-agent-kicker {
+    color: #CEBD88;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, .38);
   }
 
   .sf-agent-shell {
@@ -215,6 +228,47 @@ include 'header.php';
     margin: 0 0 12px;
   }
 
+  .sf-agent-city-list {
+    border-top: 1px solid #eadfca;
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+
+  .sf-agent-city-list strong {
+    color: #172235;
+    display: block;
+    font-size: 13px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .sf-agent-city-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sf-agent-city-button {
+    background: #fff;
+    border: 3px double #CEBD88;
+    border-radius: 0;
+    color: #172235;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 8px 10px;
+  }
+
+  .sf-agent-city-button:hover,
+  .sf-agent-city-button:focus,
+  .sf-agent-city-button.is-active {
+    background: #CEBD88;
+    color: #172235;
+    outline: 0;
+  }
+
   .sf-agent-suggest {
     margin-top: 22px;
     padding: 22px;
@@ -328,6 +382,7 @@ include 'header.php';
             <a class="sf-agent-btn" id="sf-agent-contact" href="contact?subject=Agent%20enquiry%20-%20KwaZulu-Natal">Contact this agent</a>
             <a class="sf-agent-btn secondary" id="sf-agent-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Durban%2C%20South%20Africa" target="_blank" rel="noopener noreferrer">Open map</a>
           </div>
+          <div class="sf-agent-city-list" id="sf-agent-city-list"></div>
         </div>
       </aside>
     </div>
@@ -336,72 +391,7 @@ include 'header.php';
 
 <script>
 (function() {
-  var agents = {
-    'kwazulu-natal': {
-      label: 'KwaZulu-Natal',
-      title: 'Durban support point',
-      name: 'Sir Francis Durban',
-      details: 'KwaZulu-Natal regional support for retail, wholesale, private labelling and procurement enquiries.',
-      query: 'Durban, South Africa',
-      direct: true
-    },
-    'gauteng': {
-      label: 'Gauteng',
-      title: 'Gauteng enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Gauteng agent is listed yet. We will route your enquiry to Durban while we review local supplier suggestions.',
-      query: 'Johannesburg, South Africa'
-    },
-    'western-cape': {
-      label: 'Western Cape',
-      title: 'Western Cape enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Western Cape agent is listed yet. Suggest a trusted Cape Town supplier or contact Durban support.',
-      query: 'Cape Town, South Africa'
-    },
-    'eastern-cape': {
-      label: 'Eastern Cape',
-      title: 'Eastern Cape enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Eastern Cape agent is listed yet. Suggest a local agent or contact Durban support.',
-      query: 'Gqeberha, South Africa'
-    },
-    'free-state': {
-      label: 'Free State',
-      title: 'Free State enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Free State agent is listed yet. Suggest a local supplier or contact Durban support.',
-      query: 'Bloemfontein, South Africa'
-    },
-    'north-west': {
-      label: 'North West',
-      title: 'North West enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated North West agent is listed yet. Suggest a local supplier or contact Durban support.',
-      query: 'Rustenburg, South Africa'
-    },
-    'mpumalanga': {
-      label: 'Mpumalanga',
-      title: 'Mpumalanga enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Mpumalanga agent is listed yet. Suggest a local supplier or contact Durban support.',
-      query: 'Mbombela, South Africa'
-    },
-    'limpopo': {
-      label: 'Limpopo',
-      title: 'Limpopo enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Limpopo agent is listed yet. Suggest a local supplier or contact Durban support.',
-      query: 'Polokwane, South Africa'
-    },
-    'northern-cape': {
-      label: 'Northern Cape',
-      title: 'Northern Cape enquiries',
-      name: 'Nearest Sir Francis support',
-      details: 'No dedicated Northern Cape agent is listed yet. Suggest a local supplier or contact Durban support.',
-      query: 'Kimberley, South Africa'
-    }
-  };
+  var agents = <?=json_encode($sf_agent_regions, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)?>;
 
   function provinceFromCoordinates(lat, lng) {
     if (lat <= -26.8 && lng <= 24.8) return 'western-cape';
@@ -417,6 +407,7 @@ include 'header.php';
 
   function setActiveRegion(region) {
     var agent = agents[region] || agents['kwazulu-natal'];
+    if (!agent) return;
     document.querySelectorAll('[data-region]').forEach(function(item) {
       item.classList.toggle('is-active', item.getAttribute('data-region') === region);
     });
@@ -429,6 +420,43 @@ include 'header.php';
     document.getElementById('sf-agent-details').textContent = agent.details;
     document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent('Agent enquiry - ' + agent.label);
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(agent.query);
+    renderCityAgents(agent);
+  }
+
+  function renderCityAgents(agent) {
+    var cityList = document.getElementById('sf-agent-city-list');
+    var cities = Array.isArray(agent.city_agents) ? agent.city_agents : [];
+    if (!cityList) return;
+
+    if (!cities.length) {
+      cityList.innerHTML = '<strong>City view</strong><p class="sf-agent-meta">No city agents are listed for this region yet.</p>';
+      return;
+    }
+
+    cityList.innerHTML = '<strong>City view</strong><div class="sf-agent-city-buttons"></div>';
+    var buttonWrap = cityList.querySelector('.sf-agent-city-buttons');
+    cities.forEach(function(cityAgent, index) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'sf-agent-city-button' + (index === 0 ? ' is-active' : '');
+      button.textContent = cityAgent.city || cityAgent.name || 'City agent';
+      button.addEventListener('click', function() {
+        buttonWrap.querySelectorAll('.sf-agent-city-button').forEach(function(item) {
+          item.classList.remove('is-active');
+        });
+        button.classList.add('is-active');
+        setCityAgent(agent, cityAgent);
+      });
+      buttonWrap.appendChild(button);
+    });
+    setCityAgent(agent, cities[0]);
+  }
+
+  function setCityAgent(regionAgent, cityAgent) {
+    document.getElementById('sf-agent-name').textContent = cityAgent.name || regionAgent.name;
+    document.getElementById('sf-agent-details').textContent = cityAgent.details || regionAgent.details;
+    document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + regionAgent.label));
+    document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(cityAgent.query || regionAgent.query);
   }
 
   document.querySelectorAll('[data-region]').forEach(function(item) {
