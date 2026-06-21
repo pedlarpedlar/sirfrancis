@@ -202,6 +202,12 @@ foreach ($sourceKeys as $key) {
     $cacheInfo[$key] = cbSheetCacheInfo($key);
 }
 
+$adminHelpOverride = [
+    'title' => 'Sheet Sources helper',
+    'body' => 'Manage the Google Sheet links that power products, coupons, clearance and wholesale data. Published TSV links are what the website reads. Editable sheet links are only for staff/admin buttons that open Google Sheets. Use force refresh after editing a sheet when you want the website to pull fresh data immediately.',
+    'links' => [['TSV How-to', 'tsv_how_to'], ['Products', 'products'], ['Coupons', 'coupons'], ['Categories', 'category_order']],
+];
+
 include __DIR__ . '/header.php';
 include __DIR__ . '/page_menues.php';
 ?>
@@ -232,7 +238,6 @@ include __DIR__ . '/page_menues.php';
 <div class="container sheet-shell">
     <div class="sheet-hero">
         <h1>Sheet Sources</h1>
-        <p class="mb-0">Manage the Google Sheet links that power products, coupons and the Clearance Basket. Use force refresh after editing a sheet when you want the website to pull fresh data immediately.</p>
         <div class="sheet-actions mt-3">
             <form method="post" action="sheets" class="m-0">
                 <input type="hidden" name="sheet_action" value="refresh_all">

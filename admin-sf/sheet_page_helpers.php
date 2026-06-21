@@ -286,6 +286,17 @@ if (!function_exists('cbAdminSheetPage')) {
         $source = $sources[$key];
         $syncLabel = $key === 'products' ? 'Sync Products' : 'Sync ' . ($source['label'] ?? $title);
         $health = checkCandybirdSheetHealth($key);
+        $adminHelpOverride = [
+            'title' => $title . ' helper',
+            'body' => trim(preg_replace('/\s+/', ' ', strip_tags(str_replace(['</p>', '<br>', '<br/>', '<br />'], ' ', (string) $introHtml)))),
+            'links' => array_values(array_filter([
+                ['TSV How-to', 'tsv_how_to'],
+                ['Sheet Links', 'sheets'],
+                $key === 'products' ? ['Categories', 'category_order'] : null,
+                $key === 'coupons' ? ['Coupon Tester', 'coupon_tester'] : null,
+                $key === 'wholesale' ? ['Wholesale Page', '../wholesale-pricelist'] : null,
+            ])),
+        ];
         include __DIR__ . '/header.php';
         include __DIR__ . '/page_menues.php';
         ?>
@@ -303,13 +314,10 @@ if (!function_exists('cbAdminSheetPage')) {
             .header-list { display:flex; flex-wrap:wrap; gap:6px; padding:0; margin:8px 0 0; list-style:none; }
             .header-list li { background:#f6f1ea; border:1px solid var(--sf-border); border-radius:999px; padding:4px 8px; font-size:12px; }
             .sheet-actions { display:flex; flex-wrap:wrap; gap:10px; }
-            .sheet-help-link { color:var(--sf-gold); font-weight:900; text-decoration:underline; }
         </style>
         <div class="container sheet-page">
             <div class="sheet-hero">
                 <h1><?= cbAdminSheetText($title) ?></h1>
-                <?= $introHtml ?>
-                <p class="mb-0 mt-2"><a class="sheet-help-link" href="tsv_how_to">Need help publishing the Google Sheet as TSV?</a></p>
                 <div class="sheet-actions mt-3">
                     <a class="btn btn-light" href="download_sheet_template?type=<?= cbAdminSheetText($key) ?>">Download template</a>
                     <form method="post" class="m-0"><input type="hidden" name="sheet_action" value="refresh_source"><button class="btn btn-warning" type="submit"><?= cbAdminSheetText($syncLabel) ?></button></form>

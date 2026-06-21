@@ -96,6 +96,9 @@ if (!function_exists('cbAdminHelpContent')) {
 
 $adminHelpPage = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php');
 $adminHelp = cbAdminHelpContent($adminHelpPage);
+if (!empty($adminHelpOverride) && is_array($adminHelpOverride)) {
+    $adminHelp = array_merge($adminHelp, $adminHelpOverride);
+}
 ?>
 <style>
     .admin-help-bubble {
@@ -124,7 +127,9 @@ $adminHelp = cbAdminHelpContent($adminHelpPage);
         bottom: 54px;
         color: #2b2018;
         display: none;
+        max-height: min(520px, calc(100vh - 96px));
         max-width: 350px;
+        overflow-y: auto;
         padding: 16px;
         position: absolute;
         right: 0;
