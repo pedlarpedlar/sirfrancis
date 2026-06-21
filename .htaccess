@@ -72,16 +72,12 @@ Redirect 301 /favicon.png /assets/img/favicon.png
 RewriteEngine on
 Options +FollowSymLinks -MultiViews
 
-# Redirect non-www to www
-RewriteCond %{HTTP_HOST} ^candybird\.co\.za [NC]
-RewriteRule ^(.*)$ https://www.candybird.co.za/$1 [R=301,L]
-
-# Force HTTPS
+# Force the canonical Sir Francis domain on every public and admin URL.
+RewriteCond %{HTTP_HOST} ^sirfrancis\.co\.za$ [NC,OR]
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-SSL} !on
-RewriteCond %{HTTP_HOST} ^candybird\.co\.za$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.candybird\.co\.za$
-RewriteRule ^/?$ "https\:\/\/www\.candybird\.co\.za\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^(www\.)?sirfrancis\.co\.za$ [NC]
+RewriteRule ^ https://www.sirfrancis.co.za%{REQUEST_URI} [R=301,L]
 
 # Serve a fresh XML sitemap at the standard search-engine URL.
 RewriteRule ^sitemap\.xml$ /crons/generate_sitemap.php [L]
@@ -108,10 +104,6 @@ RewriteRule ^([a-z0-9][a-z0-9-]{2,120})/?$ /route_slug.php?slug=$1 [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /404.php [L]
-
-#Redirect shop to products
-RewriteCond %{HTTP_HOST} ^shop\.candybird\.co\.za$ [NC]
-RewriteRule ^(.*)$ https://candybird.co.za/products [R=301,L]
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php80” package as the default “PHP” programming language.
