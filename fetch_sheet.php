@@ -17,50 +17,52 @@ $isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['
 $isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
 $isClearanceCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['clearance-basket', 'clearance']) || in_array($productPageCategorySlug, ['clearance-basket', 'clearance'], true) || $requestPathSlug === 'clearance-basket';
 $page_url_canonical = "https://sirfrancis.co.za/products";
-$title_og = 'Marine Collagen, Fish Gelatine & Bulk Supply Online | Sir Francis';
+$title_og = 'Product Catalogue & Supply Lines | Sir Francis';
 $page_url_og = "https://sirfrancis.co.za/products";
-$description_meta = 'Shop Sir Francis for marine collagen, fish gelatine, private labelling and bulk supply support. Secure checkout, collection and delivery across South Africa.';
+$description_meta = 'Browse Sir Francis marine collagen, fish gelatine, private labelling and bulk supply lines with secure ordering, collection and delivery support across South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://sirfrancis.co.za/assets/img/product/1.png';
+$productsHeroImage = sfSiteImagePath('products.hero', 'assets/img/product/1.png');
+$productsSpecialsImage = sfSiteImagePath('products.specials_banner', 'assets/img/ocean.jpg');
+$productsRetailImage = sfSiteImagePath('products.retail_banner', 'assets/img/ocean.jpg');
+$productsResellerImage = sfSiteImagePath('products.reseller_banner', 'assets/img/logo/main.png');
+$image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsHeroImage, '/');
 $image_type_og = 'image/png';
 if ($isGiftingCategoryPage) {
     $page_url_canonical = "https://sirfrancis.co.za/gifting";
-    $title_og = 'Retail Marine Collagen & Gelatine Online | Sir Francis';
+    $title_og = 'Consumer & Trade Packs | Sir Francis';
     $page_url_og = "https://sirfrancis.co.za/gifting";
-    $description_meta = 'Shop Sir Francis retail-ready marine collagen and fish gelatine products for personal, household and wellness use.';
+    $description_meta = 'Browse Sir Francis consumer and trade-friendly marine collagen and fish gelatine pack sizes for repeat ordering and client-facing supply.';
     $description_og = $description_meta;
-    $image_url_og = 'assets/img/product/1.png';
+    $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsRetailImage, '/');
     $image_type_og = 'image/png';
 } elseif ($isResellerCategoryPage) {
     $page_url_canonical = 'https://sirfrancis.co.za/resellers';
-    $title_og = 'Bulk Supply & Wholesale Packs Online | Sir Francis';
+    $title_og = 'Bulk Supply & Wholesale Packs | Sir Francis';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop Sir Francis wholesale-friendly marine collagen and fish gelatine supply for manufacturers, food service, health retailers and repeat bulk buyers.';
+    $description_meta = 'Browse Sir Francis wholesale-friendly marine collagen and fish gelatine supply for manufacturers, food service, health retailers and repeat bulk buyers.';
     $description_og = $description_meta;
-    $image_url_og = 'assets/img/product/1.png';
+    $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsResellerImage, '/');
     $image_type_og = 'image/png';
 } elseif ($isSpecialsCategoryPage) {
     $page_url_canonical = 'https://sirfrancis.co.za/specials';
     $title_og = 'Sir Francis Product Specials';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop current Sir Francis specials on marine collagen, fish gelatine and selected wellness products.';
+    $description_meta = 'Review current Sir Francis specials on marine collagen, fish gelatine and selected wellness product lines.';
     $description_og = $description_meta;
-    $image_url_og = 'assets/img/product/1.png';
+    $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsSpecialsImage, '/');
     $image_type_og = 'image/png';
 } elseif ($isClearanceCategoryPage) {
     $page_url_canonical = 'https://sirfrancis.co.za/clearance-basket';
     $title_og = 'Clearance Basket Deals | Sir Francis';
     $page_url_og = $page_url_canonical;
-    $description_meta = 'Shop Sir Francis Clearance Basket for reduced clearance stock, dated items and overstocked products.';
+    $description_meta = 'Review Sir Francis Clearance Basket lines for reduced clearance stock, dated items and overstocked products.';
     $description_og = $description_meta;
-    $image_url_og = 'assets/img/product/1.png';
+    $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsSpecialsImage, '/');
     $image_type_og = 'image/png';
 }
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']) && empty($_GET['category']) && empty($_GET['search']);
 ?>
-
-<title>Marine Collagen, Fish Gelatine & Bulk Supply Online | Sir Francis</title>
 
 <?php
 include 'page_menues.php';
@@ -475,7 +477,7 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
 <?php if ($isSpecialsCategoryPage || $isClearanceCategoryPage): ?>
 <section class="specials-clearance-banner">
   <div class="container">
-    <img src="assets/img/ocean.jpg" alt="Sir Francis marine product range" loading="eager">
+    <img src="<?= htmlspecialchars($productsSpecialsImage, ENT_QUOTES, 'UTF-8') ?>" alt="Sir Francis marine product range" loading="eager"<?= sfSiteEditableImageAttrs('products.specials_banner') ?>>
   </div>
 </section>
 <?php endif; ?>
@@ -485,15 +487,15 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
   <div class="container">
     <div class="gifting-category-panel gifting-category-panel--gifting">
       <div class="gifting-category-copy">
-        <h1>Retail Products</h1>
-        <p>Browse retail-ready Sir Francis marine collagen, fish gelatine and wellness products for home use, repeat customers and client-facing supply.</p>
+        <h1>Consumer & Trade Packs</h1>
+        <p>Browse Sir Francis marine collagen, fish gelatine and wellness pack sizes suited to repeat ordering, customer-facing supply and professional procurement.</p>
         <div class="gifting-category-highlights">
-          <span>Retail and business-friendly ordering</span>
+          <span>Business-friendly ordering</span>
           <span>Carefully packed marine wellness products</span>
-          <span>Secure checkout with delivery support</span>
+          <span>Secure ordering with delivery support</span>
         </div>
       </div>
-      <img class="category-social-image" src="assets/img/ocean.jpg" alt="Sir Francis marine product range" loading="lazy">
+      <img class="category-social-image" src="<?= htmlspecialchars($productsRetailImage, ENT_QUOTES, 'UTF-8') ?>" alt="Sir Francis marine product range" loading="lazy"<?= sfSiteEditableImageAttrs('products.retail_banner') ?>>
     </div>
   </div>
 </section>
@@ -503,14 +505,14 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
     <div class="gifting-category-panel">
       <div>
         <h1>Reseller & Wholesale Packs</h1>
-        <p>Browse reseller-friendly Sir Francis packs for manufacturers, health retailers, food service and larger repeat buyers. These products are useful when you need clear sizes, dependable pricing and a quick way to build a basket for resale or bulk use.</p>
+        <p>Review reseller-friendly Sir Francis packs for manufacturers, health retailers, food service and larger repeat buyers. These lines help procurement teams compare sizes, pricing and availability before placing repeat or bulk orders.</p>
         <div class="gifting-category-highlights">
           <span>Useful pack sizes for resale and repeat buying</span>
-          <span>Clear online pricing with cart and checkout support</span>
+          <span>Clear pricing with cart and checkout support</span>
           <span>Wholesale list available for larger bulk planning</span>
         </div>
       </div>
-      <img class="category-social-image" src="assets/img/logo/main.png" alt="Sir Francis wholesale and bulk packs" loading="lazy">
+      <img class="category-social-image" src="<?= htmlspecialchars($productsResellerImage, ENT_QUOTES, 'UTF-8') ?>" alt="Sir Francis wholesale and bulk packs" loading="lazy"<?= sfSiteEditableImageAttrs('products.reseller_banner') ?>>
     </div>
   </div>
 </section>
@@ -519,11 +521,11 @@ generateProductsBreadcrumbsFromSheet([], $selectedCategory, $searchTerm);
   <div class="container">
     <div class="products-page-visual-panel">
       <div>
-        <h1>Online Shop</h1>
-        <p>Browse Sir Francis marine collagen, fish gelatine, sea moss, specials and wellness products. Each product and size is listed separately so prices, stock and shipping stay clear.</p>
+        <h1>Product Catalogue</h1>
+        <p>Review Sir Francis marine collagen, fish gelatine, sea moss, specials and wellness supply lines. Each product and size is listed separately so pricing, availability and logistics stay clear for procurement and repeat orders.</p>
       </div>
       <a class="products-page-visual-link" href="pricelist" aria-label="View Sir Francis pricelist">
-        <img src="assets/img/product/1.png" alt="Sir Francis online product range" loading="lazy">
+        <img src="<?= htmlspecialchars($productsHeroImage, ENT_QUOTES, 'UTF-8') ?>" alt="Sir Francis product catalogue" loading="lazy"<?= sfSiteEditableImageAttrs('products.hero') ?>>
       </a>
     </div>
   </div>
