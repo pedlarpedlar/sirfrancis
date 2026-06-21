@@ -24,7 +24,7 @@ $page_url_og = $page_url_canonical;
 $title_og = 'Find an Agent - Sir Francis';
 $description_meta = 'Find a Sir Francis agent by South African region, or suggest a new agent in your area.';
 $description_og = $description_meta;
-$image_url_og = 'https://sirfrancis.co.za/assets/img/logo/logo.png';
+$image_url_og = 'https://sirfrancis.co.za/assets/img/og/find-agent-social.png';
 
 include 'header.php';
 ?>
@@ -35,8 +35,14 @@ include 'header.php';
 <meta property="og:title" content="<?=htmlspecialchars($title_og, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($description_og, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:image" content="<?=htmlspecialchars($image_url_og, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:image:width" content="1731">
+<meta property="og:image:height" content="909">
 <meta property="og:url" content="<?=htmlspecialchars($page_url_og, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?=htmlspecialchars($title_og, ENT_QUOTES, 'UTF-8')?>">
+<meta name="twitter:description" content="<?=htmlspecialchars($description_og, ENT_QUOTES, 'UTF-8')?>">
+<meta name="twitter:image" content="<?=htmlspecialchars($image_url_og, ENT_QUOTES, 'UTF-8')?>">
 
 <?php include 'page_menues.php'; ?>
 
