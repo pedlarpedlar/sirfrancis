@@ -15,6 +15,7 @@ if (isset($_SESSION['cart_total'])) {
 // Include your database connection file
 include_once __DIR__ . "/dbh.inc.php";
 include_once __DIR__ . "/product_sheet_helpers.php";
+include_once __DIR__ . "/site_image_helpers.php";
 
 $requestHost = $_SERVER['HTTP_HOST'] ?? 'sirfrancis.co.za';
 $requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

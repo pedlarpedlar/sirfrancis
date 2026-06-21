@@ -707,6 +707,128 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
 </script>
 <?php endif; ?>
 
+<?php if (!empty($_SESSION['admin_id'])): ?>
+<style>
+  .sf-editable-image-wrap {
+    position: relative;
+  }
+
+  .sf-edit-image-button {
+    align-items: center;
+    background: #172235;
+    border: 1px solid #CEBD88;
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px #172235, inset 0 0 0 3px rgba(206, 189, 136, .8), 0 8px 20px rgba(0,0,0,.25);
+    color: #CEBD88;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 13px;
+    height: 34px;
+    justify-content: center;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 34px;
+    z-index: 30;
+  }
+
+  .sf-edit-image-button:hover,
+  .sf-edit-image-button:focus {
+    background: #23324b;
+    color: #f5ead3;
+  }
+</style>
+<script>
+(function () {
+  var editableItems = document.querySelectorAll('[data-sf-editable-image]');
+  if (!editableItems.length) return;
+
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/jpeg,image/png,image/webp,image/gif';
+  input.style.display = 'none';
+  document.body.appendChild(input);
+
+  var activeTarget = null;
+
+  function ensureWrapped(element) {
+    if (element.classList.contains('sf-editable-image-wrap')) {
+      return element;
+    }
+    if (element.parentElement && element.parentElement.classList.contains('sf-editable-image-wrap')) {
+      return element.parentElement;
+    }
+    if (element.tagName && element.tagName.toLowerCase() === 'img') {
+      element.parentElement.classList.add('sf-editable-image-wrap');
+      return element.parentElement;
+    }
+    element.classList.add('sf-editable-image-wrap');
+    return element;
+  }
+
+  function setTargetImage(target, path) {
+    if (!target || !path) return;
+    if (target.getAttribute('data-sf-editable-bg') === '1') {
+      target.style.backgroundImage = "url('" + path.replace(/'/g, "\\'") + "')";
+      target.setAttribute('data-sf-current-image', path);
+      return;
+    }
+    if (target.tagName && target.tagName.toLowerCase() === 'img') {
+      target.src = path;
+    }
+  }
+
+  editableItems.forEach(function (item) {
+    var host = ensureWrapped(item);
+    if (host.querySelector(':scope > .sf-edit-image-button')) return;
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'sf-edit-image-button no-print';
+    button.setAttribute('aria-label', 'Replace image');
+    button.setAttribute('title', 'Replace image');
+    button.innerHTML = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      activeTarget = item;
+      input.value = '';
+      input.click();
+    });
+    host.appendChild(button);
+  });
+
+  input.addEventListener('change', function () {
+    if (!activeTarget || !input.files || !input.files[0]) return;
+    var key = activeTarget.getAttribute('data-sf-editable-image');
+    var form = new FormData();
+    form.append('image_key', key);
+    form.append('image', input.files[0]);
+
+    fetch('<?=$home_directory?>admin_update_site_image.php', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: form
+    })
+      .then(function (response) {
+        return response.json().catch(function () {
+          return { success: false, message: 'The server returned an invalid image update response.' };
+        });
+      })
+      .then(function (data) {
+        if (!data.success) {
+          alert(data.message || 'Image update failed.');
+          return;
+        }
+        setTargetImage(activeTarget, '<?=$home_directory?>' + data.path);
+      })
+      .catch(function () {
+        alert('Image update failed. Please check the server error log.');
+      });
+  });
+})();
+</script>
+<?php endif; ?>
+
 
 
 <script>

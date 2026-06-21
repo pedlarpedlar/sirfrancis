@@ -10,7 +10,8 @@ $validMonth = date('F Y');
 $limitedDescription = 'Sir Francis wholesale and bulk pricelist for resellers, food service, gifting buyers and larger repeat orders.';
 $page_url_canonical = 'https://sirfrancis.co.za/wholesale-pricelist';
 $title_og = 'Wholesale Pricelist - Sir Francis';
-$image_url_og = 'https://sirfrancis.co.za/assets/img/logo/main.png';
+$wholesaleHeroImage = sfSiteImagePath('wholesale_pricelist.hero', 'assets/img/logo/main.png');
+$image_url_og = 'https://sirfrancis.co.za/' . ltrim($wholesaleHeroImage, '/');
 $image_type_og = 'image/png';
 $image_width_og = '1200';
 $image_height_og = '630';
@@ -101,7 +102,7 @@ include 'page_menues.php';
         </div>
       </div>
       <div class="wholesale-hero-mark">
-        <img class="wholesale-hero-logo" src="assets/img/logo/main.png" alt="Sir Francis" loading="lazy">
+        <img class="wholesale-hero-logo" src="<?= cbWholesaleText($wholesaleHeroImage) ?>" alt="Sir Francis" loading="lazy"<?= sfSiteEditableImageAttrs('wholesale_pricelist.hero') ?>>
       </div>
     </div>
 

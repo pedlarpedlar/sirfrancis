@@ -6,12 +6,12 @@ $defer_homepage_personalization = true;
 $load_shopping_nav = false;
 $page_preload_images = ['assets/img/slider/1.optimized.jpg'];
 include 'session_logins.php';
-$page_url_canonical = 'https://www.fishgelatine.co.za/v2/';
-$page_url_og = 'https://www.fishgelatine.co.za/v2/';
+$page_url_canonical = 'https://sirfrancis.co.za/';
+$page_url_og = 'https://sirfrancis.co.za/';
 $title_og = "Sir Francis | Marine Collagen, Fish Gelatine and Private Labelling";
 $description_meta = 'Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and supplement private labelling solutions in South Africa.';
 $description_og = $description_meta;
-$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/logo/logo.png';
+$image_url_og = 'https://sirfrancis.co.za/assets/img/logo/logo.png';
 include 'header.php';
 $showSubscribeOffer = empty($_SESSION['user_id']);
 ?>
@@ -285,10 +285,23 @@ include 'page_menues.php';
 include 'slides.php';
 include 'recipe_posts.php';
 
+$slideFallbackImages = [
+    'bg-img1' => 'assets/img/slider/slider.jpg',
+    'bg-img2' => 'assets/img/slider/slide1.jpg',
+    'bg-img3' => 'assets/img/slider/slide2.jpg',
+    'bg-img4' => 'assets/img/slider/slide3.png',
+    'bg-img5' => 'assets/img/slider/slider.jpg',
+    'bg-img6' => 'assets/img/slider/slide1.jpg',
+    'bg-img7' => 'assets/img/slider/slide2.jpg',
+    'bg-img8' => 'assets/img/slider/slide3.png',
+];
+
 foreach ($slides as $index => $slide) {
     $slideBgClass = $index === 0 ? $slide['bg_img'] : '';
     $deferredBgAttribute = $index === 0 ? '' : ' data-bg-img-class="' . htmlspecialchars($slide['bg_img'], ENT_QUOTES, 'UTF-8') . '"';
-    echo '<div class="slider-item bg-img ' . $slideBgClass . '"' . $deferredBgAttribute . '>';
+    $slideImageKey = 'homepage.slider.' . $index;
+    $slideImagePath = sfSiteImagePath($slideImageKey, $slideFallbackImages[$slide['bg_img']] ?? 'assets/img/ocean.jpg');
+    echo '<div class="slider-item bg-img ' . $slideBgClass . '"' . $deferredBgAttribute . sfSiteBackgroundStyle($slideImagePath) . sfSiteEditableBackgroundAttrs($slideImageKey, $slideImagePath) . '>';
     echo '  <div class="container container1">';
     echo '    <div class="row align-items-center slider-height">';
     echo '      <div class="col-12 text-center">';
@@ -347,7 +360,7 @@ foreach ($slides as $index => $slide) {
             href="wholesale-pricelist"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/ocean.jpg" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async" />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.bulk', 'assets/img/ocean.jpg'), ENT_QUOTES, 'UTF-8') ?>" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.bulk') ?> />
             <span class="home-pathway-copy">
               <h2>Buy Bulk</h2>
               <p>Marine collagen, fish gelatine and wellness ingredients for wholesale buyers and businesses.</p>
@@ -361,7 +374,7 @@ foreach ($slides as $index => $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/1.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.retail', 'assets/img/slider/1.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.retail') ?> />
             <span class="home-pathway-copy">
               <h2>Retail Shop</h2>
               <p>Shop the retail range direct to the public.</p>
@@ -375,7 +388,7 @@ foreach ($slides as $index => $slide) {
             href="private_labelling"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/2.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async" />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.private_label', 'assets/img/slider/2.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.private_label') ?> />
             <span class="home-pathway-copy">
               <h2>Private Labelling</h2>
               <p>Create your own supplement brand.</p>
@@ -389,7 +402,7 @@ foreach ($slides as $index => $slide) {
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="assets/img/slider/3.optimized.jpg" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async" />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.stockist', 'assets/img/slider/3.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.stockist') ?> />
             <span class="home-pathway-copy">
               <h2>Become a Stockist</h2>
               <p>Apply to stock Sir Francis products and build a premium wellness income stream.</p>
@@ -732,7 +745,7 @@ foreach ($slides as $index => $slide) {
           <a
             class="zoom-in d-block overflow-hidden position-relative"
             href="product?id=101"
-            ><img src="assets/img/banner/5.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner" width="370" height="270" loading="lazy" decoding="async"
+            ><img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.featured', 'assets/img/banner/5.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.featured') ?>
           /></a>
         </div>
       </div>
@@ -742,7 +755,7 @@ foreach ($slides as $index => $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="return_policy"
           >
-            <img src="assets/img/banner/6.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner" width="370" height="270" loading="lazy" decoding="async"
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.returns', 'assets/img/banner/6.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.returns') ?>
           /></a>
         </div>
       </div>
@@ -752,7 +765,7 @@ foreach ($slides as $index => $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="recipes"
           >
-            <img src="assets/img/banner/4.png" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.recipes', 'assets/img/banner/4.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.recipes') ?>
           /></a>
         </div>
       </div>

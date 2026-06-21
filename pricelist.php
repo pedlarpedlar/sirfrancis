@@ -22,13 +22,14 @@ $tsvPricelistUrl = 'pricelist-download?' . http_build_query($tsvQuery);
 $updatedAt = date('d M Y');
 $validMonth = date('F Y');
 $limitedDescription = 'Compact Sir Francis pricelist with current product prices, specials, sizes and online product links.';
-$page_url_canonical = "https://www.fishgelatine.co.za/v2/pricelist";
+$page_url_canonical = "https://sirfrancis.co.za/pricelist";
 $title_og = 'Pricelist - Sir Francis';
-$page_url_og = "https://www.fishgelatine.co.za/v2/pricelist";
+$page_url_og = "https://sirfrancis.co.za/pricelist";
 $description_og = $limitedDescription;
 $description_meta = $limitedDescription;
-$image_url_og = 'https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg';
-$image_type_og = 'image/jpeg';
+$pricelistHeroImage = sfSiteImagePath('pricelist.hero', 'assets/img/logo/main.png');
+$image_url_og = 'https://sirfrancis.co.za/' . ltrim($pricelistHeroImage, '/');
+$image_type_og = 'image/png';
 $image_width_og = '1200';
 $image_height_og = '630';
 
@@ -59,11 +60,13 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
 ?>
 
 <style>
-  .pricelist-page { background: #f7f4ef; padding: 28px 0 44px; }
+  .pricelist-page { background: #f4eee2; padding: 28px 0 44px; }
   .pricelist-hero {
-    background: #2d1739;
+    background: #0b2341;
+    border: 1px solid #c9b36d;
+    box-shadow: inset 0 0 0 3px #0b2341, inset 0 0 0 4px rgba(201,179,109,.78);
     color: #fff;
-    border-radius: 8px;
+    border-radius: 0;
     padding: 20px;
     display: flex;
     align-items: center;
@@ -71,47 +74,49 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     gap: 18px;
     margin-bottom: 14px;
   }
-  .pricelist-hero h1 { color: #fcb42f; font-size: 30px; margin: 0 0 4px; }
-  .pricelist-hero p { margin: 0; color: #f8ecff; font-size: 14px; }
+  .pricelist-hero h1 { color: #d3bd75; font-family:"Playfair Display", Georgia, serif; font-size: 30px; margin: 0 0 4px; }
+  .pricelist-hero p { margin: 0; color: #f5ead3; font-size: 14px; }
   .pricelist-hero-copy { min-width: 0; }
   .pricelist-hero-media {
     aspect-ratio: 1.9 / 1;
-    border-radius: 8px;
+    background: rgba(244,238,226,.08);
+    border: 1px solid rgba(201,179,109,.65);
+    border-radius: 0;
     max-width: 420px;
     object-fit: cover;
     width: min(420px, 38vw);
   }
   .pricelist-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .pricelist-note {
-    background: #fff;
-    border: 1px solid #eadfd2;
-    border-radius: 8px;
+    background: #fffaf2;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     padding: 10px 14px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px 16px;
     font-size: 13px;
-    color: #51475a;
+    color: #344154;
     margin-bottom: 14px;
   }
   .pricelist-shell {
-    background: #fff;
-    border: 1px solid #eadfd2;
-    border-radius: 8px;
+    background: #fffaf2;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     overflow: hidden;
   }
   .pricelist-search {
     align-items: center;
     background: #fff;
-    border: 1px solid #eadfd2;
-    border-radius: 8px;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     display: flex;
     gap: 10px;
     margin-bottom: 14px;
     padding: 10px 12px;
   }
   .pricelist-search label {
-    color: #4b185f;
+    color: #0b2341;
     font-size: 12px;
     font-weight: 800;
     margin: 0;
@@ -119,21 +124,21 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     white-space: nowrap;
   }
   .pricelist-search input {
-    border: 1px solid #decbe7;
-    border-radius: 6px;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     flex: 1;
     min-width: 0;
     padding: 9px 10px;
   }
   .pricelist-search-count {
-    color: #6d6270;
+    color: #526071;
     font-size: 12px;
     white-space: nowrap;
   }
   .pricelist-filter-panel {
-    background: #fff;
-    border: 1px solid #eadfd2;
-    border-radius: 8px;
+    background: #fffaf2;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
     margin-bottom: 14px;
     padding: 14px;
   }
@@ -143,22 +148,22 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     grid-template-columns: 1.3fr 1fr 1fr 1fr;
   }
   .pricelist-filter-panel label {
-    color: #4b185f;
+    color: #0b2341;
     display: block;
     font-size: 12px;
     font-weight: 800;
     margin-bottom: 5px;
     text-transform: uppercase;
   }
-  .pricelist-filter-panel .form-control { border-color: #decbe7; border-radius: 6px; font-size: 13px; }
+  .pricelist-filter-panel .form-control { border-color: #d9c98a; border-radius: 0; font-size: 13px; }
   .pricelist-filter-panel select[multiple] { min-height: 92px; }
   .pricelist-filter-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
   .pricelist-mini-fields { display: grid; gap: 8px; grid-template-columns: 1fr; }
-  .pricelist-table { margin: 0; color: #2c2926; font-size: 13px; }
+  .pricelist-table { margin: 0; color: #1d293c; font-size: 13px; }
   .pricelist-table thead th {
-    background: #f0e8f4;
-    border-bottom: 1px solid #decbe7;
-    color: #4b185f;
+    background: #0b2341;
+    border-bottom: 1px solid #c9b36d;
+    color: #d3bd75;
     font-size: 12px;
     letter-spacing: .02em;
     padding: 8px 10px;
@@ -170,8 +175,8 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   .pricelist-table td { border-top: 1px solid #f0ebe4; padding: 6px 10px; vertical-align: middle; }
   .pricelist-table tbody tr:hover td { background: #fffaf2; }
   .pricelist-category td {
-    background: #5b1178 !important;
-    color: #fcb42f;
+    background: #102f52 !important;
+    color: #d3bd75;
     font-weight: 800;
     padding: 7px 10px;
   }
@@ -190,7 +195,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     font-size: 11px;
     font-weight: 700;
   }
-  .pricelist-category-sort span { color: #f9e7ff; }
+  .pricelist-category-sort span { color: #f5ead3; }
   .pricelist-category-sort .pricelist-sort-link {
     background: rgba(255,255,255,.12);
     border: 1px solid rgba(255,255,255,.22);
@@ -198,8 +203,8 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     padding: 3px 7px;
   }
   .pricelist-category-sort .pricelist-sort-link:hover {
-    background: #fcb42f;
-    color: #2d1739;
+    background: #d3bd75;
+    color: #0b2341;
     text-decoration: none;
   }
   .pricelist-group-row td {
@@ -221,9 +226,10 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   }
   .pricelist-group-icon {
     align-items: center;
-    background: #f0e8f4;
-    border-radius: 50%;
-    color: #5b1178;
+    background: #f4eee2;
+    border: 1px solid #d9c98a;
+    border-radius: 0;
+    color: #0b2341;
     display: inline-flex;
     font-weight: 900;
     height: 22px;
@@ -231,13 +237,13 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
     width: 22px;
   }
   .pricelist-group-title { font-weight: 800; min-width: 0; }
-  .pricelist-group-range { color: #5b1178; font-weight: 900; white-space: nowrap; }
+  .pricelist-group-range { color: #0b2341; font-weight: 900; white-space: nowrap; }
   .pricelist-group-count { color: #6d6270; font-size: 12px; white-space: nowrap; }
   .pricelist-size-row[hidden] { display: none !important; }
   .pricelist-size-row td:first-child { padding-left: 38px; }
   .product-link { color: #2c2926; font-weight: 700; text-decoration: none; }
   .product-link:hover { color: #28364B; }
-  .price-cell { color: #5b1178; font-weight: 800; white-space: nowrap; }
+  .price-cell { color: #0b2341; font-weight: 800; white-space: nowrap; }
   .price-cell del { color: #8a7d8f; display: block; font-size: 11px; font-weight: 600; margin-bottom: 1px; }
   .price-cell .sale-price { color: #1d7d38; display: inline-block; }
   .price-cell .saving-pill {
@@ -256,7 +262,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
   .valid-cell .special-until { color: #9b2b19; font-weight: 700; }
   .id-cell, .size-cell { color: #6d6270; white-space: nowrap; }
   .cart-cell { text-align: center; width: 52px; }
-  .cart-cell a { color: #5b1178; font-size: 18px; }
+  .cart-cell a { color: #0b2341; font-size: 18px; }
   .pricelist-footnote {
     color: #6d6270;
     font-size: 12px;
@@ -299,7 +305,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
         <h1>Sir Francis Pricelist</h1>
         <p><?= number_format($productCount) ?> products | Valid for <?= cbPricelistText($validMonth) ?> | Updated <?= cbPricelistText($updatedAt) ?></p>
       </div>
-      <img class="pricelist-hero-media no-print" src="https://www.fishgelatine.co.za/v2/assets/img/pricelist.jpg" alt="Sir Francis pricelist product range" loading="lazy">
+      <img class="pricelist-hero-media no-print" src="<?= cbPricelistText($pricelistHeroImage) ?>" alt="Sir Francis pricelist product range" loading="lazy"<?= sfSiteEditableImageAttrs('pricelist.hero') ?>>
       <div class="pricelist-actions no-print">
         <a href="<?= cbPricelistText($whatsappPricelistUrl) ?>" class="btn btn-success"><i class="fab fa-whatsapp mr-1"></i> WhatsApp pricelist</a>
         <a href="<?= cbPricelistText($printPricelistUrl) ?>" class="btn btn-warning" target="_blank" rel="noopener noreferrer"><i class="fas fa-print mr-1"></i> Print / Save PDF</a>
@@ -481,7 +487,7 @@ function cbPricelistCategorySortControls($currentSort, $currentDirection) {
       WhatsApp or email your order for an invoice, or checkout online for specials and convenience.
       Stock is subject to availability. Personalized/custom orders usually require 3-7 days.
       Prices are intended for <?= cbPricelistText($validMonth) ?>, but may change without notice due to stock refills, supplier changes, and seasonal availability.
-      View the latest list at www.fishgelatine.co.za/pricelist.
+      View the latest list at sirfrancis.co.za/pricelist.
     </p>
   </div>
 </main>
