@@ -63,6 +63,11 @@ if (!function_exists('cbAdminHelpContent')) {
                 'body' => 'Enable at least one shipping or collection method. Delivery prices, free shipping rules and the Maps API all affect checkout.',
                 'links' => [['Contact Info', 'manage_website_information'], ['Checkout', '../checkout']],
             ],
+            'editor_settings' => [
+                'title' => 'Editor Settings helper',
+                'body' => 'TinyMCE is the rich text editor used for formatted admin content fields. Save the TinyMCE API key here when the editor shows API key warnings or when the key changes in your TinyMCE account.',
+                'links' => [['Contact Info', 'manage_website_information'], ['Admin Sitemap', 'index']],
+            ],
             'site_flags' => [
                 'title' => 'Site notices helper',
                 'body' => 'Use this for shop closure, delayed processing, holidays, stocktake, or maintenance. Leave dates blank when a notice should stay active until manually paused.',

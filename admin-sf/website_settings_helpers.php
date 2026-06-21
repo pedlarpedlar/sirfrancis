@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../product_sheet_helpers.php';
 
+if (!defined('SF_DEFAULT_TINYMCE_API_KEY')) {
+    define('SF_DEFAULT_TINYMCE_API_KEY', 'uf9ixo1olhq0m9yx1bgn5opvoxzqfqit0qeagiiuwofx9xdz');
+}
+
 if (!function_exists('cbWebsiteSettingsEnsureColumns')) {
     function cbWebsiteSettingsEnsureColumns($conn) {
         $columns = [
@@ -12,6 +16,7 @@ if (!function_exists('cbWebsiteSettingsEnsureColumns')) {
             'contact_recaptcha_type' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_type VARCHAR(20) NOT NULL DEFAULT 'v3'",
             'contact_recaptcha_site_key' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_site_key VARCHAR(255) NULL",
             'contact_recaptcha_secret_key' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_secret_key VARCHAR(255) NULL",
+            'tinymce_api_key' => "ALTER TABLE admin_website_settings ADD COLUMN tinymce_api_key VARCHAR(255) NULL",
             'free_shipping_amount' => "ALTER TABLE admin_website_settings ADD COLUMN free_shipping_amount DECIMAL(10,2) NULL DEFAULT 0",
         ];
         foreach ($columns as $column => $alterSql) {

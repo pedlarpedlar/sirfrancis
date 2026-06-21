@@ -168,12 +168,13 @@ function cbAdminMenuActive($page, $currentPage) {
           </li>
           <li><a href="recipe">Recipe Corner</a></li>
           <li>
-            <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha', 'site_flags'], $adminCurrentPage) ?>>
+            <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha', 'editor_settings', 'site_flags'], $adminCurrentPage) ?>>
               <summary>Website Settings</summary>
               <ul>
                 <li><a href="manage_website_information">Contact Info</a></li>
                 <li><a href="shipping_settings">Shipping</a></li>
                 <li><a href="google_recaptcha">Google reCAPTCHA</a></li>
+                <li><a href="editor_settings">Editor Settings</a></li>
                 <li><a href="site_flags">Site Notices</a></li>
               </ul>
             </details>
@@ -250,12 +251,13 @@ function cbAdminMenuActive($page, $currentPage) {
       </li>
       <li><a href="recipe"<?= cbAdminMenuActive('recipe', $adminCurrentPage) ?>>Recipe Corner</a></li>
       <li>
-        <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha', 'site_flags'], $adminCurrentPage) ?>>
+        <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_recaptcha', 'editor_settings', 'site_flags'], $adminCurrentPage) ?>>
           <summary>Website Settings</summary>
           <ul>
             <li><a href="manage_website_information">Contact Info</a></li>
             <li><a href="shipping_settings">Shipping</a></li>
             <li><a href="google_recaptcha">Google reCAPTCHA</a></li>
+            <li><a href="editor_settings"<?= cbAdminMenuActive('editor_settings', $adminCurrentPage) ?>>Editor Settings</a></li>
             <li><a href="site_flags"<?= cbAdminMenuActive('site_flags', $adminCurrentPage) ?>>Site Notices</a></li>
           </ul>
         </details>

@@ -61,6 +61,7 @@ if (!isset($_SESSION['admin_id'])) {
 
 include __DIR__ . '/dbh.inc.php';
 require_once __DIR__ . '/../product_sheet_helpers.php';
+require_once __DIR__ . '/website_settings_helpers.php';
 
 function cbSettingsColumnExists($conn, $column) {
     $safeColumn = $conn->real_escape_string($column);
@@ -113,6 +114,7 @@ try {
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_type', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_type VARCHAR(20) NOT NULL DEFAULT 'v3'");
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_site_key', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_site_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_secret_key', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_secret_key VARCHAR(255) NULL");
+    cbSettingsEnsureColumn($conn, 'tinymce_api_key', "ALTER TABLE admin_website_settings ADD COLUMN tinymce_api_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'category_display_order', "ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
 
     $settingsId = 1;
@@ -129,6 +131,7 @@ try {
     $isContactSave = in_array($settingsSection, ['all', 'contact'], true);
     $isShippingSave = in_array($settingsSection, ['all', 'shipping'], true);
     $isRecaptchaSave = in_array($settingsSection, ['all', 'recaptcha'], true);
+    $isEditorSave = in_array($settingsSection, ['all', 'editor'], true);
     $postedOrExisting = static function($field, $default = '') use ($existingSettings) {
         return array_key_exists($field, $_POST) ? trim((string) $_POST[$field]) : (string) ($existingSettings[$field] ?? $default);
     };
@@ -145,6 +148,7 @@ try {
     $contact_recaptcha_type = $isRecaptchaSave ? (in_array($_POST['contact_recaptcha_type'] ?? 'v3', ['v3', 'v2_checkbox'], true) ? $_POST['contact_recaptcha_type'] : 'v3') : (string) ($existingSettings['contact_recaptcha_type'] ?? 'v3');
     $contact_recaptcha_site_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_site_key') : (string) ($existingSettings['contact_recaptcha_site_key'] ?? '');
     $contact_recaptcha_secret_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_secret_key') : (string) ($existingSettings['contact_recaptcha_secret_key'] ?? '');
+    $tinymce_api_key = $isEditorSave ? $postedOrExisting('tinymce_api_key', SF_DEFAULT_TINYMCE_API_KEY) : (string) ($existingSettings['tinymce_api_key'] ?? '');
     if ($isShippingSave && array_key_exists('default_unit_weight_g', $_POST)) {
         $default_unit_weight_kg = ((float) str_replace(',', '.', (string) $_POST['default_unit_weight_g'])) / 1000;
     } else {
@@ -214,6 +218,7 @@ try {
                             contact_recaptcha_type = ?,
                             contact_recaptcha_site_key = ?,
                             contact_recaptcha_secret_key = ?,
+                            tinymce_api_key = ?,
                             banking_details = ?,
                             website_company_name = ?,
                             support_email = ?,
@@ -226,7 +231,7 @@ try {
         throw new RuntimeException("Could not prepare the website settings update: " . $conn->error);
     }
 
-    $stmt->bind_param("ssssssssisssssssdsi", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order, $settingsId);
+    $stmt->bind_param("ssssssssissssssssdsi", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order, $settingsId);
     if (!$stmt->execute()) {
         throw new RuntimeException("Could not save website settings: " . $stmt->error);
     }
@@ -234,11 +239,11 @@ try {
     $stmt->close();
 
     if ($changedRows === 0 && !$hasSettingsRow) {
-        $insert = $conn->prepare("INSERT INTO admin_website_settings (tel, hotline, email_1, email_2, address, headquarters, free_shipping_amount, google_maps_api_key, contact_recaptcha_enabled, contact_recaptcha_type, contact_recaptcha_site_key, contact_recaptcha_secret_key, banking_details, website_company_name, support_email, shipping_rates_json, default_unit_weight_kg, category_display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert = $conn->prepare("INSERT INTO admin_website_settings (tel, hotline, email_1, email_2, address, headquarters, free_shipping_amount, google_maps_api_key, contact_recaptcha_enabled, contact_recaptcha_type, contact_recaptcha_site_key, contact_recaptcha_secret_key, tinymce_api_key, banking_details, website_company_name, support_email, shipping_rates_json, default_unit_weight_kg, category_display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if (!$insert) {
             throw new RuntimeException("Could not prepare the website settings insert: " . $conn->error);
         }
-        $insert->bind_param("ssssssssisssssssds", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order);
+        $insert->bind_param("ssssssssissssssssds", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order);
         if (!$insert->execute()) {
             throw new RuntimeException("Could not create website settings: " . $insert->error);
         }
