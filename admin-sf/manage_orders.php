@@ -195,12 +195,12 @@ include 'page_menues.php';
     .orders-table { table-layout: fixed; }
     .orders-table th, .orders-table td { font-size: 13px; vertical-align: middle; }
     .orders-table th:nth-child(1) { width: 10%; }
-    .orders-table th:nth-child(2) { width: 25%; }
+    .orders-table th:nth-child(2) { width: 23%; }
     .orders-table th:nth-child(3) { width: 14%; }
     .orders-table th:nth-child(4) { width: 11%; }
     .orders-table th:nth-child(5) { width: 13%; }
-    .orders-table th:nth-child(6) { width: 15%; }
-    .orders-table th:nth-child(7) { width: 12%; }
+    .orders-table th:nth-child(6) { width: 13%; }
+    .orders-table th:nth-child(7) { width: 16%; }
     .orders-table th.sortable { cursor: pointer; user-select: none; }
     .orders-table th.sortable:hover { color: #28364B; }
     .status-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; }
@@ -215,9 +215,63 @@ include 'page_menues.php';
     .status-cancelled { background: #ffe4e4; color: #9f1d1d; }
     .payment-pill { display: inline-flex; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 800; background: #f4f1ed; color: #675c69; }
     .payment-paid { background: #e3f8e8; color: #186f33; }
-    .order-action-row { display: none; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .order-action-row { display: none; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
     .order-action-row.is-open { display: flex; }
     .order-action-row .btn { white-space: nowrap; }
+    .order-icon-btn {
+        align-items: center;
+        border: 3px double currentColor !important;
+        border-radius: 0 !important;
+        display: inline-flex;
+        font-size: 14px;
+        height: 34px;
+        justify-content: center;
+        line-height: 1;
+        min-width: 34px;
+        padding: 0 !important;
+    }
+    .order-icon-btn i { pointer-events: none; }
+    .order-action-toggle {
+        background: #fff !important;
+        color: #28364B !important;
+    }
+    .order-action-view {
+        background: #eef4ff !important;
+        color: #1d4f91 !important;
+    }
+    .order-action-edit {
+        background: #28364B !important;
+        color: #fff !important;
+    }
+    .order-action-copy {
+        background: #fff7df !important;
+        color: #8a6400 !important;
+    }
+    .order-action-paid {
+        background: #e5f8ec !important;
+        color: #1d7a3a !important;
+    }
+    .order-action-update {
+        background: #e5f6f7 !important;
+        color: #116177 !important;
+    }
+    .order-action-resend {
+        background: #f7f1e4 !important;
+        color: #7a5b14 !important;
+    }
+    .order-action-cancel {
+        background: #fff1e8 !important;
+        color: #a94608 !important;
+    }
+    .order-action-delete {
+        background: #ffe8e8 !important;
+        color: #a51f1f !important;
+    }
+    .order-icon-btn:hover,
+    .order-icon-btn:focus {
+        background: #28364B !important;
+        color: #CEBD88 !important;
+    }
     .order-details-row { display: none; }
     .order-details-row.is-open { display: table-row; }
     .order-details-panel { background: #fbf8f3; border: 1px solid var(--sf-border); border-radius: 8px; padding: 12px; }
@@ -238,7 +292,7 @@ include 'page_menues.php';
     }
     @media (max-width: 575px) {
         .order-stats { grid-template-columns: 1fr; }
-        .orders-actions .btn, .order-action-row .btn { width: 100%; }
+        .orders-actions .btn { width: 100%; }
     }
 </style>
 
@@ -327,33 +381,38 @@ include 'page_menues.php';
                         </td>
                         <td><?= cbOrderText($order['order_date']) ?></td>
                         <td>
-                            <button class="btn btn-outline-primary btn-sm order-action-toggle" type="button">Open actions</button>
+                            <button class="btn btn-sm order-icon-btn order-action-toggle" type="button" title="Open order actions" aria-label="Open order actions" data-toggle="tooltip" data-placement="top">
+                                <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
                             <div class="order-action-row">
-                                <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
-                                <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
-                                <a class="btn btn-outline-secondary btn-sm" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');">Copy Order</a>
+                                <a class="btn btn-sm order-icon-btn order-action-view" href="order_details?order_id=<?= urlencode($order['order_id']) ?>" title="View order details" aria-label="View order details" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                                <a class="btn btn-sm order-icon-btn order-action-edit" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>" title="Edit cart items and quantities" aria-label="Edit cart items and quantities" data-toggle="tooltip" data-placement="top"><i class="fas fa-shopping-cart" aria-hidden="true"></i></a>
+                                <a class="btn btn-sm order-icon-btn order-action-copy" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');" title="Copy order into a new draft" aria-label="Copy order into a new draft" data-toggle="tooltip" data-placement="top"><i class="fas fa-copy" aria-hidden="true"></i></a>
                                 <?php if ((int) $order['payment_status'] === 0): ?>
-                                    <button class="btn btn-success btn-sm mark-paid-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Mark Paid</button>
+                                    <button class="btn btn-sm order-icon-btn order-action-paid mark-paid-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>" title="Mark order as paid" aria-label="Mark order as paid" data-toggle="tooltip" data-placement="top"><i class="fas fa-money-check-alt" aria-hidden="true"></i></button>
                                 <?php endif; ?>
-                                <button class="btn btn-dark btn-sm order-status-btn" type="button"
+                                <button class="btn btn-sm order-icon-btn order-action-update order-status-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-current-status="<?= cbOrderText($status) ?>"
                                     data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
-                                    data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
-                                    Update Client
+                                    data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>"
+                                    title="Update status and optionally email client" aria-label="Update status and optionally email client" data-toggle="tooltip" data-placement="top">
+                                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-outline-success btn-sm resend-order-email-btn" type="button"
+                                <button class="btn btn-sm order-icon-btn order-action-resend resend-order-email-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
-                                    data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
-                                    Resend Email
+                                    data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
+                                    title="Resend order confirmation email" aria-label="Resend order confirmation email" data-toggle="tooltip" data-placement="top">
+                                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
+                                <button class="btn btn-sm order-icon-btn order-action-cancel cancel-order-btn" type="button"
                                     data-order-id="<?= cbOrderText($order['order_id']) ?>"
                                     data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
-                                    data-paid="<?= ((int) $order['payment_status'] > 0) ? '1' : '0' ?>">
-                                    Cancel
+                                    data-paid="<?= ((int) $order['payment_status'] > 0) ? '1' : '0' ?>"
+                                    title="Cancel order and record reason" aria-label="Cancel order and record reason" data-toggle="tooltip" data-placement="top">
+                                    <i class="fas fa-ban" aria-hidden="true"></i>
                                 </button>
-                                <button class="btn btn-outline-danger btn-sm delete-order" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Delete</button>
+                                <button class="btn btn-sm order-icon-btn order-action-delete delete-order" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>" title="Delete order permanently" aria-label="Delete order permanently" data-toggle="tooltip" data-placement="top"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -380,28 +439,34 @@ include 'page_menues.php';
                         <span class="payment-pill <?= ((int) $order['payment_status'] > 0) ? 'payment-paid' : '' ?>"><?= ((int) $order['payment_status'] > 0) ? 'Paid' : 'Unpaid' ?></span>
                     </p>
                     <div class="order-action-row">
-                        <a class="btn btn-outline-primary btn-sm" href="order_details?order_id=<?= urlencode($order['order_id']) ?>">View</a>
-                        <a class="btn btn-dark btn-sm" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>">Edit Cart</a>
-                        <a class="btn btn-outline-secondary btn-sm" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');">Copy Order</a>
-                        <button class="btn btn-dark btn-sm order-status-btn" type="button"
+                        <a class="btn btn-sm order-icon-btn order-action-view" href="order_details?order_id=<?= urlencode($order['order_id']) ?>" title="View order details" aria-label="View order details" data-toggle="tooltip" data-placement="top"><i class="fas fa-eye" aria-hidden="true"></i></a>
+                        <a class="btn btn-sm order-icon-btn order-action-edit" href="manage_order?order_id=<?= urlencode($order['order_id']) ?>" title="Edit cart items and quantities" aria-label="Edit cart items and quantities" data-toggle="tooltip" data-placement="top"><i class="fas fa-shopping-cart" aria-hidden="true"></i></a>
+                        <a class="btn btn-sm order-icon-btn order-action-copy" href="copy_order?order_id=<?= urlencode($order['order_id']) ?>" onclick="return confirm('Copy this order into a new unpaid draft order?');" title="Copy order into a new draft" aria-label="Copy order into a new draft" data-toggle="tooltip" data-placement="top"><i class="fas fa-copy" aria-hidden="true"></i></a>
+                        <?php if ((int) $order['payment_status'] === 0): ?>
+                            <button class="btn btn-sm order-icon-btn order-action-paid mark-paid-btn" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>" title="Mark order as paid" aria-label="Mark order as paid" data-toggle="tooltip" data-placement="top"><i class="fas fa-money-check-alt" aria-hidden="true"></i></button>
+                        <?php endif; ?>
+                        <button class="btn btn-sm order-icon-btn order-action-update order-status-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-current-status="<?= cbOrderText($status) ?>"
                             data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
-                            data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>">
-                            Update Client
+                            data-total="<?= cbOrderText(number_format((float) $order['grand_total_amount'], 2, '.', '')) ?>"
+                            title="Update status and optionally email client" aria-label="Update status and optionally email client" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-outline-success btn-sm resend-order-email-btn" type="button"
+                        <button class="btn btn-sm order-icon-btn order-action-resend resend-order-email-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
-                            data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>">
-                            Resend Email
+                            data-customer="<?= cbOrderText(trim($order['customer_name']) ?: 'customer') ?>"
+                            title="Resend order confirmation email" aria-label="Resend order confirmation email" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-outline-danger btn-sm cancel-order-btn" type="button"
+                        <button class="btn btn-sm order-icon-btn order-action-cancel cancel-order-btn" type="button"
                             data-order-id="<?= cbOrderText($order['order_id']) ?>"
                             data-total="<?= cbOrderText($order['grand_total_amount']) ?>"
-                            data-paid="<?= ((int) $order['payment_status'] > 0) ? '1' : '0' ?>">
-                            Cancel
+                            data-paid="<?= ((int) $order['payment_status'] > 0) ? '1' : '0' ?>"
+                            title="Cancel order and record reason" aria-label="Cancel order and record reason" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-ban" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-outline-danger btn-sm delete-order" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>">Delete</button>
+                        <button class="btn btn-sm order-icon-btn order-action-delete delete-order" type="button" data-order-id="<?= cbOrderText($order['order_id']) ?>" title="Delete order permanently" aria-label="Delete order permanently" data-toggle="tooltip" data-placement="top"><i class="fas fa-trash-alt" aria-hidden="true"></i></button>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -566,9 +631,9 @@ function ajaxMessage(xhr, fallback) {
 function setButtonWorking($button, isWorking, text) {
     if (!$button.length) return;
     if (isWorking) {
-        $button.data('original-text', $button.text()).prop('disabled', true).text(text || 'Working...');
+        $button.data('original-html', $button.html()).prop('disabled', true).html(text || 'Working...');
     } else {
-        $button.prop('disabled', false).text($button.data('original-text') || $button.text());
+        $button.prop('disabled', false).html($button.data('original-html') || $button.html());
     }
 }
 
@@ -594,19 +659,33 @@ function filterOrders() {
         row.toggle(matchesSearch && matchesStatus);
         if (!matchesSearch || !matchesStatus) {
             row.find('.order-action-row').removeClass('is-open');
-            row.find('.order-action-toggle').text('Open actions');
+            row.find('.order-action-toggle')
+                .attr('title', 'Open order actions')
+                .attr('aria-label', 'Open order actions')
+                .html('<i class="fas fa-ellipsis-h" aria-hidden="true"></i>');
         }
     });
 }
 
 $(function() {
+    if ($.fn.tooltip) {
+        $('[data-toggle="tooltip"]').tooltip({ container: 'body', trigger: 'hover focus' });
+    }
+
     $('#orderSearch, #statusFilter').on('input change', filterOrders);
 
     $('body').on('click', '.order-action-toggle', function() {
         var $button = $(this);
         var $actions = $button.siblings('.order-action-row');
         var isOpen = $actions.toggleClass('is-open').hasClass('is-open');
-        $button.text(isOpen ? 'Close actions' : 'Open actions');
+        var label = isOpen ? 'Close order actions' : 'Open order actions';
+        $button
+            .attr('title', label)
+            .attr('aria-label', label)
+            .html(isOpen ? '<i class="fas fa-times" aria-hidden="true"></i>' : '<i class="fas fa-ellipsis-h" aria-hidden="true"></i>');
+        if ($.fn.tooltip) {
+            $button.tooltip('dispose').tooltip({ container: 'body', trigger: 'hover focus' });
+        }
     });
 
     var orderSortState = { key: 'date', dir: 'desc' };
