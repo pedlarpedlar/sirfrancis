@@ -306,7 +306,7 @@ foreach ($order as $item) {
                 <img src="' . $image_url . '" width="50px" alt="item image"/>
             </td>
             <td style="width:50%; padding: 10px; border: 1px solid #ccc;">
-                <a href="' . htmlspecialchars(sirFrancisSiteUrl('product?id=' . rawurlencode((string) $productId)), ENT_QUOTES, 'UTF-8') . '">' . $product_title . '</a>
+                <a href="' . htmlspecialchars(sirFrancisSiteUrl('product-' . rawurlencode((string) $productId)), ENT_QUOTES, 'UTF-8') . '">' . $product_title . '</a>
             </td>
             <td style="width:10%; padding: 10px; border: 1px solid #ccc;">' . $quantity . '</td>
             <td style="width:25%; padding: 10px; border: 1px solid #ccc;">' . $emailPriceHtml . '</td>

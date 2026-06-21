@@ -18,7 +18,9 @@ function candybirdSendReviewAdminEmail($sheetProduct, $productId, $reviewId, $di
     $productTitle = function_exists('getSheetProductDisplayTitle')
         ? getSheetProductDisplayTitle($sheetProduct)
         : trim(($sheetProduct['name'] ?? 'Product') . ' ' . ($sheetProduct['size'] ?? ''));
-    $productUrl = 'https://www.fishgelatine.co.za/v2/product?id=' . rawurlencode((string) $productId) . '#pills-contact';
+    $productUrl = function_exists('getSheetProductUrl')
+        ? getSheetProductUrl($sheetProduct, true) . '#pills-contact'
+        : 'https://sirfrancis.co.za/product-' . rawurlencode((string) $productId) . '#pills-contact';
 
     try {
         $mail = new PHPMailer(true);

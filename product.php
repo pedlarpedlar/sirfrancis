@@ -1133,10 +1133,7 @@ $(function() {
     const product = ALL_PRODUCTS.map(normalizeProduct).find(function(item) {
       return item.id === String(productId);
     });
-    if (product && product.slug) {
-      return 'https://sirfrancis.co.za/' + encodeURIComponent(product.slug);
-    }
-    return 'https://sirfrancis.co.za/product?id=' + encodeURIComponent(productId);
+    return 'https://sirfrancis.co.za/' + getProductPath(product || { id: productId });
   }
 
   function getProductPath(product) {
@@ -1152,7 +1149,7 @@ $(function() {
       if (slug) return encodeURIComponent(slug);
     }
 
-    return product ? 'product?id=' + encodeURIComponent(product.id) : 'products';
+    return product && product.id ? 'product-' + encodeURIComponent(product.id) : 'products';
   }
 
   function convertToStars(rating) {
@@ -1197,7 +1194,7 @@ $(function() {
 
     [product.parentCategory, product.childCategory1, product.childCategory2].filter(Boolean).forEach(function(category) {
       const categorySlug = String(category).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-      crumbs.push('<li class="breadcrumb-item"><a href="' + (categorySlug || ('products?category=' + encodeURIComponent(category))) + '">' + escapeHtml(category) + '</a></li>');
+      crumbs.push('<li class="breadcrumb-item"><a href="' + (categorySlug || 'products') + '">' + escapeHtml(category) + '</a></li>');
     });
 
     crumbs.push('<li class="breadcrumb-item active" aria-current="page">' + escapeHtml(displayTitle(product)) + '</li>');

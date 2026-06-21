@@ -600,7 +600,8 @@ function generateProductsBreadcrumbsFromSheet($products, $selectedCategory = nul
             $pathAccum = [];
             foreach ($categoryPath as $catName) {
                 $pathAccum[] = $catName;
-                $breadcrumbs[] = '<li class="breadcrumb-item"><a href="' . htmlspecialchars(function_exists('getCandybirdCategoryUrl') ? getCandybirdCategoryUrl($catName) : ('products?category=' . urlencode($catName)), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($catName) . '</a></li>';
+                $fallbackCategorySlug = function_exists('normalizeCandybirdProductSlug') ? normalizeCandybirdProductSlug($catName) : strtolower(preg_replace('/[^a-z0-9]+/i', '-', $catName));
+                $breadcrumbs[] = '<li class="breadcrumb-item"><a href="' . htmlspecialchars(function_exists('getCandybirdCategoryUrl') ? getCandybirdCategoryUrl($catName) : ($fallbackCategorySlug ?: 'products'), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($catName) . '</a></li>';
             }
         } else {
             // If category not found, still display it
@@ -917,7 +918,7 @@ function getCategoryPath(category) {
   const labelSlug = slugifyCategory(getCategoryLabel(category));
   const sourceSlug = slugifyCategory(category);
   if (sourceSlug === 'specials' || labelSlug === 'specials') return 'specials';
-  return labelSlug || sourceSlug || `products?category=${encodeURIComponent(category)}`;
+  return labelSlug || sourceSlug || 'products';
 }
 
 function sortCategoryNames(names) {
@@ -1148,7 +1149,7 @@ function getProductPath(product) {
     if (slug) return encodeURIComponent(slug);
   }
 
-  return product ? `product?id=${encodeURIComponent(product.id)}` : 'products';
+  return product && product.id ? `product-${encodeURIComponent(product.id)}` : 'products';
 }
 
 $(document).on('click', '.category-toggle', function () {
@@ -2063,6 +2064,7 @@ function updateModal(productData) {
     
     var productTitle = productData.title;
     var productId = productData.id;
+    var productShareUrl = 'https://sirfrancis.co.za/' + getProductPath(productData);
     var productCategory = productData.category_name;
     var quickStockNumber = getStockNumber(productData);
     var quickSoldOut = quickStockNumber !== null && quickStockNumber <= 0;
@@ -2072,7 +2074,8 @@ function updateModal(productData) {
 
     // Generate breadcrumb HTML
     let categoryLinksHtml = categories.map(cat => {
-        return `<a href="products?category=${encodeURIComponent(cat)}">${cat}</a>`;
+        const categorySlug = String(cat || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        return `<a href="${categorySlug || 'products'}">${cat}</a>`;
     }).join(' > ');
 
     // Append product title at the end
@@ -2149,17 +2152,17 @@ function updateModal(productData) {
           <ul class="d-flex align-items-center">
             <li class="share">Share</li>
             <li>
-              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=https://sirfrancis.co.za/product?id=${productId}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
+              <a class="share-link-click" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productShareUrl)}" target="_blank" rel="noopener noreferrer"><i class="ion-social-facebook"></i></a>
             </li>
             <li>
-              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=https://sirfrancis.co.za/product?id=${productId}&text=View this Sir Francis product" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
+              <a class="share-link-click" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(productShareUrl)}&text=View this Sir Francis product" target="_blank" rel="noopener noreferrer"><i class="ion-social-twitter"></i></a>
             </li>
             <li>
               <a target="_blank" class="share-link-click" href="https://www.pinterest.com/pin/create/button/"
                data-pin-do="buttonBookmark"
                data-pin-custom="true"
                data-pin-save="true"
-               data-pin-url="https://sirfrancis.co.za/product?id=${productId}"
+               data-pin-url="${productShareUrl}"
                data-pin-media="${product_url_og}"
                >
                <i class="ion-social-pinterest"></i>

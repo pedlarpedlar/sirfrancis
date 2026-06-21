@@ -28,24 +28,24 @@ function outputUrl($loc, $changefreq, $priority) {
     echo '</url>';
 }
 
-outputUrl('https://www.fishgelatine.co.za/v2/', 'weekly', '1.0');
-outputUrl('https://www.fishgelatine.co.za/v2/products', 'daily', '0.8');
-outputUrl('https://www.fishgelatine.co.za/v2/contact', 'monthly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/about', 'monthly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/gifting', 'weekly', '0.7');
-outputUrl('https://www.fishgelatine.co.za/v2/pricelist', 'weekly', '0.7');
-outputUrl('https://www.fishgelatine.co.za/v2/wholesale-pricelist', 'monthly', '0.6');
-outputUrl('https://www.fishgelatine.co.za/v2/private_labelling', 'monthly', '0.6');
-outputUrl('https://www.fishgelatine.co.za/v2/bulk_ordering', 'monthly', '0.6');
-outputUrl('https://www.fishgelatine.co.za/v2/delivery_policy', 'monthly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/return_policy', 'monthly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/policies', 'yearly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/terms', 'yearly', '0.4');
-outputUrl('https://www.fishgelatine.co.za/v2/privacypolicy', 'yearly', '0.4');
-outputUrl('https://www.fishgelatine.co.za/v2/cookie_policy', 'yearly', '0.4');
-outputUrl('https://www.fishgelatine.co.za/v2/bankingdetails', 'yearly', '0.3');
-outputUrl('https://www.fishgelatine.co.za/v2/global-services', 'monthly', '0.5');
-outputUrl('https://www.fishgelatine.co.za/v2/recipes', 'weekly', '0.5');
+outputUrl(sirFrancisSiteUrl('/'), 'weekly', '1.0');
+outputUrl(sirFrancisSiteUrl('products'), 'daily', '0.8');
+outputUrl(sirFrancisSiteUrl('contact'), 'monthly', '0.5');
+outputUrl(sirFrancisSiteUrl('about'), 'monthly', '0.5');
+outputUrl(sirFrancisSiteUrl('gifting'), 'weekly', '0.7');
+outputUrl(sirFrancisSiteUrl('pricelist'), 'weekly', '0.7');
+outputUrl(sirFrancisSiteUrl('wholesale-pricelist'), 'monthly', '0.6');
+outputUrl(sirFrancisSiteUrl('private_labelling'), 'monthly', '0.6');
+outputUrl(sirFrancisSiteUrl('bulk_ordering'), 'monthly', '0.6');
+outputUrl(sirFrancisSiteUrl('delivery_policy'), 'monthly', '0.5');
+outputUrl(sirFrancisSiteUrl('return_policy'), 'monthly', '0.5');
+outputUrl(sirFrancisSiteUrl('policies'), 'yearly', '0.5');
+outputUrl(sirFrancisSiteUrl('terms'), 'yearly', '0.4');
+outputUrl(sirFrancisSiteUrl('privacypolicy'), 'yearly', '0.4');
+outputUrl(sirFrancisSiteUrl('cookie_policy'), 'yearly', '0.4');
+outputUrl(sirFrancisSiteUrl('bankingdetails'), 'yearly', '0.3');
+outputUrl(sirFrancisSiteUrl('global-services'), 'monthly', '0.5');
+outputUrl(sirFrancisSiteUrl('recipes'), 'weekly', '0.5');
 
 $categoryLinks = [];
 $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
@@ -61,7 +61,7 @@ foreach ($products as $product) {
     if ($id !== '') {
         $productUrl = function_exists('getSheetProductUrl')
             ? getSheetProductUrl($product, true)
-            : 'https://www.fishgelatine.co.za/v2/product?id=' . urlencode($id);
+            : sirFrancisSiteUrl('product-' . rawurlencode($id));
         outputUrl($productUrl, 'weekly', '0.6');
     }
 }
@@ -69,7 +69,7 @@ foreach ($products as $product) {
 foreach (array_keys($categoryLinks) as $category) {
     $categoryUrl = function_exists('getCandybirdCategoryUrl')
         ? getCandybirdCategoryUrl($category, true)
-        : 'https://www.fishgelatine.co.za/v2/products?category=' . urlencode($category);
+        : sirFrancisSiteUrl(normalizeCandybirdProductSlug($category) ?: 'products');
     outputUrl($categoryUrl, 'weekly', '0.7');
 }
 
@@ -83,7 +83,7 @@ if (file_exists($recipeFile)) {
     if (isset($blogPosts) && is_array($blogPosts)) {
         foreach ($blogPosts as $post) {
             if (!empty($post['id'])) {
-                outputUrl('https://www.fishgelatine.co.za/v2/recipe?id=' . urlencode($post['id']), 'weekly', '0.6');
+                outputUrl(sirFrancisSiteUrl('recipe?id=' . urlencode($post['id'])), 'weekly', '0.6');
             }
         }
     }

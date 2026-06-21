@@ -205,6 +205,8 @@ if (mysqli_num_rows($result) > 0) {
         $image_url = htmlspecialchars($displaySnapshot['image_url']);
         $productId = htmlspecialchars($item['product_id']);
         $product_title = htmlspecialchars($displaySnapshot['title']);
+        $sheetProduct = getSheetProductById($item['product_id']);
+        $productHref = '../' . ($sheetProduct ? getSheetProductUrl($sheetProduct) : ('product-' . rawurlencode((string) $item['product_id'])));
         $quantity = (float)$item['quantity'];
         $product_price = (float)$displaySnapshot['price'];
         $discount_amount = (float)$displaySnapshot['discount_amount'];
@@ -216,7 +218,7 @@ if (mysqli_num_rows($result) > 0) {
             '<tr>
                 <td>
                     ' . (!empty($image_url) ? '<img class="no-print" src="' . $image_url . '" alt="' . $product_title . '" style="max-width: 50px; max-height: 50px; margin-right: 10px;">' : '<img class="no-print" src="../assets/img/product/1.png" alt="Placeholder Image" style="max-width: 50px; max-height: 50px; margin-right: 10px;">') . '
-                    <a href="../product?id=' . $productId . '">' . $product_title . '</a>
+                    <a href="' . htmlspecialchars($productHref, ENT_QUOTES, 'UTF-8') . '">' . $product_title . '</a>
                 </td>
                 <td>' . $quantity . '</td>
                 <td>' . number_format($product_price, 2) . '</td>

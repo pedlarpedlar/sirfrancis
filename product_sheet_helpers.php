@@ -1508,9 +1508,18 @@ if (!function_exists('getSheetProductSlug')) {
         $size = trim((string) ($product['size'] ?? $product['weight'] ?? ''));
         if (strtolower((string) ($product['is_clearance'] ?? '')) === 'yes') {
             $title = preg_replace('/\bclearance\b/i', '', $title);
-            return normalizeCandybirdProductSlug(trim($title . ' ' . $size . ' clearance'));
+            $clearanceSlug = normalizeCandybirdProductSlug(trim($title . ' ' . $size . ' clearance'));
+            if ($clearanceSlug !== '') {
+                return $clearanceSlug;
+            }
         }
-        return normalizeCandybirdProductSlug(trim($title . ' ' . $size));
+        $generatedSlug = normalizeCandybirdProductSlug(trim($title . ' ' . $size));
+        if ($generatedSlug !== '') {
+            return $generatedSlug;
+        }
+
+        $id = normalizeCandybirdProductSlug($product['id'] ?? '');
+        return $id !== '' ? 'product-' . $id : '';
     }
 }
 
@@ -1538,6 +1547,10 @@ if (!function_exists('getSheetProductBySlug')) {
             }
         }
 
+        if (preg_match('/^product-(\d+)$/', $slug, $matches)) {
+            return getSheetProductById($matches[1]);
+        }
+
         return null;
     }
 }
@@ -1561,7 +1574,7 @@ if (!function_exists('getCandybirdCategoryUrl')) {
         if ($slug === '') {
             $slug = getCandybirdCategorySlug($categoryName);
         }
-        $path = $slug !== '' ? '/' . rawurlencode($slug) : '/products?category=' . rawurlencode((string) $categoryName);
+        $path = $slug !== '' ? '/' . rawurlencode($slug) : '/products';
         return $absolute ? sirFrancisSiteUrl($path) : ltrim($path, '/');
     }
 }
@@ -1610,7 +1623,7 @@ if (!function_exists('getSheetProductUrl')) {
         $slug = getSheetProductSlug($product);
         $path = $slug !== ''
             ? '/' . rawurlencode($slug)
-            : '/product?id=' . rawurlencode((string) ($product['id'] ?? ''));
+            : '/product';
         return $absolute ? sirFrancisSiteUrl($path) : ltrim($path, '/');
     }
 }

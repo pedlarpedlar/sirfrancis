@@ -284,6 +284,7 @@ if (mysqli_num_rows($result) > 0) {
         $productId = htmlspecialchars($item['product_id']);
         $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $fetched_order_date ?? null);
         $sheetProduct = getSheetProductById($item['product_id']);
+        $productHref = $sheetProduct ? getSheetProductUrl($sheetProduct) : ('product-' . rawurlencode((string) $item['product_id']));
         if ($sheetProduct) {
             $fetched_weight_kg += getSheetProductWeightKg($sheetProduct) * (float) ($item['quantity'] ?? 0);
         }
@@ -304,7 +305,7 @@ if (mysqli_num_rows($result) > 0) {
             '<tr>
                 <td>
                     ' . (!empty($image_url) ? '<img class="no-print" src="' . $image_url . '" alt="' . $product_title . '" style="max-width: 50px; max-height: 50px; margin-right: 10px;">' : '<img class="no-print" src="assets/img/product/1.png" alt="Placeholder Image" style="max-width: 50px; max-height: 50px; margin-right: 10px;">') . '
-                    <a href="product?id=' . $productId . '">' . $product_title .'</a>
+                    <a href="' . htmlspecialchars($productHref, ENT_QUOTES, 'UTF-8') . '">' . $product_title .'</a>
                 </td>
                 <td>' . $quantity . '</td>
                 <td>' . $priceDisplay . '</td>

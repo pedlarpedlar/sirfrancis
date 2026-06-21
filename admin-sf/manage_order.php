@@ -89,6 +89,8 @@ foreach ($orderItems as $item) {
     $displaySnapshot = getCandybirdOrderItemDisplaySnapshot($conn, $item, $item['order_date'] ?? null);
     $image_url = $displaySnapshot['image_url'];
     $displayTitle = $displaySnapshot['title'];
+    $sheetProduct = getSheetProductById($item['id']);
+    $productHref = '../' . ($sheetProduct ? getSheetProductUrl($sheetProduct) : ('product-' . rawurlencode((string) $item['id'])));
 
     $price = $displaySnapshot['price'];
     $quantity = $item['quantity'];
@@ -128,7 +130,7 @@ foreach ($orderItems as $item) {
     $cart_table .= '<img src="' . htmlspecialchars($image_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($displayTitle, ENT_QUOTES, 'UTF-8') . '" />';
     $cart_table .= '</th>';
     $cart_table .= '<td>';
-    $cart_table .= '<span class="whish-title"><a href="../product?id=' . $item['id'] . '">' . htmlspecialchars($displayTitle, ENT_QUOTES, 'UTF-8') . '</a></span>';
+    $cart_table .= '<span class="whish-title"><a href="' . htmlspecialchars($productHref, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($displayTitle, ENT_QUOTES, 'UTF-8') . '</a></span>';
     $cart_table .= '</td>';
     $cart_table .= '<td class="text-center">';
     $cart_table .= '<div class="product-count style">';
