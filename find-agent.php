@@ -190,6 +190,10 @@ include 'header.php';
     z-index: 2;
   }
 
+  .sf-agent-map.is-boundary-ready .sf-agent-static-map {
+    display: none;
+  }
+
   .sf-agent-map.is-google-ready .sf-agent-google-map {
     display: block;
   }
@@ -444,6 +448,20 @@ include 'header.php';
   var googleMap = null;
   var agentMarkers = [];
   var activeRegion = 'kwazulu-natal';
+  var regionFeatures = {};
+  var provinceGeoJsonUrl = 'assets/data/south-africa-provinces.geojson';
+  var provinceNameMap = {
+    'Eastern Cape': 'eastern-cape',
+    'Free State': 'free-state',
+    'Gauteng': 'gauteng',
+    'KwaZulu-Natal': 'kwazulu-natal',
+    'Limpopo': 'limpopo',
+    'Mpumalanga': 'mpumalanga',
+    'North West': 'north-west',
+    'Northern Cape': 'northern-cape',
+    'Nothern Cape': 'northern-cape',
+    'Western Cape': 'western-cape'
+  };
 
   function provinceFromCoordinates(lat, lng) {
     if (lat <= -26.8 && lng <= 24.8) return 'western-cape';
@@ -474,6 +492,7 @@ include 'header.php';
     document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent('Agent enquiry - ' + agent.label);
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(agent.query);
     renderCityAgents(agent, selectedCityName);
+    refreshProvinceStyles();
     focusMapOnRegion(region);
   }
 
@@ -527,11 +546,30 @@ include 'header.php';
     googleMap.setZoom(14);
   }
 
+  function fitMapToRegionBoundary(region) {
+    if (!googleMap || !window.google || !google.maps || !regionFeatures[region]) return false;
+    var bounds = new google.maps.LatLngBounds();
+    regionFeatures[region].getGeometry().forEachLatLng(function(latLng) {
+      bounds.extend(latLng);
+    });
+    if (bounds.isEmpty && bounds.isEmpty()) return false;
+    googleMap.fitBounds(bounds);
+    google.maps.event.addListenerOnce(googleMap, 'idle', function() {
+      if (googleMap.getZoom() > 8) {
+        googleMap.setZoom(8);
+      }
+    });
+    return true;
+  }
+
   function focusMapOnRegion(region) {
     if (!googleMap || !window.google || !google.maps) return;
     var agent = agents[region];
     var cities = agent && Array.isArray(agent.city_agents) ? agent.city_agents.filter(hasCoordinates) : [];
-    if (!cities.length) return;
+    if (!cities.length) {
+      fitMapToRegionBoundary(region);
+      return;
+    }
     if (cities.length === 1) {
       focusMapOnCity(cities[0]);
       return;
@@ -560,6 +598,7 @@ include 'header.php';
       clickableIcons: false
     });
     mapNode.parentElement.classList.add('is-google-ready');
+    initProvinceBoundaries(mapNode);
     Object.keys(agents).forEach(function(region) {
       var agent = agents[region];
       var cities = Array.isArray(agent.city_agents) ? agent.city_agents : [];
@@ -579,6 +618,57 @@ include 'header.php';
     });
     focusMapOnRegion(activeRegion);
   };
+
+  function featureRegion(feature) {
+    var provinceName = feature.getProperty('shapeName') || feature.getProperty('name');
+    return provinceNameMap[provinceName] || '';
+  }
+
+  function refreshProvinceStyles() {
+    if (!googleMap || !googleMap.data) return;
+    googleMap.data.setStyle(function(feature) {
+      var region = featureRegion(feature);
+      var isActive = region === activeRegion;
+      return {
+        fillColor: isActive ? '#CEBD88' : '#172235',
+        fillOpacity: isActive ? 0.28 : 0.12,
+        strokeColor: isActive ? '#CEBD88' : '#172235',
+        strokeOpacity: 0.9,
+        strokeWeight: isActive ? 2.4 : 1.4,
+        clickable: true,
+        zIndex: isActive ? 2 : 1
+      };
+    });
+  }
+
+  function initProvinceBoundaries(mapNode) {
+    if (!googleMap || !googleMap.data) return;
+    googleMap.data.loadGeoJson(provinceGeoJsonUrl, null, function(features) {
+      features.forEach(function(feature) {
+        var region = featureRegion(feature);
+        if (region) regionFeatures[region] = feature;
+      });
+      mapNode.parentElement.classList.add('is-boundary-ready');
+      refreshProvinceStyles();
+      focusMapOnRegion(activeRegion);
+    });
+    googleMap.data.addListener('click', function(event) {
+      var region = featureRegion(event.feature);
+      if (region) {
+        setActiveRegion(region);
+      }
+    });
+    googleMap.data.addListener('mouseover', function(event) {
+      googleMap.data.overrideStyle(event.feature, {
+        fillOpacity: 0.34,
+        strokeColor: '#CEBD88',
+        strokeWeight: 2.4
+      });
+    });
+    googleMap.data.addListener('mouseout', function(event) {
+      googleMap.data.revertStyle(event.feature);
+    });
+  }
 
   document.querySelectorAll('[data-region]').forEach(function(item) {
     item.addEventListener('click', function() {
