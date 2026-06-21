@@ -159,6 +159,14 @@ include 'header.php';
     margin-top: 18px;
   }
 
+  .sf-agent-map-tools {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 14px 0 10px;
+  }
+
   .sf-agent-map {
     background: #f7f1df;
     border: 1px solid #d8c895;
@@ -334,6 +342,81 @@ include 'header.php';
     display: block;
   }
 
+  .sf-agent-modal {
+    align-items: center;
+    background: rgba(23, 34, 53, .74);
+    bottom: 0;
+    display: none;
+    justify-content: center;
+    left: 0;
+    padding: 18px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 9999;
+  }
+
+  .sf-agent-modal.is-visible {
+    display: flex;
+  }
+
+  .sf-agent-modal-dialog {
+    background: #fff;
+    border: 3px double #CEBD88;
+    color: #172235;
+    max-height: 86vh;
+    max-width: 720px;
+    overflow: auto;
+    padding: 22px;
+    position: relative;
+    width: min(100%, 720px);
+  }
+
+  .sf-agent-modal-close {
+    background: #172235;
+    border: 3px double #CEBD88;
+    color: #CEBD88;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 900;
+    height: 38px;
+    line-height: 1;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 38px;
+  }
+
+  .sf-agent-modal h2 {
+    color: #172235;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 1.65rem;
+    margin: 0 46px 6px 0;
+  }
+
+  .sf-agent-modal-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .sf-agent-modal-card {
+    border: 1px solid #e3d6bd;
+    padding: 14px;
+  }
+
+  .sf-agent-modal-card h3 {
+    color: #172235;
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+  }
+
+  .sf-agent-modal-card p {
+    color: #574f45;
+    line-height: 1.55;
+    margin: 0 0 8px;
+  }
+
   @media (max-width: 991px) {
     .sf-agent-layout,
     .sf-agent-map-wrap {
@@ -360,10 +443,8 @@ include 'header.php';
       <h1>Find an agent</h1>
       <p>Start with Durban as the default Sir Francis region, choose your province on the map, or allow location access so we can suggest the closest available region.</p>
       <div class="sf-agent-actions">
-        <button type="button" class="sf-agent-btn" id="sf-agent-location-btn">Use my location</button>
         <a class="sf-agent-btn secondary" href="#suggest-agent">Suggest an agent</a>
       </div>
-      <div class="sf-agent-notice" id="sf-agent-location-note" aria-live="polite"></div>
     </div>
   </section>
 
@@ -373,6 +454,11 @@ include 'header.php';
         <span class="sf-agent-kicker">Clickable region map</span>
         <h2>Select your region</h2>
         <p>Click a region to see the current Sir Francis agent details. Regions without a local agent will route you to the nearest available support point and invite you to suggest a supplier.</p>
+        <div class="sf-agent-map-tools">
+          <button type="button" class="sf-agent-btn" id="sf-agent-location-btn">Use my location</button>
+          <button type="button" class="sf-agent-btn secondary" id="sf-agent-view-current-btn">View selected agents</button>
+        </div>
+        <div class="sf-agent-notice" id="sf-agent-location-note" aria-live="polite"></div>
 
         <div class="sf-agent-map-wrap">
           <div class="sf-agent-map" aria-label="South African regions">
@@ -441,6 +527,16 @@ include 'header.php';
     </div>
   </section>
 </main>
+
+<div class="sf-agent-modal" id="sf-agent-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="sf-agent-modal-title">
+  <div class="sf-agent-modal-dialog">
+    <button type="button" class="sf-agent-modal-close" id="sf-agent-modal-close" aria-label="Close agent details">&times;</button>
+    <span class="sf-agent-kicker" id="sf-agent-modal-kicker">Available agents</span>
+    <h2 id="sf-agent-modal-title">Agents nearby</h2>
+    <p class="sf-agent-meta" id="sf-agent-modal-summary"></p>
+    <div class="sf-agent-modal-list" id="sf-agent-modal-list"></div>
+  </div>
+</div>
 
 <script>
 (function() {
@@ -523,6 +619,7 @@ include 'header.php';
         button.classList.add('is-active');
         setCityAgent(agent, cityAgent);
         focusMapOnCity(cityAgent);
+        openAgentsModal(activeRegion, cityAgent.city);
       });
       buttonWrap.appendChild(button);
     });
@@ -534,6 +631,59 @@ include 'header.php';
     document.getElementById('sf-agent-details').textContent = cityAgent.details || regionAgent.details;
     document.getElementById('sf-agent-contact').href = 'contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + regionAgent.label));
     document.getElementById('sf-agent-map-link').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(cityAgent.query || regionAgent.query);
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function(character) {
+      return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[character];
+    });
+  }
+
+  function agentPhoneLink(phone) {
+    return String(phone || '').replace(/[^\d+]/g, '');
+  }
+
+  function openAgentsModal(region, selectedCityName) {
+    var agent = agents[region] || agents['kwazulu-natal'];
+    var modal = document.getElementById('sf-agent-modal');
+    var list = document.getElementById('sf-agent-modal-list');
+    if (!agent || !modal || !list) return;
+
+    var cities = Array.isArray(agent.city_agents) ? agent.city_agents : [];
+    document.getElementById('sf-agent-modal-kicker').textContent = cities.length ? 'Agents found' : 'No local agent listed';
+    document.getElementById('sf-agent-modal-title').textContent = agent.label + ' agents';
+    document.getElementById('sf-agent-modal-summary').textContent = cities.length
+      ? 'Choose an agent below to phone, open their map location, or send an enquiry.'
+      : 'There is no active agent listed for this region yet. You can still contact Sir Francis or suggest a supplier.';
+
+    if (!cities.length) {
+      list.innerHTML = '<div class="sf-agent-modal-card"><h3>Sir Francis support</h3><p>We can route your enquiry while a local agent is being appointed.</p><div class="sf-agent-actions"><a class="sf-agent-btn" href="contact?subject=' + encodeURIComponent('Agent enquiry - ' + agent.label) + '">Contact Sir Francis</a><a class="sf-agent-btn secondary" href="#suggest-agent">Suggest an agent</a></div></div>';
+    } else {
+      list.innerHTML = cities.map(function(cityAgent) {
+        var phoneHref = agentPhoneLink(cityAgent.phone);
+        var isSelected = selectedCityName && selectedCityName === cityAgent.city;
+        return '<div class="sf-agent-modal-card' + (isSelected ? ' is-active' : '') + '">'
+          + '<h3>' + escapeHtml(cityAgent.name || cityAgent.city || 'Agent') + '</h3>'
+          + '<p><strong>' + escapeHtml(cityAgent.city || agent.label) + '</strong></p>'
+          + '<p>' + escapeHtml(cityAgent.address || cityAgent.details || '') + '</p>'
+          + (cityAgent.phone ? '<p><strong>Phone:</strong> ' + escapeHtml(cityAgent.phone) + '</p>' : '')
+          + '<div class="sf-agent-actions">'
+          + (phoneHref ? '<a class="sf-agent-btn" href="tel:' + encodeURIComponent(phoneHref) + '">Call agent</a>' : '')
+          + '<a class="sf-agent-btn secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(cityAgent.query || cityAgent.address || '') + '">Open map</a>'
+          + '<a class="sf-agent-btn secondary" href="contact?subject=' + encodeURIComponent(cityAgent.contact_subject || ('Agent enquiry - ' + agent.label)) + '">Send enquiry</a>'
+          + '</div></div>';
+      }).join('');
+    }
+
+    modal.classList.add('is-visible');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeAgentsModal() {
+    var modal = document.getElementById('sf-agent-modal');
+    if (!modal) return;
+    modal.classList.remove('is-visible');
+    modal.setAttribute('aria-hidden', 'true');
   }
 
   function hasCoordinates(cityAgent) {
@@ -612,6 +762,7 @@ include 'header.php';
         marker.addListener('click', function() {
           setActiveRegion(region, cityAgent.city);
           focusMapOnCity(cityAgent);
+          openAgentsModal(region, cityAgent.city);
         });
         agentMarkers.push(marker);
       });
@@ -656,6 +807,7 @@ include 'header.php';
       var region = featureRegion(event.feature);
       if (region) {
         setActiveRegion(region);
+        openAgentsModal(region);
       }
     });
     googleMap.data.addListener('mouseover', function(event) {
@@ -684,6 +836,25 @@ include 'header.php';
 
   var locationButton = document.getElementById('sf-agent-location-btn');
   var locationNote = document.getElementById('sf-agent-location-note');
+  var viewCurrentButton = document.getElementById('sf-agent-view-current-btn');
+  var modalClose = document.getElementById('sf-agent-modal-close');
+  var modal = document.getElementById('sf-agent-modal');
+  if (viewCurrentButton) {
+    viewCurrentButton.addEventListener('click', function() {
+      openAgentsModal(activeRegion);
+    });
+  }
+  if (modalClose) {
+    modalClose.addEventListener('click', closeAgentsModal);
+  }
+  if (modal) {
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) closeAgentsModal();
+    });
+  }
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') closeAgentsModal();
+  });
   if (locationButton && navigator.geolocation) {
     locationButton.addEventListener('click', function() {
       locationButton.disabled = true;
@@ -693,6 +864,7 @@ include 'header.php';
       navigator.geolocation.getCurrentPosition(function(position) {
         var region = provinceFromCoordinates(position.coords.latitude, position.coords.longitude);
         setActiveRegion(region);
+        openAgentsModal(region);
         locationButton.disabled = false;
         locationButton.textContent = 'Use my location';
         locationNote.textContent = 'Closest region selected. If this looks wrong, choose your region manually on the map.';
