@@ -164,6 +164,7 @@ include 'header.php';
     border: 1px solid #d8c895;
     min-height: 420px;
     padding: 14px;
+    position: relative;
   }
 
   .sf-agent-google-map {
@@ -177,7 +178,16 @@ include 'header.php';
   }
 
   .sf-agent-map.is-google-ready .sf-agent-static-map {
-    display: none;
+    background: rgba(248, 245, 238, .95);
+    border: 1px solid #CEBD88;
+    bottom: 12px;
+    box-shadow: 0 10px 26px rgba(23, 34, 53, .18);
+    max-width: 270px;
+    padding: 8px;
+    position: absolute;
+    right: 12px;
+    width: 38%;
+    z-index: 2;
   }
 
   .sf-agent-map.is-google-ready .sf-agent-google-map {
@@ -328,6 +338,13 @@ include 'header.php';
 
     .sf-agent-result {
       position: static;
+    }
+
+    .sf-agent-map.is-google-ready .sf-agent-static-map {
+      bottom: 10px;
+      max-width: 210px;
+      right: 10px;
+      width: 48%;
     }
   }
 </style>
@@ -506,8 +523,8 @@ include 'header.php';
 
   function focusMapOnCity(cityAgent) {
     if (!googleMap || !hasCoordinates(cityAgent)) return;
-    googleMap.panTo({ lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) });
-    googleMap.setZoom(10);
+    googleMap.setCenter({ lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) });
+    googleMap.setZoom(14);
   }
 
   function focusMapOnRegion(region) {
@@ -524,6 +541,11 @@ include 'header.php';
       bounds.extend({ lat: Number(cityAgent.lat), lng: Number(cityAgent.lng) });
     });
     googleMap.fitBounds(bounds);
+    google.maps.event.addListenerOnce(googleMap, 'idle', function() {
+      if (googleMap.getZoom() > 10) {
+        googleMap.setZoom(10);
+      }
+    });
   }
 
   window.initSirFrancisAgentMap = function() {
@@ -534,7 +556,8 @@ include 'header.php';
       zoom: 6,
       mapTypeControl: false,
       streetViewControl: false,
-      fullscreenControl: true
+      fullscreenControl: true,
+      clickableIcons: false
     });
     mapNode.parentElement.classList.add('is-google-ready');
     Object.keys(agents).forEach(function(region) {
