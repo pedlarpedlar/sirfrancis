@@ -4,6 +4,7 @@ $load_shopping_nav = false;
 include 'session_logins.php';
 require_once __DIR__ . '/find_agent_helpers.php';
 
+$sf_is_admin = !empty($_SESSION['admin_id']);
 $sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions($conn ?? null) : [];
 $sf_google_maps_api_key = '';
 if (isset($conn) && $conn instanceof mysqli) {
@@ -463,6 +464,9 @@ include 'header.php';
         <div class="sf-agent-map-tools">
           <button type="button" class="sf-agent-btn" id="sf-agent-location-btn">Use my location</button>
           <button type="button" class="sf-agent-btn secondary" id="sf-agent-view-current-btn">View selected agents</button>
+          <?php if ($sf_is_admin): ?>
+            <a class="sf-agent-btn secondary" href="admin-sf/agents">Add agents in admin panel</a>
+          <?php endif; ?>
         </div>
         <div class="sf-agent-notice" id="sf-agent-location-note" aria-live="polite"></div>
 

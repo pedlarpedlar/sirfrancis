@@ -111,6 +111,8 @@ try {
     cbSettingsEnsureColumn($conn, 'default_unit_weight_kg', "ALTER TABLE admin_website_settings ADD COLUMN default_unit_weight_kg DECIMAL(10,3) NULL DEFAULT 0.25");
     cbSettingsEnsureColumn($conn, 'google_maps_api_key', "ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'google_places_api_key', "ALTER TABLE admin_website_settings ADD COLUMN google_places_api_key VARCHAR(255) NULL");
+    cbSettingsEnsureColumn($conn, 'google_business_place_id', "ALTER TABLE admin_website_settings ADD COLUMN google_business_place_id VARCHAR(255) NULL");
+    cbSettingsEnsureColumn($conn, 'google_customer_reviews_merchant_id', "ALTER TABLE admin_website_settings ADD COLUMN google_customer_reviews_merchant_id VARCHAR(80) NULL");
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_enabled', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_enabled TINYINT(1) NOT NULL DEFAULT 0");
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_type', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_type VARCHAR(20) NOT NULL DEFAULT 'v3'");
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_site_key', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_site_key VARCHAR(255) NULL");
@@ -147,6 +149,8 @@ try {
     $free_shipping_amount = $isShippingSave ? (is_numeric($_POST['free_shipping_amount'] ?? null) ? (string) $_POST['free_shipping_amount'] : '0') : (string) ($existingSettings['free_shipping_amount'] ?? '0');
     $google_maps_api_key = $isMapsSave ? $postedOrExisting('google_maps_api_key') : (string) ($existingSettings['google_maps_api_key'] ?? '');
     $google_places_api_key = $isMapsSave ? $postedOrExisting('google_places_api_key') : (string) ($existingSettings['google_places_api_key'] ?? '');
+    $google_business_place_id = $isMapsSave ? $postedOrExisting('google_business_place_id') : (string) ($existingSettings['google_business_place_id'] ?? '');
+    $google_customer_reviews_merchant_id = $isMapsSave ? preg_replace('/\D+/', '', $postedOrExisting('google_customer_reviews_merchant_id')) : (string) ($existingSettings['google_customer_reviews_merchant_id'] ?? '');
     $contact_recaptcha_enabled = $isRecaptchaSave ? (isset($_POST['contact_recaptcha_enabled']) ? 1 : 0) : (int) ($existingSettings['contact_recaptcha_enabled'] ?? 0);
     $contact_recaptcha_type = $isRecaptchaSave ? (in_array($_POST['contact_recaptcha_type'] ?? 'v3', ['v3', 'v2_checkbox'], true) ? $_POST['contact_recaptcha_type'] : 'v3') : (string) ($existingSettings['contact_recaptcha_type'] ?? 'v3');
     $contact_recaptcha_site_key = $isRecaptchaSave ? $postedOrExisting('contact_recaptcha_site_key') : (string) ($existingSettings['contact_recaptcha_site_key'] ?? '');
@@ -218,6 +222,8 @@ try {
                             free_shipping_amount = ?, 
                             google_maps_api_key = ?,
                             google_places_api_key = ?,
+                            google_business_place_id = ?,
+                            google_customer_reviews_merchant_id = ?,
                             contact_recaptcha_enabled = ?,
                             contact_recaptcha_type = ?,
                             contact_recaptcha_site_key = ?,
@@ -235,7 +241,7 @@ try {
         throw new RuntimeException("Could not prepare the website settings update: " . $conn->error);
     }
 
-    $stmt->bind_param("sssssssssissssssssdsi", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $google_places_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order, $settingsId);
+    $stmt->bind_param("sssssssssssissssssssdsi", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $google_places_api_key, $google_business_place_id, $google_customer_reviews_merchant_id, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order, $settingsId);
     if (!$stmt->execute()) {
         throw new RuntimeException("Could not save website settings: " . $stmt->error);
     }
@@ -243,11 +249,11 @@ try {
     $stmt->close();
 
     if ($changedRows === 0 && !$hasSettingsRow) {
-        $insert = $conn->prepare("INSERT INTO admin_website_settings (tel, hotline, email_1, email_2, address, headquarters, free_shipping_amount, google_maps_api_key, google_places_api_key, contact_recaptcha_enabled, contact_recaptcha_type, contact_recaptcha_site_key, contact_recaptcha_secret_key, tinymce_api_key, banking_details, website_company_name, support_email, shipping_rates_json, default_unit_weight_kg, category_display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert = $conn->prepare("INSERT INTO admin_website_settings (tel, hotline, email_1, email_2, address, headquarters, free_shipping_amount, google_maps_api_key, google_places_api_key, google_business_place_id, google_customer_reviews_merchant_id, contact_recaptcha_enabled, contact_recaptcha_type, contact_recaptcha_site_key, contact_recaptcha_secret_key, tinymce_api_key, banking_details, website_company_name, support_email, shipping_rates_json, default_unit_weight_kg, category_display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if (!$insert) {
             throw new RuntimeException("Could not prepare the website settings insert: " . $conn->error);
         }
-        $insert->bind_param("sssssssssissssssssds", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $google_places_api_key, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order);
+        $insert->bind_param("sssssssssssissssssssds", $tel, $hotline, $email_1, $email_2, $address, $headquarters, $free_shipping_amount, $google_maps_api_key, $google_places_api_key, $google_business_place_id, $google_customer_reviews_merchant_id, $contact_recaptcha_enabled, $contact_recaptcha_type, $contact_recaptcha_site_key, $contact_recaptcha_secret_key, $tinymce_api_key, $banking_details, $website_company_name, $support_email, $shipping_rates_json, $default_unit_weight_kg, $category_display_order);
         if (!$insert->execute()) {
             throw new RuntimeException("Could not create website settings: " . $insert->error);
         }

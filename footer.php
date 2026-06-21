@@ -21,6 +21,8 @@ $footerWhatsappDigits = preg_replace('/\D+/', '', $footerWhatsappNumber);
 if (strpos($footerWhatsappDigits, '0') === 0) {
     $footerWhatsappDigits = '27' . substr($footerWhatsappDigits, 1);
 }
+require_once __DIR__ . '/google_integrations_helpers.php';
+$sfGoogleCustomerReviewsMerchantId = sfGoogleCustomerReviewsMerchantId($conn ?? null);
 function sfFooterPublicAddress($value, $fallback = 'Manhattan, New York, USA') {
     $value = trim((string) $value);
     if ($value === '') {
@@ -2200,7 +2202,7 @@ $('body').on('click', '.navmenu-click-mobile', function(event) {
 <?php
 $cbIsAdminArea = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-sf/') !== false;
 ?>
-<?php if (!$cbIsAdminArea): ?>
+<?php if (!$cbIsAdminArea && $sfGoogleCustomerReviewsMerchantId !== ''): ?>
 <script>
   (function() {
     function loadMerchantWidget() {
@@ -2214,7 +2216,7 @@ $cbIsAdminArea = strpos((string) ($_SERVER['REQUEST_URI'] ?? ''), '/admin-sf/') 
       merchantWidgetScript.addEventListener('load', function() {
         if (!window.merchantwidget || typeof window.merchantwidget.start !== 'function') return;
         window.merchantwidget.start({
-          merchant_id: 5312147848,
+          merchant_id: <?= json_encode((int) $sfGoogleCustomerReviewsMerchantId) ?>,
           position: 'BOTTOM_RIGHT',
           region: 'ZA'
         });

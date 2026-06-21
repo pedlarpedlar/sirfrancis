@@ -20,6 +20,8 @@ $autoSubmitPayfast = isset($_GET['payfast']) && $_GET['payfast'] === '1';
 $autoSubmitOzow = isset($_GET['ozow']) && $_GET['ozow'] === '1';
 $showGoogleCustomerReviewsOptIn = false;
 $googleCustomerReviewsOrder = [];
+require_once __DIR__ . '/google_integrations_helpers.php';
+$googleCustomerReviewsMerchantId = sfGoogleCustomerReviewsMerchantId($conn ?? null);
 
 if (!function_exists('cbGoogleCustomerReviewsCountryCode')) {
     function cbGoogleCustomerReviewsCountryCode($country, $address = '') {
@@ -267,10 +269,10 @@ if (mysqli_num_rows($result) > 0) {
         }
     }
 
-    $showGoogleCustomerReviewsOptIn = isset($_GET['thankyou']) && !empty($fetched_billing_email_address) && empty($admin_id);
+    $showGoogleCustomerReviewsOptIn = isset($_GET['thankyou']) && !empty($fetched_billing_email_address) && empty($admin_id) && $googleCustomerReviewsMerchantId !== '';
     if ($showGoogleCustomerReviewsOptIn) {
         $googleCustomerReviewsOrder = [
-            'merchant_id' => 5312147848,
+            'merchant_id' => (int) $googleCustomerReviewsMerchantId,
             'order_id' => (string) $fetched_id,
             'email' => (string) $fetched_billing_email_address,
             'delivery_country' => cbGoogleCustomerReviewsCountryCode($fetched_shipping_country, $fetched_shipping_address),

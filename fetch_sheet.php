@@ -557,6 +557,34 @@ include 'page_menues.php';
     }
 
   }
+
+  .products-page-shell button,
+  .products-page-shell .btn,
+  .products-page-shell .nav-link,
+  .products-page-shell .pro-btn,
+  .products-page-shell .actions .action,
+  .products-page-shell .size-btn,
+  .products-page-shell .clear-product-filters,
+  .products-page-shell .mobile-category-toggle,
+  .products-page-shell .category-toggle,
+  .products-page-shell .products-size-chip,
+  .products-page-shell .badge,
+  #quick-view .size-btn,
+  #quick-view .product-thumb,
+  #add-to-cart .btn {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .products-page-shell .products-filter-panel,
+  .products-page-shell .grid-nav-wraper,
+  .products-page-shell .shop-grid-menu,
+  #quick-view .modal-content,
+  #add-to-cart .modal-content {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
 </style>
 
 

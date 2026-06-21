@@ -1,5 +1,9 @@
 <?php
 include 'session_logins.php';
+require_once __DIR__ . '/google_integrations_helpers.php';
+$sfGoogleSettings = sfGoogleIntegrationSettings($conn ?? null);
+$sfGoogleReviewsApiKey = sfGooglePlacesBrowserKey($conn ?? null);
+$sfGoogleBusinessPlaceId = $sfGoogleSettings['google_business_place_id'] ?? '';
 include 'header.php';
 ?>
 <!-- Canonical URL to Avoid Duplicate Content Issues -->
@@ -285,8 +289,8 @@ include 'page_menues.php';
       <span class="section-label">Customer Reviews</span>
       <h2 class="mt-3">What Our Customers Say</h2>
 
-      <div id="candybird-rating" class="rating-box mt-4"></div>
-      <div id="candybird-reviews" class="reviews-grid mt-4"></div>
+      <div id="sirfrancis-rating" class="rating-box mt-4"></div>
+      <div id="sirfrancis-reviews" class="reviews-grid mt-4"></div>
 
       <a href="https://www.google.com/search?q=Sir Francis+reviews"
          target="_blank"
@@ -376,27 +380,32 @@ include 'page_menues.php';
 </style>
 
 <script>
-  function initCandybirdReviews() {
+  const sfAboutReviewsConfig = {
+    apiKey: <?= json_encode($sfGoogleReviewsApiKey) ?>,
+    placeId: <?= json_encode($sfGoogleBusinessPlaceId) ?>
+  };
+
+  function initSirFrancisReviews() {
     const service = new google.maps.places.PlacesService(
       document.createElement("div")
     );
 
     service.getDetails(
       {
-        placeId: "ChIJD-2dz3vReh4R8QE7FCn_Xc4",
+        placeId: sfAboutReviewsConfig.placeId,
         fields: ["name", "rating", "user_ratings_total", "reviews", "url"]
       },
       function (place, status) {
         if (status !== google.maps.places.PlacesServiceStatus.OK || !place) {
-          document.getElementById("candybird-reviews").innerHTML =
+          document.getElementById("sirfrancis-reviews").innerHTML =
             "<p>Google reviews are currently unavailable.</p>";
           return;
         }
 
-        document.getElementById("candybird-rating").innerHTML =
+        document.getElementById("sirfrancis-rating").innerHTML =
           `${place.rating || ""} ★ from ${place.user_ratings_total || 0} Google reviews`;
 
-        const reviewsContainer = document.getElementById("candybird-reviews");
+        const reviewsContainer = document.getElementById("sirfrancis-reviews");
         reviewsContainer.innerHTML = "";
 
         if (place.reviews && place.reviews.length) {
@@ -419,9 +428,13 @@ include 'page_menues.php';
   }
 </script>
 
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initCandybirdReviews">
+<?php if ($sfGoogleReviewsApiKey !== '' && $sfGoogleBusinessPlaceId !== ''): ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= rawurlencode($sfGoogleReviewsApiKey) ?>&libraries=places&callback=initSirFrancisReviews"></script>
+<?php else: ?>
+<script>
+  document.getElementById("sirfrancis-reviews").innerHTML = "<p>Google reviews are currently unavailable.</p>";
 </script>
+<?php endif; ?>
   
 
 

@@ -6,6 +6,10 @@ $defer_homepage_personalization = true;
 $load_shopping_nav = false;
 $page_preload_images = ['assets/img/slider/1.optimized.jpg'];
 include 'session_logins.php';
+require_once __DIR__ . '/google_integrations_helpers.php';
+$sfGoogleSettings = sfGoogleIntegrationSettings($conn ?? null);
+$sfGoogleReviewsApiKey = sfGooglePlacesBrowserKey($conn ?? null);
+$sfGoogleBusinessPlaceId = $sfGoogleSettings['google_business_place_id'] ?? '';
 $page_url_canonical = 'https://sirfrancis.co.za/';
 $page_url_og = 'https://sirfrancis.co.za/';
 $title_og = "Sir Francis | Marine Collagen, Fish Gelatine and Private Labelling";
@@ -561,6 +565,11 @@ foreach ($slides as $index => $slide) {
 </style>
 
 <script>
+  const sfHomepageReviewsConfig = {
+    apiKey: <?= json_encode($sfGoogleReviewsApiKey) ?>,
+    placeId: <?= json_encode($sfGoogleBusinessPlaceId) ?>
+  };
+
   function shuffleReviews(reviews) {
     return reviews.sort(() => Math.random() - 0.5);
   }
@@ -572,7 +581,7 @@ foreach ($slides as $index => $slide) {
 
     service.getDetails(
       {
-        placeId: "ChIJD-2dz3vReh4R8QE7FCn_Xc4",
+        placeId: sfHomepageReviewsConfig.placeId,
         fields: ["name", "rating", "user_ratings_total", "reviews", "url"]
       },
       function (place, status) {
@@ -616,13 +625,26 @@ foreach ($slides as $index => $slide) {
     var loadReviews = function() {
       if (reviewsLoaded) return;
       reviewsLoaded = true;
+      var container = document.getElementById("homepage-google-reviews");
+      if (!sfHomepageReviewsConfig.apiKey || !sfHomepageReviewsConfig.placeId) {
+        if (container) {
+          container.innerHTML = `
+            <div class="carousel-item active">
+              <div class="review-slide-card text-center">
+                <p>Customer reviews are currently unavailable.</p>
+              </div>
+            </div>
+          `;
+        }
+        return;
+      }
       if (window.google && google.maps && google.maps.places) {
         initHomepageReviews();
         return;
       }
 
       var script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDNYtzAP875aoyTvQnfaK96eizYBJ1jxB8&libraries=places&callback=initHomepageReviews&loading=async';
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(sfHomepageReviewsConfig.apiKey) + '&libraries=places&callback=initHomepageReviews&loading=async';
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);

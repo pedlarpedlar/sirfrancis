@@ -52,6 +52,20 @@ include 'page_menues.php';
         </div>
 
         <div class="maps-settings-card">
+            <h4>Google Reviews & Customer Badge</h4>
+            <div class="form-group">
+                <label for="google_business_place_id">Sir Francis Google Business Place ID</label>
+                <input type="text" class="form-control" id="google_business_place_id" name="google_business_place_id" value="<?= cbWebsiteSettingsText($row['google_business_place_id'] ?? '') ?>" autocomplete="off">
+                <small class="form-text text-muted">Used to show Sir Francis Google reviews on the homepage and about page. Get this from Google's Place ID Finder for the Sir Francis Business Profile.</small>
+            </div>
+            <div class="form-group mb-0">
+                <label for="google_customer_reviews_merchant_id">Google Customer Reviews Merchant ID</label>
+                <input type="text" class="form-control" id="google_customer_reviews_merchant_id" name="google_customer_reviews_merchant_id" value="<?= cbWebsiteSettingsText($row['google_customer_reviews_merchant_id'] ?? '') ?>" autocomplete="off">
+                <small class="form-text text-muted">Used for the Google Customer Reviews badge and post-order opt-in. This is your numeric Google Merchant Center ID.</small>
+            </div>
+        </div>
+
+        <div class="maps-settings-card">
             <h4>Setup Notes</h4>
             <div class="maps-help">
                 <ul>
@@ -59,6 +73,7 @@ include 'page_menues.php';
                     <li>Enable Places API for address autocomplete and place lookups.</li>
                     <li>Restrict the key to your website domains, for example sirfrancis.co.za and www.sirfrancis.co.za.</li>
                     <li>If you use one key for both, paste the same key into both fields.</li>
+                    <li>Google reviews need the Sir Francis Business Profile Place ID. Google Customer Reviews need an approved Merchant Center account.</li>
                     <li>If a key is missing or restricted incorrectly, the site will keep manual address entry and static map fallbacks available.</li>
                 </ul>
             </div>

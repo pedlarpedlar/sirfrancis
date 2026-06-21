@@ -160,41 +160,8 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
         <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <?php endif; ?>
 
-<!-- Google tag (gtag.js) -->
-<?php if (!empty($defer_gtag)): ?>
+<!-- Google tag placeholder. Add Sir Francis tracking IDs before enabling an external gtag loader. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  (function() {
-    var loaded = false;
-    function loadGtag() {
-      if (loaded) return;
-      loaded = true;
-      var gtagScript = document.createElement('script');
-      gtagScript.async = true;
-      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-770312537';
-      document.head.appendChild(gtagScript);
-      gtag('js', new Date());
-      gtag('config', 'AW-770312537');
-      gtag('config', 'AW-17232752521');
-    }
-    ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
-      window.addEventListener(eventName, loadGtag, { once: true, passive: true });
-    });
-    window.addEventListener('load', function() {
-      window.setTimeout(loadGtag, 12000);
-    }, { once: true });
-  })();
 </script>
-<?php else: ?>
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-770312537">
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-770312537');
-  gtag('config', 'AW-17232752521');
-</script>
-<?php endif; ?>
