@@ -27,23 +27,33 @@ if (!function_exists('sfSiteImagePath')) {
     }
 }
 
+if (!function_exists('sfSiteImageRecommendedSizeAttr')) {
+    function sfSiteImageRecommendedSizeAttr($recommendedSize = '') {
+        $recommendedSize = trim((string) $recommendedSize);
+        if ($recommendedSize === '') {
+            return '';
+        }
+        return ' data-sf-image-size="' . htmlspecialchars($recommendedSize, ENT_QUOTES, 'UTF-8') . '"';
+    }
+}
+
 if (!function_exists('sfSiteEditableImageAttrs')) {
-    function sfSiteEditableImageAttrs($key) {
+    function sfSiteEditableImageAttrs($key, $recommendedSize = '') {
         if (empty($_SESSION['admin_id'])) {
             return '';
         }
 
-        return ' data-sf-editable-image="' . htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . '"';
+        return ' data-sf-editable-image="' . htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . '"' . sfSiteImageRecommendedSizeAttr($recommendedSize);
     }
 }
 
 if (!function_exists('sfSiteEditableBackgroundAttrs')) {
-    function sfSiteEditableBackgroundAttrs($key, $imagePath = '') {
+    function sfSiteEditableBackgroundAttrs($key, $imagePath = '', $recommendedSize = '') {
         if (empty($_SESSION['admin_id'])) {
             return '';
         }
 
-        $attrs = ' data-sf-editable-image="' . htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . '" data-sf-editable-bg="1"';
+        $attrs = ' data-sf-editable-image="' . htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . '" data-sf-editable-bg="1"' . sfSiteImageRecommendedSizeAttr($recommendedSize);
         if ($imagePath !== '') {
             $attrs .= ' data-sf-current-image="' . htmlspecialchars((string) $imagePath, ENT_QUOTES, 'UTF-8') . '"';
         }

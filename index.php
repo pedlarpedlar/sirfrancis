@@ -178,6 +178,50 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
   margin: 0;
 }
 
+.brand-slider-section .single-brand {
+  padding: 0 8px;
+}
+
+.brand-slider-section .brand-thumb {
+  align-items: center;
+  background: #F1F0E8;
+  border: 3px double #CEBD88;
+  color: #28364B;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+}
+
+.brand-slider-section .brand-thumb:hover,
+.brand-slider-section .brand-thumb:focus {
+  background: #28364B;
+  color: #CEBD88;
+}
+
+.brand-slider-section .brand-icon-fallback {
+  align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 12px;
+  width: 100%;
+}
+
+.brand-slider-section .brand-icon-fallback.sf-has-uploaded-image i {
+  display: none;
+}
+
+.brand-slider-section .brand-icon-fallback i {
+  color: currentColor;
+  font-size: 34px;
+}
+
 .product-tab,
 .common-banner.thingy,
 .blog-section {
@@ -301,7 +345,7 @@ foreach ($slides as $index => $slide) {
     $deferredBgAttribute = $index === 0 ? '' : ' data-bg-img-class="' . htmlspecialchars($slide['bg_img'], ENT_QUOTES, 'UTF-8') . '"';
     $slideImageKey = 'homepage.slider.' . $index;
     $slideImagePath = sfSiteImagePath($slideImageKey, $slideFallbackImages[$slide['bg_img']] ?? 'assets/img/ocean.jpg');
-    echo '<div class="slider-item bg-img ' . $slideBgClass . '"' . $deferredBgAttribute . sfSiteBackgroundStyle($slideImagePath) . sfSiteEditableBackgroundAttrs($slideImageKey, $slideImagePath) . '>';
+    echo '<div class="slider-item bg-img ' . $slideBgClass . '"' . $deferredBgAttribute . sfSiteBackgroundStyle($slideImagePath) . sfSiteEditableBackgroundAttrs($slideImageKey, $slideImagePath, '1600 x 900px or larger, landscape') . '>';
     echo '  <div class="container container1">';
     echo '    <div class="row align-items-center slider-height">';
     echo '      <div class="col-12 text-center">';
@@ -360,7 +404,7 @@ foreach ($slides as $index => $slide) {
             href="wholesale-pricelist"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.bulk', 'assets/img/ocean.jpg'), ENT_QUOTES, 'UTF-8') ?>" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.bulk') ?> />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.bulk', 'assets/img/ocean.jpg'), ENT_QUOTES, 'UTF-8') ?>" alt="Bulk marine collagen and fish gelatine" width="570" height="330" loading="eager" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.bulk', '1140 x 660px, landscape') ?> />
             <span class="home-pathway-copy">
               <h2>Buy Bulk</h2>
               <p>Marine collagen, fish gelatine and wellness ingredients for wholesale buyers and businesses.</p>
@@ -374,7 +418,7 @@ foreach ($slides as $index => $slide) {
             href="products"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.retail', 'assets/img/slider/1.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.retail') ?> />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.retail', 'assets/img/slider/1.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis retail shop" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.retail', '540 x 660px, portrait') ?> />
             <span class="home-pathway-copy">
               <h2>Retail Shop</h2>
               <p>Shop the retail range direct to the public.</p>
@@ -388,7 +432,7 @@ foreach ($slides as $index => $slide) {
             href="private_labelling"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.private_label', 'assets/img/slider/2.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.private_label') ?> />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.private_label', 'assets/img/slider/2.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Sir Francis private labelling" width="270" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.private_label', '540 x 660px, portrait') ?> />
             <span class="home-pathway-copy">
               <h2>Private Labelling</h2>
               <p>Create your own supplement brand.</p>
@@ -402,7 +446,7 @@ foreach ($slides as $index => $slide) {
             href="resellers"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.stockist', 'assets/img/slider/3.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.stockist') ?> />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.stockist', 'assets/img/slider/3.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.stockist', '1140 x 660px, landscape') ?> />
             <span class="home-pathway-copy">
               <h2>Become a Stockist</h2>
               <p>Apply to stock Sir Francis products and build a premium wellness income stream.</p>
@@ -745,7 +789,7 @@ foreach ($slides as $index => $slide) {
           <a
             class="zoom-in d-block overflow-hidden position-relative"
             href="product?id=101"
-            ><img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.featured', 'assets/img/banner/5.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.featured') ?>
+            ><img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.featured', 'assets/img/banner/5.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Featured product banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.featured', '740 x 540px, landscape') ?>
           /></a>
         </div>
       </div>
@@ -755,7 +799,7 @@ foreach ($slides as $index => $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="return_policy"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.returns', 'assets/img/banner/6.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.returns') ?>
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.returns', 'assets/img/banner/6.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Return policy banner" width="370" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.returns', '740 x 540px, landscape') ?>
           /></a>
         </div>
       </div>
@@ -765,7 +809,7 @@ foreach ($slides as $index => $slide) {
             class="zoom-in d-block overflow-hidden position-relative"
             href="recipes"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.recipes', 'assets/img/banner/4.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.recipes') ?>
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.recipes', 'assets/img/banner/4.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.recipes', '1540 x 540px, wide landscape') ?>
           /></a>
         </div>
       </div>
@@ -839,11 +883,24 @@ foreach ($slides as $index => $slide) {
     <div class="row">
       <div class="col-12">
         <div class="brand-init border-top py-35 slick-nav-brand">
-          <?php foreach ($brands as $brand): ?>
+          <?php foreach ($brands as $index => $brand): ?>
+          <?php
+            $brandImageKey = 'homepage.brand.' . $index;
+            $brandImagePath = sfSiteImagePath($brandImageKey, '');
+            $brandIconClass = $brand['icon'] ?? 'fas fa-anchor';
+            $brandHasImage = $brandImagePath !== '';
+          ?>
           <div class="slider-item">
             <div class="single-brand">
               <a href="<?php echo htmlspecialchars($brand['link'] ?? './', ENT_QUOTES, 'UTF-8'); ?>" class="brand-thumb" aria-label="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-                <img src="assets/img/brand/<?php echo $brand['img']; ?>" alt="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>" width="170" height="100" loading="lazy" decoding="async" />
+                <span
+                  class="brand-icon-fallback<?= $brandHasImage ? ' sf-has-uploaded-image' : '' ?>"
+                  role="img"
+                  aria-label="<?php echo htmlspecialchars($brand['alt'], ENT_QUOTES, 'UTF-8'); ?>"
+                  <?= sfSiteBackgroundStyle($brandImagePath) ?><?= sfSiteEditableBackgroundAttrs($brandImageKey, $brandImagePath, '340 x 200px, transparent PNG or clean logo on light background') ?>
+                >
+                  <i class="<?php echo htmlspecialchars($brandIconClass, ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                </span>
               </a>
             </div>
           </div>

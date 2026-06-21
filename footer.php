@@ -737,6 +737,26 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     background: #23324b;
     color: #f5ead3;
   }
+
+  .sf-editable-image-wrap:hover .sf-edit-image-button::after,
+  .sf-edit-image-button:focus::after {
+    background: #172235;
+    border: 1px solid #CEBD88;
+    box-shadow: 0 8px 20px rgba(0,0,0,.24);
+    color: #f5ead3;
+    content: attr(data-sf-tooltip);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    min-width: 190px;
+    padding: 8px 10px;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: calc(100% + 8px);
+    white-space: normal;
+  }
 </style>
 <script>
 (function () {
@@ -771,6 +791,7 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     if (target.getAttribute('data-sf-editable-bg') === '1') {
       target.style.backgroundImage = "url('" + path.replace(/'/g, "\\'") + "')";
       target.setAttribute('data-sf-current-image', path);
+      target.classList.add('sf-has-uploaded-image');
       return;
     }
     if (target.tagName && target.tagName.toLowerCase() === 'img') {
@@ -784,8 +805,11 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'sf-edit-image-button no-print';
-    button.setAttribute('aria-label', 'Replace image');
-    button.setAttribute('title', 'Replace image');
+    var recommendedSize = item.getAttribute('data-sf-image-size') || 'Upload a clear JPG, PNG or WEBP that matches this space.';
+    var tooltip = 'Replace image. Suggested size: ' + recommendedSize;
+    button.setAttribute('aria-label', tooltip);
+    button.setAttribute('title', tooltip);
+    button.setAttribute('data-sf-tooltip', tooltip);
     button.innerHTML = '<i class="fas fa-pencil-alt" aria-hidden="true"></i>';
     button.addEventListener('click', function (event) {
       event.preventDefault();

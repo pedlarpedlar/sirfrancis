@@ -198,11 +198,11 @@ $staticMedia = [
 
 // Array containing brand information
 $brands = [
-    ['img' => '1.png', 'alt' => 'wholesale', 'link' => 'wholesale'],
-    ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
-    ['img' => '3.png', 'alt' => 'private labelling', 'link' => 'private_labelling'],
-    ['img' => '4.png', 'alt' => 'private labelling', 'link' => 'private_labelling'],
-    ['img' => '5.png', 'alt' => 'buyer protection', 'link' => 'return_policy'],
-    ['img' => '2.png', 'alt' => 'free delivery', 'link' => 'delivery_policy'],
-    ['img' => '3.png', 'alt' => 'private labelling', 'link' => 'private_labelling']
+    ['icon' => 'fas fa-boxes', 'alt' => 'Wholesale supply', 'link' => 'wholesale-pricelist'],
+    ['icon' => 'fas fa-truck', 'alt' => 'Delivery support', 'link' => 'delivery_policy'],
+    ['icon' => 'fas fa-flask', 'alt' => 'Private labelling', 'link' => 'private_labelling'],
+    ['icon' => 'fas fa-store', 'alt' => 'Stockist enquiries', 'link' => 'resellers'],
+    ['icon' => 'fas fa-shield-alt', 'alt' => 'Buyer support', 'link' => 'return_policy'],
+    ['icon' => 'fas fa-anchor', 'alt' => 'Marine ingredients', 'link' => 'products'],
+    ['icon' => 'fas fa-industry', 'alt' => 'Bulk procurement', 'link' => 'bulk_ordering']
 ];
