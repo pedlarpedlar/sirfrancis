@@ -1,6 +1,10 @@
 <?php
 // Start or resume the session
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+header('Content-Type: application/json; charset=UTF-8');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -8,6 +12,15 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/PHPMailer/src/Exception.php';
 require 'PHPMailer/PHPMailer/src/SMTP.php';
+require_once 'candybird_mail_helpers.php';
+
+function sfRegisterRespond(array $payload, int $statusCode = 200): void
+{
+    http_response_code($statusCode);
+    echo json_encode($payload);
+    exit();
+}
+
 $liveConfigPath = rtrim((string) ($_SERVER['HOME'] ?? getenv('HOME') ?: dirname(__DIR__)), '/') . '/configs_sirfrancis/sirfrancis_config.php';
 if (file_exists($liveConfigPath)) {
     require_once $liveConfigPath;
@@ -18,14 +31,22 @@ include 'log_action_function.php';
 include 'dbh.inc.php';
 
 // Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+$requestMethod = $_SERVER["REQUEST_METHOD"] ?? '';
+if ($requestMethod === "POST") {
+    if (!isset($conn) || !($conn instanceof mysqli) || $conn->connect_error) {
+        $dbError = isset($conn) && $conn instanceof mysqli ? $conn->connect_error : 'Connection unavailable.';
+        logAction('Register Error', 'Database connection unavailable: ' . $dbError, null, null);
+        sfRegisterRespond([
+            "success" => false,
+            "message" => "Registration is temporarily unavailable. Please try again shortly."
+        ], 500);
+    }
 
     // Get input values
     $username = trim($_POST['user-name'] ?? '');
     $password_raw = $_POST['user-password'] ?? '';
     $confirmPassword = $_POST['confirm-password'] ?? '';
     $email = trim($_POST['user-email'] ?? '');
-    $special_code = $password_raw; // if you still need this for admin email
 
     $errors = [];
 
@@ -52,9 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (!empty($errors)) {
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "errors" => $errors]);
-        exit();
+        sfRegisterRespond(["success" => false, "errors" => $errors]);
     }
 
     // Hash the password AFTER confirming match
@@ -65,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         logAction('Register Error', 'Database prepare failed.', null, $email);
-        die(json_encode(["success" => false, "message" => "Database error."]));
+        sfRegisterRespond(["success" => false, "message" => "Database error."], 500);
     }
     mysqli_stmt_bind_param($stmt, "ss", $username, $email);
     mysqli_stmt_execute($stmt);
@@ -74,9 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (mysqli_stmt_num_rows($stmt) > 0) {
         $errors['username'] = "Username or email is already taken.";
         logAction('Register Error', 'Username or email is taken.', null, $email);
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "errors" => $errors]);
-        exit();
+        sfRegisterRespond(["success" => false, "errors" => $errors]);
     }
     mysqli_stmt_close($stmt);
 
@@ -85,81 +102,85 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         logAction('Register Error', 'Database prepare failed.', null, $email);
-        die(json_encode(["success" => false, "message" => "Database error."]));
+        sfRegisterRespond(["success" => false, "message" => "Database error."], 500);
     }
     mysqli_stmt_bind_param($stmt, "sss", $username, $password, $email);
-    mysqli_stmt_execute($stmt);
+    if (!mysqli_stmt_execute($stmt)) {
+        $insertError = mysqli_stmt_error($stmt);
+        logAction('Register Error', 'User insert failed: ' . $insertError, null, $email);
+        mysqli_stmt_close($stmt);
+        sfRegisterRespond([
+            "success" => false,
+            "message" => "Registration could not be completed. Please try again."
+        ], 500);
+    }
     $user_id = mysqli_insert_id($conn);
+    mysqli_stmt_close($stmt);
 
     logAction('Registered User', 'New user registered.', $user_id, $email);
 
-    $response = [
+    try {
+        if (function_exists('cbCandybirdLoadMailConfig')) {
+            cbCandybirdLoadMailConfig();
+        }
+
+        $email_body = @file_get_contents(__DIR__ . '/emails/email_register.php');
+        if (is_string($email_body) && $email_body !== '' && function_exists('cbCandybirdSendMail')) {
+            $email_body = str_replace('{recipient_name}', $username, $email_body);
+            $email_body = str_replace('{user_email_unsubscribe}', $email, $email_body);
+            $mailResult = cbCandybirdSendMail(
+                $email,
+                $username,
+                "Welcome to Sir Francis - Registration Confirmation",
+                $email_body,
+                [
+                    'from_name' => 'Sir Francis',
+                    'reply_to_email' => $GLOBALS['smtp_username1'] ?? '',
+                    'reply_to_name' => 'Sir Francis',
+                ]
+            );
+            if (empty($mailResult['success'])) {
+                logAction('Register Error', 'Welcome email failed: ' . ($mailResult['error'] ?? 'Unknown mail error.'), $user_id, $email);
+            }
+        } else {
+            logAction('Register Error', 'Welcome email template or mail helper unavailable.', $user_id, $email);
+        }
+
+        $adminRecipient = trim((string) ($GLOBALS['smtp_username1'] ?? ''));
+        $admin_body = @file_get_contents(__DIR__ . '/emails/email_register_admin.php');
+        if ($adminRecipient !== '' && filter_var($adminRecipient, FILTER_VALIDATE_EMAIL) && is_string($admin_body) && $admin_body !== '' && function_exists('cbCandybirdSendMail')) {
+            $admin_body = str_replace('{recipient_name}', 'Admin', $admin_body);
+            $admin_body = str_replace('{user_id}', (string) $user_id, $admin_body);
+            $admin_body = str_replace('{user_name}', $username, $admin_body);
+            $admin_body = str_replace('{user_email}', $email, $admin_body);
+            $admin_body = str_replace('{special_code}', '', $admin_body);
+            $adminResult = cbCandybirdSendMail(
+                $adminRecipient,
+                'Admin',
+                "New User Registration",
+                $admin_body,
+                ['from_name' => 'Sir Francis']
+            );
+            if (empty($adminResult['success'])) {
+                logAction('Register Error', 'Admin registration email failed: ' . ($adminResult['error'] ?? 'Unknown mail error.'), $user_id, $email);
+            }
+        }
+    } catch (Throwable $e) {
+        logAction('Register Error', 'Registration email handling failed: ' . $e->getMessage(), $user_id, $email);
+    }
+
+    $conn->close();
+    sfRegisterRespond([
         "success" => true,
         "message" => "Registration successful. You can now log in.",
         "redirect_url" => "https://sirfrancis.co.za/login"
-    ];
-    header('Content-Type: application/json');
-    echo json_encode($response);
-
-    // Continue with email sending below
-    try {
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = $smtp_server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $smtp_username5;
-        $mail->Password = $smtp_password5;
-        $mail->SMTPSecure = $smtp_type;
-        $mail->Port = $smtp_port;
-
-        $mail->setFrom($smtp_username5, 'Sir Francis');
-        $mail->addAddress($email, $username);
-        $mail->addReplyTo($smtp_username1, 'Sir Francis');
-        $mail->Subject = "Welcome to Sir Francis - Registration Confirmation";
-        $email_body = file_get_contents('emails/email_register.php');
-        $email_body = str_replace('{recipient_name}', $username, $email_body);
-        $email_body = str_replace('{user_email_unsubscribe}', $email, $email_body);
-        $mail->Body = $email_body;
-        $mail->isHTML(true);
-        $mail->send();
-
-        // Send admin notification
-        $admin_mail = new PHPMailer(true);
-        $admin_mail->isSMTP();
-        $admin_mail->Host = $smtp_server;
-        $admin_mail->SMTPAuth = true;
-        $admin_mail->Username = $smtp_username5;
-        $admin_mail->Password = $smtp_password5;
-        $admin_mail->SMTPSecure = $smtp_type;
-        $admin_mail->Port = $smtp_port;
-
-        $admin_mail->setFrom($smtp_username5, 'Sir Francis');
-        $admin_mail->addAddress($smtp_username1, 'Admin');
-        $admin_mail->Subject = "New User Registration";
-        $admin_body = file_get_contents('emails/email_register_admin.php');
-        $admin_body = str_replace('{recipient_name}', 'Admin', $admin_body);
-        $admin_body = str_replace('{user_id}', $user_id, $admin_body);
-        $admin_body = str_replace('{user_name}', $username, $admin_body);
-        $admin_body = str_replace('{user_email}', $email, $admin_body);
-        $admin_body = str_replace('{special_code}', $special_code, $admin_body);
-        $admin_mail->Body = $admin_body;
-        $admin_mail->isHTML(true);
-        $admin_mail->send();
-
-    } catch (Exception $e) {
-        logAction('Register Error', 'Email sending failed: '.$e->getMessage(), $user_id, $email);
-    }
-
-    $stmt->close();
-    $conn->close();
+    ]);
 
 } else {
     logAction('Register Error', 'Form not submitted.', null, null);
-    header('Content-Type: application/json');
-    echo json_encode([
+    sfRegisterRespond([
         "success" => false,
         "message" => "Form not submitted."
-    ]);
-    exit();
+    ], 405);
 }
 ?>
