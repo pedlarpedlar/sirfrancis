@@ -176,7 +176,11 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
         $row2 = [];
         $row3 = [];
         foreach ($headers as $header) {
-            $row2[] = $explainers[$header] ?? 'Optional sheet field.';
+            if ($key === 'coupons' && $header === 'id') {
+                $row2[] = 'Unique coupon row ID. Start real coupon rows from line 3; line 2 is helper text and is ignored by the importer.';
+            } else {
+                $row2[] = $explainers[$header] ?? 'Optional sheet field.';
+            }
             if ($key === 'products') {
                 $examples = [
                     'id' => '101',
