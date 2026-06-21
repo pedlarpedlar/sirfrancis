@@ -167,7 +167,6 @@ function cbAdminMenuActive($page, $currentPage) {
               </ul>
             </details>
           </li>
-          <li><a href="recipe">Recipe Corner</a></li>
           <li>
             <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_maps_places', 'google_recaptcha', 'editor_settings', 'site_flags'], $adminCurrentPage) ?>>
               <summary>Website Settings</summary>
@@ -253,7 +252,6 @@ function cbAdminMenuActive($page, $currentPage) {
           </ul>
         </details>
       </li>
-      <li><a href="recipe"<?= cbAdminMenuActive('recipe', $adminCurrentPage) ?>>Recipe Corner</a></li>
       <li>
         <details<?= cbAdminMenuOpen(['manage_website_information', 'shipping_settings', 'google_maps_places', 'google_recaptcha', 'editor_settings', 'site_flags'], $adminCurrentPage) ?>>
           <summary>Website Settings</summary>

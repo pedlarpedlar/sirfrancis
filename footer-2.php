@@ -1387,12 +1387,6 @@ function logAction(action, details = '', userId = null, guestIdentifier = '') {
     });
 }
 
-$('body').on('click', '.print_recipe', function(event) {
-    event.preventDefault();
-    window.print();
-    logAction('Clicked on print recipe', 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
-});
-
 $('body').on('click', '.list-view-products', function(event) {
     logAction('Clicked on list-view', 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
 });

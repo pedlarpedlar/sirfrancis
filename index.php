@@ -327,7 +327,6 @@ include 'page_menues.php';
 <?php
 
 include 'slides.php';
-include 'recipe_posts.php';
 
 $slideFallbackImages = [
     'bg-img1' => 'assets/img/slider/slider.jpg',
@@ -807,75 +806,15 @@ foreach ($slides as $index => $slide) {
         <div class="banner-thumb">
           <a
             class="zoom-in d-block overflow-hidden position-relative"
-            href="recipes"
+            href="find-agent"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.recipes', 'assets/img/banner/4.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Recipes banner" width="770" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.recipes', '1540 x 540px, wide landscape') ?>
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.banner.agent-network', 'assets/img/banner/4.png'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/banner/1.png';" alt="Regional agent network banner" width="770" height="270" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.banner.agent-network', '1540 x 540px, wide landscape') ?>
           /></a>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- start recipe section -->
-<section class="blog-section theme1 pb-65">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-          <div class="section-title text-center">
-            <h2 class="title mb-3">From our latest recipes</h2>
-            <span class="sf-anchor-divider pb-3" aria-hidden="true"><i class="fas fa-anchor"></i></span>
-            <p class="text">
-              Check out these scrumptious, delicious recipes!
-            </p>
-          </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="blog-init slick-nav">
-          <?php
-          $first_five_posts = array_slice($blogPosts, 0, 5);
-          ?>
-          <?php foreach ($first_five_posts as $post): ?>
-          <div class="slider-item">
-            <div class="single-blog">
-              <a
-                class="blog-thumb mb-20 zoom-in d-block overflow-hidden"
-                href="recipe?id=<?php echo $post['id']; ?>"
-              >
-                <img src="assets/img/blog-post/<?php echo $post['img']; ?>" alt="<?php echo htmlspecialchars(strip_tags($post['title']), ENT_QUOTES, 'UTF-8'); ?>" width="370" height="260" loading="lazy" decoding="async" />
-              </a>
-              <div class="blog-post-content">
-                <a
-                  class="blog-link theme-color d-inline-block mb-10 text-uppercase"
-                  href="recipe?id=<?php echo $post['id']; ?>"
-                >
-                  <?php echo $post['category']; ?>
-                </a>
-                <h3 class="title mb-15">
-                  <a href="recipe?id=<?php echo $post['id']; ?>">
-                    <?php echo strip_tags($post['title']); ?>
-                  </a>
-                </h3>
-                <p class="sub-title">
-                  Posted by
-                  <span class="theme-color d-inline-block mx-1">
-                    <?php echo $post['author']; ?>
-                  </span>
-                  <?php echo $post['date']; ?>
-                </p>
-              </div>
-            </div>
-          </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end recipe section -->
-
 
 <!-- brand slider start -->
 <div class="brand-slider-section theme1 bg-white">

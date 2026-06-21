@@ -246,7 +246,6 @@ $categories = buildSheetMenuCategories();
             <ul class="offcanvas-submenu">
                 <li><a class="navmenu-click-mobile" href="private_labelling">Private Labelling</a></li>
                 <li><a class="navmenu-click-mobile" href="contact">Contact Us</a></li>
-                <li><a class="navmenu-click-mobile" href="recipes">Knowledge Centre</a></li>
                 <li><a class="navmenu-click-mobile" href="global-services">Global Services</a></li>
                 <li><a class="navmenu-click-mobile" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click-mobile" href="wholesale-pricelist">Wholesale Pricelist</a></li>
@@ -526,7 +525,6 @@ foreach ($offCanvasCartItems as $item) {
               <ul class="sub-menu">
                 <li><a class="navmenu-click" href="private_labelling">Private Labelling</a></li>
                 <li><a class="navmenu-click" href="contact">Contact Us</a></li>
-                <li><a class="navmenu-click" href="recipes">Knowledge Centre</a></li>
                 <li><a class="navmenu-click" href="pricelist">Pricelist</a></li>
                 <li><a class="navmenu-click" href="wholesale-pricelist">Wholesale Pricelist</a></li>
                 <li>

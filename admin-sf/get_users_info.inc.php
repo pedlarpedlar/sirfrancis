@@ -13,7 +13,7 @@ $sql = "
     (SELECT COUNT(*) FROM cart c WHERE c.user_id = u.id) AS cart_count,
     (SELECT COUNT(*) FROM wishlist w WHERE w.user_id = u.id) AS wishlist_count,
     (SELECT COUNT(*) FROM compare cm WHERE cm.user_id = u.id) AS compare_count,
-    (SELECT COUNT(*) FROM recipe_comments rc WHERE rc.user_id = u.id) AS comment_count,
+    0 AS comment_count,
     (SELECT s.is_subscribed FROM subscribers s WHERE s.email = u.email LIMIT 1) AS is_subscribed,
     (SELECT GROUP_CONCAT(c.product_id) FROM cart c WHERE c.user_id = u.id) AS cart_product_ids,
     (SELECT GROUP_CONCAT(w.product_id) FROM wishlist w WHERE w.user_id = u.id) AS wishlist_product_ids,

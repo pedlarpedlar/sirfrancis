@@ -63,7 +63,6 @@ $linkGroups = [
         ['Checkout', $siteBase . 'checkout', 'Customer checkout'],
         ['Contact', $siteBase . 'contact', 'Contact page'],
         ['Find an Agent', $siteBase . 'find-agent', 'Public agent map and agent lookup'],
-        ['Recipes', $siteBase . 'recipes', 'Recipe index'],
     ],
     'Policy & Sales Pages' => [
         ['Terms', $siteBase . 'terms', 'Terms and conditions'],

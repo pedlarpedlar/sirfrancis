@@ -45,7 +45,6 @@ outputUrl(sirFrancisSiteUrl('privacypolicy'), 'yearly', '0.4');
 outputUrl(sirFrancisSiteUrl('cookie_policy'), 'yearly', '0.4');
 outputUrl(sirFrancisSiteUrl('bankingdetails'), 'yearly', '0.3');
 outputUrl(sirFrancisSiteUrl('global-services'), 'monthly', '0.5');
-outputUrl(sirFrancisSiteUrl('recipes'), 'weekly', '0.5');
 
 $categoryLinks = [];
 $products = function_exists('getSheetProductsWithClearance') ? getSheetProductsWithClearance() : getSheetProducts();
@@ -71,22 +70,6 @@ foreach (array_keys($categoryLinks) as $category) {
         ? getCandybirdCategoryUrl($category, true)
         : sirFrancisSiteUrl(normalizeCandybirdProductSlug($category) ?: 'products');
     outputUrl($categoryUrl, 'weekly', '0.7');
-}
-
-$recipeFile = $rootDir . '/recipe_posts.php';
-if (!file_exists($recipeFile) && is_dir($liveRoot)) {
-    $recipeFile = $liveRoot . '/recipe_posts.php';
-}
-
-if (file_exists($recipeFile)) {
-    include $recipeFile;
-    if (isset($blogPosts) && is_array($blogPosts)) {
-        foreach ($blogPosts as $post) {
-            if (!empty($post['id'])) {
-                outputUrl(sirFrancisSiteUrl('recipe?id=' . urlencode($post['id'])), 'weekly', '0.6');
-            }
-        }
-    }
 }
 
 if (isset($conn) && $conn instanceof mysqli) {

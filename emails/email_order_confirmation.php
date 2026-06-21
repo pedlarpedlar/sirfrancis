@@ -115,7 +115,6 @@
                             <p style="margin:0 0 10px;">
                                 <a href="https://sirfrancis.co.za/contact" style="color:#28364B;text-decoration:none;">Help</a> |
                                 <a href="https://sirfrancis.co.za/privacypolicy" style="color:#28364B;text-decoration:none;">Privacy policy</a> |
-                                <a href="https://sirfrancis.co.za/recipes" style="color:#28364B;text-decoration:none;">Recipe Corner</a>
                             </p>
                             <p style="margin:0;">Copyright &copy; {year} Sir Francis. All rights reserved.</p>
                             <p style="margin:10px 0 0;font-size:11px;">Please add <a href="mailto:info@sirfrancis.co.za" style="color:#28364B;text-decoration:none;">info@sirfrancis.co.za</a> and <a href="https://sirfrancis.co.za" style="color:#28364B;text-decoration:none;">sirfrancis.co.za</a> to your safe senders list so order updates reach you. Prefer fewer updates? <a href="https://sirfrancis.co.za/unsubscribe?email={user_email_unsubscribe}" style="color:#28364B;text-decoration:none;">Unsubscribe from marketing emails here</a>. Essential order, payment, account and security emails will still be sent when needed.</p>

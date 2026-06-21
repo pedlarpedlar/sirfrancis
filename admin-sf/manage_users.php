@@ -178,7 +178,7 @@ function cbCustomersDeleteCustomerCompletely($conn, $userId) {
             cbCustomersDeleteByInt($conn, 'orders', 'id', $orderId);
         }
 
-        foreach (['cart', 'wishlist', 'compare', 'reviews', 'recipe_comments', 'sessions', 'action_logs', 'page_views'] as $table) {
+        foreach (['cart', 'wishlist', 'compare', 'reviews', 'sessions', 'action_logs', 'page_views'] as $table) {
             cbCustomersDeleteByInt($conn, $table, 'user_id', $userId);
         }
         foreach ($guestIds as $guestId) {

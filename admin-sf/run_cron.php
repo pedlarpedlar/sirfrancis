@@ -18,7 +18,7 @@ $allowedJobs = [
     ],
     'generate_sitemap.php' => [
         'label' => 'Sitemap',
-        'description' => 'Regenerates the XML sitemap output from current pages, categories, products, and recipes.'
+        'description' => 'Regenerates the XML sitemap output from current pages, categories, and products.'
     ],
     'geolocation.php' => [
         'label' => 'Geolocation',

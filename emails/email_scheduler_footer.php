@@ -22,8 +22,6 @@
         <td align="center">
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li style="font-size:10px; display: inline-block; color: #28364B;"> <a href="https://sirfrancis.co.za/privacypolicy" style="text-decoration: none; color: #28364B; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">Privacy policy</a></li>
-            <li style="font-size:10px; display: inline-block; color: white;"> <span style="padding-left:5px;padding-right: 5px;">&#8226;</span> <a href="https://sirfrancis.co.za/return_policy" style="text-decoration: none; color: #28364B; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">Buyer Protection</a></li>
-            <li style="font-size:10px; display: inline-block; color: white;"> <span style="padding-left:5px;padding-right: 5px;">&#8226;</span> <a href="https://sirfrancis.co.za/recipes" style="text-decoration: none; color: #28364B; font-family:'Montserrat', sans-serif;font-optical-sizing: auto;font-weight: 400;font-style: normal;">Recipe Corner</a></li>
           </ul>
       </td>
   </tr>

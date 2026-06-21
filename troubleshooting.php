@@ -58,7 +58,6 @@ basically, mimic the checkout.inc.php page with the order details and redirect t
 (halfway done! just need to complete the "view carts" page so that i can actually checkout as admin) BRAINSTORM: to make it easier for user (and me), add a add-to-cart button next to each size in the pricelist. use a different link like shop-pricelist so that it doesn't tamper with the printable pricelist. 
 
 (^continuation) if i as the admin add to cart then it should generate a syncitt invoice directly. basically, on that page (restricted by admin login), the products should come from the candybird database and get inserted into the syncitt database and then instead of checking out, redirect to the invoice on syncitt where you can then add the customer details. If that product isn't already added to syncitt then add as a new product perhaps with a suffix or order note "online-store" to define the orders and to separate the items for filter purposes. Also make it such that a user can share their cart with me (admin) and if I view it from the admin panel then i can check-out that cart. I should be able to remove/add/update the items in the cart and empty/save cart. There can also be a list of "carts" which i can either delete or checkout. this way, user can do their own shopping "manually" from pricelist and then send to me, or checkout on their own, or simply use the website itself to shop and checkout.
-Admin should be able to:add / edit / approve or reject / delete reviews on products, and same for recipe blogs.
 
 users should be able to change their rating on a product
 
@@ -68,7 +67,6 @@ To compare, add Material, Features, Properties etc.
 
 make page manage_order.php: Add order details here. Admin should be able to: - Add/remove products - Update quantity - Add/remove coupon - Add/remove/edit shipping method - Add/remove/edit shipping charge - All user info should also be editable but only on the users page, not the orders page.
 
-recipe corner: Prepare 52 recipes (1yr) and have cronjob or scheduler upload a new recipe every Sunday until it runs out. allow people to rate and comment on the recipes. Include links in some recipes, to other websites.
 
 create a way for admin/staff users to add to cart and checkout on behalf of customers (guests or users). when it comes to payfast payment they must just checkout themselves from their profile, if it's a guest give them a user and details like email and 12345 (and inform them to change their password.)
 
@@ -76,7 +74,6 @@ also log these actions i.e. admin placed the order.
 
 admin Manage order page. 
 
-make a "inbox" for all website notifications, order updates, comments, recipe corner etc.
 
 <!-- ADD FEATURES AND PAGES END -->
 
@@ -153,9 +150,7 @@ pretty-inize the admin category add page, currently a bit raw
 
 // checkout total not correct with discounts and coupon, cart total is, copy that.
 
-// Make a Product Not Found and Recipe Not Found page or simply redirect page.
 
-//make the recipe category page! or simply remove links from headers on recipes page  and tags on recipe page and go directly to recipe and recipes.
 
 
 //Make a pricelists downloadable, with each size and category as headers/dividers.
@@ -164,7 +159,6 @@ pretty-inize the admin category add page, currently a bit raw
 
 //TEST order checkout page: with and without create user.
 
-//make pages: recipes.php, 
 
 
 
@@ -186,15 +180,12 @@ pretty-inize the admin category add page, currently a bit raw
 COMPLETED/PUT ASIDE FOR LATER:
 
 
-//immediate to get started: recipe page and recipes, index page more info (on banners), and product listing (at least 1 per category), make payfast live.
 
 //make a Banking Details page
 
 //add banking details add to sitemaps
 
-//add each recipe to sitemaps just like the products. that means anyone searching for these recipes would land up on the page.
 
-//add products to view_recipe page
 
 //add global-services, wholesale, return policy and other important pages from menu to sitemaps
 
@@ -354,7 +345,6 @@ Send email to all existing candybird clients that the website has a new look and
 
 //clean up UI, make bg outline much lighter, make fonts bolder, get the checkout and payfast to work, make featured items, remove the unwanted menu items for now like reseller/pricelist etc, add images and start advertising asap.
 
-// Change the icon colors for email insta/facebook. Also change the background color. And "read our blog" should be "Check our recipes! or something. Make the email footer/headers more friendly rather than robot-like.
 
 // Add image url upload to csv file (when exporting and importing)
 

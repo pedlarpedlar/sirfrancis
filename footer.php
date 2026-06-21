@@ -161,7 +161,6 @@ $footerGoogleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawu
       <a href="<?=$home_directory?>pricelist">Pricelist</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Wholesale Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
-      <a href="<?=$home_directory?>recipes">Knowledge Centre</a>
     </div>
     <div>
       <h3>Business</h3>
@@ -2131,12 +2130,6 @@ function logAction(action, details = '', userId = null, guestIdentifier = '') {
         logUx(type, 'From: ' + pagePath(pageUrl) + ' | To: ' + pagePath(href) + ' | Text: ' + text);
     });
 })();
-
-$('body').on('click', '.print_recipe', function(event) {
-    event.preventDefault();
-    window.print();
-    logAction('Clicked on print recipe', 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
-});
 
 $('body').on('click', '.list-view-products', function(event) {
     logAction('Clicked on list-view', 'From page ' + window.location.href, '<?=$userId?>', '<?=$guestIdentifier?>');
