@@ -12,6 +12,7 @@ if (!function_exists('cbWebsiteSettingsEnsureColumns')) {
             'default_unit_weight_kg' => "ALTER TABLE admin_website_settings ADD COLUMN default_unit_weight_kg DECIMAL(10,3) NULL DEFAULT 0.25",
             'category_display_order' => "ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL",
             'google_maps_api_key' => "ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL",
+            'google_places_api_key' => "ALTER TABLE admin_website_settings ADD COLUMN google_places_api_key VARCHAR(255) NULL",
             'contact_recaptcha_enabled' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_enabled TINYINT(1) NOT NULL DEFAULT 0",
             'contact_recaptcha_type' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_type VARCHAR(20) NOT NULL DEFAULT 'v3'",
             'contact_recaptcha_site_key' => "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_site_key VARCHAR(255) NULL",

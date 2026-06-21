@@ -139,21 +139,35 @@ $enabled_delivery_options = getCandybirdEnabledDeliveryOptions($delivery_options
 $default_delivery_method = getCandybirdDefaultDeliveryMethod($delivery_options);
 $default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $checkout_weight_kg, $checkout_free_shipping_basis, $free_shipping_amount);
 $google_maps_api_key = '';
+$google_places_api_key = '';
 if ($conn instanceof mysqli) {
     $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
     if ($mapsColumnCheck && $mapsColumnCheck->num_rows === 0) {
         $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL");
     }
-    $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
-    if ($mapsColumnCheck && $mapsColumnCheck->num_rows > 0) {
-        $mapsResult = $conn->query("SELECT google_maps_api_key FROM admin_website_settings LIMIT 1");
+    $placesColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_places_api_key'");
+    if ($placesColumnCheck && $placesColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_places_api_key VARCHAR(255) NULL");
+    }
+    $mapsResult = $conn->query("SELECT google_maps_api_key, google_places_api_key FROM admin_website_settings LIMIT 1");
+    if ($mapsResult) {
         if ($mapsResult && ($mapsRow = $mapsResult->fetch_assoc())) {
             $google_maps_api_key = trim((string) ($mapsRow['google_maps_api_key'] ?? ''));
+            $google_places_api_key = trim((string) ($mapsRow['google_places_api_key'] ?? ''));
         }
     }
 }
+if ($google_places_api_key === '') {
+    $google_places_api_key = $google_maps_api_key;
+}
 if ($google_maps_api_key === '') {
     $google_maps_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
+}
+if ($google_places_api_key === '') {
+    $google_places_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_PLACES_API_KEY'));
+}
+if ($google_places_api_key === '') {
+    $google_places_api_key = $google_maps_api_key;
 }
 
 
@@ -1464,8 +1478,8 @@ window.initCandybirdAddressAutocomplete = function initCandybirdAddressAutocompl
 <?php
 include 'footer.php';
 ?>
-<?php if ($google_maps_api_key !== ''): ?>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=htmlspecialchars($google_maps_api_key, ENT_QUOTES)?>&libraries=places&callback=initCandybirdAddressAutocomplete"></script>
+<?php if ($google_places_api_key !== ''): ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=htmlspecialchars($google_places_api_key, ENT_QUOTES)?>&libraries=places&callback=initCandybirdAddressAutocomplete"></script>
 <?php elseif (isset($_SESSION['admin_id'])): ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1474,7 +1488,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var note = document.createElement('div');
     note.className = 'checkout-field-error';
     note.style.marginTop = '6px';
-    note.textContent = 'Admin note: Google address autocomplete is off because no Google Maps API key is saved in Website Information.';
+    note.textContent = 'Admin note: Google address autocomplete is off because no Google Places API key is saved in Website Settings.';
     input.parentNode.appendChild(note);
 });
 </script>

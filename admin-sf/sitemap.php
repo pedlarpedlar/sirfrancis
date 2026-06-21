@@ -45,7 +45,8 @@ $linkGroups = [
     ],
     'Website & Settings' => [
         ['Contact Info', 'manage_website_information', 'Company, contact, address and banking settings'],
-        ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices, free shipping and Maps API'],
+        ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices and free shipping'],
+        ['Google Maps & Places', 'google_maps_places', 'Maps and Places API keys for live maps and address autocomplete'],
         ['Google reCAPTCHA', 'google_recaptcha', 'Contact form spam protection settings'],
         ['Site Notices', 'site_flags', 'Shop closure, delayed-processing and maintenance flags'],
         ['Run Cron Jobs', 'run_cron', 'Manually trigger available cron jobs'],

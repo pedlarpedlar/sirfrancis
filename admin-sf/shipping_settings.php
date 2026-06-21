@@ -37,10 +37,6 @@ include 'page_menues.php';
     .shipping-settings-card h4 { color:#28364B; margin-bottom:14px; }
     .shipping-settings-card .form-group { margin-bottom:18px; }
     .shipping-method-card { background:#fbfaf7; border:1px solid #e8ded2; border-radius:8px; padding:18px; margin-bottom:18px; height:100%; }
-    .shipping-help-panel { display:none; background:#f6f0ff; border:1px solid #dfccf3; border-radius:8px; padding:16px; margin-top:14px; color:#47354f; }
-    .shipping-help-panel.is-visible { display:block; }
-    .shipping-help-panel ul { padding-left:20px; margin-bottom:0; }
-    .shipping-help-panel li { margin-bottom:8px; }
     .shipping-inline-help { color:#6d6570; font-size:13px; line-height:1.5; margin-top:6px; }
     .shipping-field-grid { display:grid; grid-template-columns: minmax(0, 1fr); gap:18px; }
     @media (min-width: 768px) {
@@ -77,23 +73,6 @@ include 'page_menues.php';
                         <div class="input-group-append"><span class="input-group-text">grams</span></div>
                     </div>
                     <small class="form-text text-muted">Use a dot for decimals if needed. This is only a fallback when the sheet has no shipping_weight and the visible size is unit/pc/ml/lt. Example: 250 means 250 grams.</small>
-                </div>
-                <div class="form-group mb-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label for="google_maps_api_key" class="mb-1">Google Maps API Key</label>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="shippingHelpToggle">Help mode</button>
-                    </div>
-                    <input type="text" class="form-control" id="google_maps_api_key" name="google_maps_api_key" value="<?= cbWebsiteSettingsText($row['google_maps_api_key'] ?? '') ?>" autocomplete="off">
-                    <small class="form-text text-muted">Used for checkout address autocomplete. Leave blank to keep manual address typing only.</small>
-                    <div class="shipping-help-panel" id="shippingHelpPanel">
-                        <strong>Google Maps help</strong>
-                        <ul>
-                            <li>Get the key from Google Cloud Console by enabling the Maps JavaScript API and Places API.</li>
-                            <li>Add your website domains as allowed referrers so the key cannot be freely used elsewhere.</li>
-                            <li>This helps customers choose cleaner delivery addresses, suburbs and postal details at checkout.</li>
-                            <li>If the key is empty or restricted incorrectly, checkout still allows manual address typing.</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <div class="row">
@@ -142,16 +121,4 @@ include 'page_menues.php';
 </div>
 
 <?php cbWebsiteSettingsSaveScript(true); ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var helpButton = document.getElementById('shippingHelpToggle');
-    var helpPanel = document.getElementById('shippingHelpPanel');
-    if (helpButton && helpPanel) {
-        helpButton.addEventListener('click', function() {
-            helpPanel.classList.toggle('is-visible');
-            helpButton.textContent = helpPanel.classList.contains('is-visible') ? 'Hide help' : 'Help mode';
-        });
-    }
-});
-</script>
 <?php include 'footer.php'; ?>

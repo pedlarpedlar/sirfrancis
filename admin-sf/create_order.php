@@ -13,6 +13,7 @@ $message = '';
 $success = false;
 $old = $_POST;
 $googleMapsApiKey = '';
+$googlePlacesApiKey = '';
 
 function cbCreateOrderText($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -23,16 +24,27 @@ if ($conn instanceof mysqli) {
     if ($mapsColumnCheck && $mapsColumnCheck->num_rows === 0) {
         $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL");
     }
-    $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
-    if ($mapsColumnCheck && $mapsColumnCheck->num_rows > 0) {
-        $mapsResult = $conn->query("SELECT google_maps_api_key FROM admin_website_settings LIMIT 1");
-        if ($mapsResult && ($mapsRow = $mapsResult->fetch_assoc())) {
-            $googleMapsApiKey = trim((string) ($mapsRow['google_maps_api_key'] ?? ''));
-        }
+    $placesColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_places_api_key'");
+    if ($placesColumnCheck && $placesColumnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_places_api_key VARCHAR(255) NULL");
     }
+    $mapsResult = $conn->query("SELECT google_maps_api_key, google_places_api_key FROM admin_website_settings LIMIT 1");
+    if ($mapsResult && ($mapsRow = $mapsResult->fetch_assoc())) {
+        $googleMapsApiKey = trim((string) ($mapsRow['google_maps_api_key'] ?? ''));
+        $googlePlacesApiKey = trim((string) ($mapsRow['google_places_api_key'] ?? ''));
+    }
+}
+if ($googlePlacesApiKey === '') {
+    $googlePlacesApiKey = $googleMapsApiKey;
 }
 if ($googleMapsApiKey === '') {
     $googleMapsApiKey = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
+}
+if ($googlePlacesApiKey === '') {
+    $googlePlacesApiKey = trim((string) getenv('SIRFRANCIS_GOOGLE_PLACES_API_KEY'));
+}
+if ($googlePlacesApiKey === '') {
+    $googlePlacesApiKey = $googleMapsApiKey;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -321,14 +333,14 @@ include 'page_menues.php';
             window.initSirFrancisAdminOrderAddressAutocomplete();
         }
 
-        <?php if ($googleMapsApiKey === ''): ?>
+        <?php if ($googlePlacesApiKey === ''): ?>
         showManualFields();
         <?php endif; ?>
     });
 })();
 </script>
-<?php if ($googleMapsApiKey !== ''): ?>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=cbCreateOrderText($googleMapsApiKey)?>&libraries=places&callback=initSirFrancisAdminOrderAddressAutocomplete"></script>
+<?php if ($googlePlacesApiKey !== ''): ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=cbCreateOrderText($googlePlacesApiKey)?>&libraries=places&callback=initSirFrancisAdminOrderAddressAutocomplete"></script>
 <?php endif; ?>
 
 <?php include '../footer.php'; ?>
