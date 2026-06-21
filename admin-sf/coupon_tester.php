@@ -246,6 +246,7 @@ include 'page_menues.php';
                             <tr><th>Categories</th><td><?= cbCtText($coupon['category_restriction'] ?? $coupon['valid_categories'] ?? 'All') ?></td></tr>
                             <tr><th>Excluded product types</th><td><?= cbCtText($coupon['product_type_exclusion'] ?? $coupon['excluded_product_types'] ?? 'None') ?></td></tr>
                             <tr><th>Sale items allowed</th><td><?= cbCtYes($coupon['valid_on_sale_items'] ?? 'no') ? 'Yes' : 'No' ?></td></tr>
+                            <tr><th>Subscriber only</th><td><?= cbCtYes($coupon['subscriber_only'] ?? $coupon['subscription_only'] ?? $coupon['requires_subscription'] ?? 'no') ? 'Yes' : 'No' ?></td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

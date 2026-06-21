@@ -77,13 +77,11 @@ if (!function_exists('parseCandybirdTsvRows')) {
             }
 
             $rowNumberAfterHeader++;
-            if ($rowNumberAfterHeader === 1) {
-                $firstHeader = strtolower(trim((string) ($headers[0] ?? '')));
-                $firstValue = trim((string) ($row[0] ?? ''));
-                if (in_array(strtolower($firstValue), ['note', 'notes', 'explainer', 'instructions', 'instruction', 'example', 'help'], true)
-                    || ($firstHeader === 'id' && $firstValue !== '' && !is_numeric($firstValue))) {
-                    continue;
-                }
+            $firstHeader = strtolower(trim((string) ($headers[0] ?? '')));
+            $firstValue = trim((string) ($row[0] ?? ''));
+            if (in_array(strtolower($firstValue), ['note', 'notes', 'explainer', 'instructions', 'instruction', 'example', 'help'], true)
+                || ($firstHeader === 'id' && $firstValue !== '' && !is_numeric($firstValue))) {
+                continue;
             }
 
             if (count($row) < $headerCount) {
@@ -181,7 +179,7 @@ if (!function_exists('candybirdTsvDataLooksSafeToCache')) {
             return true;
         }
 
-        return candybirdTsvValidProductCount($tsvData) >= 250;
+        return candybirdTsvValidProductCount($tsvData) >= 1;
     }
 }
 

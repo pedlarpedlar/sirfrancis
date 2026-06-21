@@ -90,6 +90,23 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                 'slug',
                 'additional_categories',
             ],
+            'coupons' => [
+                'id',
+                'coupon_code',
+                'discount_type',
+                'discount_value',
+                'min_order_value',
+                'valid_from',
+                'valid_until',
+                'valid_on_sale_items',
+                'subscriber_only',
+                'valid_count',
+                'multi_user',
+                'email_restriction',
+                'phone_restriction',
+                'category_restriction',
+                'product_type_exclusion',
+            ],
         ];
         $headers = $templateHeaders[$key] ?? array_values(array_unique(array_merge(
             $sources[$key]['required_headers'] ?? [],
@@ -124,6 +141,7 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             'valid_from' => 'Coupon/clearance start date.',
             'valid_until' => 'Coupon/clearance end date.',
             'valid_on_sale_items' => 'yes/no. Whether coupon applies to already discounted items.',
+            'subscriber_only' => 'yes/no. yes means only subscribed email addresses can use this coupon.',
             'min_order_value' => 'Minimum product subtotal before shipping.',
             'discount_type' => 'percentage or fixed.',
             'discount_value' => 'Discount amount, e.g. 10 or 100.',
@@ -187,18 +205,19 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
             } elseif ($key === 'coupons') {
                 $examples = [
                     'id' => '1',
-                    'coupon_code' => 'PAYDAY',
-                    'valid_from' => '01-06-2026',
-                    'valid_until' => '30-06-2026',
+                    'coupon_code' => 'MARINE10',
+                    'discount_type' => 'percentage',
+                    'discount_value' => '10',
+                    'min_order_value' => '750',
+                    'valid_from' => '01-07-2026',
+                    'valid_until' => '31-07-2026',
                     'valid_on_sale_items' => 'no',
-                    'min_order_value' => '500',
-                    'discount_type' => 'fixed',
-                    'discount_value' => '100',
-                    'valid_count' => '1',
+                    'subscriber_only' => 'no',
+                    'valid_count' => '100',
                     'multi_user' => 'yes',
                     'email_restriction' => '',
                     'phone_restriction' => '',
-                    'category_restriction' => 'Gifting',
+                    'category_restriction' => 'Marine Collagen',
                     'product_type_exclusion' => 'digital,voucher',
                     'product_id_restriction' => '',
                 ];
@@ -239,6 +258,10 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
                 ];
             }
             $row3[] = $examples[$header] ?? '';
+        }
+
+        if ($key === 'coupons') {
+            return [$headers, $row3, $row2];
         }
 
         return [$headers, $row2, $row3];

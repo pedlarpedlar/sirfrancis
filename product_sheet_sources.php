@@ -14,8 +14,8 @@ if (!function_exists('getCandybirdDefaultSheetSources')) {
                 'label' => 'Coupons',
                 'published_url' => 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS6OtaChjDDrYCGBfpSaK8nnixhqpoZpJwPKRnA0MmuTCHrIIYSoksqoFkB8syrlxfOjn27rOY0wvll/pub?gid=0&single=true&output=tsv',
                 'edit_url' => 'https://docs.google.com/spreadsheets/d/1aofJluANxsJ-jtEIh9w1DDRzVuArtJVG32nFndX6bqw/edit?gid=0#gid=0',
-                'required_headers' => ['id', 'coupon_code', 'valid_from', 'valid_until', 'valid_on_sale_items', 'min_order_value', 'discount_type', 'discount_value'],
-                'optional_headers' => ['valid_count', 'multi_user', 'email_restriction', 'phone_restriction', 'category_restriction', 'product_type_exclusion', 'product_id_restriction'],
+                'required_headers' => ['id', 'coupon_code', 'discount_type', 'discount_value', 'min_order_value', 'valid_from', 'valid_until', 'valid_on_sale_items', 'subscriber_only', 'valid_count', 'multi_user', 'email_restriction', 'phone_restriction', 'category_restriction', 'product_type_exclusion'],
+                'optional_headers' => ['product_id_restriction'],
             ],
             'clearance' => [
                 'label' => 'Clearance Basket',
@@ -242,15 +242,13 @@ if (!function_exists('checkCandybirdSheetHealth')) {
                 break;
             }
 
-            if ($scannedRowCount === 1) {
-                $firstHeader = strtolower(trim((string) ($headers[0] ?? '')));
-                $firstValue = trim((string) ($row[0] ?? ''));
-                if (in_array(strtolower($firstValue), ['note', 'notes', 'explainer', 'instructions', 'instruction', 'example', 'help'], true)
-                    || ($firstHeader === 'id' && $firstValue !== '' && !is_numeric($firstValue))) {
-                    $ignoredRowCount++;
-                    $explanationRowSkipped = true;
-                    continue;
-                }
+            $firstHeader = strtolower(trim((string) ($headers[0] ?? '')));
+            $firstValue = trim((string) ($row[0] ?? ''));
+            if (in_array(strtolower($firstValue), ['note', 'notes', 'explainer', 'instructions', 'instruction', 'example', 'help'], true)
+                || ($firstHeader === 'id' && $firstValue !== '' && !is_numeric($firstValue))) {
+                $ignoredRowCount++;
+                $explanationRowSkipped = true;
+                continue;
             }
 
             if (count($row) < $headerCount) {
