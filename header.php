@@ -40,6 +40,7 @@ $description_meta = $description_meta ?? "Sir Francis supplies premium fish gela
     <!-- Author and Keywords Meta Tags -->
     <meta name="author" content="Sir Francis">
     <meta name="keywords" content="fish gelatine South Africa, marine collagen South Africa, collagen peptides, tripeptides, sea moss, supplement private labelling, Sir Francis">
+    <title><?= htmlspecialchars($title_og, ENT_QUOTES, 'UTF-8') ?></title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="<?=$home_directory?>assets/img/favicon.png">
