@@ -54,6 +54,48 @@ function sfSubscriberDate($value) {
 
 sfSubscribersEnsureTable($conn);
 
+$flash = $_SESSION['subscriber_admin_flash'] ?? null;
+unset($_SESSION['subscriber_admin_flash']);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+    if ($action === 'delete') {
+        $subscriberId = (int) ($_POST['subscriber_id'] ?? 0);
+        if ($subscriberId > 0) {
+            $stmt = $conn->prepare("DELETE FROM subscribers WHERE id = ? LIMIT 1");
+            if ($stmt) {
+                $stmt->bind_param('i', $subscriberId);
+                $stmt->execute();
+                $deleted = $stmt->affected_rows > 0;
+                $stmt->close();
+                $_SESSION['subscriber_admin_flash'] = [
+                    'success' => $deleted,
+                    'message' => $deleted ? 'Subscriber deleted.' : 'Subscriber was not found.',
+                ];
+            } else {
+                $_SESSION['subscriber_admin_flash'] = [
+                    'success' => false,
+                    'message' => 'Subscriber could not be deleted.',
+                ];
+            }
+        } else {
+            $_SESSION['subscriber_admin_flash'] = [
+                'success' => false,
+                'message' => 'Subscriber could not be identified.',
+            ];
+        }
+
+        $redirectQuery = [];
+        foreach (['status', 'q'] as $key) {
+            if (isset($_POST[$key]) && trim((string) $_POST[$key]) !== '') {
+                $redirectQuery[$key] = trim((string) $_POST[$key]);
+            }
+        }
+        header('Location: subscribers' . ($redirectQuery ? '?' . http_build_query($redirectQuery) : ''));
+        exit();
+    }
+}
+
 $status = $_GET['status'] ?? 'all';
 if (!in_array($status, ['all', 'active', 'unsubscribed'], true)) {
     $status = 'all';
@@ -114,6 +156,9 @@ include 'page_menues.php';
     .subscriber-tabs a.active { background: #CEBD88; color: #172235; }
     .subscriber-search { display: flex; gap: 8px; }
     .subscriber-search input { border: 1px solid #d8c895; border-radius: 0; min-width: 260px; padding: 9px 11px; }
+    .subscriber-delete-form { margin: 0; }
+    .subscriber-delete-btn { background: #8a1f1f; border: 0; border-radius: 0; color: #fff; font-weight: 800; padding: 7px 10px; }
+    .subscriber-delete-btn:hover { background: #5f1111; color: #fff; }
     .subscriber-pill { border-radius: 999px; display: inline-block; font-size: 12px; font-weight: 900; padding: 5px 9px; text-transform: uppercase; }
     .subscriber-pill.active { background: #e8f5e9; color: #1b5e20; }
     .subscriber-pill.unsubscribed { background: #fff3e0; color: #8a4b00; }
@@ -131,6 +176,12 @@ include 'page_menues.php';
         <h2>Subscribers</h2>
         <p class="mb-0">View active subscribers, unsubscribed addresses and the recorded subscription dates for broadcast compliance.</p>
     </section>
+
+    <?php if ($flash): ?>
+        <div class="alert <?= !empty($flash['success']) ? 'alert-success' : 'alert-danger' ?> mt-3">
+            <?= sfSubscriberText($flash['message'] ?? '') ?>
+        </div>
+    <?php endif; ?>
 
     <section class="subscribers-stats" aria-label="Subscriber totals">
         <div class="subscriber-stat"><strong><?= number_format($stats['active']) ?></strong><span>Subscribed</span></div>
@@ -161,11 +212,12 @@ include 'page_menues.php';
                         <th>Subscribed Date</th>
                         <th>Unsubscribed Date</th>
                         <th>First Seen</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!$rows): ?>
-                        <tr><td colspan="5">No subscriber records found.</td></tr>
+                        <tr><td colspan="6">No subscriber records found.</td></tr>
                     <?php endif; ?>
                     <?php foreach ($rows as $row): ?>
                         <?php
@@ -182,6 +234,15 @@ include 'page_menues.php';
                             <td><?= sfSubscriberText(sfSubscriberDate($subscribedDate)) ?></td>
                             <td><?= sfSubscriberText(sfSubscriberDate($unsubscribedDate)) ?></td>
                             <td><?= sfSubscriberText(sfSubscriberDate($row['created_at'])) ?></td>
+                            <td>
+                                <form class="subscriber-delete-form" method="post" action="subscribers" onsubmit="return confirm('Delete this subscriber from the list? This cannot be undone.');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="subscriber_id" value="<?= (int) $row['id'] ?>">
+                                    <input type="hidden" name="status" value="<?= sfSubscriberText($status) ?>">
+                                    <input type="hidden" name="q" value="<?= sfSubscriberText($search) ?>">
+                                    <button type="submit" class="subscriber-delete-btn">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
