@@ -1,6 +1,5 @@
 <?php
 include 'session_logins.php';
-include 'header.php';
 
 $contactWhatsappNumber = trim((string) ($hotline ?? ''));
 if ($contactWhatsappNumber === '') {
@@ -10,11 +9,29 @@ $contactWhatsappDigits = preg_replace('/\D+/', '', $contactWhatsappNumber);
 if (strpos($contactWhatsappDigits, '0') === 0) {
     $contactWhatsappDigits = '27' . substr($contactWhatsappDigits, 1);
 }
-$consumerEmail = 'info@fishgelatine.co.za';
-$contactGoogleAddress = 'Sir Francis, 18 Babiana Rd, Malabar, Port Elizabeth, South Africa';
+$consumerEmail = 'info@sirfrancis.co.za';
+$contactFallbackAddress = 'Sir Francis, 1000 Example Avenue, Manhattan, New York, NY 10001, USA';
+function sfContactPublicAddress($value, $fallback) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return $fallback;
+    }
+    if (preg_match('/babiana|malabar|port\s*elizabeth/i', $value)) {
+        return $fallback;
+    }
+    return $value;
+}
+$contactGoogleAddress = sfContactPublicAddress($website_address ?? '', $contactFallbackAddress);
+$contactHeadOffice = sfContactPublicAddress($headquarters ?: ($website_address ?? ''), 'Manhattan, New York, USA');
 $googleReviewUrl = 'https://g.page/r/CfEBOxQp_13OEBE/review';
 $googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($contactGoogleAddress);
 $googleEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($contactGoogleAddress) . '&output=embed';
+$limitedDescription = 'Contact Sir Francis for product support, retail orders, wholesale supply, bulk buying and private labelling enquiries.';
+$page_url_canonical = 'https://sirfrancis.co.za/contact';
+$title_og = 'Contact Us - Sir Francis';
+$page_url_og = 'https://sirfrancis.co.za/contact';
+$description_og = $limitedDescription;
+$description_meta = $limitedDescription;
 $contactRecaptchaEnabled = false;
 $contactRecaptchaSiteKey = '';
 $contactRecaptchaType = 'v3';
@@ -35,8 +52,8 @@ if (isset($conn) && $conn instanceof mysqli && !$conn->connect_error) {
 }
 $contactStartedAt = time();
 $_SESSION['contact_form_started_at'] = $contactStartedAt;
+include 'header.php';
 ?>
-<title>Contact Us - Sir Francis</title>
 <?php include 'page_menues.php'; ?>
 
 <style>
@@ -98,13 +115,13 @@ $_SESSION['contact_form_started_at'] = $contactStartedAt;
 
           <div class="cb-contact-item">
             <h3><i class="fas fa-map-marker-alt"></i>Head office</h3>
-            <p><?=htmlspecialchars($headquarters ?: $website_address ?: 'Port Elizabeth, South Africa', ENT_QUOTES, 'UTF-8')?></p>
+            <p><?=htmlspecialchars($contactHeadOffice, ENT_QUOTES, 'UTF-8')?></p>
           </div>
 
           <div class="cb-contact-item">
             <h3><i class="fas fa-warehouse"></i>Operational address</h3>
             <p><?=htmlspecialchars($contactGoogleAddress, ENT_QUOTES, 'UTF-8')?></p>
-            <p class="cb-contact-highlight mb-0">Use this exact address in Google Maps for the Sir Francis location: <strong>Sir Francis, 18 Babiana Rd, Malabar, Port Elizabeth</strong>.</p>
+            <p class="cb-contact-highlight mb-0">Use this exact address in Google Maps for the Sir Francis location: <strong><?=htmlspecialchars($contactGoogleAddress, ENT_QUOTES, 'UTF-8')?></strong>.</p>
           </div>
 
           <div class="cb-contact-item">
