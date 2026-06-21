@@ -30,6 +30,7 @@ $linkGroups = [
         ['Broadcast History', 'broadcasts', 'Past and pending broadcasts, results, edit, copy and delete'],
         ['Social Accounts', 'social_accounts', 'Social handles, login notes and posting reminder settings'],
         ['Business Documents', 'business_documents', 'Admin-only CIPC, SARS, contracts, tax and business document vault'],
+        ['Find Agents', 'agents', 'Add supplier agents, map pins and phone numbers'],
     ],
     'Sheets & Products' => [
         ['Products', 'products', 'Product sheet links, health, template and force sync'],
@@ -61,6 +62,7 @@ $linkGroups = [
         ['Cart', $siteBase . 'cart', 'Customer cart'],
         ['Checkout', $siteBase . 'checkout', 'Customer checkout'],
         ['Contact', $siteBase . 'contact', 'Contact page'],
+        ['Find an Agent', $siteBase . 'find-agent', 'Public agent map and agent lookup'],
         ['Recipes', $siteBase . 'recipes', 'Recipe index'],
     ],
     'Policy & Sales Pages' => [

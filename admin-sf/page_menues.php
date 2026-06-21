@@ -148,9 +148,10 @@ function cbAdminMenuActive($page, $currentPage) {
           <li><a href="email_lists">Email Lists</a></li>
           <li><a href="broadcasts">Broadcast History</a></li>
           <li>
-            <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents'], $adminCurrentPage) ?>>
+            <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents', 'agents'], $adminCurrentPage) ?>>
               <summary>Business Ops</summary>
               <ul>
+                <li><a href="agents">Find Agents</a></li>
                 <li><a href="social_accounts">Social Accounts</a></li>
                 <li><a href="business_documents">Business Documents</a></li>
               </ul>
@@ -234,9 +235,10 @@ function cbAdminMenuActive($page, $currentPage) {
       </li>
       <li><a href="backups"<?= cbAdminMenuActive('backups', $adminCurrentPage) ?>>Website Backups</a></li>
       <li>
-        <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents'], $adminCurrentPage) ?>>
+        <details<?= cbAdminMenuOpen(['social_accounts', 'business_documents', 'agents'], $adminCurrentPage) ?>>
           <summary>Business Ops</summary>
           <ul>
+            <li><a href="agents"<?= cbAdminMenuActive('agents', $adminCurrentPage) ?>>Find Agents</a></li>
             <li><a href="social_accounts"<?= cbAdminMenuActive('social_accounts', $adminCurrentPage) ?>>Social Accounts</a></li>
             <li><a href="business_documents"<?= cbAdminMenuActive('business_documents', $adminCurrentPage) ?>>Business Documents</a></li>
           </ul>

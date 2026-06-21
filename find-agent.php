@@ -2,9 +2,9 @@
 $use_corporate_nav = true;
 $load_shopping_nav = false;
 include 'session_logins.php';
-require_once __DIR__ . '/find_agent_data.php';
+require_once __DIR__ . '/find_agent_helpers.php';
 
-$sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions() : [];
+$sf_agent_regions = function_exists('sfFindAgentRegions') ? sfFindAgentRegions($conn ?? null) : [];
 $sf_google_maps_api_key = '';
 if (isset($conn) && $conn instanceof mysqli) {
     $sf_maps_column_check = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
@@ -445,7 +445,7 @@ include 'header.php';
     document.getElementById('sf-agent-region-label').textContent = agent.direct ? 'Available region' : agent.label;
     document.getElementById('sf-agent-title').textContent = agent.title;
     document.getElementById('sf-agent-summary').textContent = agent.direct
-      ? 'This region has the default Sir Francis support point available.'
+      ? 'This region has active Sir Francis agent details available.'
       : 'We do not have a listed agent in this region yet, but we can still route your enquiry.';
     document.getElementById('sf-agent-name').textContent = agent.name;
     document.getElementById('sf-agent-details').textContent = agent.details;
