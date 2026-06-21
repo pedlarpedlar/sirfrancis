@@ -626,7 +626,7 @@ if ($resultWebsiteSettings) {
     }
 
 
-    $support_email = $settings['email_1'];
+    $support_email = trim((string) ($settings['support_email'] ?? '')) ?: $settings['email_1'];
     $website_company_name = "Sir Francis"; // For Privacy Policy, Terms, etc
 } else {
     // Handle the case where the query fails

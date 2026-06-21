@@ -1587,9 +1587,6 @@ if (!function_exists('getCandybirdCategorySlug')) {
         if (in_array($normalizedName, ['special', 'specials', 'sale', 'sales'], true)) {
             return 'specials';
         }
-        if (in_array($normalizedName, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'reseller', 'resellers'], true)) {
-            return 'resellers';
-        }
         return normalizeCandybirdProductSlug($categoryName);
     }
 }

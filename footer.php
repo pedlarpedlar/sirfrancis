@@ -5,14 +5,34 @@ if (strpos($_SERVER['PHP_SELF'], '/admin-sf/') !== false) {
     $guestIdentifier = null;
 }
 $showPublicAdminSync = !empty($_SESSION['admin_id']) && strpos($_SERVER['PHP_SELF'] ?? '', '/admin-sf/') === false;
+$footerEmail = trim((string) ($support_email ?? ''));
+if ($footerEmail === '') {
+    $footerEmail = trim((string) ($website_email ?? ''));
+}
+if ($footerEmail === '') {
+    $footerEmail = 'info@sirfrancis.co.za';
+}
+$footerPhoneNumber = trim((string) ($tel ?? ''));
 $footerWhatsappNumber = trim((string) ($hotline ?? ''));
 if ($footerWhatsappNumber === '') {
-    $footerWhatsappNumber = trim((string) ($tel ?? ''));
+    $footerWhatsappNumber = $footerPhoneNumber;
 }
 $footerWhatsappDigits = preg_replace('/\D+/', '', $footerWhatsappNumber);
 if (strpos($footerWhatsappDigits, '0') === 0) {
     $footerWhatsappDigits = '27' . substr($footerWhatsappDigits, 1);
 }
+function sfFooterPublicAddress($value, $fallback = 'Manhattan, New York, USA') {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return $fallback;
+    }
+    if (preg_match('/babiana|malabar|port\s*elizabeth/i', $value)) {
+        return $fallback;
+    }
+    return $value;
+}
+$footerAddress = sfFooterPublicAddress($website_address ?? '', sfFooterPublicAddress($headquarters ?? ''));
+$footerGoogleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($footerAddress);
 ?>
 
 <style>
@@ -146,15 +166,15 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
     <div>
       <h3>Business</h3>
       <a href="<?=$home_directory?>bulk_ordering">Bulk Ordering</a>
-      <a href="<?=$home_directory?>resellers">Become a Stockist</a>
       <a href="<?=$home_directory?>wholesale-pricelist">Bulk Pricelist</a>
       <a href="<?=$home_directory?>private_labelling">Private Labelling</a>
+      <a href="<?=$home_directory?>find-agent">Find an Agent</a>
       <a href="<?=$home_directory?>contact">Custom Quote</a>
     </div>
     <div>
       <h3>Help</h3>
       <a href="<?=$home_directory?>contact">Contact Us</a>
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Overport%2C%20Berea%204007%2C%20Durban%2C%20South%20Africa" target="_blank" rel="noopener noreferrer">Find us on Google Maps</a>
+      <a href="<?=htmlspecialchars($footerGoogleMapsUrl, ENT_QUOTES, 'UTF-8')?>" target="_blank" rel="noopener noreferrer">Find us on Google Maps</a>
       <a href="<?=$home_directory?>delivery_policy">Delivery Policy</a>
       <a href="<?=$home_directory?>return_policy">Buyer Protection and Returns</a>
       <a href="<?=$home_directory?>terms">Terms and Conditions</a>
@@ -181,12 +201,14 @@ if (strpos($footerWhatsappDigits, '0') === 0) {
                 <span class="sf-anchor-divider mt-2 mb-5" aria-hidden="true"><i class="fas fa-anchor"></i></span>
               
                 <ul class="mt-2 custom">
-                  <li><a href="contact"><i class="fas fa-envelope mr-2"></i> <?=$website_email?></a></li>
-                  <li><a href="contact"><i class="fas fa-phone mr-2"></i> <?=$tel?></a></li>
-                  <?php if (!empty($footerWhatsappDigits)): ?>
-                    <li><a href="https://wa.me/<?=$footerWhatsappDigits?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-2"></i> <?=$footerWhatsappNumber?></a></li>
+                  <li><a href="mailto:<?=htmlspecialchars($footerEmail, ENT_QUOTES, 'UTF-8')?>"><i class="fas fa-envelope mr-2"></i> <?=htmlspecialchars($footerEmail, ENT_QUOTES, 'UTF-8')?></a></li>
+                  <?php if ($footerPhoneNumber !== ''): ?>
+                    <li><a href="tel:<?=htmlspecialchars($footerPhoneNumber, ENT_QUOTES, 'UTF-8')?>"><i class="fas fa-phone mr-2"></i> <?=htmlspecialchars($footerPhoneNumber, ENT_QUOTES, 'UTF-8')?></a></li>
                   <?php endif; ?>
-                  <li><a href="contact"><i class="fas fa-map mr-2"></i> <?=$website_address?></a></li>
+                  <?php if (!empty($footerWhatsappDigits)): ?>
+                    <li><a href="https://wa.me/<?=$footerWhatsappDigits?>" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp mr-2"></i> <?=htmlspecialchars($footerWhatsappNumber, ENT_QUOTES, 'UTF-8')?></a></li>
+                  <?php endif; ?>
+                  <li><a href="<?=htmlspecialchars($footerGoogleMapsUrl, ENT_QUOTES, 'UTF-8')?>" target="_blank" rel="noopener noreferrer"><i class="fas fa-map mr-2"></i> <?=htmlspecialchars($footerAddress, ENT_QUOTES, 'UTF-8')?></a></li>
                 </ul>
             </div>
 

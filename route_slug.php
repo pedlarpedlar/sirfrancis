@@ -8,8 +8,8 @@ if ($slug === '') {
     exit;
 }
 
-if (in_array($slug, ['reseller-packs', 'for-resellers', 'resellers-wholesale', 'reseller'], true)) {
-    header('Location: /resellers', true, 301);
+if (in_array($slug, ['resellers', 'reseller-packs', 'for-resellers', 'resellers-wholesale', 'reseller', 'stockist', 'stockists'], true)) {
+    header('Location: /find-agent', true, 301);
     exit;
 }
 

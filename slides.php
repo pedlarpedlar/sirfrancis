@@ -69,11 +69,11 @@ $slides = [
     ],
     [
         'bg_img' => 'bg-img4',
-        'title' => 'Local Stockist',
-        'subtitle' => 'Become a Stockist',
-        'description' => 'Apply to become a local stockist and build your income with a premium Sir Francis product range.',
-        'button_text' => 'Boost Your Income',
-        'button_link' => 'resellers',
+        'title' => 'Regional Agents',
+        'subtitle' => 'Find Local Support',
+        'description' => 'Find the nearest Sir Francis support region or suggest an agent for your area.',
+        'button_text' => 'Find an Agent',
+        'button_link' => 'find-agent',
         'animation' => [
             'text' => 'fadeInUp',
             'title' => 'fadeInUp',
@@ -201,7 +201,7 @@ $brands = [
     ['icon' => 'fas fa-boxes', 'alt' => 'Wholesale supply', 'link' => 'wholesale-pricelist'],
     ['icon' => 'fas fa-truck', 'alt' => 'Delivery support', 'link' => 'delivery_policy'],
     ['icon' => 'fas fa-flask', 'alt' => 'Private labelling', 'link' => 'private_labelling'],
-    ['icon' => 'fas fa-store', 'alt' => 'Stockist enquiries', 'link' => 'resellers'],
+    ['icon' => 'fas fa-map-marker-alt', 'alt' => 'Find an agent', 'link' => 'find-agent'],
     ['icon' => 'fas fa-shield-alt', 'alt' => 'Buyer support', 'link' => 'return_policy'],
     ['icon' => 'fas fa-anchor', 'alt' => 'Marine ingredients', 'link' => 'products'],
     ['icon' => 'fas fa-industry', 'alt' => 'Bulk procurement', 'link' => 'bulk_ordering']

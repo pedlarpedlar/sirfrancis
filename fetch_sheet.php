@@ -13,7 +13,6 @@ $requestPathSlug = function_exists('normalizeCandybirdProductSlug')
     ? normalizeCandybirdProductSlug(trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '', '/'))
     : '';
 $isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['gifting']) || !empty($_GET['gifting_intro']) || $productPageCategorySlug === 'gifting' || $requestPathSlug === 'gifting';
-$isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller']) || in_array($productPageCategorySlug, ['for-resellers', 'resellers-wholesale', 'reseller-packs', 'resellers', 'reseller'], true) || $requestPathSlug === 'resellers';
 $isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
 $isClearanceCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['clearance-basket', 'clearance']) || in_array($productPageCategorySlug, ['clearance-basket', 'clearance'], true) || $requestPathSlug === 'clearance-basket';
 $page_url_canonical = "https://sirfrancis.co.za/products";
@@ -24,7 +23,6 @@ $description_og = $description_meta;
 $productsHeroImage = sfSiteImagePath('products.hero', 'assets/img/product/1.png');
 $productsSpecialsImage = sfSiteImagePath('products.specials_banner', 'assets/img/ocean.jpg');
 $productsRetailImage = sfSiteImagePath('products.retail_banner', 'assets/img/ocean.jpg');
-$productsResellerImage = sfSiteImagePath('products.reseller_banner', 'assets/img/logo/main.png');
 $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsHeroImage, '/');
 $image_type_og = 'image/png';
 if ($isGiftingCategoryPage) {
@@ -34,14 +32,6 @@ if ($isGiftingCategoryPage) {
     $description_meta = 'Browse Sir Francis consumer and trade-friendly marine collagen and fish gelatine pack sizes for repeat ordering and client-facing supply.';
     $description_og = $description_meta;
     $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsRetailImage, '/');
-    $image_type_og = 'image/png';
-} elseif ($isResellerCategoryPage) {
-    $page_url_canonical = 'https://sirfrancis.co.za/resellers';
-    $title_og = 'Bulk Supply & Wholesale Packs | Sir Francis';
-    $page_url_og = $page_url_canonical;
-    $description_meta = 'Browse Sir Francis wholesale-friendly marine collagen and fish gelatine supply for manufacturers, food service, health retailers and repeat bulk buyers.';
-    $description_og = $description_meta;
-    $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsResellerImage, '/');
     $image_type_og = 'image/png';
 } elseif ($isSpecialsCategoryPage) {
     $page_url_canonical = 'https://sirfrancis.co.za/specials';

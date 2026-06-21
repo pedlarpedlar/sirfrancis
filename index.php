@@ -443,13 +443,13 @@ foreach ($slides as $index => $slide) {
       <div class="col-md-6 mb-30">
         <div class="banner-thumb">
           <a
-            href="resellers"
+            href="find-agent"
             class="zoom-in d-block overflow-hidden"
           >
-            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.stockist', 'assets/img/slider/3.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Become a Sir Francis stockist" width="570" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.stockist', '1140 x 660px, landscape') ?> />
+            <img src="<?= htmlspecialchars(sfSiteImagePath('homepage.pathway.agent', 'assets/img/slider/3.optimized.jpg'), ENT_QUOTES, 'UTF-8') ?>" onerror="this.onerror=null;this.src='assets/img/ocean.jpg';" alt="Find a Sir Francis agent" width="570" height="330" loading="lazy" decoding="async"<?= sfSiteEditableImageAttrs('homepage.pathway.agent', '1140 x 660px, landscape') ?> />
             <span class="home-pathway-copy">
-              <h2>Become a Stockist</h2>
-              <p>Apply to stock Sir Francis products and build a premium wellness income stream.</p>
+              <h2>Find an Agent</h2>
+              <p>Locate regional Sir Francis support or suggest an agent for your area.</p>
             </span>
           </a>
         </div>
@@ -465,14 +465,14 @@ foreach ($slides as $index => $slide) {
       <div class="col-lg-8 mb-3 mb-lg-0">
         <h1>Marine collagen, fish gelatine and private labelling in South Africa</h1>
         <p>
-          Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and custom supplement solutions. We support wholesale buyers, private-label brands, stockists and retail customers across South Africa.
+          Sir Francis supplies premium fish gelatine, marine collagen, peptides, tripeptides, sea moss and custom supplement solutions. We support wholesale buyers, private-label brands, regional agents and retail customers across South Africa.
         </p>
       </div>
       <div class="col-lg-4">
         <div class="homepage-seo-links">
           <a href="products">Shop online</a>
           <a href="pricelist">Pricelist</a>
-          <a href="resellers">Become a stockist</a>
+          <a href="find-agent">Find an agent</a>
           <a href="wholesale-pricelist">Wholesale pricelist</a>
           <a href="private_labelling">Private labelling</a>
           <a href="contact">Contact us</a>
