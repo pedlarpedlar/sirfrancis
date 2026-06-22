@@ -20,6 +20,8 @@ function generateSignature($data, $passPhrase = null) {
     return md5( $getString );
 } 
 
+require_once __DIR__ . '/payfast_settings_helpers.php';
+
 $user_id = !isset($_SESSION['user_id']) ? null : $_SESSION['user_id'];
 $user_is_guest = false;
 $sessionParam = isset($_SESSION['session_id']) ? '&session=' . urlencode($_SESSION['session_id']) : '';
@@ -29,25 +31,25 @@ if ($user_id === null) {
 
 $order_id = (string) (int) preg_replace('/\D/', '', (string) ($order_id ?? ''));
 $cartTotal = round((float) ($cartTotal ?? 0), 2);
+$payfastSettings = sfPayfastSettings($conn ?? null);
 $payNowForm = '';
-$return_url = 'https://www.fishgelatine.co.za/v2/order_details?order_id='.$order_id.$sessionParam.'&thankyou';
-$cancel_url = 'https://www.fishgelatine.co.za/v2/order_details?order_id='.$order_id.$sessionParam.'&payment-cancelled';
+$return_url = sfPayfastSiteUrl('order_details?order_id='.$order_id.$sessionParam.'&thankyou');
+$cancel_url = sfPayfastSiteUrl('order_details?order_id='.$order_id.$sessionParam.'&payment-cancelled');
 
-if ($order_id === '' || $cartTotal <= 0) {
+if ($order_id === '' || $cartTotal <= 0 || !sfPayfastReady($payfastSettings)) {
     return;
 }
 
-
-// $passphrase = 'jt7NOE43FZPn'; //'My3eautifulPass';
-$passphrase = 'My3eautifulPass';
+$passphrase = trim((string) ($payfastSettings['payfast_passphrase'] ?? ''));
+$passphrase = $passphrase !== '' ? $passphrase : null;
 
 $data = array(
     // Merchant details
-    'merchant_id' => '14090292', // '10000100', // live: 14090292
-    'merchant_key' => '5ksggz4e5rru2', // '46f0cd694581a', //live: 5ksggz4e5rru2
+    'merchant_id' => trim((string) $payfastSettings['payfast_merchant_id']),
+    'merchant_key' => trim((string) $payfastSettings['payfast_merchant_key']),
     'return_url' => $return_url,
     'cancel_url' => $cancel_url,
-    'notify_url' => 'https://www.fishgelatine.co.za/v2/notify',
+    'notify_url' => sfPayfastSiteUrl('notify'),
     // Transaction details
     'm_payment_id' => $order_id, //Unique payment ID to pass through to notify_url
     'amount' => number_format( sprintf( '%.2f', $cartTotal ), 2, '.', '' ),
@@ -61,11 +63,7 @@ $data = array_filter($data, function ($value) {
 $signature = generateSignature($data, $passphrase);
 $data['signature'] = $signature;
 
-// If in testing mode make use of either sandbox.payfast.co.za or www.payfast.co.za
-// $testingMode = true;
-$testingMode = false;
-
-$pfHost = $testingMode ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
+$pfHost = sfPayfastHost($payfastSettings);
 $payNowForm = '<form action="https://'.$pfHost.'/eng/process" method="post" id="payNowForm">';
 foreach($data as $name=> $value) {
     $payNowForm .= '<input name="'.htmlspecialchars($name, ENT_QUOTES, 'UTF-8').'" type="hidden" value=\''.htmlspecialchars($value, ENT_QUOTES, 'UTF-8').'\' />';

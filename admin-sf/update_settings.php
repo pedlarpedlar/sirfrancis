@@ -119,6 +119,11 @@ try {
     cbSettingsEnsureColumn($conn, 'contact_recaptcha_secret_key', "ALTER TABLE admin_website_settings ADD COLUMN contact_recaptcha_secret_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'tinymce_api_key', "ALTER TABLE admin_website_settings ADD COLUMN tinymce_api_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'category_display_order', "ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
+    cbSettingsEnsureColumn($conn, 'payfast_enabled', "ALTER TABLE admin_website_settings ADD COLUMN payfast_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    cbSettingsEnsureColumn($conn, 'payfast_sandbox', "ALTER TABLE admin_website_settings ADD COLUMN payfast_sandbox TINYINT(1) NOT NULL DEFAULT 1");
+    cbSettingsEnsureColumn($conn, 'payfast_merchant_id', "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_id VARCHAR(80) NULL");
+    cbSettingsEnsureColumn($conn, 'payfast_merchant_key', "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_key VARCHAR(120) NULL");
+    cbSettingsEnsureColumn($conn, 'payfast_passphrase', "ALTER TABLE admin_website_settings ADD COLUMN payfast_passphrase VARCHAR(255) NULL");
 
     $settingsId = 1;
     $hasSettingsRow = false;
@@ -131,6 +136,37 @@ try {
     }
 
     $settingsSection = trim((string) ($_POST['settings_section'] ?? $_GET['section'] ?? 'all'));
+    if ($settingsSection === 'payfast') {
+        $payfast_enabled = isset($_POST['payfast_enabled']) ? 1 : 0;
+        $payfast_sandbox = isset($_POST['payfast_sandbox']) ? 1 : 0;
+        $payfast_merchant_id = preg_replace('/\D+/', '', (string) ($_POST['payfast_merchant_id'] ?? ''));
+        $payfast_merchant_key = trim((string) ($_POST['payfast_merchant_key'] ?? ''));
+        $payfast_passphrase = trim((string) ($_POST['payfast_passphrase'] ?? ''));
+
+        if ($payfast_enabled && ($payfast_merchant_id === '' || $payfast_merchant_key === '')) {
+            throw new RuntimeException('Add the PayFast merchant ID and merchant key before enabling PayFast.');
+        }
+
+        if ($hasSettingsRow) {
+            $payfastStmt = $conn->prepare("UPDATE admin_website_settings SET payfast_enabled = ?, payfast_sandbox = ?, payfast_merchant_id = ?, payfast_merchant_key = ?, payfast_passphrase = ? WHERE id = ?");
+            if (!$payfastStmt) {
+                throw new RuntimeException("Could not prepare PayFast settings update: " . $conn->error);
+            }
+            $payfastStmt->bind_param("iisssi", $payfast_enabled, $payfast_sandbox, $payfast_merchant_id, $payfast_merchant_key, $payfast_passphrase, $settingsId);
+        } else {
+            $payfastStmt = $conn->prepare("INSERT INTO admin_website_settings (payfast_enabled, payfast_sandbox, payfast_merchant_id, payfast_merchant_key, payfast_passphrase) VALUES (?, ?, ?, ?, ?)");
+            if (!$payfastStmt) {
+                throw new RuntimeException("Could not prepare PayFast settings insert: " . $conn->error);
+            }
+            $payfastStmt->bind_param("iisss", $payfast_enabled, $payfast_sandbox, $payfast_merchant_id, $payfast_merchant_key, $payfast_passphrase);
+        }
+        if (!$payfastStmt->execute()) {
+            throw new RuntimeException("Could not save PayFast settings: " . $payfastStmt->error);
+        }
+        $payfastStmt->close();
+        cbSettingsRedirect('success', 'PayFast settings saved.');
+    }
+
     $isContactSave = in_array($settingsSection, ['all', 'contact'], true);
     $isShippingSave = in_array($settingsSection, ['all', 'shipping'], true);
     $isMapsSave = in_array($settingsSection, ['all', 'maps'], true);

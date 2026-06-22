@@ -886,6 +886,27 @@ function formatRand(amount) {
     return 'R' + (parseFloat(amount) || 0).toFixed(2);
 }
 
+function checkoutModal(action) {
+    var modalEl = document.getElementById('pudoLockerConfirmModal');
+    if (!modalEl) return;
+    if (window.bootstrap && bootstrap.Modal) {
+        var instance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        if (action === 'hide') {
+            instance.hide();
+        } else {
+            instance.show();
+        }
+        return;
+    }
+    if ($.fn.modal) {
+        $('#pudoLockerConfirmModal').modal(action || 'show');
+        return;
+    }
+    modalEl.classList.toggle('show', action !== 'hide');
+    modalEl.style.display = action === 'hide' ? 'none' : 'block';
+    modalEl.setAttribute('aria-hidden', action === 'hide' ? 'true' : 'false');
+}
+
 function isSouthAfricaCountry(value) {
     var normalized = String(value || '').trim().toLowerCase();
     return normalized === '' || normalized === 'south africa' || normalized === 'sa' || normalized === 'za' || normalized === 'zaf';
@@ -1227,7 +1248,7 @@ $('body').on('submit', '#checkout-form', function(e){
 
     if (selectedDeliveryMethod() === 'locker' && checkoutWeightKg > 0 && !pudoLockerConfirmed) {
         pendingCheckoutSubmit = true;
-        $('#pudoLockerConfirmModal').modal('show');
+        checkoutModal('show');
         return;
     }
 
@@ -1236,7 +1257,7 @@ $('body').on('submit', '#checkout-form', function(e){
 
 $('#confirmPudoLockerBtn').on('click', function() {
     pudoLockerConfirmed = true;
-    $('#pudoLockerConfirmModal').modal('hide');
+    checkoutModal('hide');
     if (pendingCheckoutSubmit) {
         $('#checkout-form').trigger('submit');
     }
@@ -1244,7 +1265,7 @@ $('#confirmPudoLockerBtn').on('click', function() {
 
 $('#changeToDoorDeliveryBtn').on('click', function() {
     pendingCheckoutSubmit = false;
-    $('#pudoLockerConfirmModal').modal('hide');
+    checkoutModal('hide');
     if ($('#delivery-door').length) {
         $('#delivery-door').prop('checked', true).trigger('change');
     }

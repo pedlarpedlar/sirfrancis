@@ -3,18 +3,20 @@
 header('HTTP/1.0 200 OK');
 flush();
 
-define('SANDBOX_MODE', false);
-$pfHost = SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
-
 date_default_timezone_set('Africa/Johannesburg'); // Set to GMT+2
 include 'dbh.inc.php';
 require_once __DIR__ . '/product_sheet_helpers.php';
+require_once __DIR__ . '/payfast_settings_helpers.php';
+
+$payfastSettings = sfPayfastSettings($conn ?? null);
+$pfHost = sfPayfastHost($payfastSettings);
 
 // Posted variables from ITN
 $pfData = $_POST;
 $pfParamString = '';
 
-$pfPassphrase = 'My3eautifulPass'; //'jt7NOE43FZPn'; //'My3eautifulPass';
+$pfPassphrase = trim((string) ($payfastSettings['payfast_passphrase'] ?? ''));
+$pfPassphrase = $pfPassphrase !== '' ? $pfPassphrase : null;
 
 // Strip any slashes in data
 foreach ($pfData as $key => $val) {

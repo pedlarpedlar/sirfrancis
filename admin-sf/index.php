@@ -48,6 +48,7 @@ $linkGroups = [
     'Website & Settings' => [
         ['Contact Info', 'manage_website_information', 'Company, contact, address and banking settings'],
         ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices and free shipping'],
+        ['PayFast Settings', 'payfast_settings', 'Merchant credentials, sandbox mode and payment status callbacks'],
         ['Google Maps & Places', 'google_maps_places', 'Maps and Places API keys for live maps and address autocomplete'],
         ['Google reCAPTCHA', 'google_recaptcha', 'Contact form spam protection settings'],
         ['Editor Settings', 'editor_settings', 'TinyMCE rich text editor API key and editor configuration'],
