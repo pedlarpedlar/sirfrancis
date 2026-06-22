@@ -67,6 +67,27 @@ function cbDownloadTemplateWriteQuotedTsvRow($handle, $row) {
     fwrite($handle, implode("\t", $cells) . "\n");
 }
 
+function cbDownloadTemplateProductExportValue($product, $header) {
+    $value = (string) ($product[$header] ?? '');
+
+    if (in_array($header, ['html_description', 'disclaimers'], true)) {
+        return cbDownloadTemplateHtmlCell($value);
+    }
+
+    if (in_array($header, ['discount', 'discounted_price'], true)) {
+        $price = function_exists('candybirdParseSheetMoney') ? candybirdParseSheetMoney($product['price'] ?? 0) : (float) ($product['price'] ?? 0);
+        $discountedPrice = function_exists('candybirdParseSheetMoney') ? candybirdParseSheetMoney($product['discounted_price'] ?? 0) : (float) ($product['discounted_price'] ?? 0);
+        $discountAmount = function_exists('candybirdParseSheetMoney') ? candybirdParseSheetMoney($product['discount'] ?? 0) : (float) ($product['discount'] ?? 0);
+        $hasRealDiscount = ($discountedPrice > 0 && $discountedPrice < $price) || $discountAmount > 0;
+
+        if (!$hasRealDiscount || (string) ($product['special_active'] ?? '') === 'no') {
+            return '';
+        }
+    }
+
+    return $value;
+}
+
 $type = strtolower(trim((string) ($_GET['type'] ?? 'products')));
 if (!in_array($type, ['products', 'coupons', 'clearance', 'wholesale'], true)) {
     $type = 'products';
@@ -86,11 +107,7 @@ if ($exportProducts) {
     foreach (getSheetProducts(false) as $product) {
         $row = [];
         foreach ($headers as $header) {
-            $value = (string) ($product[$header] ?? '');
-            if (in_array($header, ['html_description', 'disclaimers'], true)) {
-                $value = cbDownloadTemplateHtmlCell($value);
-            }
-            $row[] = $value;
+            $row[] = cbDownloadTemplateProductExportValue($product, $header);
         }
         cbDownloadTemplateWriteQuotedTsvRow($out, $row);
     }
