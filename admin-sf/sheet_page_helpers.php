@@ -423,14 +423,21 @@ if (!function_exists('cbAdminSheetPage')) {
             .sheet-start-step span { align-items:center; background:#28364B; color:#CEBD88; display:inline-flex; font-weight:900; height:34px; justify-content:center; margin-bottom:12px; width:34px; }
             .sheet-start-step h3 { color:#28364B; font-size:18px; margin-bottom:8px; }
             .sheet-start-step p { color:#574f45; min-height:54px; }
-            .manual-product-grid { display:grid; gap:14px; }
-            .manual-product-field label { color:#28364B; display:block; font-weight:800; margin-bottom:6px; }
+            .manual-product-grid { display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0, 1fr)); }
+            .manual-product-field label { color:#28364B; display:block; font-size:13px; font-weight:800; margin-bottom:4px; }
             .manual-product-field input,
-            .manual-product-field textarea { border:1px solid var(--sf-border); border-radius:0; padding:10px 12px; width:100%; }
-            .manual-product-field small { color:#70695f; display:block; margin-top:5px; }
+            .manual-product-field textarea { border:1px solid var(--sf-border); border-radius:0; font-size:14px; min-height:40px; padding:8px 10px; width:100%; }
+            .manual-product-field small { color:#70695f; display:block; font-size:12px; line-height:1.35; margin-top:4px; }
+            .manual-product-field--wide { grid-column:1 / -1; }
+            .manual-product-modal .modal-dialog { max-width:980px; }
+            .manual-product-modal .modal-content { border-radius:0; }
+            .manual-product-modal .modal-header { background:#28364B; color:#fff; }
+            .manual-product-modal .modal-header h5 { color:#CEBD88; }
+            .manual-product-modal .close { color:#fff; opacity:1; }
             @media (max-width: 991px) {
                 .sheet-start-steps { grid-template-columns:1fr; }
                 .sheet-start-step + .sheet-start-step { border-left:0; }
+                .manual-product-grid { grid-template-columns:1fr; }
             }
         </style>
         <div class="container sheet-page">
@@ -481,45 +488,54 @@ if (!function_exists('cbAdminSheetPage')) {
             <?php if ($key === 'products'): ?>
                 <?php
                     $manualHeaders = getCandybirdProductTemplateHeaders();
+                    $manualFieldLabels = [
+                        'id' => 'Product ID',
+                        'parent_category' => 'Main Category',
+                        'child_category_1' => 'Subcategory',
+                        'child_category_2' => 'Second Subcategory',
+                        'name' => 'Product Name',
+                        'price' => 'Normal Price',
+                        'img_url' => 'Image URL',
+                        'size' => 'Display Size',
+                        'shipping_weight' => 'Shipping Weight',
+                        'free_delivery_excluded' => 'Exclude Free Delivery',
+                        'discount' => 'Discount Amount',
+                        'discounted_price' => 'Final Sale Price',
+                        'discount_valid_from' => 'Discount Start Date',
+                        'discount_valid_until' => 'Discount End Date',
+                        'html_description' => 'Product Description',
+                        'disclaimers' => 'Product Disclaimers',
+                        'product_type' => 'Product Type',
+                        'qty_in_stock' => 'Quantity In Stock',
+                        'lead_time' => 'Lead Time',
+                        'slug' => 'Product Slug',
+                        'additional_categories' => 'Additional Categories',
+                    ];
                     $manualFieldHelp = [
                         'id' => 'Unique product ID. Keep it stable because carts, reviews and orders use this.',
+                        'parent_category' => 'Main menu category, for example Marine Wellness.',
+                        'child_category_1' => 'Optional category under the main category.',
+                        'child_category_2' => 'Optional smaller category under the subcategory.',
+                        'name' => 'Product name without the size, for example Marine Collagen.',
+                        'price' => 'Use numbers only, for example 145.00.',
                         'img_url' => 'You can paste existing image URLs here, upload images below, or do both. Multiple URLs are separated with commas.',
+                        'size' => 'What customers see, for example 100g, 1kg, 250ml or 1pc.',
+                        'shipping_weight' => 'Only fill this if it differs from size, for example 0.75kg.',
+                        'free_delivery_excluded' => 'Type yes only if free delivery should not apply.',
+                        'discount' => 'Rand amount off the normal price. Optional.',
+                        'discounted_price' => 'Final sale price. Optional. Overrides discount amount.',
+                        'discount_valid_from' => 'Optional. Use DD-MM-YYYY.',
+                        'discount_valid_until' => 'Optional. Use DD-MM-YYYY.',
                         'html_description' => 'Rich product description shown to customers.',
                         'disclaimers' => 'Optional disclaimer text, such as image or product notes.',
+                        'product_type' => 'Use digital for vouchers/e-books. Leave blank for normal products.',
+                        'qty_in_stock' => 'Leave blank if stock is unlimited or not tracked.',
+                        'lead_time' => 'Optional, for example 2-5 working days.',
+                        'slug' => 'Clean URL text. Leave blank to let the site use the product name and size.',
                         'additional_categories' => 'Optional extra category paths. Use Parent > Child and separate multiple paths with |.',
                     ];
                     $textareaFields = ['html_description', 'disclaimers', 'additional_categories'];
                 ?>
-                <div class="sheet-panel" id="manual-product-form">
-                    <h2>Add Product Manually</h2>
-                    <p class="text-muted">This form uses the same headers as the product template. Uploaded images are saved into <strong>assets/img/product_images</strong> and added to the product image URL field.</p>
-                    <form method="post" enctype="multipart/form-data" id="manual-product-entry-form">
-                        <input type="hidden" name="sheet_action" value="add_manual_product">
-                        <div class="manual-product-grid">
-                            <?php foreach ($manualHeaders as $header): ?>
-                                <div class="manual-product-field">
-                                    <label for="manual_product_<?= cbAdminSheetText($header) ?>"><?= cbAdminSheetText($header) ?></label>
-                                    <?php if (in_array($header, $textareaFields, true)): ?>
-                                        <textarea id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" rows="<?= $header === 'html_description' ? 7 : 4 ?>" class="<?= in_array($header, ['html_description', 'disclaimers'], true) ? 'manual-product-richtext' : '' ?>"></textarea>
-                                    <?php else: ?>
-                                        <input id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" type="<?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'number' : 'text' ?>" <?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'step="0.01"' : '' ?> <?= in_array($header, ['id', 'name', 'price'], true) ? 'required' : '' ?>>
-                                    <?php endif; ?>
-                                    <?php if (!empty($manualFieldHelp[$header])): ?>
-                                        <small><?= cbAdminSheetText($manualFieldHelp[$header]) ?></small>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endforeach; ?>
-                            <div class="manual-product-field">
-                                <label for="manual_product_images">Upload product images</label>
-                                <input id="manual_product_images" name="product_images[]" type="file" accept="image/*" multiple>
-                                <small>Images upload to assets/img/product_images and their URLs are added to img_url.</small>
-                            </div>
-                        </div>
-                        <div class="sheet-actions mt-3">
-                            <button class="btn btn-primary" type="submit">Save Manual Product</button>
-                        </div>
-                    </form>
-                </div>
             <?php endif; ?>
 
             <div class="sheet-panel" id="sheet-links">
@@ -543,7 +559,63 @@ if (!function_exists('cbAdminSheetPage')) {
                         <?php if (!empty($source['published_url'])): ?><a class="btn btn-outline-secondary" href="<?= cbAdminSheetText($source['published_url']) ?>" target="_blank" rel="noopener noreferrer">Open TSV feed</a><?php endif; ?>
                     </div>
                 </form>
+                <?php if ($key === 'products'): ?>
+                    <hr>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap:10px;">
+                        <div>
+                            <h3 class="mb-1" style="font-size:18px;color:#28364B;">Create Product</h3>
+                            <p class="text-muted mb-0">Use a compact form with the same fields as the product template.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Create Product</button>
+                    </div>
+                <?php endif; ?>
             </div>
+
+            <?php if ($key === 'products'): ?>
+                <div class="modal fade manual-product-modal" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createProductModalTitle">Create Product</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="post" enctype="multipart/form-data" id="manual-product-entry-form">
+                                <div class="modal-body">
+                                    <input type="hidden" name="sheet_action" value="add_manual_product">
+                                    <p class="text-muted">Create a product using the same fields as the product template. Uploaded images are saved into <strong>assets/img/product_images</strong> and added to the image URL field.</p>
+                                    <div class="manual-product-grid">
+                                        <?php foreach ($manualHeaders as $header): ?>
+                                            <?php $isWideField = in_array($header, ['img_url', 'html_description', 'disclaimers', 'additional_categories'], true); ?>
+                                            <div class="manual-product-field <?= $isWideField ? 'manual-product-field--wide' : '' ?>">
+                                                <label for="manual_product_<?= cbAdminSheetText($header) ?>"><?= cbAdminSheetText($manualFieldLabels[$header] ?? ucwords(str_replace('_', ' ', $header))) ?></label>
+                                                <?php if (in_array($header, $textareaFields, true)): ?>
+                                                    <textarea id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" rows="<?= $header === 'html_description' ? 6 : 3 ?>" class="<?= in_array($header, ['html_description', 'disclaimers'], true) ? 'manual-product-richtext' : '' ?>"></textarea>
+                                                <?php else: ?>
+                                                    <input id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" type="<?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'number' : 'text' ?>" <?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'step="0.01"' : '' ?> <?= in_array($header, ['id', 'name', 'price'], true) ? 'required' : '' ?>>
+                                                <?php endif; ?>
+                                                <?php if (!empty($manualFieldHelp[$header])): ?>
+                                                    <small><?= cbAdminSheetText($manualFieldHelp[$header]) ?></small>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                        <div class="manual-product-field manual-product-field--wide">
+                                            <label for="manual_product_images">Upload Product Images</label>
+                                            <input id="manual_product_images" name="product_images[]" type="file" accept="image/*" multiple>
+                                            <small>Images upload to assets/img/product_images and their URLs are added to Image URL.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-primary" type="submit">Save Product</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php if ($key !== 'products'): ?>
                 <div class="sheet-panel">
