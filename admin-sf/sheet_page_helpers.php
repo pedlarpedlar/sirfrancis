@@ -564,6 +564,7 @@ if (!function_exists('cbAdminSheetPage')) {
                         'additional_categories' => 'Optional extra category paths. Use Parent > Child and separate multiple paths with |.',
                     ];
                     $textareaFields = ['html_description', 'disclaimers', 'additional_categories'];
+                    $hiddenProductModalFields = ['img_url'];
                 ?>
             <?php endif; ?>
 
@@ -638,6 +639,10 @@ if (!function_exists('cbAdminSheetPage')) {
                                     <p class="text-muted">Create a product using the same fields as the product template. Uploaded images are saved into <strong>assets/img/product_images</strong> and added to the image URL field.</p>
                                     <div class="manual-product-grid">
                                         <?php foreach ($manualHeaders as $header): ?>
+                                            <?php if (in_array($header, $hiddenProductModalFields, true)): ?>
+                                                <input type="hidden" name="product[<?= cbAdminSheetText($header) ?>]" value="">
+                                                <?php continue; ?>
+                                            <?php endif; ?>
                                             <?php $isWideField = in_array($header, ['img_url', 'html_description', 'disclaimers', 'additional_categories'], true); ?>
                                             <div class="manual-product-field <?= $isWideField ? 'manual-product-field--wide' : '' ?>">
                                                 <label for="manual_product_<?= cbAdminSheetText($header) ?>"><?= cbAdminSheetText($manualFieldLabels[$header] ?? ucwords(str_replace('_', ' ', $header))) ?></label>
