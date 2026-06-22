@@ -306,7 +306,22 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
     }
 
     .slider-content .hero-crest-logo + .text {
+      color: #CEBD88;
+      font-family: "Pinyon Script", cursive !important;
+      font-size: clamp(42px, 5vw, 76px);
+      font-weight: 400;
+      line-height: .95;
       margin-top: 4px;
+      text-transform: none;
+    }
+
+    .main-slider .slider-content .text-secondary:not(.sub-subtitle) {
+      color: #fff !important;
+      font-family: "Playfair Display", Georgia, serif !important;
+      font-size: clamp(22px, 2.4vw, 34px);
+      font-weight: 700;
+      line-height: 1.15;
+      text-transform: none;
     }
 
     .main-slider .slider-height {
@@ -326,9 +341,16 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
     }
 
     .main-slider .slider-content .text-secondary.sub-subtitle {
+      color: #f7f1e6 !important;
+      font-family: "Raleway", Arial, sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.7;
       margin-left: auto !important;
       margin-right: auto !important;
       max-width: min(620px, 88vw);
+      text-transform: none;
     }
 
     @media (max-width: 767px) {
@@ -350,11 +372,11 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       }
 
       .main-slider .slider-content .text {
-        font-size: 22px;
+        font-size: 42px;
       }
 
-      .main-slider .slider-content .text-secondary {
-        font-size: 24px !important;
+      .main-slider .slider-content .text-secondary:not(.sub-subtitle) {
+        font-size: 23px !important;
       }
 
       .main-slider .slider-content .text-secondary.sub-subtitle {
