@@ -377,6 +377,19 @@ if (!function_exists('cbAdminSheetPage')) {
         $source = $sources[$key];
         $syncLabel = $key === 'products' ? 'Sync Products' : 'Sync ' . ($source['label'] ?? $title);
         $health = $key === 'products' ? [] : checkCandybirdSheetHealth($key);
+        $nextProductIdHint = '';
+        if ($key === 'products') {
+            $maxProductId = 0;
+            foreach (getSheetProducts(false) as $product) {
+                $productId = trim((string) ($product['id'] ?? ''));
+                if (ctype_digit($productId)) {
+                    $maxProductId = max($maxProductId, (int) $productId);
+                }
+            }
+            $nextProductIdHint = $maxProductId > 0
+                ? 'The highest numeric product ID currently found is ' . $maxProductId . ', so you can use IDs from ' . ($maxProductId + 1) . ' upward.'
+                : 'No numeric product IDs were found yet. You can start from 1 upward.';
+        }
         $tinymceApiKey = '';
         if ($key === 'products' && isset($conn) && $conn instanceof mysqli) {
             $websiteSettings = cbWebsiteSettingsLoad($conn);
@@ -528,7 +541,7 @@ if (!function_exists('cbAdminSheetPage')) {
                         'additional_categories' => 'Additional Categories',
                     ];
                     $manualFieldHelp = [
-                        'id' => 'Unique product ID. Keep it stable because carts, reviews and orders use this.',
+                        'id' => 'Unique product ID. Keep it stable because carts, reviews and orders use this. ' . $nextProductIdHint,
                         'parent_category' => 'Main menu category, for example Marine Wellness.',
                         'child_category_1' => 'Optional category under the main category.',
                         'child_category_2' => 'Optional smaller category under the subcategory.',
