@@ -200,6 +200,27 @@ if (!function_exists('saveCandybirdManualProduct')) {
     }
 }
 
+if (!function_exists('deleteCandybirdManualProduct')) {
+    function deleteCandybirdManualProduct($productId) {
+        $productId = trim((string) $productId);
+        if ($productId === '') {
+            return false;
+        }
+
+        $changed = false;
+        $rows = [];
+        foreach (getCandybirdManualProductRows() as $row) {
+            if (trim((string) ($row['id'] ?? '')) === $productId) {
+                $changed = true;
+                continue;
+            }
+            $rows[] = $row;
+        }
+
+        return $changed ? saveCandybirdManualProductRows($rows) : false;
+    }
+}
+
 if (!function_exists('candybirdParseSheetMoney')) {
     function candybirdParseSheetMoney($value) {
         if (is_int($value) || is_float($value)) {

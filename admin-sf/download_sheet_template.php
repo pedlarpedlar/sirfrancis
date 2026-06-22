@@ -38,14 +38,27 @@ if (!in_array($type, ['products', 'coupons', 'clearance', 'wholesale'], true)) {
     $type = 'products';
 }
 
-$filename = cbDownloadTemplateBusinessSlug($conn ?? null) . '-' . $type . '-template.tsv';
+$exportProducts = $type === 'products' && isset($_GET['export']) && $_GET['export'] === '1';
+$filename = cbDownloadTemplateBusinessSlug($conn ?? null) . '-' . $type . ($exportProducts ? '-export.tsv' : '-template.tsv');
 header('Content-Type: text/tab-separated-values; charset=utf-8');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Pragma: no-cache');
 header('Expires: 0');
 
 $out = fopen('php://output', 'w');
-foreach (cbAdminSheetTemplateRows($type) as $row) {
-    fputcsv($out, $row, "\t");
+if ($exportProducts) {
+    $headers = getCandybirdProductTemplateHeaders();
+    fputcsv($out, $headers, "\t");
+    foreach (getSheetProducts(false) as $product) {
+        $row = [];
+        foreach ($headers as $header) {
+            $row[] = (string) ($product[$header] ?? '');
+        }
+        fputcsv($out, $row, "\t");
+    }
+} else {
+    foreach (cbAdminSheetTemplateRows($type) as $row) {
+        fputcsv($out, $row, "\t");
+    }
 }
 fclose($out);

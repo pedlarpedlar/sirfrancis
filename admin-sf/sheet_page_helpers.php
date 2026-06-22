@@ -353,6 +353,13 @@ if (!function_exists('cbAdminSheetPage')) {
             $action = $_POST['sheet_action'] ?? '';
             if ($key === 'products' && $action === 'add_manual_product') {
                 [$success, $message] = cbAdminSheetSaveManualProductFromPost();
+            } elseif ($key === 'products' && $action === 'delete_manual_product') {
+                $deleteId = trim((string) ($_POST['product_id'] ?? ''));
+                $success = deleteCandybirdManualProduct($deleteId);
+                if ($success) {
+                    cbAdminSheetClearPublicProductCache();
+                }
+                $message = $success ? 'Product override deleted from the website feed.' : 'This product is not a manual website product. Delete sheet products from Google Sheets.';
             } elseif ($action === 'save_source') {
                 $success = cbAdminSheetSaveSingleSource($key);
                 if ($success) {
@@ -468,6 +475,19 @@ if (!function_exists('cbAdminSheetPage')) {
             .manual-product-modal .modal-header { background:#28364B; color:#fff; }
             .manual-product-modal .modal-header h5 { color:#CEBD88; }
             .manual-product-modal .close { color:#fff; opacity:1; }
+            .product-admin-table-card { background:#fff; border:1px solid var(--sf-border); border-radius:8px; margin-bottom:18px; padding:18px; }
+            .product-admin-table-head { align-items:center; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; margin-bottom:12px; }
+            .product-admin-table-head h2 { color:#28364B; font-size:22px; margin:0; }
+            .product-admin-table-tools { display:flex; flex-wrap:wrap; gap:8px; }
+            .product-admin-table-wrap { max-height:520px; overflow:auto; border:1px solid var(--sf-border); }
+            .product-admin-table { border-collapse:collapse; font-size:13px; min-width:1160px; width:100%; }
+            .product-admin-table th { background:#28364B; color:#CEBD88; cursor:pointer; position:sticky; top:0; z-index:1; }
+            .product-admin-table th, .product-admin-table td { border-bottom:1px solid var(--sf-border); padding:9px 10px; text-align:left; vertical-align:top; }
+            .product-admin-table tbody tr:nth-child(even) { background:#fbfaf6; }
+            .product-admin-table .btn { border-radius:0; font-size:12px; padding:5px 8px; }
+            .product-table-actions { display:flex; gap:6px; white-space:nowrap; }
+            .product-source-badge { background:#f8f5ee; color:#574f45; display:inline-block; font-weight:800; padding:3px 7px; text-transform:capitalize; }
+            .product-table-search { border:1px solid var(--sf-border); border-radius:0; min-height:38px; min-width:240px; padding:7px 10px; }
             @media (max-width: 991px) {
                 .sheet-start-steps { grid-template-columns:1fr; }
                 .sheet-start-step + .sheet-start-step { border-left:0; }
@@ -528,6 +548,10 @@ if (!function_exists('cbAdminSheetPage')) {
             <?php if ($key === 'products'): ?>
                 <?php
                     $manualHeaders = getCandybirdProductTemplateHeaders();
+                    $adminProducts = array_values(getSheetProducts(false));
+                    usort($adminProducts, static function($a, $b) {
+                        return strnatcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
+                    });
                     $manualFieldLabels = [
                         'id' => 'Product ID',
                         'parent_category' => 'Main Category',
@@ -577,6 +601,72 @@ if (!function_exists('cbAdminSheetPage')) {
                     $textareaFields = ['html_description', 'disclaimers', 'additional_categories'];
                     $hiddenProductModalFields = ['img_url'];
                 ?>
+            <?php endif; ?>
+
+            <?php if ($key === 'products'): ?>
+                <section class="product-admin-table-card" aria-labelledby="product-admin-list-title">
+                    <div class="product-admin-table-head">
+                        <div>
+                            <h2 id="product-admin-list-title">Products</h2>
+                            <p class="text-muted mb-0">View products currently loaded by the website. Editing a sheet product saves a website override with the same product ID.</p>
+                        </div>
+                        <div class="product-admin-table-tools">
+                            <input type="search" class="product-table-search" id="productTableSearch" placeholder="Search products">
+                            <a class="btn btn-outline-primary" href="download_sheet_template?type=products&export=1">Export All Products</a>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Create Product</button>
+                        </div>
+                    </div>
+                    <div class="product-admin-table-wrap">
+                        <table class="product-admin-table" id="adminProductsTable">
+                            <thead>
+                                <tr>
+                                    <th data-sort="id">ID</th>
+                                    <th data-sort="name">Product</th>
+                                    <th data-sort="parent_category">Category</th>
+                                    <th data-sort="price">Price</th>
+                                    <th data-sort="size">Size</th>
+                                    <th data-sort="qty_in_stock">Stock</th>
+                                    <th data-sort="source">Source</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($adminProducts as $product): ?>
+                                    <?php
+                                        $productId = trim((string) ($product['id'] ?? ''));
+                                        $productSource = trim((string) ($product['source'] ?? 'sheet'));
+                                        $productJson = [];
+                                        foreach ($manualHeaders as $header) {
+                                            $productJson[$header] = (string) ($product[$header] ?? '');
+                                        }
+                                    ?>
+                                    <tr data-product-row data-search="<?= cbAdminSheetText(strtolower(implode(' ', [$productId, $product['name'] ?? '', $product['parent_category'] ?? '', $product['child_category_1'] ?? '', $product['child_category_2'] ?? '', $product['additional_categories'] ?? '']))) ?>">
+                                        <td data-value="<?= cbAdminSheetText($productId) ?>"><?= cbAdminSheetText($productId) ?></td>
+                                        <td data-value="<?= cbAdminSheetText($product['name'] ?? '') ?>">
+                                            <strong><?= cbAdminSheetText($product['name'] ?? '') ?></strong>
+                                            <?php if (!empty($product['slug'])): ?><br><small><?= cbAdminSheetText($product['slug']) ?></small><?php endif; ?>
+                                        </td>
+                                        <td data-value="<?= cbAdminSheetText($product['parent_category'] ?? '') ?>"><?= cbAdminSheetText(trim(implode(' > ', array_filter([$product['parent_category'] ?? '', $product['child_category_1'] ?? '', $product['child_category_2'] ?? ''])))) ?></td>
+                                        <td data-value="<?= cbAdminSheetText((string) ($product['price'] ?? '')) ?>">R<?= cbAdminSheetText(number_format((float) ($product['price'] ?? 0), 2)) ?></td>
+                                        <td data-value="<?= cbAdminSheetText($product['size'] ?? '') ?>"><?= cbAdminSheetText($product['size'] ?? '') ?></td>
+                                        <td data-value="<?= cbAdminSheetText($product['qty_in_stock'] ?? '') ?>"><?= cbAdminSheetText($product['qty_in_stock'] ?? '') ?></td>
+                                        <td data-value="<?= cbAdminSheetText($productSource) ?>"><span class="product-source-badge"><?= cbAdminSheetText($productSource === 'manual' ? 'website' : 'sheet') ?></span></td>
+                                        <td>
+                                            <div class="product-table-actions">
+                                                <button type="button" class="btn btn-outline-primary product-edit-button" data-product='<?= cbAdminSheetText(json_encode($productJson, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES)) ?>'>Edit</button>
+                                                <form method="post" class="m-0 product-delete-form">
+                                                    <input type="hidden" name="sheet_action" value="delete_manual_product">
+                                                    <input type="hidden" name="product_id" value="<?= cbAdminSheetText($productId) ?>">
+                                                    <button type="submit" class="btn btn-outline-danger" <?= $productSource === 'manual' ? '' : 'disabled title="Delete sheet products from Google Sheets. Edit here to create a website override."' ?>>Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             <?php endif; ?>
 
             <?php if ($key !== 'products'): ?>
@@ -651,7 +741,7 @@ if (!function_exists('cbAdminSheetPage')) {
                                     <div class="manual-product-grid">
                                         <?php foreach ($manualHeaders as $header): ?>
                                             <?php if (in_array($header, $hiddenProductModalFields, true)): ?>
-                                                <input type="hidden" name="product[<?= cbAdminSheetText($header) ?>]" value="">
+                                                <input type="hidden" id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" value="">
                                                 <?php continue; ?>
                                             <?php endif; ?>
                                             <?php $isWideField = in_array($header, ['img_url', 'html_description', 'disclaimers', 'additional_categories'], true); ?>
@@ -788,6 +878,111 @@ if (!function_exists('cbAdminSheetPage')) {
                                 tinymce.triggerSave();
                             });
                         }
+                    }
+
+                    function showProductModal() {
+                        var modal = document.getElementById('createProductModal');
+                        if (!modal) return;
+                        if (window.bootstrap && bootstrap.Modal) {
+                            bootstrap.Modal.getOrCreateInstance(modal).show();
+                        } else if (window.jQuery && jQuery.fn.modal) {
+                            jQuery(modal).modal('show');
+                        } else {
+                            modal.classList.add('show');
+                            modal.style.display = 'block';
+                            modal.removeAttribute('aria-hidden');
+                        }
+                    }
+
+                    function setManualProductField(name, value) {
+                        var field = document.getElementById('manual_product_' + name);
+                        if (!field) return;
+                        field.value = value || '';
+                        if (window.tinymce && tinymce.get(field.id)) {
+                            tinymce.get(field.id).setContent(value || '');
+                        }
+                    }
+
+                    function resetManualProductForm() {
+                        var form = document.getElementById('manual-product-entry-form');
+                        if (!form) return;
+                        form.reset();
+                        document.querySelectorAll('.manual-product-html-output').forEach(function(output) {
+                            output.value = '';
+                            output.classList.remove('is-visible');
+                        });
+                        document.querySelectorAll('.manual-product-richtext').forEach(function(field) {
+                            if (window.tinymce && tinymce.get(field.id)) {
+                                tinymce.get(field.id).setContent('');
+                            }
+                        });
+                        var title = document.getElementById('createProductModalTitle');
+                        if (title) title.textContent = 'Create Product';
+                    }
+
+                    document.querySelectorAll('[data-target="#createProductModal"]').forEach(function(button) {
+                        button.addEventListener('click', resetManualProductForm);
+                    });
+
+                    document.querySelectorAll('.product-edit-button').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            var product = {};
+                            try {
+                                product = JSON.parse(button.getAttribute('data-product') || '{}');
+                            } catch (error) {
+                                product = {};
+                            }
+                            Object.keys(product).forEach(function(key) {
+                                setManualProductField(key, product[key]);
+                            });
+                            var title = document.getElementById('createProductModalTitle');
+                            if (title) title.textContent = 'Edit Product';
+                            showProductModal();
+                        });
+                    });
+
+                    document.querySelectorAll('.product-delete-form').forEach(function(form) {
+                        form.addEventListener('submit', function(event) {
+                            if (!window.confirm('Delete this website product or override? Products that come from Google Sheets must be deleted in the sheet.')) {
+                                event.preventDefault();
+                            }
+                        });
+                    });
+
+                    var productSearch = document.getElementById('productTableSearch');
+                    if (productSearch) {
+                        productSearch.addEventListener('input', function() {
+                            var query = productSearch.value.trim().toLowerCase();
+                            document.querySelectorAll('[data-product-row]').forEach(function(row) {
+                                row.style.display = !query || (row.getAttribute('data-search') || '').indexOf(query) !== -1 ? '' : 'none';
+                            });
+                        });
+                    }
+
+                    var productsTable = document.getElementById('adminProductsTable');
+                    if (productsTable) {
+                        productsTable.querySelectorAll('th[data-sort]').forEach(function(header, index) {
+                            header.addEventListener('click', function() {
+                                var tbody = productsTable.querySelector('tbody');
+                                var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+                                var direction = header.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
+                                productsTable.querySelectorAll('th[data-sort]').forEach(function(other) {
+                                    delete other.dataset.sortDirection;
+                                });
+                                header.dataset.sortDirection = direction;
+                                rows.sort(function(a, b) {
+                                    var av = (a.children[index] && a.children[index].getAttribute('data-value')) || '';
+                                    var bv = (b.children[index] && b.children[index].getAttribute('data-value')) || '';
+                                    var an = parseFloat(av);
+                                    var bn = parseFloat(bv);
+                                    var result = !isNaN(an) && !isNaN(bn) ? an - bn : av.localeCompare(bv, undefined, { numeric: true, sensitivity: 'base' });
+                                    return direction === 'asc' ? result : -result;
+                                });
+                                rows.forEach(function(row) {
+                                    tbody.appendChild(row);
+                                });
+                            });
+                        });
                     }
 
                     document.querySelectorAll('.manual-product-convert-html').forEach(function(button) {
