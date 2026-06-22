@@ -68,9 +68,9 @@ if (!function_exists('sfGoogleIntegrationSettings')) {
 if (!function_exists('sfGooglePlacesBrowserKey')) {
     function sfGooglePlacesBrowserKey($conn) {
         $settings = sfGoogleIntegrationSettings($conn);
-        return $settings['google_places_api_key'] !== ''
-            ? $settings['google_places_api_key']
-            : $settings['google_maps_api_key'];
+        return $settings['google_maps_api_key'] !== ''
+            ? $settings['google_maps_api_key']
+            : $settings['google_places_api_key'];
     }
 }
 

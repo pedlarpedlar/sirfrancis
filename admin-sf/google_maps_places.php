@@ -44,12 +44,12 @@ include 'page_menues.php';
             <div class="form-group">
                 <label for="google_maps_api_key">Google Maps JavaScript API Key</label>
                 <input type="text" class="form-control" id="google_maps_api_key" name="google_maps_api_key" value="<?= cbWebsiteSettingsText(($row['google_maps_api_key'] ?? '') ?: ($googleDefaults['google_maps_api_key'] ?? '')) ?>" autocomplete="off">
-                <small class="form-text text-muted">Used for live Google Maps displays such as the Find an Agent map.</small>
+                <small class="form-text text-muted">Used to load Google Maps in the browser, including Find an Agent, checkout address autocomplete and admin address autocomplete. This key must allow Maps JavaScript API and Places API.</small>
             </div>
             <div class="form-group mb-0">
                 <label for="google_places_api_key">Google Places API Key</label>
                 <input type="text" class="form-control" id="google_places_api_key" name="google_places_api_key" value="<?= cbWebsiteSettingsText(($row['google_places_api_key'] ?? '') ?: ($googleDefaults['google_places_api_key'] ?? '')) ?>" autocomplete="off">
-                <small class="form-text text-muted">Used for address autocomplete on checkout and admin order creation. If left blank, the Maps key will be used as the fallback.</small>
+                <small class="form-text text-muted">Optional server/Places lookup key. For browser autocomplete, the Maps JavaScript key above is used first because Google loads Places through the Maps JavaScript script.</small>
             </div>
         </div>
 
@@ -71,8 +71,8 @@ include 'page_menues.php';
             <h4>Setup Notes</h4>
             <div class="maps-help">
                 <ul>
-                    <li>In Google Cloud Console, enable Maps JavaScript API for the live map.</li>
-                    <li>Enable Places API for address autocomplete and place lookups.</li>
+                    <li>In Google Cloud Console, enable Maps JavaScript API on the browser key.</li>
+                    <li>Enable Places API on the same browser key for checkout and admin address autocomplete.</li>
                     <li>Restrict the key to your website domains, for example sirfrancis.co.za and www.sirfrancis.co.za.</li>
                     <li>If you use one key for both, paste the same key into both fields.</li>
                     <li>Google reviews need the Sir Francis Business Profile Place ID. Google Customer Reviews need an approved Merchant Center account.</li>
