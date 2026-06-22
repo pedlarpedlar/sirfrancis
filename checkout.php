@@ -1476,7 +1476,7 @@ window.gm_authFailure = function() {
         note.id = 'checkout_maps_admin_note';
         note.className = 'checkout-field-error';
         note.style.marginTop = '6px';
-        note.textContent = 'Admin note: Google address autocomplete could not start. Check that the key is allowed for https://www.sirfrancis.co.za/* and has Maps JavaScript API plus Places API enabled.';
+        note.textContent = 'Admin note: Google address autocomplete could not start. Check the Maps JavaScript API key in admin settings. In Google Cloud, allow https://www.sirfrancis.co.za/* and https://sirfrancis.co.za/* under HTTP referrers, and enable Maps JavaScript API plus Places API on that same key.';
         input.parentNode.appendChild(note);
     }
     if (document.readyState === 'loading') {

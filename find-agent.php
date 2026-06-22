@@ -544,7 +544,7 @@ include 'header.php';
   var agentMarkers = [];
   var activeRegion = 'kwazulu-natal';
   var regionFeatures = {};
-  var provinceGeoJsonUrl = 'assets/data/south-africa-provinces.geojson';
+  var provinceGeoJsonUrl = 'assets/data/south-africa-provinces.geojson?v=20260622';
   var provinceNameMap = {
     'Eastern Cape': 'eastern-cape',
     'Free State': 'free-state',
@@ -770,6 +770,21 @@ include 'header.php';
       });
     });
     focusMapOnRegion(activeRegion);
+  };
+
+  window.gm_authFailure = function() {
+    var mapNode = document.getElementById('sf-agent-google-map');
+    if (!mapNode) return;
+    var wrap = mapNode.parentElement;
+    if (!wrap || document.getElementById('sf-agent-google-auth-note')) return;
+    var note = document.createElement('div');
+    note.id = 'sf-agent-google-auth-note';
+    note.className = 'sf-agent-meta is-visible';
+    note.style.padding = '12px';
+    note.style.background = '#fff3cd';
+    note.style.color = '#574f45';
+    note.textContent = 'Google Maps could not start because the API key rejected this page. In Google Cloud, add https://www.sirfrancis.co.za/* and https://sirfrancis.co.za/* under HTTP referrers for the Maps JavaScript key, and enable Maps JavaScript API.';
+    wrap.appendChild(note);
   };
 
   function featureRegion(feature) {
