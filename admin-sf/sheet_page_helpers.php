@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../product_sheet_helpers.php';
 require_once __DIR__ . '/../wholesale_pricelist_helpers.php';
+require_once __DIR__ . '/website_settings_helpers.php';
 if (!isset($conn) || !($conn instanceof mysqli)) {
     @include_once __DIR__ . '/db_connect.php';
 }
@@ -63,33 +64,92 @@ if (!function_exists('cbAdminSheetSaveSingleSource')) {
     }
 }
 
+if (!function_exists('cbAdminSheetProductUploadUrls')) {
+    function cbAdminSheetProductUploadUrls($productId, $productName) {
+        $urls = [];
+        if (empty($_FILES['product_images']) || !is_array($_FILES['product_images']['name'] ?? null)) {
+            return $urls;
+        }
+
+        $uploadDir = dirname(__DIR__) . '/assets/img/product_images';
+        if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
+            return $urls;
+        }
+
+        $safeBase = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', (string) ($productId ?: $productName)), '-'));
+        if ($safeBase === '') {
+            $safeBase = 'product';
+        }
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $count = count($_FILES['product_images']['name']);
+        for ($i = 0; $i < $count; $i++) {
+            if ((int) ($_FILES['product_images']['error'][$i] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                continue;
+            }
+            $tmp = (string) ($_FILES['product_images']['tmp_name'][$i] ?? '');
+            if ($tmp === '' || !is_uploaded_file($tmp)) {
+                continue;
+            }
+            $extension = strtolower(pathinfo((string) $_FILES['product_images']['name'][$i], PATHINFO_EXTENSION));
+            if (!in_array($extension, $allowed, true)) {
+                continue;
+            }
+            $targetName = $safeBase . '-' . date('Ymd-His') . '-' . ($i + 1) . '.' . $extension;
+            $targetPath = $uploadDir . '/' . $targetName;
+            $suffix = 2;
+            while (file_exists($targetPath)) {
+                $targetName = $safeBase . '-' . date('Ymd-His') . '-' . ($i + 1) . '-' . $suffix . '.' . $extension;
+                $targetPath = $uploadDir . '/' . $targetName;
+                $suffix++;
+            }
+            if (move_uploaded_file($tmp, $targetPath)) {
+                $urls[] = 'https://www.sirfrancis.co.za/assets/img/product_images/' . rawurlencode($targetName);
+            }
+        }
+
+        return $urls;
+    }
+}
+
+if (!function_exists('cbAdminSheetSaveManualProductFromPost')) {
+    function cbAdminSheetSaveManualProductFromPost() {
+        $headers = getCandybirdProductTemplateHeaders();
+        $posted = is_array($_POST['product'] ?? null) ? $_POST['product'] : [];
+        $product = [];
+        foreach ($headers as $header) {
+            $product[$header] = trim((string) ($posted[$header] ?? ''));
+        }
+
+        if ($product['id'] === '') {
+            return [false, 'Add a unique product ID before saving.'];
+        }
+        if ($product['name'] === '') {
+            return [false, 'Add a product name before saving.'];
+        }
+        if ($product['price'] === '' || !is_numeric(str_replace(',', '.', $product['price']))) {
+            return [false, 'Add a numeric product price before saving.'];
+        }
+
+        $uploadedUrls = cbAdminSheetProductUploadUrls($product['id'], $product['name']);
+        if ($uploadedUrls) {
+            $existingUrls = array_filter(array_map('trim', explode(',', (string) $product['img_url'])));
+            $product['img_url'] = implode(', ', array_merge($existingUrls, $uploadedUrls));
+        }
+
+        if (saveCandybirdManualProduct($product)) {
+            cbAdminSheetClearPublicProductCache();
+            return [true, 'Manual product saved. It is now included with the product feed.'];
+        }
+
+        return [false, 'Manual product could not be saved. Check that sheet_cache is writable.'];
+    }
+}
+
 if (!function_exists('cbAdminSheetTemplateRows')) {
     function cbAdminSheetTemplateRows($key) {
         $sources = getCandybirdSheetSources();
         $templateHeaders = [
-            'products' => [
-                'id',
-                'parent_category',
-                'child_category_1',
-                'child_category_2',
-                'name',
-                'price',
-                'img_url',
-                'size',
-                'shipping_weight',
-                'free_delivery_excluded',
-                'discount',
-                'discounted_price',
-                'discount_valid_from',
-                'discount_valid_until',
-                'html_description',
-                'disclaimers',
-                'product_type',
-                'qty_in_stock',
-                'lead_time',
-                'slug',
-                'additional_categories',
-            ],
+            'products' => getCandybirdProductTemplateHeaders(),
             'coupons' => [
                 'id',
                 'coupon_code',
@@ -289,7 +349,9 @@ if (!function_exists('cbAdminSheetPage')) {
         $success = false;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $action = $_POST['sheet_action'] ?? '';
-            if ($action === 'save_source') {
+            if ($key === 'products' && $action === 'add_manual_product') {
+                [$success, $message] = cbAdminSheetSaveManualProductFromPost();
+            } elseif ($action === 'save_source') {
                 $success = cbAdminSheetSaveSingleSource($key);
                 if ($success) {
                     cbAdminSheetClearPublicProductCache();
@@ -315,6 +377,14 @@ if (!function_exists('cbAdminSheetPage')) {
         $source = $sources[$key];
         $syncLabel = $key === 'products' ? 'Sync Products' : 'Sync ' . ($source['label'] ?? $title);
         $health = $key === 'products' ? [] : checkCandybirdSheetHealth($key);
+        $tinymceApiKey = '';
+        if ($key === 'products' && isset($conn) && $conn instanceof mysqli) {
+            $websiteSettings = cbWebsiteSettingsLoad($conn);
+            $tinymceApiKey = trim((string) ($websiteSettings['tinymce_api_key'] ?? ''));
+            if ($tinymceApiKey === '' && defined('SF_DEFAULT_TINYMCE_API_KEY')) {
+                $tinymceApiKey = SF_DEFAULT_TINYMCE_API_KEY;
+            }
+        }
         $adminHelpOverride = [
             'title' => $title . ' helper',
             'body' => trim(preg_replace('/\s+/', ' ', strip_tags(str_replace(['</p>', '<br>', '<br/>', '<br />'], ' ', (string) $introHtml)))),
@@ -353,6 +423,11 @@ if (!function_exists('cbAdminSheetPage')) {
             .sheet-start-step span { align-items:center; background:#28364B; color:#CEBD88; display:inline-flex; font-weight:900; height:34px; justify-content:center; margin-bottom:12px; width:34px; }
             .sheet-start-step h3 { color:#28364B; font-size:18px; margin-bottom:8px; }
             .sheet-start-step p { color:#574f45; min-height:54px; }
+            .manual-product-grid { display:grid; gap:14px; }
+            .manual-product-field label { color:#28364B; display:block; font-weight:800; margin-bottom:6px; }
+            .manual-product-field input,
+            .manual-product-field textarea { border:1px solid var(--sf-border); border-radius:0; padding:10px 12px; width:100%; }
+            .manual-product-field small { color:#70695f; display:block; margin-top:5px; }
             @media (max-width: 991px) {
                 .sheet-start-steps { grid-template-columns:1fr; }
                 .sheet-start-step + .sheet-start-step { border-left:0; }
@@ -403,6 +478,50 @@ if (!function_exists('cbAdminSheetPage')) {
                 </section>
             <?php endif; ?>
 
+            <?php if ($key === 'products'): ?>
+                <?php
+                    $manualHeaders = getCandybirdProductTemplateHeaders();
+                    $manualFieldHelp = [
+                        'id' => 'Unique product ID. Keep it stable because carts, reviews and orders use this.',
+                        'img_url' => 'You can paste existing image URLs here, upload images below, or do both. Multiple URLs are separated with commas.',
+                        'html_description' => 'Rich product description shown to customers.',
+                        'disclaimers' => 'Optional disclaimer text, such as image or product notes.',
+                        'additional_categories' => 'Optional extra category paths. Use Parent > Child and separate multiple paths with |.',
+                    ];
+                    $textareaFields = ['html_description', 'disclaimers', 'additional_categories'];
+                ?>
+                <div class="sheet-panel" id="manual-product-form">
+                    <h2>Add Product Manually</h2>
+                    <p class="text-muted">This form uses the same headers as the product template. Uploaded images are saved into <strong>assets/img/product_images</strong> and added to the product image URL field.</p>
+                    <form method="post" enctype="multipart/form-data" id="manual-product-entry-form">
+                        <input type="hidden" name="sheet_action" value="add_manual_product">
+                        <div class="manual-product-grid">
+                            <?php foreach ($manualHeaders as $header): ?>
+                                <div class="manual-product-field">
+                                    <label for="manual_product_<?= cbAdminSheetText($header) ?>"><?= cbAdminSheetText($header) ?></label>
+                                    <?php if (in_array($header, $textareaFields, true)): ?>
+                                        <textarea id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" rows="<?= $header === 'html_description' ? 7 : 4 ?>" class="<?= in_array($header, ['html_description', 'disclaimers'], true) ? 'manual-product-richtext' : '' ?>"></textarea>
+                                    <?php else: ?>
+                                        <input id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" type="<?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'number' : 'text' ?>" <?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'step="0.01"' : '' ?> <?= in_array($header, ['id', 'name', 'price'], true) ? 'required' : '' ?>>
+                                    <?php endif; ?>
+                                    <?php if (!empty($manualFieldHelp[$header])): ?>
+                                        <small><?= cbAdminSheetText($manualFieldHelp[$header]) ?></small>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                            <div class="manual-product-field">
+                                <label for="manual_product_images">Upload product images</label>
+                                <input id="manual_product_images" name="product_images[]" type="file" accept="image/*" multiple>
+                                <small>Images upload to assets/img/product_images and their URLs are added to img_url.</small>
+                            </div>
+                        </div>
+                        <div class="sheet-actions mt-3">
+                            <button class="btn btn-primary" type="submit">Save Manual Product</button>
+                        </div>
+                    </form>
+                </div>
+            <?php endif; ?>
+
             <div class="sheet-panel" id="sheet-links">
                 <h2><?= $key === 'products' ? 'Save Product Sheet Links Here' : 'Editable Sheet Links' ?></h2>
                 <?php if ($key === 'products'): ?>
@@ -448,6 +567,28 @@ if (!function_exists('cbAdminSheetPage')) {
                 </div>
             <?php endif; ?>
         </div>
+        <?php if ($key === 'products' && $tinymceApiKey !== ''): ?>
+            <script src="https://cdn.tiny.cloud/1/<?= cbAdminSheetText($tinymceApiKey) ?>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    if (window.tinymce) {
+                        tinymce.init({
+                            selector: '.manual-product-richtext',
+                            menubar: false,
+                            plugins: 'lists link table code',
+                            toolbar: 'undo redo | bold italic | bullist numlist | link table | code',
+                            height: 260
+                        });
+                        var form = document.getElementById('manual-product-entry-form');
+                        if (form) {
+                            form.addEventListener('submit', function() {
+                                tinymce.triggerSave();
+                            });
+                        }
+                    }
+                });
+            </script>
+        <?php endif; ?>
         <?php
         include __DIR__ . '/../footer.php';
     }

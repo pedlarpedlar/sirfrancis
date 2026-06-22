@@ -102,6 +102,104 @@ if (!function_exists('parseCandybirdTsvRows')) {
     }
 }
 
+if (!function_exists('getCandybirdProductTemplateHeaders')) {
+    function getCandybirdProductTemplateHeaders() {
+        return [
+            'id',
+            'parent_category',
+            'child_category_1',
+            'child_category_2',
+            'name',
+            'price',
+            'img_url',
+            'size',
+            'shipping_weight',
+            'free_delivery_excluded',
+            'discount',
+            'discounted_price',
+            'discount_valid_from',
+            'discount_valid_until',
+            'html_description',
+            'disclaimers',
+            'product_type',
+            'qty_in_stock',
+            'lead_time',
+            'slug',
+            'additional_categories',
+        ];
+    }
+}
+
+if (!function_exists('getCandybirdManualProductsFile')) {
+    function getCandybirdManualProductsFile() {
+        return __DIR__ . '/sheet_cache/manual_products.tsv';
+    }
+}
+
+if (!function_exists('getCandybirdManualProductRows')) {
+    function getCandybirdManualProductRows() {
+        $file = getCandybirdManualProductsFile();
+        if (!is_file($file)) {
+            return [];
+        }
+        return parseCandybirdTsvRows((string) file_get_contents($file));
+    }
+}
+
+if (!function_exists('saveCandybirdManualProductRows')) {
+    function saveCandybirdManualProductRows($rows) {
+        $file = getCandybirdManualProductsFile();
+        $dir = dirname($file);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+            return false;
+        }
+
+        $headers = getCandybirdProductTemplateHeaders();
+        $handle = fopen('php://temp', 'r+');
+        if (!$handle) {
+            return false;
+        }
+        fputcsv($handle, $headers, "\t");
+        foreach ($rows as $row) {
+            $line = [];
+            foreach ($headers as $header) {
+                $line[] = (string) ($row[$header] ?? '');
+            }
+            fputcsv($handle, $line, "\t");
+        }
+        rewind($handle);
+        $contents = stream_get_contents($handle);
+        fclose($handle);
+
+        return file_put_contents($file, $contents, LOCK_EX) !== false;
+    }
+}
+
+if (!function_exists('saveCandybirdManualProduct')) {
+    function saveCandybirdManualProduct($product) {
+        $headers = getCandybirdProductTemplateHeaders();
+        $clean = [];
+        foreach ($headers as $header) {
+            $clean[$header] = trim((string) ($product[$header] ?? ''));
+        }
+
+        if ($clean['id'] === '' || $clean['name'] === '' || $clean['price'] === '') {
+            return false;
+        }
+
+        $rowsById = [];
+        foreach (getCandybirdManualProductRows() as $row) {
+            $rowId = trim((string) ($row['id'] ?? ''));
+            if ($rowId !== '') {
+                $rowsById[$rowId] = $row;
+            }
+        }
+        $rowsById[$clean['id']] = $clean;
+
+        return saveCandybirdManualProductRows(array_values($rowsById));
+    }
+}
+
 if (!function_exists('candybirdParseSheetMoney')) {
     function candybirdParseSheetMoney($value) {
         if (is_int($value) || is_float($value)) {
@@ -300,6 +398,14 @@ if (!function_exists('getSheetProducts')) {
         foreach (fetchCandybirdTsvSheet($sheet_url, 'products', 3600, $forceRefresh) as $item) {
             $item = normalizeCandybirdSheetMoneyFields($item);
             if (!empty($item['id']) && trim((string) ($item['name'] ?? '')) !== '' && trim((string) ($item['price'] ?? '')) !== '') {
+                $sheetProducts[(string) $item['id']] = normalizeCandybirdProductSpecial($item);
+            }
+        }
+
+        foreach (getCandybirdManualProductRows() as $item) {
+            $item = normalizeCandybirdSheetMoneyFields($item);
+            if (!empty($item['id']) && trim((string) ($item['name'] ?? '')) !== '' && trim((string) ($item['price'] ?? '')) !== '') {
+                $item['source'] = 'manual';
                 $sheetProducts[(string) $item['id']] = normalizeCandybirdProductSpecial($item);
             }
         }
