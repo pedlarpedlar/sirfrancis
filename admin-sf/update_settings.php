@@ -120,7 +120,7 @@ try {
     cbSettingsEnsureColumn($conn, 'tinymce_api_key', "ALTER TABLE admin_website_settings ADD COLUMN tinymce_api_key VARCHAR(255) NULL");
     cbSettingsEnsureColumn($conn, 'category_display_order', "ALTER TABLE admin_website_settings ADD COLUMN category_display_order TEXT NULL");
     cbSettingsEnsureColumn($conn, 'payfast_enabled', "ALTER TABLE admin_website_settings ADD COLUMN payfast_enabled TINYINT(1) NOT NULL DEFAULT 0");
-    cbSettingsEnsureColumn($conn, 'payfast_sandbox', "ALTER TABLE admin_website_settings ADD COLUMN payfast_sandbox TINYINT(1) NOT NULL DEFAULT 1");
+    cbSettingsEnsureColumn($conn, 'payfast_sandbox', "ALTER TABLE admin_website_settings ADD COLUMN payfast_sandbox TINYINT(1) NOT NULL DEFAULT 0");
     cbSettingsEnsureColumn($conn, 'payfast_merchant_id', "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_id VARCHAR(80) NULL");
     cbSettingsEnsureColumn($conn, 'payfast_merchant_key', "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_key VARCHAR(120) NULL");
     cbSettingsEnsureColumn($conn, 'payfast_passphrase', "ALTER TABLE admin_website_settings ADD COLUMN payfast_passphrase VARCHAR(255) NULL");

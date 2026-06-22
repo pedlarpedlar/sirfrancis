@@ -48,6 +48,7 @@ include 'page_menues.php';
             <div class="custom-control custom-switch mb-3">
                 <input type="checkbox" class="custom-control-input" id="payfast_sandbox" name="payfast_sandbox" value="1" <?= !empty($payfastSettings['payfast_sandbox']) ? 'checked' : '' ?>>
                 <label class="custom-control-label" for="payfast_sandbox">Use PayFast sandbox/testing mode</label>
+                <small class="form-text text-muted">Leave this off for your real PayFast merchant ID and merchant key. Sandbox mode only accepts PayFast sandbox credentials.</small>
             </div>
             <div class="form-group">
                 <label for="payfast_merchant_id">Merchant ID</label>

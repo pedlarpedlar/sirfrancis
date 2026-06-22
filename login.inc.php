@@ -66,6 +66,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check the database for the user
         $sql = "SELECT id, username, email, password_hash FROM users WHERE username = ? OR email = ?";
         $stmt = mysqli_prepare($conn, $sql);
+        if (!$stmt) {
+            error_log('Sir Francis login lookup prepare failed: ' . mysqli_error($conn));
+            header('Content-Type: application/json');
+            echo json_encode([
+                "success" => false,
+                "message" => "Login is temporarily unavailable. Please try again."
+            ]);
+            exit();
+        }
 
         // Bind parameters and execute the statement
         mysqli_stmt_bind_param($stmt, "ss", $username, $username);
@@ -93,11 +102,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     // Store the token and expiration in the database associated with the user
                     $sql = "UPDATE users SET remember_token = ?, remember_token_expiration = ? WHERE id = ?";
-                    $stmt = mysqli_prepare($conn, $sql);
-                    mysqli_stmt_bind_param($stmt, "ssi", $token, $expiration, $userId);
-                    mysqli_stmt_execute($stmt);
-                    
-                    candybirdSetRememberCookie($token, $expiration);
+                    $stmtRemember = mysqli_prepare($conn, $sql);
+                    if ($stmtRemember) {
+                        mysqli_stmt_bind_param($stmtRemember, "ssi", $token, $expiration, $userId);
+                        mysqli_stmt_execute($stmtRemember);
+                        mysqli_stmt_close($stmtRemember);
+
+                        candybirdSetRememberCookie($token, $expiration);
+                    } else {
+                        error_log('Sir Francis remember-me prepare failed: ' . mysqli_error($conn));
+                    }
                 }
 
                 // Update other tables to associate with the user when logging in
@@ -108,17 +122,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Update user_id for existing records
                         $sqlUpdate = "UPDATE $table SET user_id = ? WHERE guest_identifier = ?";
                         $stmtUpdate = mysqli_prepare($conn, $sqlUpdate);
-                        mysqli_stmt_bind_param($stmtUpdate, "ss", $userId, $guestIdentifier);
-                        mysqli_stmt_execute($stmtUpdate);
+                        if (!$stmtUpdate) {
+                            error_log('Sir Francis login guest merge prepare failed for ' . $table . ': ' . mysqli_error($conn));
+                            continue;
+                        }
+                        mysqli_stmt_bind_param($stmtUpdate, "is", $userId, $guestIdentifier);
+                        if (!mysqli_stmt_execute($stmtUpdate)) {
+                            error_log('Sir Francis login guest merge execute failed for ' . $table . ': ' . mysqli_stmt_error($stmtUpdate));
+                        }
                         mysqli_stmt_close($stmtUpdate);
                     }
 
                     // Update sessions table
                     $sqlUpdate = "UPDATE sessions SET user_id = ? WHERE session_id = ?";
                     $stmtUpdate = mysqli_prepare($conn, $sqlUpdate);
-                    mysqli_stmt_bind_param($stmtUpdate, "ss", $userId, $_SESSION['guest_identifier']);
-                    mysqli_stmt_execute($stmtUpdate);
-                    mysqli_stmt_close($stmtUpdate);
+                    if ($stmtUpdate) {
+                        mysqli_stmt_bind_param($stmtUpdate, "is", $userId, $_SESSION['guest_identifier']);
+                        if (!mysqli_stmt_execute($stmtUpdate)) {
+                            error_log('Sir Francis login session merge execute failed: ' . mysqli_stmt_error($stmtUpdate));
+                        }
+                        mysqli_stmt_close($stmtUpdate);
+                    } else {
+                        error_log('Sir Francis login session merge prepare failed: ' . mysqli_error($conn));
+                    }
                 }
 
                 // Return success response

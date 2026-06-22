@@ -22,7 +22,7 @@ if (!function_exists('cbWebsiteSettingsEnsureColumns')) {
             'tinymce_api_key' => "ALTER TABLE admin_website_settings ADD COLUMN tinymce_api_key VARCHAR(255) NULL",
             'free_shipping_amount' => "ALTER TABLE admin_website_settings ADD COLUMN free_shipping_amount DECIMAL(10,2) NULL DEFAULT 0",
             'payfast_enabled' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_enabled TINYINT(1) NOT NULL DEFAULT 0",
-            'payfast_sandbox' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_sandbox TINYINT(1) NOT NULL DEFAULT 1",
+            'payfast_sandbox' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_sandbox TINYINT(1) NOT NULL DEFAULT 0",
             'payfast_merchant_id' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_id VARCHAR(80) NULL",
             'payfast_merchant_key' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_merchant_key VARCHAR(120) NULL",
             'payfast_passphrase' => "ALTER TABLE admin_website_settings ADD COLUMN payfast_passphrase VARCHAR(255) NULL",
