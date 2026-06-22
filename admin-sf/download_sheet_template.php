@@ -33,6 +33,40 @@ function cbDownloadTemplateBusinessSlug($conn) {
     return $slug !== '' ? $slug : 'mywebsite';
 }
 
+function cbDownloadTemplateHtmlCell($value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+
+    if (preg_match('/<\s*(p|div|ul|ol|li|br|strong|em|b|i|span|h[1-6]|table|blockquote)\b/i', $value)) {
+        return $value;
+    }
+
+    $blocks = preg_split('/\R{2,}/', $value);
+    $html = [];
+    foreach ($blocks as $block) {
+        $lines = array_filter(array_map('trim', preg_split('/\R/', (string) $block)));
+        if (!$lines) {
+            continue;
+        }
+        $html[] = '<p>' . implode('<br>', array_map(static function($line) {
+            return htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
+        }, $lines)) . '</p>';
+    }
+
+    return implode("\n", $html);
+}
+
+function cbDownloadTemplateWriteQuotedTsvRow($handle, $row) {
+    $cells = [];
+    foreach ($row as $value) {
+        $cell = str_replace('"', '""', (string) $value);
+        $cells[] = '"' . $cell . '"';
+    }
+    fwrite($handle, implode("\t", $cells) . "\n");
+}
+
 $type = strtolower(trim((string) ($_GET['type'] ?? 'products')));
 if (!in_array($type, ['products', 'coupons', 'clearance', 'wholesale'], true)) {
     $type = 'products';
@@ -48,17 +82,21 @@ header('Expires: 0');
 $out = fopen('php://output', 'w');
 if ($exportProducts) {
     $headers = getCandybirdProductTemplateHeaders();
-    fputcsv($out, $headers, "\t");
+    cbDownloadTemplateWriteQuotedTsvRow($out, $headers);
     foreach (getSheetProducts(false) as $product) {
         $row = [];
         foreach ($headers as $header) {
-            $row[] = (string) ($product[$header] ?? '');
+            $value = (string) ($product[$header] ?? '');
+            if (in_array($header, ['html_description', 'disclaimers'], true)) {
+                $value = cbDownloadTemplateHtmlCell($value);
+            }
+            $row[] = $value;
         }
-        fputcsv($out, $row, "\t");
+        cbDownloadTemplateWriteQuotedTsvRow($out, $row);
     }
 } else {
     foreach (cbAdminSheetTemplateRows($type) as $row) {
-        fputcsv($out, $row, "\t");
+        cbDownloadTemplateWriteQuotedTsvRow($out, $row);
     }
 }
 fclose($out);
