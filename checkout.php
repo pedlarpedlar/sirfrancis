@@ -890,7 +890,14 @@ function checkoutModal(action) {
     var modalEl = document.getElementById('pudoLockerConfirmModal');
     if (!modalEl) return;
     if (window.bootstrap && bootstrap.Modal) {
-        var instance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        var instance = null;
+        if (typeof bootstrap.Modal.getOrCreateInstance === 'function') {
+            instance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        } else if (typeof bootstrap.Modal.getInstance === 'function') {
+            instance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        } else {
+            instance = new bootstrap.Modal(modalEl);
+        }
         if (action === 'hide') {
             instance.hide();
         } else {
