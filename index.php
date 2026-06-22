@@ -309,10 +309,57 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       margin-top: 4px;
     }
 
+    .main-slider .slider-height {
+      min-height: 840px;
+    }
+
+    .main-slider .slider-content {
+      padding-bottom: 78px;
+    }
+
+    .main-slider.dots-style .slick-dots {
+      bottom: 34px;
+    }
+
+    .main-slider .slider-content .btn.mt-45 {
+      margin-top: 34px;
+    }
+
+    .main-slider .slider-content .text-secondary.sub-subtitle {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      max-width: min(620px, 88vw);
+    }
+
     @media (max-width: 767px) {
+      .main-slider .slider-height {
+        min-height: 760px;
+      }
+
+      .main-slider .slider-content {
+        padding-bottom: 88px;
+      }
+
+      .main-slider.dots-style .slick-dots {
+        bottom: 26px;
+      }
+
       .hero-crest-logo {
         margin-bottom: 12px;
         max-width: min(300px, 88vw);
+      }
+
+      .main-slider .slider-content .text {
+        font-size: 22px;
+      }
+
+      .main-slider .slider-content .text-secondary {
+        font-size: 24px !important;
+      }
+
+      .main-slider .slider-content .text-secondary.sub-subtitle {
+        font-size: 15px !important;
+        line-height: 1.55;
       }
     }
 
