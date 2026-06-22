@@ -300,9 +300,9 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       display: block;
       filter: drop-shadow(0 8px 22px rgba(0, 0, 0, .28));
       height: auto;
-      margin: 0 auto 18px;
-      max-width: min(420px, 86vw);
-      width: 420px;
+      margin: 0 auto 12px;
+      max-width: min(310px, 72vw);
+      width: 310px;
     }
 
     .slider-content .hero-crest-logo + .text {
@@ -322,6 +322,26 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       font-weight: 700;
       line-height: 1.15;
       text-transform: none;
+    }
+
+    .main-slider .slider-content .title {
+      padding-bottom: 8px !important;
+    }
+
+    .main-slider .slider-content .sf-anchor-divider {
+      gap: 16px;
+      margin: 12px auto 18px;
+      min-width: 170px;
+    }
+
+    .main-slider .slider-content .sf-anchor-divider::before,
+    .main-slider .slider-content .sf-anchor-divider::after {
+      height: 1px;
+      width: 64px;
+    }
+
+    .main-slider .slider-content .sf-anchor-divider i {
+      font-size: 30px;
     }
 
     .main-slider .slider-height {
@@ -367,8 +387,23 @@ $showSubscribeOffer = empty($_SESSION['user_id']);
       }
 
       .hero-crest-logo {
-        margin-bottom: 12px;
-        max-width: min(300px, 88vw);
+        margin-bottom: 10px;
+        max-width: min(245px, 76vw);
+      }
+
+      .main-slider .slider-content .sf-anchor-divider {
+        gap: 12px;
+        margin: 10px auto 16px;
+        min-width: 132px;
+      }
+
+      .main-slider .slider-content .sf-anchor-divider::before,
+      .main-slider .slider-content .sf-anchor-divider::after {
+        width: 46px;
+      }
+
+      .main-slider .slider-content .sf-anchor-divider i {
+        font-size: 26px;
       }
 
       .main-slider .slider-content .text {
