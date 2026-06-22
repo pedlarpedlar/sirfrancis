@@ -452,6 +452,10 @@ if (!function_exists('cbAdminSheetPage')) {
             .manual-product-field textarea { border:1px solid var(--sf-border); border-radius:0; font-size:14px; min-height:40px; padding:8px 10px; width:100%; }
             .manual-product-field small { color:#70695f; display:block; font-size:12px; line-height:1.35; margin-top:4px; }
             .manual-product-field--wide { grid-column:1 / -1; }
+            .manual-product-html-tools { align-items:center; display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+            .manual-product-html-tools button { border-radius:0; font-size:12px; font-weight:800; padding:7px 10px; }
+            .manual-product-html-output { background:#fbfaf6; border:1px solid #d8c895; color:#28364B; display:none; font-family:Consolas, monospace; font-size:12px; margin-top:8px; min-height:80px; padding:8px; width:100%; }
+            .manual-product-html-output.is-visible { display:block; }
             .manual-product-modal .modal-dialog { max-width:980px; }
             .manual-product-modal .modal-content { border-radius:0; }
             .manual-product-modal .modal-header { background:#28364B; color:#fff; }
@@ -647,7 +651,14 @@ if (!function_exists('cbAdminSheetPage')) {
                                             <div class="manual-product-field <?= $isWideField ? 'manual-product-field--wide' : '' ?>">
                                                 <label for="manual_product_<?= cbAdminSheetText($header) ?>"><?= cbAdminSheetText($manualFieldLabels[$header] ?? ucwords(str_replace('_', ' ', $header))) ?></label>
                                                 <?php if (in_array($header, $textareaFields, true)): ?>
-                                                    <textarea id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" rows="<?= $header === 'html_description' ? 6 : 3 ?>" class="<?= in_array($header, ['html_description', 'disclaimers'], true) ? 'manual-product-richtext' : '' ?>"></textarea>
+                                                    <textarea id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" rows="<?= $header === 'html_description' ? 6 : 3 ?>" class="<?= in_array($header, ['html_description', 'disclaimers'], true) ? 'manual-product-richtext' : '' ?>" data-product-html-field="<?= cbAdminSheetText($header) ?>"></textarea>
+                                                    <?php if (in_array($header, ['html_description', 'disclaimers'], true)): ?>
+                                                        <div class="manual-product-html-tools">
+                                                            <button type="button" class="btn btn-outline-primary manual-product-convert-html" data-target="manual_product_<?= cbAdminSheetText($header) ?>">Convert To HTML</button>
+                                                            <button type="button" class="btn btn-outline-secondary manual-product-copy-html" data-target="manual_product_<?= cbAdminSheetText($header) ?>">Copy HTML</button>
+                                                        </div>
+                                                        <textarea class="manual-product-html-output" id="manual_product_<?= cbAdminSheetText($header) ?>_html_output" readonly aria-label="<?= cbAdminSheetText($manualFieldLabels[$header] ?? $header) ?> HTML output"></textarea>
+                                                    <?php endif; ?>
                                                 <?php else: ?>
                                                     <input id="manual_product_<?= cbAdminSheetText($header) ?>" name="product[<?= cbAdminSheetText($header) ?>]" type="<?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'number' : 'text' ?>" <?= in_array($header, ['price', 'discount', 'discounted_price'], true) ? 'step="0.01"' : '' ?> <?= in_array($header, ['id', 'name', 'price'], true) ? 'required' : '' ?>>
                                                 <?php endif; ?>
@@ -699,12 +710,30 @@ if (!function_exists('cbAdminSheetPage')) {
             <script src="https://cdn.tiny.cloud/1/<?= cbAdminSheetText($tinymceApiKey) ?>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                    function productFieldHtml(fieldId) {
+                        if (window.tinymce && tinymce.get(fieldId)) {
+                            return tinymce.get(fieldId).getContent();
+                        }
+                        var field = document.getElementById(fieldId);
+                        return field ? field.value : '';
+                    }
+
+                    function updateProductHtmlOutput(fieldId) {
+                        var output = document.getElementById(fieldId + '_html_output');
+                        if (!output) return '';
+                        var html = productFieldHtml(fieldId);
+                        output.value = html;
+                        output.classList.add('is-visible');
+                        return html;
+                    }
+
                     if (window.tinymce) {
                         tinymce.init({
                             selector: '.manual-product-richtext',
                             menubar: false,
                             plugins: 'lists link table code',
                             toolbar: 'undo redo | bold italic | bullist numlist | link table | code',
+                            branding: false,
                             height: 260
                         });
                         var form = document.getElementById('manual-product-entry-form');
@@ -714,6 +743,34 @@ if (!function_exists('cbAdminSheetPage')) {
                             });
                         }
                     }
+
+                    document.querySelectorAll('.manual-product-convert-html').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            updateProductHtmlOutput(button.getAttribute('data-target'));
+                        });
+                    });
+
+                    document.querySelectorAll('.manual-product-copy-html').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            var fieldId = button.getAttribute('data-target');
+                            var html = updateProductHtmlOutput(fieldId);
+                            if (!html) return;
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                navigator.clipboard.writeText(html);
+                            } else {
+                                var output = document.getElementById(fieldId + '_html_output');
+                                if (output) {
+                                    output.focus();
+                                    output.select();
+                                    document.execCommand('copy');
+                                }
+                            }
+                            button.textContent = 'Copied';
+                            window.setTimeout(function() {
+                                button.textContent = 'Copy HTML';
+                            }, 1400);
+                        });
+                    });
                 });
             </script>
         <?php endif; ?>
