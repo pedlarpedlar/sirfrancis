@@ -420,9 +420,19 @@ if (!function_exists('cbAdminSheetPage')) {
             .sheet-start-steps { display:grid; gap:0; grid-template-columns:repeat(3, minmax(0, 1fr)); }
             .sheet-start-step { border-top:1px solid var(--sf-border); padding:20px; }
             .sheet-start-step + .sheet-start-step { border-left:1px solid var(--sf-border); }
+            .sheet-start-step:nth-child(1) { background:#f4f8fb; }
+            .sheet-start-step:nth-child(2) { background:#fbf7ef; }
+            .sheet-start-step:nth-child(3) { background:#f3f7f1; }
             .sheet-start-step span { align-items:center; background:#28364B; color:#CEBD88; display:inline-flex; font-weight:900; height:34px; justify-content:center; margin-bottom:12px; width:34px; }
             .sheet-start-step h3 { color:#28364B; font-size:18px; margin-bottom:8px; }
             .sheet-start-step p { color:#574f45; min-height:54px; }
+            .sheet-start-step:nth-child(1) .btn { background:#315f7c !important; border-color:#315f7c !important; color:#fff !important; }
+            .sheet-start-step:nth-child(2) .btn { background:#9b7d2d !important; border-color:#9b7d2d !important; color:#fff !important; }
+            .sheet-start-step:nth-child(3) .btn { background:#4f7742 !important; border-color:#4f7742 !important; color:#fff !important; }
+            .sheet-links-panel { background:#fbfaf6; border-color:#d8c895; }
+            .sheet-links-panel .btn-primary { background:#28364B !important; border-color:#28364B !important; color:#fff !important; }
+            .sheet-create-product-callout { background:#f3f7f8; border:1px solid #c8d8df; padding:14px; }
+            .sheet-create-product-callout .btn { background:#315f7c !important; border-color:#315f7c !important; color:#fff !important; }
             .manual-product-grid { display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0, 1fr)); }
             .manual-product-field label { color:#28364B; display:block; font-size:13px; font-weight:800; margin-bottom:4px; }
             .manual-product-field input,
@@ -538,7 +548,7 @@ if (!function_exists('cbAdminSheetPage')) {
                 ?>
             <?php endif; ?>
 
-            <div class="sheet-panel" id="sheet-links">
+            <div class="sheet-panel sheet-links-panel" id="sheet-links">
                 <h2><?= $key === 'products' ? 'Save Product Sheet Links Here' : 'Editable Sheet Links' ?></h2>
                 <?php if ($key === 'products'): ?>
                     <p class="text-muted">Paste the published TSV URL and the editable Google Sheet URL here. Once saved, use Sync Products when you want the website to refresh immediately.</p>
@@ -561,7 +571,7 @@ if (!function_exists('cbAdminSheetPage')) {
                 </form>
                 <?php if ($key === 'products'): ?>
                     <hr>
-                    <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap:10px;">
+                    <div class="sheet-create-product-callout d-flex flex-wrap align-items-center justify-content-between" style="gap:10px;">
                         <div>
                             <h3 class="mb-1" style="font-size:18px;color:#28364B;">Create Product</h3>
                             <p class="text-muted mb-0">Use a compact form with the same fields as the product template.</p>
