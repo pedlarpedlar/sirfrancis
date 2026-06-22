@@ -338,6 +338,8 @@ if (!function_exists('cbAdminSheetTemplateRows')) {
 
 if (!function_exists('cbAdminSheetPage')) {
     function cbAdminSheetPage($key, $title, $introHtml) {
+        global $conn;
+
         $sourceKeys = ['products', 'coupons', 'clearance', 'wholesale'];
         if (!in_array($key, $sourceKeys, true)) {
             http_response_code(404);
@@ -391,11 +393,16 @@ if (!function_exists('cbAdminSheetPage')) {
                 : 'No numeric product IDs were found yet. You can start from 1 upward.';
         }
         $tinymceApiKey = '';
-        if ($key === 'products' && isset($conn) && $conn instanceof mysqli) {
-            $websiteSettings = cbWebsiteSettingsLoad($conn);
-            $tinymceApiKey = trim((string) ($websiteSettings['tinymce_api_key'] ?? ''));
-            if ($tinymceApiKey === '' && defined('SF_DEFAULT_TINYMCE_API_KEY')) {
+        if ($key === 'products') {
+            if (defined('SF_DEFAULT_TINYMCE_API_KEY')) {
                 $tinymceApiKey = SF_DEFAULT_TINYMCE_API_KEY;
+            }
+            if (isset($conn) && $conn instanceof mysqli) {
+                $websiteSettings = cbWebsiteSettingsLoad($conn);
+                $savedTinymceApiKey = trim((string) ($websiteSettings['tinymce_api_key'] ?? ''));
+                if ($savedTinymceApiKey !== '') {
+                    $tinymceApiKey = $savedTinymceApiKey;
+                }
             }
         }
         $adminHelpOverride = [
@@ -708,14 +715,36 @@ if (!function_exists('cbAdminSheetPage')) {
         </div>
         <?php if ($key === 'products' && $tinymceApiKey !== ''): ?>
             <script src="https://cdn.tiny.cloud/1/<?= cbAdminSheetText($tinymceApiKey) ?>/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <?php endif; ?>
+        <?php if ($key === 'products'): ?>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                    function escapeHtml(value) {
+                        return String(value || '')
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/'/g, '&#039;');
+                    }
+
+                    function plainTextToHtml(value) {
+                        var text = String(value || '').trim();
+                        if (!text) return '';
+                        return text.split(/\n{2,}/).map(function(block) {
+                            var lines = block.split(/\n/).map(function(line) {
+                                return escapeHtml(line.trim());
+                            }).filter(Boolean);
+                            return lines.length ? '<p>' + lines.join('<br>') + '</p>' : '';
+                        }).filter(Boolean).join("\n");
+                    }
+
                     function productFieldHtml(fieldId) {
                         if (window.tinymce && tinymce.get(fieldId)) {
                             return tinymce.get(fieldId).getContent();
                         }
                         var field = document.getElementById(fieldId);
-                        return field ? field.value : '';
+                        return field ? plainTextToHtml(field.value) : '';
                     }
 
                     function updateProductHtmlOutput(fieldId) {
@@ -727,15 +756,32 @@ if (!function_exists('cbAdminSheetPage')) {
                         return html;
                     }
 
-                    if (window.tinymce) {
-                        tinymce.init({
-                            selector: '.manual-product-richtext',
-                            menubar: false,
-                            plugins: 'lists link table code',
-                            toolbar: 'undo redo | bold italic | bullist numlist | link table | code',
-                            branding: false,
-                            height: 260
+                    function initManualProductEditors() {
+                        if (!window.tinymce) return;
+                        document.querySelectorAll('.manual-product-richtext').forEach(function(field) {
+                            if (!field.id || tinymce.get(field.id)) return;
+                            tinymce.init({
+                                selector: '#' + field.id,
+                                menubar: false,
+                                plugins: 'lists link table code paste',
+                                toolbar: 'undo redo | formatselect | bold italic underline | bullist numlist | link table | removeformat | code',
+                                branding: false,
+                                height: 260,
+                                convert_urls: false
+                            });
                         });
+                    }
+
+                    initManualProductEditors();
+
+                    var createProductModal = document.getElementById('createProductModal');
+                    if (createProductModal && window.jQuery) {
+                        jQuery(createProductModal).on('shown.bs.modal', function() {
+                            initManualProductEditors();
+                        });
+                    }
+
+                    if (window.tinymce) {
                         var form = document.getElementById('manual-product-entry-form');
                         if (form) {
                             form.addEventListener('submit', function() {
