@@ -15,6 +15,7 @@ $requestPathSlug = function_exists('normalizeCandybirdProductSlug')
 $isGiftingCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['gifting']) || !empty($_GET['gifting_intro']) || $productPageCategorySlug === 'gifting' || $requestPathSlug === 'gifting';
 $isSpecialsCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['special', 'specials', 'sale', 'sales']) || in_array($productPageCategorySlug, ['special', 'specials', 'sale', 'sales'], true) || $requestPathSlug === 'specials';
 $isClearanceCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['clearance-basket', 'clearance']) || in_array($productPageCategorySlug, ['clearance-basket', 'clearance'], true) || $requestPathSlug === 'clearance-basket';
+$isResellerCategoryPage = cbProductsPageCategoryMatches($productPageCategory, ['reseller', 'resellers', 'wholesale', 'bulk']) || in_array($productPageCategorySlug, ['reseller', 'resellers', 'wholesale', 'bulk'], true) || in_array($requestPathSlug, ['reseller', 'resellers', 'wholesale', 'bulk'], true);
 $page_url_canonical = "https://sirfrancis.co.za/products";
 $title_og = 'Product Catalogue & Supply Lines | Sir Francis';
 $page_url_og = "https://sirfrancis.co.za/products";
@@ -23,6 +24,7 @@ $description_og = $description_meta;
 $productsHeroImage = sfSiteImagePath('products.hero', 'assets/img/product/1.png');
 $productsSpecialsImage = sfSiteImagePath('products.specials_banner', 'assets/img/ocean.jpg');
 $productsRetailImage = sfSiteImagePath('products.retail_banner', 'assets/img/ocean.jpg');
+$productsResellerImage = sfSiteImagePath('products.reseller_banner', 'assets/img/ocean.jpg');
 $image_url_og = 'https://sirfrancis.co.za/' . ltrim($productsHeroImage, '/');
 $image_type_og = 'image/png';
 if ($isGiftingCategoryPage) {
