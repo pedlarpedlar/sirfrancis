@@ -1789,6 +1789,49 @@ if (!function_exists('ensureCandybirdCartTimestampColumn')) {
     }
 }
 
+if (!function_exists('ensureCandybirdCartCompatibilityColumns')) {
+    function ensureCandybirdCartCompatibilityColumns($conn) {
+        static $checked = null;
+        if ($checked !== null) {
+            return $checked;
+        }
+        if (!($conn instanceof mysqli)) {
+            $checked = false;
+            return false;
+        }
+
+        $checked = true;
+
+        $productColumn = $conn->query("SHOW COLUMNS FROM cart LIKE 'product_id'");
+        if ($productColumn && ($column = $productColumn->fetch_assoc())) {
+            $type = strtolower((string) ($column['Type'] ?? ''));
+            if (strpos($type, 'char') === false && strpos($type, 'text') === false) {
+                $nullable = strtoupper((string) ($column['Null'] ?? '')) === 'YES' ? 'NULL' : 'NOT NULL';
+                if (!$conn->query("ALTER TABLE cart MODIFY product_id VARCHAR(120) {$nullable}")) {
+                    $checked = false;
+                    error_log('Sir Francis could not update cart product_id column for sheet product IDs: ' . $conn->error);
+                }
+            }
+        }
+
+        $userColumn = $conn->query("SHOW COLUMNS FROM cart LIKE 'user_id'");
+        if ($userColumn && ($column = $userColumn->fetch_assoc())) {
+            $type = trim((string) ($column['Type'] ?? 'int'));
+            if ($type === '') {
+                $type = 'int';
+            }
+            if (strtoupper((string) ($column['Null'] ?? '')) === 'NO') {
+                if (!$conn->query("ALTER TABLE cart MODIFY user_id {$type} NULL")) {
+                    $checked = false;
+                    error_log('Sir Francis could not make cart user_id nullable for guest carts: ' . $conn->error);
+                }
+            }
+        }
+
+        return $checked;
+    }
+}
+
 if (!function_exists('getCandybirdActiveCartReservedQty')) {
     function getCandybirdActiveCartReservedQty($conn, $productId, $excludeUserId = null, $excludeGuestIdentifier = '', $clearanceId = '') {
         if (!($conn instanceof mysqli)) {

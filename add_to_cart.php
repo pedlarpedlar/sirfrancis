@@ -97,7 +97,9 @@ if (!$sheetProductForStock) {
     exit;
 }
 ensureCandybirdCartTimestampColumn($conn);
+ensureCandybirdCartCompatibilityColumns($conn);
 ensureCandybirdCartClearanceColumns($conn);
+syncSheetProductMirrorToDb($conn, $sheetProductForStock);
 
 // Check if the product is already in the cart
 $checkSql = "SELECT id, quantity FROM cart WHERE (user_id = ? OR guest_identifier = ?) AND product_id = ? AND COALESCE(clearance_id, '') = ?";
@@ -131,14 +133,15 @@ if (!$checkStmt) {
 
         if (!$updateStmt) {
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Error in preparing update statement']);
+            echo json_encode(['success' => false, 'message' => cbCartErrorMessage($conn, 'Error in preparing update statement')]);
         } else {
             mysqli_stmt_bind_param($updateStmt, "ii", $newQuantity, $cartId);
             mysqli_stmt_execute($updateStmt);
 
             if (mysqli_stmt_errno($updateStmt)) {
+                error_log('Sir Francis add-to-cart update failed: ' . mysqli_stmt_error($updateStmt));
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Error in executing update statement']);
+                echo json_encode(['success' => false, 'message' => cbCartErrorMessage($updateStmt, 'Error in executing update statement')]);
             } else {
                 // Close the update statement
                 mysqli_stmt_close($updateStmt);
@@ -168,15 +171,17 @@ if (!$checkStmt) {
         $insertStmt = mysqli_prepare($conn, $insertSql);
 
         if (!$insertStmt) {
+            error_log('Sir Francis add-to-cart insert prepare failed: ' . mysqli_error($conn));
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Error in preparing insert statement']);
+            echo json_encode(['success' => false, 'message' => cbCartErrorMessage($conn, 'Error in preparing insert statement')]);
         } else {
             mysqli_stmt_bind_param($insertStmt, "isssi", $userId, $guestIdentifier, $sourceProductId, $clearanceId, $quantity);
             mysqli_stmt_execute($insertStmt);
 
             if (mysqli_stmt_errno($insertStmt)) {
+                error_log('Sir Francis add-to-cart insert failed: ' . mysqli_stmt_error($insertStmt));
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Error in executing insert statement']);
+                echo json_encode(['success' => false, 'message' => cbCartErrorMessage($insertStmt, 'Error in executing insert statement')]);
             } else {
                 // Close the insert statement
                 mysqli_stmt_close($insertStmt);
@@ -222,6 +227,21 @@ if (!$checkStmt) {
     }
 }
 
+function cbCartErrorMessage($source, $message) {
+    $detail = '';
+    if ($source instanceof mysqli_stmt) {
+        $detail = mysqli_stmt_error($source);
+    } elseif ($source instanceof mysqli) {
+        $detail = mysqli_error($source);
+    }
+
+    if (!empty($_SESSION['admin_id']) && $detail !== '') {
+        return $message . ': ' . $detail;
+    }
+
+    return 'Cart could not be updated. Please try again.';
+}
+
 // Function to fetch cart parameters
 function fetchCartParameters($conn, $userId, $guestIdentifier, $productId) {
     $cartParamsSql = "SELECT product_id, clearance_id, quantity
@@ -235,16 +255,16 @@ function fetchCartParameters($conn, $userId, $guestIdentifier, $productId) {
 
     mysqli_stmt_bind_param($cartParamsStmt, "ss", $userId, $guestIdentifier);
     mysqli_stmt_execute($cartParamsStmt);
-    $result = mysqli_stmt_get_result($cartParamsStmt);
+    mysqli_stmt_bind_result($cartParamsStmt, $cartProductId, $cartClearanceId, $cartQuantity);
 
     $subtotal = 0;
     $item_quantity = 0;
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        $product = !empty($row['clearance_id']) ? buildCandybirdClearanceProduct(getSheetClearanceRowById($row['clearance_id'])) : getSheetProductById($row['product_id']);
+    while (mysqli_stmt_fetch($cartParamsStmt)) {
+        $product = !empty($cartClearanceId) ? buildCandybirdClearanceProduct(getSheetClearanceRowById($cartClearanceId)) : getSheetProductById($cartProductId);
         if (!$product) continue;
 
-        $quantity = (int) $row['quantity'];
+        $quantity = (int) $cartQuantity;
         $subtotal += getSheetProductPrice($product) * $quantity;
         $item_quantity += $quantity;
     }
