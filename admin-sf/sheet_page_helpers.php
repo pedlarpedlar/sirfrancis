@@ -417,22 +417,22 @@ if (!function_exists('cbAdminSheetPage')) {
             .sheet-start-header { background:#f8f5ee; padding:22px; }
             .sheet-start-header h2 { color:#28364B; font-size:28px; margin-bottom:8px; }
             .sheet-start-header p { color:#574f45; font-size:16px; margin:0; }
-            .sheet-start-steps { display:grid; gap:0; grid-template-columns:repeat(3, minmax(0, 1fr)); }
+            .sheet-start-steps { display:grid; gap:0; grid-template-columns:repeat(4, minmax(0, 1fr)); }
             .sheet-start-step { border-top:1px solid var(--sf-border); padding:20px; }
             .sheet-start-step + .sheet-start-step { border-left:1px solid var(--sf-border); }
             .sheet-start-step:nth-child(1) { background:#f4f8fb; }
             .sheet-start-step:nth-child(2) { background:#fbf7ef; }
             .sheet-start-step:nth-child(3) { background:#f3f7f1; }
+            .sheet-start-step:nth-child(4) { background:#f8f3fb; }
             .sheet-start-step span { align-items:center; background:#28364B; color:#CEBD88; display:inline-flex; font-weight:900; height:34px; justify-content:center; margin-bottom:12px; width:34px; }
             .sheet-start-step h3 { color:#28364B; font-size:18px; margin-bottom:8px; }
             .sheet-start-step p { color:#574f45; min-height:54px; }
             .sheet-start-step:nth-child(1) .btn { background:#315f7c !important; border-color:#315f7c !important; color:#fff !important; }
             .sheet-start-step:nth-child(2) .btn { background:#9b7d2d !important; border-color:#9b7d2d !important; color:#fff !important; }
             .sheet-start-step:nth-child(3) .btn { background:#4f7742 !important; border-color:#4f7742 !important; color:#fff !important; }
+            .sheet-start-step:nth-child(4) .btn { background:#6d4c7d !important; border-color:#6d4c7d !important; color:#fff !important; }
             .sheet-links-panel { background:#fbfaf6; border-color:#d8c895; }
             .sheet-links-panel .btn-primary { background:#28364B !important; border-color:#28364B !important; color:#fff !important; }
-            .sheet-create-product-callout { background:#f3f7f8; border:1px solid #c8d8df; padding:14px; }
-            .sheet-create-product-callout .btn { background:#315f7c !important; border-color:#315f7c !important; color:#fff !important; }
             .manual-product-grid { display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0, 1fr)); }
             .manual-product-field label { color:#28364B; display:block; font-size:13px; font-weight:800; margin-bottom:4px; }
             .manual-product-field input,
@@ -470,7 +470,7 @@ if (!function_exists('cbAdminSheetPage')) {
                 <section class="sheet-start-card" aria-labelledby="product-sheet-start-title">
                     <div class="sheet-start-header">
                         <h2 id="product-sheet-start-title">Where To Start?</h2>
-                        <p>Use this page in order: add images, prepare your product sheet, then save the two Google Sheet links here.</p>
+                        <p>Use this page in order: add images, prepare your product sheet, then save the two Google Sheet links. If you prefer, create a product directly from the form.</p>
                     </div>
                     <div class="sheet-start-steps">
                         <div class="sheet-start-step">
@@ -489,7 +489,13 @@ if (!function_exists('cbAdminSheetPage')) {
                             <span>3</span>
                             <h3>Save Links Here</h3>
                             <p>After publishing your Google Sheet as TSV, paste the published TSV link and editable sheet link below.</p>
-                            <a class="btn btn-primary" href="#sheet-links">Save Product Sheet Links</a>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sheetLinksModal">Save Product Sheet Links</button>
+                        </div>
+                        <div class="sheet-start-step">
+                            <span>4</span>
+                            <h3>Create Product</h3>
+                            <p>If you prefer to add one product without editing the sheet, use the product creation form here.</p>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Open Product Form</button>
                         </div>
                     </div>
                 </section>
@@ -548,11 +554,9 @@ if (!function_exists('cbAdminSheetPage')) {
                 ?>
             <?php endif; ?>
 
+            <?php if ($key !== 'products'): ?>
             <div class="sheet-panel sheet-links-panel" id="sheet-links">
                 <h2><?= $key === 'products' ? 'Save Product Sheet Links Here' : 'Editable Sheet Links' ?></h2>
-                <?php if ($key === 'products'): ?>
-                    <p class="text-muted">Paste the published TSV URL and the editable Google Sheet URL here. Once saved, use Sync Products when you want the website to refresh immediately.</p>
-                <?php endif; ?>
                 <form method="post">
                     <input type="hidden" name="sheet_action" value="save_source">
                     <div class="form-group">
@@ -569,19 +573,43 @@ if (!function_exists('cbAdminSheetPage')) {
                         <?php if (!empty($source['published_url'])): ?><a class="btn btn-outline-secondary" href="<?= cbAdminSheetText($source['published_url']) ?>" target="_blank" rel="noopener noreferrer">Open TSV feed</a><?php endif; ?>
                     </div>
                 </form>
-                <?php if ($key === 'products'): ?>
-                    <hr>
-                    <div class="sheet-create-product-callout d-flex flex-wrap align-items-center justify-content-between" style="gap:10px;">
-                        <div>
-                            <h3 class="mb-1" style="font-size:18px;color:#28364B;">Create Product</h3>
-                            <p class="text-muted mb-0">Use a compact form with the same fields as the product template.</p>
-                        </div>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Create Product</button>
-                    </div>
-                <?php endif; ?>
             </div>
+            <?php endif; ?>
 
             <?php if ($key === 'products'): ?>
+                <div class="modal fade manual-product-modal" id="sheetLinksModal" tabindex="-1" role="dialog" aria-labelledby="sheetLinksModalTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sheetLinksModalTitle">Save Product Sheet Links</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" name="sheet_action" value="save_source">
+                                    <p class="text-muted">Paste the published TSV URL and the editable Google Sheet URL here. Once saved, use Sync Products when you want the website to refresh immediately.</p>
+                                    <div class="form-group">
+                                        <label>Published TSV URL</label>
+                                        <input type="url" class="form-control" name="published_url" value="<?= cbAdminSheetText($source['published_url'] ?? '') ?>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Editable Google Sheet URL</label>
+                                        <input type="url" class="form-control" name="edit_url" value="<?= cbAdminSheetText($source['edit_url'] ?? '') ?>">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <?php if (!empty($source['edit_url'])): ?><a class="btn btn-outline-primary" href="<?= cbAdminSheetText($source['edit_url']) ?>" target="_blank" rel="noopener noreferrer">Open editable sheet</a><?php endif; ?>
+                                    <?php if (!empty($source['published_url'])): ?><a class="btn btn-outline-secondary" href="<?= cbAdminSheetText($source['published_url']) ?>" target="_blank" rel="noopener noreferrer">Open TSV feed</a><?php endif; ?>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-primary" type="submit">Save Links</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal fade manual-product-modal" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable" role="document">
                         <div class="modal-content">
