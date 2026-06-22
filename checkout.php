@@ -1,6 +1,7 @@
 <?php
 include 'session_logins.php';
 include 'header.php';
+require_once __DIR__ . '/google_integrations_helpers.php';
 
 $page_url_canonical = "https://www.fishgelatine.co.za/v2/checkout";
 $title_og = 'Checkout - Sir Francis';
@@ -138,37 +139,7 @@ $delivery_options = getCandybirdDeliveryOptions();
 $enabled_delivery_options = getCandybirdEnabledDeliveryOptions($delivery_options);
 $default_delivery_method = getCandybirdDefaultDeliveryMethod($delivery_options);
 $default_delivery_quote = getCandybirdDeliveryQuote($default_delivery_method, $checkout_weight_kg, $checkout_free_shipping_basis, $free_shipping_amount);
-$google_maps_api_key = '';
-$google_places_api_key = '';
-if ($conn instanceof mysqli) {
-    $mapsColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_maps_api_key'");
-    if ($mapsColumnCheck && $mapsColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_maps_api_key VARCHAR(255) NULL");
-    }
-    $placesColumnCheck = $conn->query("SHOW COLUMNS FROM admin_website_settings LIKE 'google_places_api_key'");
-    if ($placesColumnCheck && $placesColumnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE admin_website_settings ADD COLUMN google_places_api_key VARCHAR(255) NULL");
-    }
-    $mapsResult = $conn->query("SELECT google_maps_api_key, google_places_api_key FROM admin_website_settings LIMIT 1");
-    if ($mapsResult) {
-        if ($mapsResult && ($mapsRow = $mapsResult->fetch_assoc())) {
-            $google_maps_api_key = trim((string) ($mapsRow['google_maps_api_key'] ?? ''));
-            $google_places_api_key = trim((string) ($mapsRow['google_places_api_key'] ?? ''));
-        }
-    }
-}
-if ($google_places_api_key === '') {
-    $google_places_api_key = $google_maps_api_key;
-}
-if ($google_maps_api_key === '') {
-    $google_maps_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_MAPS_API_KEY'));
-}
-if ($google_places_api_key === '') {
-    $google_places_api_key = trim((string) getenv('SIRFRANCIS_GOOGLE_PLACES_API_KEY'));
-}
-if ($google_places_api_key === '') {
-    $google_places_api_key = $google_maps_api_key;
-}
+$google_places_api_key = sfGooglePlacesBrowserKey($conn ?? null);
 
 
 $billing_first_name = '';
@@ -1458,7 +1429,8 @@ window.initCandybirdAddressAutocomplete = function initCandybirdAddressAutocompl
             input.setAttribute('autocomplete', 'off');
             var autocomplete = new google.maps.places.Autocomplete(input, {
                 fields: ['address_components', 'formatted_address'],
-                types: ['address']
+                types: ['address'],
+                componentRestrictions: { country: 'za' }
             });
             autocomplete.addListener('place_changed', function() {
                 applyAddress(prefix, autocomplete.getPlace());
@@ -1473,11 +1445,29 @@ window.initCandybirdAddressAutocomplete = function initCandybirdAddressAutocompl
     }
 };
 
+window.gm_authFailure = function() {
+    <?php if (isset($_SESSION['admin_id'])): ?>
+    function showCheckoutMapsAdminNote() {
+        var input = document.getElementById('billing_street_address_1');
+        if (!input) return;
+        if (document.getElementById('checkout_maps_admin_note')) return;
+        var note = document.createElement('div');
+        note.id = 'checkout_maps_admin_note';
+        note.className = 'checkout-field-error';
+        note.style.marginTop = '6px';
+        note.textContent = 'Admin note: Google address autocomplete could not start. Check that the key is allowed for https://www.sirfrancis.co.za/* and has Maps JavaScript API plus Places API enabled.';
+        input.parentNode.appendChild(note);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showCheckoutMapsAdminNote);
+    } else {
+        showCheckoutMapsAdminNote();
+    }
+    <?php endif; ?>
+};
+
 </script>
 
-<?php
-include 'footer.php';
-?>
 <?php if ($google_places_api_key !== ''): ?>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=htmlspecialchars($google_places_api_key, ENT_QUOTES)?>&libraries=places&callback=initCandybirdAddressAutocomplete"></script>
 <?php elseif (isset($_SESSION['admin_id'])): ?>
@@ -1493,3 +1483,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php endif; ?>
+
+<?php
+include 'footer.php';
+?>
