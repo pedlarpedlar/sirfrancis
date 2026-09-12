@@ -536,8 +536,8 @@ $footerGoogleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawu
         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <span class="offer-badge">R100 off</span>
-        <h3 id="subscribe-offer-title">Save R100 on your first subscribed order</h3>
+        <span class="offer-badge">R100 off R2000</span>
+        <h3 id="subscribe-offer-title">Save R100 on your first subscribed order over R2000</h3>
         <p class="mb-0">Join the Sir Francis mailing list for product updates, pricelists and special offers.</p>
       </div>
       <div class="offer-body">
