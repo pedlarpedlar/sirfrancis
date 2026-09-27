@@ -120,7 +120,7 @@ if (empty($totalsResult['success'])) {
 }
 
 $response['success'] = true;
-$response['message'] = 'Product added and order totals recalculated.';
+$response['message'] = 'Product added and order totals recalculated. Send the order confirmation email when the order is ready.';
 $response['totals'] = $totalsResult;
 echo json_encode($response);
 exit();

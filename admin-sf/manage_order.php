@@ -344,9 +344,11 @@ include 'page_menues.php';
 
   	<a href="manage_orders" class="no-print btn btn-secondary my-2">Back to Orders</a>
     <a href="../products" target="_blank" rel="noopener noreferrer" class="no-print btn btn-outline-primary my-2">Browse products</a>
+    <button type="button" class="no-print btn btn-success my-2" id="sendOrderConfirmationEmail" data-order-id="<?=htmlspecialchars((string) $order_id, ENT_QUOTES, 'UTF-8')?>">Send order confirmation email</button>
+    <div class="no-print alert d-none mt-2" id="adminOrderEmailMessage"></div>
 
     <?php if (!empty($_GET['created'])): ?>
-      <div class="alert alert-success">Order #<?=htmlspecialchars($order_id, ENT_QUOTES, 'UTF-8')?> created. Add products below to build the order.</div>
+      <div class="alert alert-success">Order #<?=htmlspecialchars($order_id, ENT_QUOTES, 'UTF-8')?> created. Add products below to build the order, then click <strong>Send order confirmation email</strong> when it is ready.</div>
     <?php endif; ?>
 
     <datalist id="adminProductList"><?=$productOptions?></datalist>
@@ -859,6 +861,39 @@ $(document).ready(function () {
           },
           error: function() {
               $('#adminOrderTotalsMessage').addClass('text-danger').text('Cancellation could not be recorded right now.');
+          }
+      });
+  });
+
+  $('#sendOrderConfirmationEmail').on('click', function() {
+      var $button = $(this);
+      var $message = $('#adminOrderEmailMessage');
+      $button.prop('disabled', true).text('Sending email...');
+      $message.removeClass('d-none alert-success alert-danger').addClass('alert-info').text('Sending latest order confirmation to customer and admin...');
+
+      $.ajax({
+          url: 'resend_order_confirmation_email.php',
+          method: 'POST',
+          dataType: 'json',
+          data: {
+              order_id: $button.data('order-id'),
+              include_edit_note: 1
+          },
+          success: function(response) {
+              $message
+                  .removeClass('alert-info alert-success alert-danger')
+                  .addClass(response && response.success ? 'alert-success' : 'alert-danger')
+                  .text((response && response.message) || 'Order email request finished.');
+          },
+          error: function(xhr) {
+              var message = 'Order confirmation email could not be sent right now.';
+              if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                  message = xhr.responseJSON.message;
+              }
+              $message.removeClass('alert-info alert-success').addClass('alert-danger').text(message);
+          },
+          complete: function() {
+              $button.prop('disabled', false).text('Send order confirmation email');
           }
       });
   });
