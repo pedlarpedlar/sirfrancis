@@ -66,14 +66,23 @@ if (!function_exists('cbAdminSheetSaveSingleSource')) {
 
 if (!function_exists('cbAdminSheetProductUploadUrls')) {
     function cbAdminSheetProductUploadUrls($productId, $productName) {
-        $urls = [];
+        $result = [
+            'urls' => [],
+            'errors' => [],
+            'attempted' => false,
+        ];
         if (empty($_FILES['product_images']) || !is_array($_FILES['product_images']['name'] ?? null)) {
-            return $urls;
+            return $result;
         }
 
         $uploadDir = dirname(__DIR__) . '/assets/img/product_images';
         if (!is_dir($uploadDir) && !mkdir($uploadDir, 0755, true)) {
-            return $urls;
+            $result['errors'][] = 'The product image folder could not be created.';
+            return $result;
+        }
+        if (!is_writable($uploadDir)) {
+            $result['errors'][] = 'The product image folder is not writable.';
+            return $result;
         }
 
         $safeBase = strtolower(trim(preg_replace('/[^A-Za-z0-9]+/', '-', (string) ($productId ?: $productName)), '-'));
@@ -83,15 +92,28 @@ if (!function_exists('cbAdminSheetProductUploadUrls')) {
         $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
         $count = count($_FILES['product_images']['name']);
         for ($i = 0; $i < $count; $i++) {
-            if ((int) ($_FILES['product_images']['error'][$i] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+            $originalName = (string) ($_FILES['product_images']['name'][$i] ?? 'Image');
+            $uploadError = (int) ($_FILES['product_images']['error'][$i] ?? UPLOAD_ERR_NO_FILE);
+            if ($uploadError === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            $result['attempted'] = true;
+            if ($uploadError !== UPLOAD_ERR_OK) {
+                $result['errors'][] = $originalName . ' could not upload. Check the file size and try again.';
                 continue;
             }
             $tmp = (string) ($_FILES['product_images']['tmp_name'][$i] ?? '');
             if ($tmp === '' || !is_uploaded_file($tmp)) {
+                $result['errors'][] = $originalName . ' was not received by the server.';
                 continue;
             }
-            $extension = strtolower(pathinfo((string) $_FILES['product_images']['name'][$i], PATHINFO_EXTENSION));
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
             if (!in_array($extension, $allowed, true)) {
+                $result['errors'][] = $originalName . ' is not a supported image type.';
+                continue;
+            }
+            if (!@getimagesize($tmp)) {
+                $result['errors'][] = $originalName . ' is not a valid image file.';
                 continue;
             }
             $targetName = $safeBase . '-' . date('Ymd-His') . '-' . ($i + 1) . '.' . $extension;
@@ -103,11 +125,13 @@ if (!function_exists('cbAdminSheetProductUploadUrls')) {
                 $suffix++;
             }
             if (move_uploaded_file($tmp, $targetPath)) {
-                $urls[] = 'https://www.sirfrancis.co.za/assets/img/product_images/' . rawurlencode($targetName);
+                $result['urls'][] = 'assets/img/product_images/' . rawurlencode($targetName);
+            } else {
+                $result['errors'][] = $originalName . ' could not be moved into the product image folder.';
             }
         }
 
-        return $urls;
+        return $result;
     }
 }
 
@@ -130,15 +154,22 @@ if (!function_exists('cbAdminSheetSaveManualProductFromPost')) {
             return [false, 'Add a numeric product price before saving.'];
         }
 
-        $uploadedUrls = cbAdminSheetProductUploadUrls($product['id'], $product['name']);
-        if ($uploadedUrls) {
+        $uploadResult = cbAdminSheetProductUploadUrls($product['id'], $product['name']);
+        $uploadedUrls = $uploadResult['urls'] ?? [];
+        if (!empty($uploadedUrls)) {
             $existingUrls = array_filter(array_map('trim', explode(',', (string) $product['img_url'])));
             $product['img_url'] = implode(', ', array_merge($existingUrls, $uploadedUrls));
         }
 
         if (saveCandybirdManualProduct($product)) {
             cbAdminSheetClearPublicProductCache();
-            return [true, 'Manual product saved. It is now included with the product feed.'];
+            $message = 'Manual product saved. It is now included with the product feed.';
+            if (!empty($uploadedUrls)) {
+                $message .= ' Added ' . count($uploadedUrls) . ' product image(s).';
+            } elseif (!empty($uploadResult['attempted'])) {
+                $message .= ' No product images were added: ' . implode(' ', $uploadResult['errors'] ?? ['Upload failed.']);
+            }
+            return [true, $message];
         }
 
         return [false, 'Manual product could not be saved. Check that sheet_cache is writable.'];
