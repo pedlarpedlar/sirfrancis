@@ -492,7 +492,7 @@ $footerGoogleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' . rawu
       <div class="modal-body">
         <div class="row align-items-center">
           <div class="col-md-4 text-center mb-4 mb-md-0">
-            <img class="product-image img-fluid" src="<?=$home_directory?>assets/img/product/1.png" width="4508" height="5025" onerror="this.onerror=null;this.src='<?=$home_directory?>assets/img/product/1.png';" alt="Product image">
+            <img class="product-image img-fluid" src="<?=$home_directory?>assets/img/logo/logo.png" width="450" height="300" onerror="this.onerror=null;this.src='<?=$home_directory?>assets/img/logo/logo.png';" alt="Product image">
           </div>
           <div class="col-md-8">
             <h5 class="product-name mb-2"></h5>
@@ -951,7 +951,7 @@ function updateModalContent(response) {
     response.cart = response.cart || {};
     var productDetails = response.cart.product || {};
 
-    var defaultImageUrl = $('#add-to-cart .product-image').attr('src');
+    var defaultImageUrl = '<?=$home_directory?>assets/img/logo/logo.png';
 
     $('#add-to-cart .modal-title').text(response.success === false ? 'Cart could not be updated' : 'Product successfully added to your shopping cart');
     $('#add-to-cart .product-name').text(productDetails.title || 'Selected product');
@@ -966,7 +966,7 @@ function updateModalContent(response) {
             : ''
     );
     
-    var imageUrl = productDetails.image_url || defaultImageUrl;
+    var imageUrl = normalizeSirFrancisPopupImage(productDetails.image_url || defaultImageUrl, defaultImageUrl);
     $('#add-to-cart .product-image').attr('src', imageUrl);
     
     $('#add-to-cart .grand_total').text('R' + (response.cart.subtotal || '0.00'));
@@ -999,7 +999,9 @@ function getSheetProductPrice(product) {
 
 function getSheetProductImages(product) {
     var imageValue = product.img_url || product.image_url || product.image_urls || product.image || '';
-    var images = String(imageValue).split(',').map(function(image) {
+    var realImages = [];
+    var fallbackImages = [];
+    String(imageValue).split(',').map(function(image) {
         return image.trim();
     }).filter(function(image) {
         var lower = image.toLowerCase();
@@ -1008,9 +1010,30 @@ function getSheetProductImages(product) {
             && lower.indexOf('fishgelatine.co.za/v2/assets/img/wholesale.jpg') === -1
             && lower.indexOf('fishgelatine.co.za/v2/assets/img/pricelist.jpg') === -1
             && lower.indexOf('fishgelatine.co.za/v2/assets/img/reseller.jpeg') === -1;
+    }).forEach(function(image) {
+        if (isSirFrancisPopupPlaceholder(image)) {
+            fallbackImages.push(image);
+        } else {
+            realImages.push(image);
+        }
     });
 
-    return images.length ? images : ['<?=$home_directory?>assets/img/product/1.png'];
+    return realImages.length ? realImages.concat(fallbackImages) : (fallbackImages.length ? fallbackImages : ['<?=$home_directory?>assets/img/logo/logo.png']);
+}
+
+function isSirFrancisPopupPlaceholder(image) {
+    var lower = String(image || '').toLowerCase();
+    return lower.indexOf('/assets/img/product/1.png') !== -1
+        || lower.indexOf('\\assets\\img\\product\\1.png') !== -1
+        || lower === 'assets/img/product/1.png'
+        || lower === '<?=$home_directory?>assets/img/product/1.png';
+}
+
+function normalizeSirFrancisPopupImage(image, fallback) {
+    if (!image || isSirFrancisPopupPlaceholder(image)) {
+        return fallback;
+    }
+    return image;
 }
 
 function buildSheetCartResponse(productId, quantity, response) {
