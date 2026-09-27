@@ -915,14 +915,29 @@ if (!function_exists('cbAdminSheetPage')) {
                         var modal = document.getElementById('createProductModal');
                         if (!modal) return;
                         if (window.bootstrap && bootstrap.Modal) {
-                            bootstrap.Modal.getOrCreateInstance(modal).show();
+                            if (typeof bootstrap.Modal.getOrCreateInstance === 'function') {
+                                bootstrap.Modal.getOrCreateInstance(modal).show();
+                                return;
+                            }
+                            if (typeof bootstrap.Modal.getInstance === 'function') {
+                                var modalInstance = bootstrap.Modal.getInstance(modal);
+                                if (!modalInstance) {
+                                    modalInstance = new bootstrap.Modal(modal);
+                                }
+                                modalInstance.show();
+                                return;
+                            }
+                            if (typeof bootstrap.Modal === 'function') {
+                                new bootstrap.Modal(modal).show();
+                                return;
+                            }
                         } else if (window.jQuery && jQuery.fn.modal) {
                             jQuery(modal).modal('show');
-                        } else {
-                            modal.classList.add('show');
-                            modal.style.display = 'block';
-                            modal.removeAttribute('aria-hidden');
+                            return;
                         }
+                        modal.classList.add('show');
+                        modal.style.display = 'block';
+                        modal.removeAttribute('aria-hidden');
                     }
 
                     function setManualProductField(name, value) {
