@@ -29,6 +29,41 @@ if (!function_exists('cbCandybirdMailAccounts')) {
     }
 }
 
+if (!function_exists('cbCandybirdAdminNotificationRecipient')) {
+    function cbCandybirdAdminNotificationRecipient($conn = null) {
+        cbCandybirdLoadMailConfig();
+        $candidates = [];
+
+        if ($conn instanceof mysqli) {
+            try {
+                $result = $conn->query("SELECT support_email, email_1, email_2 FROM admin_website_settings ORDER BY id ASC LIMIT 1");
+                if ($result) {
+                    $settings = $result->fetch_assoc() ?: [];
+                    foreach (['support_email', 'email_1', 'email_2'] as $field) {
+                        $candidates[] = $settings[$field] ?? '';
+                    }
+                    $result->free();
+                }
+            } catch (Throwable $e) {
+                error_log('Sir Francis admin notification recipient settings lookup failed: ' . $e->getMessage());
+            }
+        }
+
+        foreach (['support_email', 'website_email', 'email_1', 'smtp_username1'] as $globalName) {
+            $candidates[] = $GLOBALS[$globalName] ?? '';
+        }
+
+        foreach ($candidates as $email) {
+            $email = trim((string) $email);
+            if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $email;
+            }
+        }
+
+        return '';
+    }
+}
+
 if (!function_exists('cbCandybirdSendMail')) {
     function cbCandybirdSendMail($toEmail, $toName, $subject, $htmlBody, $options = []) {
         cbCandybirdLoadMailConfig();

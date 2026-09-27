@@ -1170,7 +1170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Now, proceed to send the order confirmation email
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $orderCreated) {
-if (!isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port, $smtp_username1)) {
+if (!isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port)) {
     $response['email_message'] = 'Order placed. Email settings are not available in this environment.';
     header('Content-Type: application/json');
     echo json_encode($response);
@@ -1296,19 +1296,23 @@ try {
         '{user_email}' => candybirdEmailText($billing_email_address)
     )));
 
-    $adminMailResult = cbCandybirdSendMail(
-        $smtp_username1,
-        'Admin',
-        $emailSubjectPrefix . "Sir Francis | Order Received | #".$orderId_zeropad,
-        $admin_email_body,
-        [
-            'reply_to_email' => $billing_email_address,
-            'reply_to_name' => trim($billing_first_name) ?: 'Sir Francis customer',
-            'prefer_mail_transport' => true,
-        ]
-    );
+    $adminRecipient = cbCandybirdAdminNotificationRecipient();
+    $adminMailResult = ['success' => false, 'error' => 'Admin/support email address is not configured.'];
+    if ($adminRecipient !== '') {
+        $adminMailResult = cbCandybirdSendMail(
+            $adminRecipient,
+            'Admin',
+            $emailSubjectPrefix . "Sir Francis | Order Received | #".$orderId_zeropad,
+            $admin_email_body,
+            [
+                'reply_to_email' => $billing_email_address,
+                'reply_to_name' => trim($billing_first_name) ?: 'Sir Francis customer',
+                'prefer_mail_transport' => true,
+            ]
+        );
+    }
     if (!empty($adminMailResult['success'])) {
-        $response['admin_email_message'] = 'Admin email sent successfully.';
+        $response['admin_email_message'] = 'Admin email sent successfully to ' . $adminRecipient . '.';
     } else {
         error_log('Sir Francis admin order email failed for order ' . $orderId_zeropad . ': ' . ($adminMailResult['error'] ?? 'unknown error'));
         $response['admin_email_message'] = 'Order placed, but the admin email could not be sent.';

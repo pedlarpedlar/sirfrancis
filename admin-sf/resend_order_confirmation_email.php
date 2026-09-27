@@ -267,9 +267,9 @@ $customerResult = cbCandybirdSendMail(
     ['prefer_mail_transport' => true]
 );
 
-$adminRecipient = $GLOBALS['smtp_username1'] ?? '';
+$adminRecipient = cbCandybirdAdminNotificationRecipient($conn);
 $adminResult = ['success' => false, 'error' => 'Admin email address is not configured.'];
-if (filter_var((string) $adminRecipient, FILTER_VALIDATE_EMAIL)) {
+if ($adminRecipient !== '') {
     $adminResult = cbCandybirdSendMail(
         $adminRecipient,
         'Admin',

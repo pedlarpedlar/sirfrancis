@@ -465,17 +465,21 @@ try {
     $admin_email_body = str_replace('{payment_method}', $order[0]['payment_method'], $admin_email_body);
     $admin_email_body = str_replace('{order_notes}', $order[0]['order_notes'], $admin_email_body);
 
-    $adminMailResult = cbCandybirdSendMail(
-        $smtp_username1,
-        'Admin',
-        $admin_email_subject,
-        $admin_email_body,
-        [
-            'reply_to_email' => $client_email,
-            'reply_to_name' => $client_name ?: 'Sir Francis customer',
-            'prefer_mail_transport' => true,
-        ]
-    );
+    $adminRecipient = cbCandybirdAdminNotificationRecipient($conn ?? null);
+    $adminMailResult = ['success' => false, 'error' => 'Admin/support email address is not configured.'];
+    if ($adminRecipient !== '') {
+        $adminMailResult = cbCandybirdSendMail(
+            $adminRecipient,
+            'Admin',
+            $admin_email_subject,
+            $admin_email_body,
+            [
+                'reply_to_email' => $client_email,
+                'reply_to_name' => $client_name ?: 'Sir Francis customer',
+                'prefer_mail_transport' => true,
+            ]
+        );
+    }
     if (!empty($adminMailResult['success'])) {
         $response = array('success' => true, 'message' => 'Order successful! Admin email sent successfully!');
     } else {

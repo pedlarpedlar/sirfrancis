@@ -176,17 +176,21 @@ try {
     $admin_email_body = str_replace('{custom_message}', $emailBody, $admin_email_body);
     
     
-    $adminMailResult = cbCandybirdSendMail(
-        $smtp_username1,
-        'Admin',
-        "Order ".$orderId_zeropad." Update - ".$emailSubject,
-        $admin_email_body,
-        [
-            'reply_to_email' => $billing_email_address,
-            'reply_to_name' => $billing_first_name ?: 'Sir Francis customer',
-            'prefer_mail_transport' => true,
-        ]
-    );
+    $adminRecipient = cbCandybirdAdminNotificationRecipient($conn);
+    $adminMailResult = ['success' => false, 'error' => 'Admin/support email address is not configured.'];
+    if ($adminRecipient !== '') {
+        $adminMailResult = cbCandybirdSendMail(
+            $adminRecipient,
+            'Admin',
+            "Order ".$orderId_zeropad." Update - ".$emailSubject,
+            $admin_email_body,
+            [
+                'reply_to_email' => $billing_email_address,
+                'reply_to_name' => $billing_first_name ?: 'Sir Francis customer',
+                'prefer_mail_transport' => true,
+            ]
+        );
+    }
 
     if (!empty($adminMailResult['success'])) {
         $admin_response = array('success' => true, 'message' => 'Admin email sent successfully!');
