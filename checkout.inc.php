@@ -1170,13 +1170,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Now, proceed to send the order confirmation email
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $orderCreated) {
-if (!isset($smtp_server, $smtp_username5, $smtp_password5, $smtp_type, $smtp_port)) {
-    $response['email_message'] = 'Order placed. Email settings are not available in this environment.';
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
-}
-
 if (!function_exists('candybirdEmailMoney')) {
     function candybirdEmailMoney($amount)
     {
