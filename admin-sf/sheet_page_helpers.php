@@ -501,6 +501,12 @@ if (!function_exists('cbAdminSheetPage')) {
             .manual-product-html-tools button { border-radius:0; font-size:12px; font-weight:800; padding:7px 10px; }
             .manual-product-html-output { background:#fbfaf6; border:1px solid #d8c895; color:#28364B; display:none; font-family:Consolas, monospace; font-size:12px; margin-top:8px; min-height:80px; padding:8px; width:100%; }
             .manual-product-html-output.is-visible { display:block; }
+            .manual-product-image-manager { background:#fbfaf6; border:1px solid var(--sf-border); padding:12px; }
+            .manual-product-image-list { display:grid; gap:10px; grid-template-columns:repeat(auto-fill, minmax(116px, 1fr)); margin-top:10px; }
+            .manual-product-image-item { background:#fff; border:1px solid #d8c895; padding:8px; }
+            .manual-product-image-item img { aspect-ratio:1 / 1; background:#f6f1ea; display:block; object-fit:cover; width:100%; }
+            .manual-product-image-item button { border-radius:0; font-size:12px; margin-top:8px; width:100%; }
+            .manual-product-image-empty { color:#70695f; font-size:13px; margin:8px 0 0; }
             .manual-product-modal .modal-dialog { max-width:980px; }
             .manual-product-modal .modal-content { border-radius:0; }
             .manual-product-modal .modal-header { background:#28364B; color:#fff; }
@@ -798,7 +804,15 @@ if (!function_exists('cbAdminSheetPage')) {
                                         <div class="manual-product-field manual-product-field--wide">
                                             <label for="manual_product_images">Upload Product Images</label>
                                             <input id="manual_product_images" name="product_images[]" type="file" accept="image/*" multiple>
-                                            <small>Images upload to assets/img/product_images and their URLs are added to Image URL.</small>
+                                            <small>Images upload to assets/img/product_images and their URLs are added to this product.</small>
+                                        </div>
+                                        <div class="manual-product-field manual-product-field--wide">
+                                            <div class="manual-product-image-manager">
+                                                <label>Current Product Images</label>
+                                                <div class="manual-product-image-list" id="manualProductImageList"></div>
+                                                <p class="manual-product-image-empty" id="manualProductImageEmpty">No product images are saved yet. Upload images above, then save the product.</p>
+                                                <small>Use Remove to detach an image from this product. It does not delete the image file from the gallery.</small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -947,6 +961,69 @@ if (!function_exists('cbAdminSheetPage')) {
                         if (window.tinymce && tinymce.get(field.id)) {
                             tinymce.get(field.id).setContent(value || '');
                         }
+                        if (name === 'img_url') {
+                            renderManualProductImages(value || '');
+                        }
+                    }
+
+                    function getManualProductImageUrls() {
+                        var field = document.getElementById('manual_product_img_url');
+                        if (!field) return [];
+                        return String(field.value || '').split(',').map(function(url) {
+                            return url.trim();
+                        }).filter(Boolean);
+                    }
+
+                    function setManualProductImageUrls(urls) {
+                        var field = document.getElementById('manual_product_img_url');
+                        if (!field) return;
+                        field.value = urls.filter(Boolean).join(', ');
+                        renderManualProductImages(field.value);
+                    }
+
+                    function adminProductImageSrc(url) {
+                        url = String(url || '').trim();
+                        if (!url) return '';
+                        if (/^(https?:)?\/\//i.test(url) || url.charAt(0) === '/') return url;
+                        return '../' + url.replace(/^(\.\.\/|\.\/|\/)+/, '');
+                    }
+
+                    function renderManualProductImages(value) {
+                        var list = document.getElementById('manualProductImageList');
+                        var empty = document.getElementById('manualProductImageEmpty');
+                        if (!list || !empty) return;
+                        var urls = String(value || '').split(',').map(function(url) {
+                            return url.trim();
+                        }).filter(Boolean);
+
+                        list.innerHTML = '';
+                        empty.style.display = urls.length ? 'none' : '';
+                        urls.forEach(function(url, index) {
+                            var item = document.createElement('div');
+                            item.className = 'manual-product-image-item';
+
+                            var image = document.createElement('img');
+                            image.src = adminProductImageSrc(url);
+                            image.alt = 'Product image ' + (index + 1);
+                            image.loading = 'lazy';
+                            image.onerror = function() {
+                                image.src = '../assets/img/product/1.png';
+                            };
+
+                            var remove = document.createElement('button');
+                            remove.type = 'button';
+                            remove.className = 'btn btn-outline-danger';
+                            remove.textContent = 'Remove';
+                            remove.addEventListener('click', function() {
+                                setManualProductImageUrls(getManualProductImageUrls().filter(function(existingUrl) {
+                                    return existingUrl !== url;
+                                }));
+                            });
+
+                            item.appendChild(image);
+                            item.appendChild(remove);
+                            list.appendChild(item);
+                        });
                     }
 
                     function resetManualProductForm() {
@@ -964,6 +1041,7 @@ if (!function_exists('cbAdminSheetPage')) {
                         });
                         var title = document.getElementById('createProductModalTitle');
                         if (title) title.textContent = 'Create Product';
+                        setManualProductImageUrls([]);
                     }
 
                     document.querySelectorAll('[data-target="#createProductModal"]').forEach(function(button) {
