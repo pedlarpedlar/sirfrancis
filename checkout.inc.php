@@ -26,6 +26,7 @@ $payment_method_name = "";
 $order_discount = 0;
 $user_registered = false;
 $orderCreated = false;
+$isAdminCheckoutTest = false;
 $response = array(
     "success" => false,
     "message" => "Checkout could not be completed."
@@ -608,6 +609,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $order_notes = trim($_POST['order_notes'] ?? '');
         $cartLeadTimeNotes = [];
         $order_status = "Processing";
+        $isAdminCheckoutTest = !empty($_SESSION['admin_id']) && !empty($_POST['admin_checkout_test']);
+        if ($isAdminCheckoutTest) {
+            $adminTestId = (int) ($_SESSION['admin_id'] ?? 0);
+            $order_notes = trim("[TEST ORDER]\nCreated by admin ID {$adminTestId} from checkout test mode. Do not fulfil, dispatch or treat as a paid/live customer order.\n" . $order_notes);
+        }
 
         // Initialize variables
         $discountRate = 0;
@@ -824,7 +830,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Left-zero-pad with 3 zeroes
             $orderId_zeropad = str_pad($orderId, 7, '0', STR_PAD_LEFT);
 
-            if (!empty($_SESSION['coupon']['code']) && (float) $couponAmount > 0) {
+            if (!$isAdminCheckoutTest && !empty($_SESSION['coupon']['code']) && (float) $couponAmount > 0) {
                 if (!candybirdRecordCouponEmailUsage($conn, $_SESSION['coupon']['code'], $billing_email_address, $orderId, $billing_phone_number)) {
                     throw new Exception("This coupon has already been used with this email address.");
                 }
@@ -949,14 +955,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Commit the transaction
             mysqli_commit($conn);
 
-            logAction('Checkout Success', 'Successfully placed order '.$orderId, $userId, $guestIdentifier);
+            logAction($isAdminCheckoutTest ? 'Checkout Test Success' : 'Checkout Success', ($isAdminCheckoutTest ? 'Successfully placed test order ' : 'Successfully placed order ') . $orderId, $userId, $guestIdentifier);
 
             // Return a success response (you can adjust this based on your needs)
             $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
             $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&thankyou=1';
             $isPayFast = stripos((string) $payment_method_name, 'payfast') !== false || (string) $payment_method === '1';
             $isOzow = candybirdIsOzowPaymentLabel($payment_method_name);
-            if ($isPayFast) {
+            if ($isAdminCheckoutTest) {
+                $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&thankyou=1&test_order=1';
+            } elseif ($isPayFast) {
                 $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&payfast=1';
             } elseif ($isOzow) {
                 $redirectUrl = 'order_details?order_id=' . $orderId . '&session=' . $sessionParam . '&ozow=1';
@@ -964,7 +972,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $response = array(
                 "success" => true,
-                "message" => "Order placed successfully.",
+                "message" => $isAdminCheckoutTest ? "Test order placed successfully. No PayFast/Ozow payment was started." : "Order placed successfully.",
                 "orderId" => $orderId,
                 "totalAmount" => $grandTotalAmount,
                 "payment_method" => $payment_method,
@@ -976,7 +984,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_rollback($conn);
             // Log the error message or handle it in a way that suits your application
             error_log("Error placing order: " . $e->getMessage());
-            logAction('Checkout Error', 'Error: '. $e->getMessage(), $userId, $guestIdentifier);
+            logAction($isAdminCheckoutTest ? 'Checkout Test Error' : 'Checkout Error', 'Error: '. $e->getMessage(), $userId, $guestIdentifier);
 
             // Return an error response (you can adjust this based on your needs)
             $response = array(
@@ -1201,6 +1209,7 @@ $sessionParam = urlencode($_SESSION['session_id'] ?? session_id());
 $orderDetailsUrl = 'https://sirfrancis.co.za/order_details?order_id=' . urlencode((string) $orderId) . '&session=' . $sessionParam;
 $adminOrderUrl = 'https://sirfrancis.co.za/admin-sf/order_details?order_id=' . urlencode((string) $orderId);
 $couponLabel = $couponCode !== '' ? 'Coupon (' . candybirdEmailText($couponCode) . ')' : 'Coupon';
+$emailSubjectPrefix = !empty($isAdminCheckoutTest) ? '[TEST ORDER] ' : '';
 
 $productDiscountRow = '';
 if ($productDiscountAmount > 0) {
@@ -1267,7 +1276,7 @@ try {
     $customerMailResult = cbCandybirdSendMail(
         $billing_email_address,
         $billing_first_name,
-        "Sir Francis | Order Confirmation | #".$orderId_zeropad,
+        $emailSubjectPrefix . "Sir Francis | Order Confirmation | #".$orderId_zeropad,
         $email_body,
         ['prefer_mail_transport' => true]
     );
@@ -1290,7 +1299,7 @@ try {
     $adminMailResult = cbCandybirdSendMail(
         $smtp_username1,
         'Admin',
-        "Sir Francis | Order Received | #".$orderId_zeropad,
+        $emailSubjectPrefix . "Sir Francis | Order Received | #".$orderId_zeropad,
         $admin_email_body,
         [
             'reply_to_email' => $billing_email_address,

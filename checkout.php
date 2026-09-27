@@ -312,6 +312,17 @@ foreach ($paymentMethods as $paymentMethod) {
       <div class="col-lg-7">
         <div class="billing-info-wrap">
           <h3 class="title">Billing Details</h3>
+          <?php if (isset($_SESSION['admin_id'])): ?>
+            <div class="checkout-test-mode" role="note">
+              <label for="admin_checkout_test">
+                <input type="checkbox" id="admin_checkout_test" name="admin_checkout_test" value="1">
+                <span>
+                  <strong>Admin checkout test mode</strong>
+                  <small>Create a clearly marked test order and send the normal order emails, but do not open PayFast or Ozow payment. Use this for safe checkout testing only.</small>
+                </span>
+              </label>
+            </div>
+          <?php endif; ?>
 
             <div class="row">
               <div class="col-lg-6 col-md-6">
@@ -568,11 +579,45 @@ foreach ($paymentMethods as $paymentMethod) {
 
               <style>
                 .checkout-delivery-card,
-                .checkout-coupon-box {
+                .checkout-coupon-box,
+                .checkout-test-mode {
                     border: 1px solid #e6e1d8;
                     background: #fff;
                     padding: 18px;
                     margin-bottom: 20px;
+                }
+
+                .checkout-test-mode {
+                    background: #f8f5ee;
+                    border-color: #d8c895;
+                }
+
+                .checkout-test-mode label {
+                    align-items: flex-start;
+                    cursor: pointer;
+                    display: flex;
+                    gap: 12px;
+                    margin: 0;
+                }
+
+                .checkout-test-mode input {
+                    margin-top: 5px;
+                }
+
+                .checkout-test-mode strong,
+                .checkout-test-mode small {
+                    display: block;
+                }
+
+                .checkout-test-mode strong {
+                    color: #172235;
+                    font-size: 16px;
+                }
+
+                .checkout-test-mode small {
+                    color: #5f574f;
+                    line-height: 1.45;
+                    margin-top: 4px;
                 }
 
                 .delivery-method-grid {
