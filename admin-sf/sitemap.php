@@ -49,6 +49,7 @@ $linkGroups = [
         ['Contact Info', 'manage_website_information', 'Company, contact, address and banking settings'],
         ['Shipping Settings', 'shipping_settings', 'Shipping methods, prices and free shipping'],
         ['PayFast Settings', 'payfast_settings', 'Merchant credentials, sandbox mode and payment status callbacks'],
+        ['Email Test', 'email_test', 'Send a real SMTP test through the same mail helper used by order emails'],
         ['Google Maps & Places', 'google_maps_places', 'Maps and Places API keys for live maps and address autocomplete'],
         ['Google reCAPTCHA', 'google_recaptcha', 'Contact form spam protection settings'],
         ['Site Notices', 'site_flags', 'Shop closure, delayed-processing and maintenance flags'],
