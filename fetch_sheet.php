@@ -1301,7 +1301,9 @@ document.addEventListener('click', function(event) {
         && lower.indexOf('fishgelatine.co.za/v2/assets/img/pricelist.jpg') === -1
         && lower.indexOf('fishgelatine.co.za/v2/assets/img/reseller.jpeg') === -1;
     });
-    return images.length ? images : ['assets/img/product/1.png'];
+    const placeholderImages = images.filter(img => /(^|\/)assets\/img\/product\/1\.png(?:[?#].*)?$/i.test(img));
+    const realImages = images.filter(img => !/(^|\/)assets\/img\/product\/1\.png(?:[?#].*)?$/i.test(img));
+    return realImages.length ? realImages.concat(placeholderImages) : (images.length ? images : ['assets/img/product/1.png']);
   }
 
   function shuffleProducts(items) {

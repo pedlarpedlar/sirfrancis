@@ -42,6 +42,11 @@ function cbProductAbsoluteUrl($url) {
     return 'https://sirfrancis.co.za/' . ltrim($url, '/');
 }
 
+function cbProductIsPlaceholderImage($url) {
+    $path = parse_url((string) $url, PHP_URL_PATH) ?: (string) $url;
+    return (bool) preg_match('#(^|/)assets/img/product/1\.png$#i', $path);
+}
+
 function cbProductSocialImageUrl($product) {
     $rawImage = trim((string) (
         $product['img_url']
@@ -56,7 +61,12 @@ function cbProductSocialImageUrl($product) {
         return 'https://sirfrancis.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
     }
 
-    $firstImage = trim(explode(',', $rawImage)[0] ?? '');
+    $productImages = array_filter(array_map('trim', explode(',', $rawImage)));
+    usort($productImages, static function($a, $b) {
+        return (int) cbProductIsPlaceholderImage($a) <=> (int) cbProductIsPlaceholderImage($b);
+    });
+
+    $firstImage = trim($productImages[0] ?? '');
     if (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($firstImage)) {
         return 'https://sirfrancis.co.za/assets/img/product/1.png?v=' . rawurlencode($productId);
     }
@@ -79,7 +89,12 @@ function cbProductSocialImageUrls($product) {
     $productId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($product['id'] ?? 'product'));
     $urls = [];
 
-    foreach (array_filter(array_map('trim', explode(',', $rawImage))) as $image) {
+    $productImages = array_filter(array_map('trim', explode(',', $rawImage)));
+    usort($productImages, static function($a, $b) {
+        return (int) cbProductIsPlaceholderImage($a) <=> (int) cbProductIsPlaceholderImage($b);
+    });
+
+    foreach ($productImages as $image) {
         if (function_exists('isSirFrancisLegacyCandybirdAsset') && isSirFrancisLegacyCandybirdAsset($image)) {
             continue;
         }
@@ -971,6 +986,19 @@ $(function() {
   }
 
   function normalizeProduct(product) {
+    function sortProductImages(images) {
+      const cleanImages = images.map(function(img) {
+        return String(img || '').trim();
+      }).filter(Boolean);
+      const placeholderImages = cleanImages.filter(function(img) {
+        return /(^|\/)assets\/img\/product\/1\.png(?:[?#].*)?$/i.test(img);
+      });
+      const realImages = cleanImages.filter(function(img) {
+        return !/(^|\/)assets\/img\/product\/1\.png(?:[?#].*)?$/i.test(img);
+      });
+      return realImages.length ? realImages.concat(placeholderImages) : cleanImages;
+    }
+
     const price = parseFloat(product.price) || 0;
     const isClearance = String(product.is_clearance || '').toLowerCase() === 'yes';
     const specialActive = isProductSpecialActive(product);
@@ -993,9 +1021,7 @@ $(function() {
       discountedPrice: (specialActive || isClearance) ? discountedPrice : price,
       description: safeSheetHtml(product.html_description || product.description || ''),
       shortDescription: product.short_description || product.description || stripHtml(product.html_description || ''),
-      images: String(product.img_url || product.image_url || product.image_urls || '').split(',').map(function(img) {
-        return img.trim();
-      }).filter(Boolean),
+      images: sortProductImages(String(product.img_url || product.image_url || product.image_urls || '').split(',')),
       rating: parseFloat(product.rating) || 0,
       reviewCount: parseInt(product.review_count || 0, 10) || 0,
       label: product.label || '',

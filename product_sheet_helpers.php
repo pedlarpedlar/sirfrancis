@@ -47,6 +47,13 @@ if (!function_exists('isSirFrancisLegacyCandybirdAsset')) {
     }
 }
 
+if (!function_exists('isSirFrancisProductPlaceholderAsset')) {
+    function isSirFrancisProductPlaceholderAsset($url) {
+        $path = parse_url((string) $url, PHP_URL_PATH) ?: (string) $url;
+        return (bool) preg_match('#(^|/)assets/img/product/1\.png$#i', $path);
+    }
+}
+
 if (!function_exists('parseCandybirdTsvRows')) {
     function parseCandybirdTsvRows($tsvData) {
         $rows = [];
@@ -2370,6 +2377,9 @@ if (!function_exists('getSheetProductImage')) {
     function getSheetProductImage($product) {
         $imageValue = $product['img_url'] ?? $product['image_url'] ?? $product['image_urls'] ?? $product['image'] ?? '';
         $images = array_filter(array_map('trim', explode(',', (string) $imageValue)));
+        usort($images, static function($a, $b) {
+            return (int) isSirFrancisProductPlaceholderAsset($a) <=> (int) isSirFrancisProductPlaceholderAsset($b);
+        });
         foreach ($images as $image) {
             if ($image === '' || $image === '#' || isSirFrancisLegacyCandybirdAsset($image)) {
                 continue;
