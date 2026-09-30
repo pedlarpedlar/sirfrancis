@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="2600" viewBox="0 0 1200 2600" role="img" aria-labelledby="title desc">
+  <title id="title">Sir Francis Marine Collagen Peptides Vector Poster</title>
+  <desc id="desc">A scalable vector recreation of a tall underwater Sir Francis Marine Collagen Peptides poster with light rays, fish silhouettes, border, and brand text.</desc>
+  <defs>
+    <linearGradient id="deepSea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0588bd"/>
+      <stop offset="0.22" stop-color="#00699a"/>
+      <stop offset="0.52" stop-color="#004d80"/>
+      <stop offset="0.76" stop-color="#007cac"/>
+      <stop offset="1" stop-color="#00a9d8"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="0%" r="42%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.08" stop-color="#e8fbff" stop-opacity="0.98"/>
+      <stop offset="0.28" stop-color="#7be8ff" stop-opacity="0.45"/>
+      <stop offset="0.68" stop-color="#1bb3df" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#1bb3df" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="surfaceGlow" cx="50%" cy="10%" r="70%">
+      <stop offset="0" stop-color="#8df0ff" stop-opacity="0.42"/>
+      <stop offset="0.45" stop-color="#24b7dc" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#06395f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="whiteFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="waveGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="0.42" stop-color="#91f2ff" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.12"/>
+    </linearGradient>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="fineGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="microBubbles" width="130" height="130" patternUnits="userSpaceOnUse">
+      <circle cx="16" cy="28" r="2.2" fill="#ffffff" opacity="0.2"/>
+      <circle cx="76" cy="42" r="1.4" fill="#ffffff" opacity="0.22"/>
+      <circle cx="112" cy="95" r="2.8" fill="#ffffff" opacity="0.16"/>
+      <circle cx="44" cy="110" r="1.5" fill="#ffffff" opacity="0.18"/>
+    </pattern>
+    <g id="fish">
+      <path d="M-98 0 C-58 -38 16 -42 72 -5 C20 40 -54 42 -98 0 Z" fill="#033a5f"/>
+      <path d="M68 -5 L118 -36 L106 0 L118 36 Z" fill="#033a5f"/>
+      <path d="M-8 -22 L20 -66 L28 -16 Z" fill="#033a5f"/>
+      <path d="M-18 20 L18 54 L10 12 Z" fill="#033a5f"/>
+      <circle cx="-54" cy="-7" r="4" fill="#0eb2d9" opacity="0.72"/>
+    </g>
+    <g id="smallFish">
+      <path d="M-42 0 C-20 -14 12 -15 38 -2 C14 15 -18 16 -42 0 Z" fill="#063756"/>
+      <path d="M36 -2 L60 -16 L55 0 L60 16 Z" fill="#063756"/>
+    </g>
+    <g id="shipMark">
+      <path d="M-154 70 C-88 95 64 96 154 64 C123 106 48 126 -34 119 C-88 115 -132 98 -154 70 Z" fill="#ffffff"/>
+      <path d="M-94 49 L-116 70 L-42 70 Z" fill="#ffffff"/>
+      <path d="M-30 4 L-85 70 L-6 70 Z" fill="#ffffff"/>
+      <path d="M38 -15 L-2 70 L73 70 Z" fill="#ffffff"/>
+      <path d="M92 18 L67 70 L126 70 Z" fill="#ffffff"/>
+      <path d="M-6 -14 L-6 81" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      <path d="M44 -34 L44 80" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      <path d="M87 1 L87 78" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <rect width="1200" height="2600" fill="#004466"/>
+  <rect x="60" y="0" width="1080" height="2600" fill="url(#deepSea)"/>
+  <rect x="60" y="0" width="1080" height="2600" fill="url(#surfaceGlow)"/>
+  <rect x="60" y="0" width="1080" height="2600" fill="url(#microBubbles)" opacity="0.8"/>
+
+  <g opacity="0.42" filter="url(#softBlur)">
+    <path d="M116 92 C250 17 410 18 558 58 C710 99 882 103 1084 36" fill="none" stroke="#bff8ff" stroke-width="18"/>
+    <path d="M104 168 C280 100 432 117 590 148 C756 180 899 169 1088 92" fill="none" stroke="#7ee7ff" stroke-width="14"/>
+    <path d="M98 252 C272 210 462 212 620 241 C809 276 946 263 1094 193" fill="none" stroke="#baf5ff" stroke-width="10"/>
+  </g>
+
+  <g opacity="0.9">
+    <rect x="60" y="0" width="1080" height="2600" fill="url(#sunGlow)"/>
+    <path d="M585 0 L430 940 L530 940 L618 0 Z" fill="url(#whiteFade)" opacity="0.36"/>
+    <path d="M616 0 L650 1040 L743 1038 L650 0 Z" fill="url(#whiteFade)" opacity="0.28"/>
+    <path d="M548 0 L206 1345 L314 1323 L594 0 Z" fill="url(#whiteFade)" opacity="0.18"/>
+    <path d="M650 0 L930 1365 L1038 1340 L695 0 Z" fill="url(#whiteFade)" opacity="0.16"/>
+    <path d="M603 0 L112 776 L202 786 L632 0 Z" fill="url(#whiteFade)" opacity="0.14"/>
+    <path d="M632 0 L1088 780 L997 787 L602 0 Z" fill="url(#whiteFade)" opacity="0.14"/>
+  </g>
+
+  <g filter="url(#fineGlow)">
+    <path d="M384 38 C454 8 498 6 600 39 C700 6 762 12 828 42 C735 60 674 66 600 51 C520 66 456 62 384 38 Z" fill="#ffffff" opacity="0.62"/>
+    <path d="M563 0 L600 96 L637 0 Z" fill="#ffffff" opacity="0.78"/>
+    <path d="M511 0 L598 124 L685 0 Z" fill="#ffffff" opacity="0.33"/>
+  </g>
+
+  <g opacity="0.26" fill="none" stroke="#d7fcff" stroke-width="4">
+    <path d="M188 388 C274 318 345 438 429 371 C514 302 579 421 665 354 C751 287 831 393 940 320"/>
+    <path d="M130 522 C238 448 316 574 430 490 C546 406 626 535 743 455 C860 374 951 489 1072 390"/>
+    <path d="M156 716 C258 648 368 753 476 679 C586 604 702 708 807 640 C912 570 986 641 1098 558"/>
+  </g>
+
+  <g transform="translate(600 500) scale(0.9)">
+    <use href="#shipMark"/>
+  </g>
+  <text x="600" y="694" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="78" text-anchor="middle" letter-spacing="20">SIR FRANCIS</text>
+  <text x="600" y="742" fill="#ffffff" font-family="Raleway, Arial, sans-serif" font-size="20" text-anchor="middle" letter-spacing="8" opacity="0.86">MARINE NUTRITION  •  A HEALTHIER YOU</text>
+
+  <g fill="#ffffff" font-family="'Arial Narrow', Impact, Haettenschweiler, sans-serif" font-weight="900" text-anchor="middle">
+    <text x="600" y="1038" font-size="164" letter-spacing="4">MARINE</text>
+    <text x="600" y="1230" font-size="164" letter-spacing="4">COLLAGEN</text>
+    <text x="600" y="1422" font-size="164" letter-spacing="4">PEPTIDES</text>
+  </g>
+
+  <g opacity="0.78">
+    <use href="#fish" transform="translate(325 1665) scale(1.42) rotate(-5)"/>
+    <use href="#fish" transform="translate(653 1785) scale(1.15) rotate(8)"/>
+    <use href="#fish" transform="translate(842 2050) scale(0.95) rotate(-9)"/>
+    <use href="#smallFish" transform="translate(940 1505) scale(0.9) rotate(-4)" opacity="0.42"/>
+    <use href="#smallFish" transform="translate(768 1615) scale(0.72) rotate(10)" opacity="0.32"/>
+    <use href="#smallFish" transform="translate(242 1948) scale(0.65) rotate(-13)" opacity="0.35"/>
+    <use href="#smallFish" transform="translate(1000 2190) scale(0.58) rotate(16)" opacity="0.34"/>
+  </g>
+
+  <g opacity="0.9" filter="url(#fineGlow)">
+    <path d="M75 2028 C176 1905 298 1889 405 1930 C540 1980 674 2018 798 1946 C916 1877 1036 1926 1125 2025 L1125 2600 L75 2600 Z" fill="#00a7d7" opacity="0.36"/>
+    <path d="M73 2062 C179 2002 263 2088 372 2032 C481 1976 579 2080 690 2018 C801 1957 901 2030 1018 1978 C1073 1954 1108 1974 1125 1987" fill="none" stroke="url(#waveGlow)" stroke-width="24"/>
+    <path d="M82 2168 C194 2100 284 2190 394 2130 C506 2070 610 2186 721 2111 C835 2035 927 2117 1033 2058 C1074 2035 1106 2046 1125 2064" fill="none" stroke="url(#waveGlow)" stroke-width="18"/>
+    <path d="M74 2268 C206 2196 310 2308 448 2228 C589 2148 701 2275 827 2198 C930 2136 1019 2189 1126 2110" fill="none" stroke="url(#waveGlow)" stroke-width="15"/>
+    <path d="M75 2375 C214 2312 334 2427 482 2336 C637 2242 749 2398 913 2298 C986 2254 1053 2270 1125 2225" fill="none" stroke="#ffffff" stroke-width="9" opacity="0.58"/>
+  </g>
+
+  <g fill="#ffffff" opacity="0.5">
+    <circle cx="214" cy="364" r="8"/>
+    <circle cx="954" cy="444" r="5"/>
+    <circle cx="1013" cy="608" r="9"/>
+    <circle cx="274" cy="826" r="5"/>
+    <circle cx="910" cy="980" r="4"/>
+    <circle cx="183" cy="1260" r="8"/>
+    <circle cx="1040" cy="1348" r="6"/>
+    <circle cx="214" cy="1564" r="4"/>
+    <circle cx="1004" cy="1690" r="7"/>
+    <circle cx="158" cy="1850" r="5"/>
+  </g>
+
+  <rect x="100" y="94" width="1000" height="2394" fill="none" stroke="#ffffff" stroke-width="7" opacity="0.86"/>
+  <rect x="124" y="118" width="952" height="2346" fill="none" stroke="#d8f7ff" stroke-width="2" opacity="0.5"/>
+</svg>
